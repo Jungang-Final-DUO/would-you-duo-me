@@ -1,0 +1,21 @@
+/* reset CSS */
+@import url("https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css");
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+#main-wrapper {
+    width: 1400px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
