@@ -139,6 +139,10 @@ public class User {
     @Builder.Default
     private List<Attendance> attendanceList = new ArrayList<>();
 
+    // 출석도장 내
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<AttdanceStamp> attdanceStampList = new ArrayList<>();
 
     // 양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
     public void addReply(Reply reply) {
@@ -194,6 +198,13 @@ public class User {
         followFromList.add(follow);
         if (this != follow.getFollowTo()) {
             follow.setFollowTo(this);
+        }
+    }
+
+    public void addAttendanceStamp(AttdanceStamp attdanceStamp) {
+        attdanceStampList.add(attdanceStamp);
+        if (this != attdanceStamp.getUser()) {
+            attdanceStamp.setUser(this);
         }
     }
 }
