@@ -11,6 +11,8 @@ import site.woulduduo.enumeration.Tier;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static site.woulduduo.enumeration.LoginType.NORMAL;
 
