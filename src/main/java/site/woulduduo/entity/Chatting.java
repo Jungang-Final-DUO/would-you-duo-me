@@ -22,10 +22,12 @@ public class Chatting {
     private Long chattingNo;
 
     @ManyToOne (fetch = FetchType.LAZY)
+    @Column(name = "chatting_from")
     @JoinColumn(name = "user_account")
     private User chattingFrom;
 
     @ManyToOne (fetch = FetchType.LAZY)
+    @Column(name = "chatting_to")
     @JoinColumn(name = "user_account")
     private User chattingTo;
 
