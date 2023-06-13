@@ -26,5 +26,7 @@ public class UserProfile {
     private String profileImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_account")
+    private User user;
 
 }
