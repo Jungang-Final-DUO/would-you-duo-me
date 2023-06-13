@@ -19,6 +19,7 @@ import java.time.LocalDate;
 public class Attendance {
 
     @Id
+    @Column(name="attendance_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long attendanceNo;
 
@@ -27,7 +28,7 @@ public class Attendance {
     private User user;
 
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(updatable = false,name="attendance_date")
     private LocalDate attendanceDate;
 
 

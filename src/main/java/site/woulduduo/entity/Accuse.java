@@ -16,6 +16,7 @@ import javax.persistence.*;
 public class Accuse {
 
     @Id
+    @Column(name="accuse_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long accuseNo;
 
@@ -23,10 +24,10 @@ public class Accuse {
     @JoinColumn(name="user_account")
     private User user;
 
-    @Column(length = 100)
+    @Column(length = 100, name="accuse_type")
     private String accuseType;
 
-    @Column(length = 20)
+    @Column(length = 20,name="accuse_etc")
     private String accuseEtc;
 
 }
