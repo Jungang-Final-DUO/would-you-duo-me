@@ -3,17 +3,21 @@ package site.woulduduo.entity;
 import lombok.*;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GeneratorType;
-import org.hibernate.annotations.UpdateTimestamp;
+import site.woulduduo.enumeration.Gender;
+import site.woulduduo.enumeration.LoginType;
+import site.woulduduo.enumeration.Position;
+import site.woulduduo.enumeration.Tier;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+
+import static site.woulduduo.enumeration.LoginType.NORMAL;
 
 @Setter
 @Getter
-@ToString(exclude = {"board", "user"})
+@ToString(exclude = {"reply"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "userAccount")
@@ -90,4 +94,9 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private LoginType userLoginType = NORMAL;
+
+    /* 쓴 댓글들 */
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reply_no")
+    private List<Reply> replyList;
 }
