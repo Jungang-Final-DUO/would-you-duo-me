@@ -12,14 +12,14 @@ import javax.persistence.*;
 import javax.persistence.CascadeType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import static site.woulduduo.enumeration.LoginType.NORMAL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static site.woulduduo.enumeration.LoginType.NORMAL;
-
 @Setter
 @Getter
-@ToString(exclude = {"replyList", "userProfileList"})
+@ToString(exclude = {"replyList", "userProfileList", "attendanceList", "accuseList"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "userAccount")
@@ -132,6 +132,26 @@ public class User {
         pointList.add(point);
         if (this != point.getUser()) {
             point.setUser(this);
+        }
+    }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Accuse> accuseList = new ArrayList<>();
+
+    public void addAccuseList(Accuse accuse) {
+        accuseList.add(accuse);
+        if (this != accuse.getUser()) {
+            accuse.setUser(this);
+        }
+    }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Attendance> attendanceList = new ArrayList<>();
+
+    public void addAttendanceList(Attendance attendance) {
+        attendanceList.add(attendance);
+        if (this != attendance.getUser()) {
+            attendance.setUser(this);
         }
     }
 }
