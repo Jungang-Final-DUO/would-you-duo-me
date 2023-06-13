@@ -20,7 +20,6 @@ public class Attendance {
     @Id
     @Column(name="attendance_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "attendance_no")
     private long attendanceNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
