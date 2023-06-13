@@ -5,11 +5,17 @@ import org.hibernate.annotations.Check;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GeneratorType;
 import org.hibernate.annotations.UpdateTimestamp;
+import site.woulduduo.enumeration.Gender;
+import site.woulduduo.enumeration.LoginType;
+import site.woulduduo.enumeration.Position;
+import site.woulduduo.enumeration.Tier;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import static site.woulduduo.enumeration.LoginType.NORMAL;
 
 @Setter
 @Getter
