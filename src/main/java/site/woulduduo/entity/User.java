@@ -10,10 +10,12 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
-@ToString(exclude = {"board", "user"})
+@ToString(exclude = {"board", "user","attendanceList","accuseList"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "userAccount")
@@ -90,4 +92,11 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private LoginType userLoginType = NORMAL;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Accuse> accuseList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Attendance> attendanceList = new ArrayList<>();
+
 }
