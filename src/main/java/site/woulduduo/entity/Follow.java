@@ -17,13 +17,12 @@ public class Follow {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_account")
-    @Column(name = "follow_from")
+    @JoinColumn(name = "follow_from")
     private User followFrom;
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_account")
+    @JoinColumn(name = "follow_to")
     private User followTo;
 
 }

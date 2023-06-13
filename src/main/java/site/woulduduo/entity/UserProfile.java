@@ -18,6 +18,7 @@ public class UserProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "profile_no")
     private Long profileNo;
 
     @Column(length = 1000, nullable = false)

@@ -28,7 +28,7 @@ import static site.woulduduo.enumeration.LoginType.NORMAL;
 public class User {
 
     @Id
-    @Column(length = 50)
+    @Column(name = "user_account",length = 50)
     private String userAccount;
 
     @Column(length = 15, nullable = false, unique = true)
