@@ -2,19 +2,27 @@ package site.woulduduo.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Setter
 @Getter
-@ToString(exclude = {})
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "")
+@EqualsAndHashCode
 @Builder
 @Entity
 @Table(name = "duo_user_follow")
 @IdClass(FollowPK.class)
 public class Follow {
+
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_account")
+    private User followFrom;
+
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_account")
+    private User followTo;
+
 }

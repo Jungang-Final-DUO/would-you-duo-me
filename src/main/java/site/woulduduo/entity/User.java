@@ -105,4 +105,20 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_no")
     private List<UserProfile> userProfileList;
+
+    // 양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
+    public void addReplyList(Reply reply) {
+        replyList.add(reply);
+        if (this != reply.getUser()) {
+            reply.setUser(this);
+        }
+    }
+
+    public void addUserProfileList(UserProfile userProfile) {
+        userProfileList.add(userProfile);
+        if (this != userProfile.getUser()) {
+            userProfile.setUser(this);
+        }
+    }
+
 }

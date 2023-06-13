@@ -2,8 +2,6 @@ package site.woulduduo.entity;
 
 
 import lombok.*;
-import org.hibernate.annotations.Check;
-import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.*;
 
