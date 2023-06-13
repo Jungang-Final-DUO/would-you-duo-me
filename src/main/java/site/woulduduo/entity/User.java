@@ -9,6 +9,7 @@ import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -99,11 +100,18 @@ public class User {
 
     /* 쓴 댓글들 */
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Reply> replyList = new ArrayList<>();
 
     /* 프로필 사진들 */
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<UserProfile> userProfileList = new ArrayList<>();
+
+    /* 포인트 증감 내역 */
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<Point> pointList = new ArrayList<>();
 
     // 양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
     public void addReplyList(Reply reply) {
@@ -120,4 +128,10 @@ public class User {
         }
     }
 
+    public void addPoint(Point point) {
+        pointList.add(point);
+        if (this != point.getUser()) {
+            point.setUser(this);
+        }
+    }
 }

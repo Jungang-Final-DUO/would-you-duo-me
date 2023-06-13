@@ -38,6 +38,10 @@ public class Chatting {
     @OneToMany(mappedBy = "chatting", fetch = FetchType.LAZY)
     private List<Message> messageList = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "chatting", fetch = FetchType.LAZY)
+    private List<Point> pointList = new ArrayList<>();
+
     //양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
     public void addMatching(Matching matching){
         matchingList.add(matching);
@@ -50,6 +54,13 @@ public class Chatting {
         messageList.add(message);
         if(this != message.getChatting()){
             message.setChatting(this);
+        }
+    }
+
+    public void addPoint(Point point) {
+        pointList.add(point);
+        if (this != point.getChatting()) {
+            point.setChatting(this);
         }
     }
 }
