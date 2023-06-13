@@ -30,11 +30,11 @@ public class Chatting {
     private User chattingTo;
 
     @Builder.Default
-    @OneToMany(mappedBy = "chatting")
+    @OneToMany(mappedBy = "chatting", fetch = FetchType.LAZY)
     private List<Matching> matchings = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "chatting")
+    @OneToMany(mappedBy = "chatting", fetch = FetchType.LAZY)
     private List<Message> messages = new ArrayList<>();
 
     //양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성

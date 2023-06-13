@@ -97,13 +97,11 @@ public class User {
     private LoginType userLoginType = NORMAL;
 
     /* 쓴 댓글들 */
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reply_no")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Reply> replyList;
 
     /* 프로필 사진들 */
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_no")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserProfile> userProfileList;
 
     // 양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성

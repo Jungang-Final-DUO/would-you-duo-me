@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.persistence.FetchType;
 import java.time.LocalDateTime;
 
 @Setter
@@ -36,7 +37,7 @@ public class Message {
     @Column(columnDefinition = "TINYINT(1)")
     private boolean messageIsRead = false;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chatting_no")
     private Chatting chatting;
 
