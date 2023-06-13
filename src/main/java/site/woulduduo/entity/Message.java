@@ -21,7 +21,7 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long messageNo;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_account")
     private User user;
 

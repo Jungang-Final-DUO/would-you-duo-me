@@ -30,7 +30,7 @@ public class Matching {
     @Column(nullable = false)
     private Integer matchingPoint;
 
-    @Column(columnDefinition = "INT(100)")
+    @Column(length = 100)
     private String matchingReviewContent;
 
     @Column(columnDefinition = "INT(1)")
