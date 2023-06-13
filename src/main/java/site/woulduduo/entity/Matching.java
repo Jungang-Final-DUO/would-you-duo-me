@@ -10,7 +10,7 @@ import java.util.List;
 
 @Setter
 @Getter
-@ToString(exclude = {"chatting"})
+@ToString(exclude = {"chatting", "pointList"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "matchingNo")
@@ -21,21 +21,23 @@ public class Matching {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "matching_no")
     private Long matchingNo;
 
+    @Column(name = "matching_date")
     private LocalDate matchingDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 7)
+    @Column(nullable = false, length = 7, name = "matching_status")
     private MatchingStatus matchingStatus;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "matching_point")
     private Integer matchingPoint;
 
-    @Column(length = 100)
+    @Column(length = 100, name = "matching_review_content")
     private String matchingReviewContent;
 
-    @Column(columnDefinition = "INT(1)")
+    @Column(columnDefinition = "INT(1)", name = "matching_review_rate")
     private Integer matchingReviewRate;
 
     @ManyToOne(fetch = FetchType.LAZY)

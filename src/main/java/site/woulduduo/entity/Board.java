@@ -5,12 +5,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import site.woulduduo.enumeration.BoardCategory;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
 @Getter
-@ToString(exclude = "user")
+@ToString(exclude = {"user", "replyList"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "boardNo")
@@ -36,11 +38,11 @@ public class Board {
 
     @Builder.Default
     @Column(name = "board_like")
-    private Long boardLike = 0L;
+    private Integer boardLike = 0;
 
     @Builder.Default
     @Column(name = "board_view_count")
-    private Long boardViewCount = 0L;
+    private Integer boardViewCount = 0;
 
     @Column(name = "board_category", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -50,7 +52,15 @@ public class Board {
     @Column(name = "board_written_date", updatable = false)
     private LocalDateTime boardWrittenDate;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reply_no")
-    private List<Reply> replyList;
+    // 댓글 목록들
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<Reply> replyList = new ArrayList<>();
+
+    public void addReply(Reply reply) {
+        replyList.add(reply);
+        if (this != reply.getBoard()) {
+            reply.setBoard(this);
+        }
+    }
 }

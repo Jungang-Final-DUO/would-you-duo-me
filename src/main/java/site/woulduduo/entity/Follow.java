@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "duo_user_follow")
-@IdClass(FollowPK.class)
+@IdClass(FollowCompositeKey.class)
 public class Follow {
 
     @Id

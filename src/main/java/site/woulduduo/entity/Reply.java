@@ -34,6 +34,6 @@ public class Reply {
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_account", insertable = false, updatable = false)
+    @JoinColumn(name = "user_account")
     private User user;
 }

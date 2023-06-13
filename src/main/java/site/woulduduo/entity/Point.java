@@ -6,10 +6,10 @@ import javax.persistence.*;
 
 @Setter
 @Getter
-@ToString(exclude = {""})
+@ToString(exclude = {"user", "chatting", "matching"})
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "")
+@EqualsAndHashCode(of = "pointNo")
 @Builder
 @Entity
 @Table(name = "duo_point")
@@ -35,12 +35,12 @@ public class Point {
     @JoinColumn(name = "matching_no")
     private Matching matching;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ad_no")
-    private Ad ad;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stamp_no")
-    private AttendanceStamp attendanceStamp;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "ad_no")
+//    private Ad ad;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "stamp_no")
+//    private AttendanceStamp attendanceStamp;
 
 }

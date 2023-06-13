@@ -15,11 +15,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "attendanceNo")
 @ToString(exclude = {"user"})
-
 public class Attendance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "attendance_no")
     private long attendanceNo;
 
     @ManyToOne(fetch = FetchType.LAZY)

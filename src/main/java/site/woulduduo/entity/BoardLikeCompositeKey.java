@@ -1,15 +1,18 @@
 package site.woulduduo.entity;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class BoardLikeCompositeKey implements Serializable {
 
-    private Board boardNo;
+    private Board board;
 
-    private User userAccount;
+    private User user;
 }
