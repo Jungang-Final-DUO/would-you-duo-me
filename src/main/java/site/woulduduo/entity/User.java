@@ -113,6 +113,11 @@ public class User {
     @Builder.Default
     private List<Point> pointList = new ArrayList<>();
 
+    /* 작성한 게시글들 */
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Board> boardList = new ArrayList<>();
+
     // 양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
     public void addReplyList(Reply reply) {
         replyList.add(reply);
@@ -132,6 +137,13 @@ public class User {
         pointList.add(point);
         if (this != point.getUser()) {
             point.setUser(this);
+        }
+    }
+
+    public void addBoardList(Board board) {
+        boardList.add(board);
+        if (this != board.getUser()) {
+            board.setUser(this);
         }
     }
 }
