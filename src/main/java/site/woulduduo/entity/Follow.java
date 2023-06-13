@@ -18,6 +18,7 @@ public class Follow {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_account")
+    @Column(name = "follow_from")
     private User followFrom;
 
     @Id
