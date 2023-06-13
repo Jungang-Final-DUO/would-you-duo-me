@@ -11,6 +11,7 @@ import site.woulduduo.enumeration.Tier;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static site.woulduduo.enumeration.LoginType.NORMAL;
@@ -98,11 +99,11 @@ public class User {
 
     /* 쓴 댓글들 */
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Reply> replyList;
+    private List<Reply> replyList = new ArrayList<>();
 
     /* 프로필 사진들 */
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<UserProfile> userProfileList;
+    private List<UserProfile> userProfileList = new ArrayList<>();
 
     // 양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
     public void addReplyList(Reply reply) {
