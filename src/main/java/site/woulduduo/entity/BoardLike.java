@@ -15,12 +15,12 @@ import javax.persistence.*;
 public class BoardLike {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_no")
     private Board board;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_account")
     private User user;
 }
