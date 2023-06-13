@@ -37,7 +37,7 @@ public class AttendanceStamp {
     private LocalDate stampMoth;
 
     // 지급 포인트 내역
-    @OneToMany(mappedBy = "attendance_stamp", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "attendanceStamp", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Point> pointList = new ArrayList<>();
 
