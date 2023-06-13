@@ -142,7 +142,7 @@ public class User {
     // 출석도장 내
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Builder.Default
-    private List<AttdanceStamp> attdanceStampList = new ArrayList<>();
+    private List<AttendanceStamp> attendanceStampList = new ArrayList<>();
 
     // 양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
     public void addReply(Reply reply) {
@@ -201,10 +201,10 @@ public class User {
         }
     }
 
-    public void addAttendanceStamp(AttdanceStamp attdanceStamp) {
-        attdanceStampList.add(attdanceStamp);
-        if (this != attdanceStamp.getUser()) {
-            attdanceStamp.setUser(this);
+    public void addAttendanceStamp(AttendanceStamp attendanceStamp) {
+        attendanceStampList.add(attendanceStamp);
+        if (this != attendanceStamp.getUser()) {
+            attendanceStamp.setUser(this);
         }
     }
 }

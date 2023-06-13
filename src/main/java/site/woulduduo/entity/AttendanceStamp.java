@@ -5,6 +5,8 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -15,7 +17,7 @@ import java.time.LocalDate;
 @Builder
 @Entity
 @Table(name = "duo_attendance_stamp")
-public class AttdanceStamp {
+public class AttendanceStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,4 +35,11 @@ public class AttdanceStamp {
     @CreatedDate
     @Column(name = "stamp_Month", updatable = false)
     private LocalDate stampMoth;
+
+    // 지급 포인트 내역
+    @OneToMany(mappedBy = "attendance_stamp", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Point> pointList = new ArrayList<>();
+
+
 }
