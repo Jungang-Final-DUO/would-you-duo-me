@@ -1,4 +1,4 @@
-package com.example.woulduduo;
+package site.woulduduo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
