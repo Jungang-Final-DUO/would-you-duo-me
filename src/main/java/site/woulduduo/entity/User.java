@@ -17,7 +17,7 @@ import static site.woulduduo.enumeration.LoginType.NORMAL;
 
 @Setter
 @Getter
-@ToString(exclude = {"reply"})
+@ToString(exclude = {"replyList", "userProfileList"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "userAccount")
@@ -99,4 +99,9 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "reply_no")
     private List<Reply> replyList;
+
+    /* 프로필 사진들 */
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_no")
+    private List<UserProfile> userProfileList;
 }
