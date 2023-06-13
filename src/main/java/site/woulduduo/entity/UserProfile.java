@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Setter
 @Getter
-@ToString(exclude = {})
+@ToString(exclude = {"user"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "profileNo")

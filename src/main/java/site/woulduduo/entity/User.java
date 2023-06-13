@@ -93,6 +93,7 @@ public class User {
     private String userSessionId = "none";
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private LoginType userLoginType = NORMAL;
 
     /* 쓴 댓글들 */
