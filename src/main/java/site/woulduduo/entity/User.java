@@ -24,31 +24,31 @@ import static site.woulduduo.enumeration.LoginType.NORMAL;
 @Builder
 @Entity
 @Table(name = "duo_user")
-@Check(constraints = "current_date - user_birthday >= 19")
+//@Check(constraints = "TIMESTAMPDIFF(current_timestamp, user_birthday) > 18")
 public class User {
 
     @Id
-    @Column(name = "user_account",length = 50)
+    @Column(name = "user_account", length = 50)
     private String userAccount;
 
-    @Column(length = 15, nullable = false, unique = true)
+    @Column(name = "user_nickname", length = 15, nullable = false, unique = true)
     private String userNickname;
 
-    @Column(nullable = false)
+    @Column(name = "user_password", nullable = false)
     private String userPassword;
 
-    @Column(nullable = false)
+    @Column(name = "user_birthday", nullable = false)
     private LocalDate userBirthday;
 
-    @Column(length = 20, nullable = false, unique = true)
+    @Column(name = "lol_ninkname", length = 20, nullable = false, unique = true)
     private String lolNickname;
 
-    @Column(nullable = false)
+    @Column(name = "user_gender", nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender userGender;
 
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(name = "user_join_date", updatable = false)
     private LocalDate userJoinDate;
 
     private LocalDateTime userRecentLoginDate;
@@ -92,8 +92,8 @@ public class User {
     @Builder.Default
     private String userSessionId = "none";
 
-    @Enumerated(EnumType.STRING)
     @Builder.Default
+    @Enumerated(EnumType.STRING)
     private LoginType userLoginType = NORMAL;
 
     /* 쓴 댓글들 */

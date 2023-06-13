@@ -22,11 +22,11 @@ public class Reply {
     @Column(name = "reply_no")
     private Long replyNo;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "reply_content", nullable = false, length = 100)
     private String replyContent;
 
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(name = "reply_written_date", updatable = false)
     private LocalDateTime replyWrittenDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,6 +34,6 @@ public class Reply {
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_account")
+    @JoinColumn(name = "user_account", insertable = false, updatable = false)
     private User user;
 }
