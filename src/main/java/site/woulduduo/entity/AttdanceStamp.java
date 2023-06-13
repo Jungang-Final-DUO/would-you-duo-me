@@ -18,7 +18,7 @@ import java.time.LocalDate;
 public class AttdanceStamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "stamp_no", nullable = false, length = 19)
+    @Column(name = "stamp_no", length = 19)
     private Long stampNo;
 
     //    onDelete = CascadeType.CASCADE) 맞을까...
