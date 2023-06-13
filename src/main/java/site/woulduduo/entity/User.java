@@ -15,7 +15,7 @@ import java.util.List;
 
 @Setter
 @Getter
-@ToString(exclude = {"board", "user","attendanceList","accuseList"})
+@ToString(exclude = {"board", "user", "attendanceList", "accuseList"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "userAccount")
@@ -93,22 +93,22 @@ public class User {
     @Enumerated(EnumType.STRING)
     private LoginType userLoginType = NORMAL;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Accuse> accuseList = new ArrayList<>();
 
-    public void addAccuseList(Accuse accuse){
+    public void addAccuseList(Accuse accuse) {
         accuseList.add(accuse);
-        if(this!=accuse.getUser()){
+        if (this != accuse.getUser()) {
             accuse.setUser(this);
         }
     }
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Attendance> attendanceList = new ArrayList<>();
 
-    public void addAttendanceList(Attendance attendance){
+    public void addAttendanceList(Attendance attendance) {
         attendanceList.add(attendance);
-        if(this!=attendance.getUser()){
+        if (this != attendance.getUser()) {
             attendance.setUser(this);
         }
     }

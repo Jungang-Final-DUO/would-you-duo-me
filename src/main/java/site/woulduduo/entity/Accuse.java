@@ -20,7 +20,7 @@ public class Accuse {
     private long accuseNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_account")
+    @JoinColumn(name = "user_account")
     private User user;
 
     @Column(length = 100)

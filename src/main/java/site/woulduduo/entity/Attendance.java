@@ -23,15 +23,12 @@ public class Attendance {
     private long attendanceNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_account")
+    @JoinColumn(name = "user_account")
     private User user;
 
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDate attendanceDate;
-
-
-
 
 
 }
