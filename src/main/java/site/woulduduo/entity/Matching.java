@@ -5,6 +5,8 @@ import site.woulduduo.enumeration.MatchingStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -39,4 +41,15 @@ public class Matching {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chatting_no")
     private Chatting chatting;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "matching", fetch = FetchType.LAZY)
+    private List<Point> pointList = new ArrayList<>();
+
+    public void addPoint(Point point) {
+        pointList.add(point);
+        if (this != point.getMatching()) {
+            point.setMatching(this);
+        }
+    }
 }

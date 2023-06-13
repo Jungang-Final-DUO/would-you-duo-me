@@ -21,11 +21,11 @@ public class Chatting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chattingNo;
 
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_account")
     private User chattingFrom;
 
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_account")
     private User chattingTo;
 
@@ -37,18 +37,29 @@ public class Chatting {
     @OneToMany(mappedBy = "chatting")
     private List<Message> messages = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "chatting", fetch = FetchType.LAZY)
+    private List<Point> pointList = new ArrayList<>();
+
     //양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
-    public void addMatching(Matching matching){
+    public void addMatching(Matching matching) {
         matchings.add(matching);
-        if(this != matching.getChatting()){
+        if (this != matching.getChatting()) {
             matching.setChatting(this);
         }
     }
 
-    public void addMessage(Message message){
+    public void addMessage(Message message) {
         messages.add(message);
-        if(this != message.getChatting()){
+        if (this != message.getChatting()) {
             message.setChatting(this);
+        }
+    }
+
+    public void addPoint(Point point) {
+        pointList.add(point);
+        if (this != point.getChatting()) {
+            point.setChatting(this);
         }
     }
 }

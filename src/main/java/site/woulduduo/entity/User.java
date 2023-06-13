@@ -9,8 +9,10 @@ import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static site.woulduduo.enumeration.LoginType.NORMAL;
@@ -99,4 +101,16 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "reply_no")
     private List<Reply> replyList;
+
+    /* 포인트 증감 내역 */
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<Point> pointList = new ArrayList<>();
+
+    public void addPoint(Point point) {
+        pointList.add(point);
+        if (this != point.getUser()) {
+            point.setUser(this);
+        }
+    }
 }
