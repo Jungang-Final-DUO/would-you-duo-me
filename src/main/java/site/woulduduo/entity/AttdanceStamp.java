@@ -22,8 +22,8 @@ public class AttdanceStamp {
     private Long stampNo;
 
     //    onDelete = CascadeType.CASCADE) 맞을까...
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_account", nullable = false, referencedColumnName = "user_account", onDelete = CascadeType.CASCADE)
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "user_account", nullable = false, referencedColumnName = "user_account")
     private User user;
 
 
@@ -31,6 +31,6 @@ public class AttdanceStamp {
     private Integer stampType;
 
     @CreatedDate
-    @Column(updatable = false)
+    @Column(name="stamp_Month",updatable = false)
     private LocalDate stampMoth;
 }
