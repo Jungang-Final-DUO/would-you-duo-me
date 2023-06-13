@@ -16,21 +16,21 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "duo_attendance_stamp")
 public class AttdanceStamp {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "stamp_no", length = 19)
+    @Column(name = "stamp_no")
     private Long stampNo;
 
     //    onDelete = CascadeType.CASCADE) 맞을까...
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "user_account", nullable = false, referencedColumnName = "user_account")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_account")
     private User user;
 
-
-    @Column(name = "stamp_type", nullable = false, length = 1)
+    @Column(name = "stamp_type", nullable = false, columnDefinition = "INT(1)")
     private Integer stampType;
 
     @CreatedDate
-    @Column(name="stamp_Month",updatable = false)
+    @Column(name = "stamp_Month", updatable = false)
     private LocalDate stampMoth;
 }

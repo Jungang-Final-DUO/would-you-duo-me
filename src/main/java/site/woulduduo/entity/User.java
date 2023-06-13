@@ -10,6 +10,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -90,4 +92,15 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private LoginType userLoginType = NORMAL;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<AttdanceStamp> attdanceStampList = new ArrayList<>();
+
+    public void addAttendanceStamp(AttdanceStamp attdanceStamp) {
+        attdanceStampList.add(attdanceStamp);
+        if (this != attdanceStamp.getUser()) {
+            attdanceStamp.setUser(this);
+        }
+    }
 }
