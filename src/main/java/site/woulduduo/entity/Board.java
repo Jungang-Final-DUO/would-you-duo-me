@@ -21,6 +21,7 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardNo;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_account")
     private User user;
