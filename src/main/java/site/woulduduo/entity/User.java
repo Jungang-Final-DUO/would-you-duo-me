@@ -24,7 +24,6 @@ import static site.woulduduo.enumeration.LoginType.NORMAL;
 @Builder
 @Entity
 @Table(name = "duo_user")
-//@Check(constraints = "TIMESTAMPDIFF(current_timestamp, user_birthday) > 18")
 public class User {
 
     @Id
@@ -38,6 +37,7 @@ public class User {
     private String userPassword;
 
     @Column(name = "user_birthday", nullable = false)
+    @Check(constraints = "TIMESTAMPDIFF(YEAR, user_birthday, CURDATE()) > 18")
     private LocalDate userBirthday;
 
     @Column(name = "lol_ninkname", length = 20, nullable = false, unique = true)
