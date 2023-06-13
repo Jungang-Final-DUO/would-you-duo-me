@@ -17,7 +17,7 @@ public class Accuse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer accuseNo;
+    private long accuseNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_account")

@@ -96,7 +96,20 @@ public class User {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Accuse> accuseList = new ArrayList<>();
 
+    public void addAccuseList(Accuse accuse){
+        accuseList.add(accuse);
+        if(this!=accuse.getUser()){
+            accuse.setUser(this);
+        }
+    }
+
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Attendance> attendanceList = new ArrayList<>();
 
+    public void addAttendanceList(Attendance attendance){
+        attendanceList.add(attendance);
+        if(this!=attendance.getUser()){
+            attendance.setUser(this);
+        }
+    }
 }

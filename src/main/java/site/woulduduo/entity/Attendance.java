@@ -20,7 +20,7 @@ public class Attendance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer attendanceNo;
+    private long attendanceNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_account")
