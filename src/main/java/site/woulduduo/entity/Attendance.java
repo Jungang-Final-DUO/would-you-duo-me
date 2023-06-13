@@ -30,5 +30,4 @@ public class Attendance {
     @Column(updatable = false)
     private LocalDate attendanceDate;
 
-
 }
