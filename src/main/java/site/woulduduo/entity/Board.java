@@ -5,7 +5,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import site.woulduduo.enumeration.BoardCategory;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
