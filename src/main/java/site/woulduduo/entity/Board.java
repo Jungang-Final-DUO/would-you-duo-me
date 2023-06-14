@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "duo_board")
-public class Board {
+public class Board<T> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,4 +62,7 @@ public class Board {
             reply.setBoard(this);
         }
     }
+
+
+
 }
