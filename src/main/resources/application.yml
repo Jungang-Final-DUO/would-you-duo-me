@@ -1,3 +1,4 @@
+
 server:
   port: 8282
 
@@ -14,7 +15,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MariaDB106Dialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
@@ -29,5 +30,6 @@ springdoc:
     path: /myapi.html
 
 # riot api key
-riot-api:
+riot.api:
+  request.uri.common: https://kr.api.riotgames.com/lol
   key: RGAPI-6f8799f7-628b-4fc5-bb15-2069fc5109d4
