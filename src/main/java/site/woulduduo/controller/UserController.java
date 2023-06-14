@@ -20,7 +20,14 @@ import javax.servlet.http.HttpSession;
 @Slf4j
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
+
+    @GetMapping("/user/register-duo")
+    public String registerDUO(/*HttpSession session, */Model model) {
+
+        return "my-page/mypage-duoprofile";
+    }
 
     @GetMapping("/user/admin")
     //관리자 페이지 열기
