@@ -1013,11 +1013,14 @@
     <%--</div>--%>
 
     <%@ include file="common/footer.jsp" %>
+
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const socket = io("http://localhost:3000");
-        });
-    </script>
+    <script src="/assets/js/chatting/main.js"></script>
+
+<%--    <script>--%>
+<%--        document.addEventListener("DOMContentLoaded", function () {--%>
+<%--            const socket = io("http://localhost:3000");--%>
+<%--        });--%>
+<%--    </script>--%>
     </body>
 </html>

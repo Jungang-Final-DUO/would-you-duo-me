@@ -9,7 +9,8 @@
     <!--    favicon img-->
 </head>
 <body>
-
+<%@ include file="../chatting/chattingModal.jsp" %>
+<%@ include file="../chatting/chattingMessageModal.jsp" %>
 <div id="main-wrapper">
     <header>
         <h1 id="logo-wrapper">
