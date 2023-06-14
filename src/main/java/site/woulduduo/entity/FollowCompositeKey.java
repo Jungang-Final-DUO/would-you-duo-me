@@ -10,7 +10,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Builder
-public class FollowPK implements Serializable {
+public class FollowCompositeKey implements Serializable {
 
     private User followFrom;
 

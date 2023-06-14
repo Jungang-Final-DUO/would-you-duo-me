@@ -8,7 +8,7 @@ import java.util.List;
 
 @Setter
 @Getter
-@ToString(exclude = {"matchingList", "messageList"})
+@ToString(exclude = {"matchingList", "messageList", "chattingFrom", "chattingTo", "pointList"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "chattingNo")

@@ -6,10 +6,10 @@ import javax.persistence.*;
 
 @Setter
 @Getter
-@ToString(exclude = {""})
+@ToString(exclude = {"user", "chatting", "matching"})
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "")
+@EqualsAndHashCode(of = "pointNo")
 @Builder
 @Entity
 @Table(name = "duo_point")

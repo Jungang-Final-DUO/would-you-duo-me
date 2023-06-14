@@ -9,8 +9,12 @@ import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import static site.woulduduo.enumeration.LoginType.NORMAL;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +22,7 @@ import static site.woulduduo.enumeration.LoginType.NORMAL;
 
 @Setter
 @Getter
-@ToString(exclude = {"replyList", "userProfileList", "attendanceList", "accuseList"})
+@ToString(exclude = {"replyList", "userProfileList", "attendanceList", "accuseList", "followToList", "followFromList", "pointList", "boardList"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "userAccount")
@@ -97,30 +101,60 @@ public class User {
     @Enumerated(EnumType.STRING)
     private LoginType userLoginType = NORMAL;
 
-    /* 쓴 댓글들 */
+    // 쓴 댓글들
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Reply> replyList = new ArrayList<>();
 
-    /* 프로필 사진들 */
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    // 프로필 사진들
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Builder.Default
     private List<UserProfile> userProfileList = new ArrayList<>();
 
-    /* 포인트 증감 내역 */
+    // 포인트 증감 내역
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Builder.Default
     private List<Point> pointList = new ArrayList<>();
 
+    // 작성한 게시글들
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Board> boardList = new ArrayList<>();
+
+    // 내가 팔로우한 사람들
+    @OneToMany(mappedBy = "followFrom", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<Follow> followToList = new ArrayList<>();
+
+    // 나를 팔로우하는 사람들
+    @OneToMany(mappedBy = "followTo", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<Follow> followFromList = new ArrayList<>();
+
+    // 신고 내역
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<Accuse> accuseList = new ArrayList<>();
+
+    // 출석 내역
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<Attendance> attendanceList = new ArrayList<>();
+
+    // 출석도장 내
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<AttendanceStamp> attendanceStampList = new ArrayList<>();
+
     // 양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
-    public void addReplyList(Reply reply) {
+    public void addReply(Reply reply) {
         replyList.add(reply);
         if (this != reply.getUser()) {
             reply.setUser(this);
         }
     }
 
-    public void addUserProfileList(UserProfile userProfile) {
+    public void addUserProfile(UserProfile userProfile) {
         userProfileList.add(userProfile);
         if (this != userProfile.getUser()) {
             userProfile.setUser(this);
@@ -134,23 +168,45 @@ public class User {
         }
     }
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Accuse> accuseList = new ArrayList<>();
-
-    public void addAccuseList(Accuse accuse) {
+    public void addAccuse(Accuse accuse) {
         accuseList.add(accuse);
         if (this != accuse.getUser()) {
             accuse.setUser(this);
         }
     }
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Attendance> attendanceList = new ArrayList<>();
-
-    public void addAttendanceList(Attendance attendance) {
+    public void addAttendance(Attendance attendance) {
         attendanceList.add(attendance);
         if (this != attendance.getUser()) {
             attendance.setUser(this);
+        }
+    }
+
+    public void addBoard(Board board) {
+        boardList.add(board);
+        if (this != board.getUser()) {
+            board.setUser(this);
+        }
+    }
+
+    public void addFollowTo(Follow follow) {
+        followToList.add(follow);
+        if (this != follow.getFollowFrom()) {
+            follow.setFollowFrom(this);
+        }
+    }
+
+    public void addFollowFrom(Follow follow) {
+        followFromList.add(follow);
+        if (this != follow.getFollowTo()) {
+            follow.setFollowTo(this);
+        }
+    }
+
+    public void addAttendanceStamp(AttendanceStamp attendanceStamp) {
+        attendanceStampList.add(attendanceStamp);
+        if (this != attendanceStamp.getUser()) {
+            attendanceStamp.setUser(this);
         }
     }
 }

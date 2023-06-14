@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
-@ToString(exclude = {"chatting"})
+@ToString(exclude = {"chatting", "user"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "messageNo")
@@ -20,21 +20,22 @@ public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "message_no")
     private Long messageNo;
 
-    @ManyToOne
-    @JoinColumn(name = "user_account")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "message_from")
     private User user;
 
-    @Column(length = 100)
+    @Column(length = 100, name = "message_content")
     private String messageContent;
 
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(updatable = false, name = "mesage_time")
     private LocalDateTime messageTime;
 
     @Builder.Default
-    @Column(columnDefinition = "TINYINT(1)")
+    @Column(columnDefinition = "TINYINT(1)", name = "message_is_read")
     private boolean messageIsRead = false;
 
     @ManyToOne(fetch = FetchType.LAZY)

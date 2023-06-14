@@ -15,10 +15,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "attendanceNo")
 @ToString(exclude = {"user"})
-
 public class Attendance {
 
     @Id
+    @Column(name="attendance_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long attendanceNo;
 
@@ -27,8 +27,7 @@ public class Attendance {
     private User user;
 
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(updatable = false,name="attendance_date")
     private LocalDate attendanceDate;
-
 
 }
