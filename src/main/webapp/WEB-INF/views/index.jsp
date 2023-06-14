@@ -9,14 +9,17 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>WOULD U DUO</title>
     <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">
-    <%--    <link rel="stylesheet" href="/assets/css/main.css">--%>
-    <%--    <link rel="stylesheet" href="/assets/css/common/common.css">--%>
+
+    <%@ include file="common/static-head.jsp"%>
+    
+</head>
+<body>
+<!--    프로필 카드 상단 검색 조건 메뉴바 -->
+
+<div id="main-wrapper">
 
     <%@ include file="common/header.jsp" %>
-    <%--<body>--%>
-    <%--<div id="main-wrapper">--%>
 
-    <!--    프로필 카드 상단 검색 조건 메뉴바 -->
     <div id="search-bar">
         <!--        인풋 닉네임 검색 -->
         <label><input type="text" id="searchBy-nickname" placeholder="듀오 검색하기" name="keyword"></label>
@@ -1013,11 +1016,12 @@
     <%--</div>--%>
 
     <%@ include file="common/footer.jsp" %>
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const socket = io("http://localhost:3000");
-        });
-    </script>
-    </body>
+</div>
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const socket = io("http://localhost:3000");
+    });
+</script>
+</body>
 </html>
