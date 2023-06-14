@@ -12,14 +12,14 @@
     <title>Document</title>
     <!-- <link rel="stylesheet" href="/assets/css/common.css"> -->
     <link rel="stylesheet" href="/assets/css/my-page/mypage-duoprofile.css">
+    <%@ include file="../common/static-head.jsp" %>
     <!--    <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">-->
 </head>
-<!-- <body>
-    <div id="main-wrapper"> -->
-<%@ include file="../common/header.jsp" %>
-<%@ include file="../my-page/my-page.jsp" %>
-<!-- -----------------------페이지 인클루드 영역 ----------------------------------------------- -->
-
+<body>
+    <!-- -----------------------페이지 인클루드 영역 ----------------------------------------------- -->
+    <div id="main-wrapper">
+    <%@ include file="../common/header.jsp" %>
+    <%@ include file="../my-page/my-page.jsp" %>
     <!--    마이페이지 우측 콘텐츠 영역 -->
     <div id="my-page-content">
         <div id="duo-profile-box">

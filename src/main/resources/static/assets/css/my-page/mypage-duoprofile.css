@@ -1,7 +1,3 @@
-@import "../common/common.css";
-@import "../common/footer.css";
-@import "../common/header.css";
-
 body::-webkit-scrollbar {
     display: none;
 }
