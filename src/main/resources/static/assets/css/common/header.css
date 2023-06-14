@@ -146,16 +146,23 @@ header {
     content: "";
 }
 
-/* sign in modal */
+/* 모달 래퍼 공통 */
+.close {
+    display: none;
+}
 
+/* sign in modal */
 #sign-in-modal {
     right: -65px;
 
     height: 300px;
     z-index: 4;
 
-    /* 로그인 모달 안보이게 하고 싶을때 */
-    display: none;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+
+    color: #000;
 }
 
 /* triangle over modal */
@@ -186,8 +193,7 @@ header {
     background: #fff;
 }
 
-#sign-in-modal .input-wrapper label
-, #sign-in-modal .input-wrapper input {
+#sign-in-modal .input-wrapper label, #sign-in-modal .input-wrapper input {
     display: block;
 }
 

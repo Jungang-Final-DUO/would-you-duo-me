@@ -3,3 +3,4 @@
 
 <link rel="stylesheet" href="/assets/css/common/header.css">
 
+<script src="/assets/js/common/header.js" type="module" defer></script>
