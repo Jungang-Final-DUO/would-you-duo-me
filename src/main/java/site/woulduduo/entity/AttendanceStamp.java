@@ -10,7 +10,7 @@ import java.util.List;
 
 @Setter
 @Getter
-@ToString(exclude = "user")
+@ToString(exclude = {"user", "pointList"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "stampNo")

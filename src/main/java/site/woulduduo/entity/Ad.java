@@ -9,7 +9,7 @@ import java.util.List;
 
 @Setter
 @Getter
-@ToString
+@ToString(exclude = "pointList")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "adNo")
