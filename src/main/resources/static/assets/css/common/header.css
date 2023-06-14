@@ -1,0 +1,341 @@
+@import "common.css";
+@import "../main.css";
+@import "footer.css";
+
+/* header style */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#logo {
+    width: 150px;
+}
+
+/* navigation bar style */
+#nav-bar {
+    width: 23%;
+    height: 120px;
+
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+    align-items: flex-end;
+}
+
+/* user navigation bar style */
+#user-nav-bar {
+    width: 40%;
+
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.user-icon {
+    width: 40px;
+}
+
+.user-icon-wrapper {
+    position: relative;
+
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+/* my page modal style */
+#my-page-modal {
+    right: -40px;
+}
+
+#my-page-modal:before {
+    top: -27px;
+    right: 37px;
+}
+
+#my-page-header {
+    width: 100%;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+
+    display: flex;
+    align-items: center;
+}
+
+#profile-img-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+
+    margin-right: 20px;
+
+    background-size: 70px;
+    /* html 에 보여주기 위한 임시 정보 - 본 프로젝트에 합칠 때는 필요없음 */
+    background-image: url('https://i.namu.wiki/i/-BO7m4nlr6HAifi1A7oJrs6EFeP4z4gg7mvRy9sKhdDXnw_e0bKn7wo-0shhcAQuL3kvhs5YSeXuyxaMXDh9vjUx5qjK4ONEmonhqmyKHJ3sCLdgDBQI3SCnSlAn1ir7A37bgicvwlBFqyg-s-ouPw.webp');
+    background-position: top;
+}
+
+#nickname-wrapper {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+#user-info-wrapper {
+    width: 100%;
+
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+#user-info-wrapper div {
+    margin-bottom: 10px;
+}
+
+#my-page-btn-wrapper {
+    width: 280px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#my-page-btn-wrapper a {
+    width: 43%;
+    background: #52C1FF;
+    padding: 10px 15px;
+    border-radius: 20px;
+
+    color: #fff;
+    font-weight: bold;
+
+    text-align: center;
+}
+
+/* user modal common */
+.user-modal {
+    position: absolute;
+    top: 100%;
+    padding: 30px;
+    margin-top: 30px;
+
+    background: #fff;
+    border-radius: 40px;
+    border: 2px solid #000;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-flow: column;
+
+    /* 모달 창 전부 사라지게 */
+    /*display: none;*/
+}
+
+.user-modal:before {
+    width: 0;
+    height: 0;
+    display: inline-block;
+    border-bottom: 30px solid #fff;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+
+    position: absolute;
+
+    content: "";
+}
+
+/* sign in modal */
+
+#sign-in-modal {
+    right: -65px;
+
+    height: 300px;
+    z-index: 4;
+
+    /* 로그인 모달 안보이게 하고 싶을때 */
+    display: none;
+}
+
+/* triangle over modal */
+#sign-in-modal:before {
+    /* 로그인 버튼 바로 아래에 위치하도록 */
+    top: -27px;
+    right: 64px;
+}
+
+/* sign-in input tag common */
+#sign-in-modal .input-wrapper label {
+    margin-bottom: 5px;
+
+    font-size: 1.2em;
+}
+
+#sign-in-modal .input-wrapper input {
+    width: 270px;
+    height: 30px;
+    background: #F2F2F2;
+    border-radius: 5px;
+    border: none;
+
+    caret-color: #4075FF;
+}
+
+#sign-in-modal .input-wrapper input:focus {
+    background: #fff;
+}
+
+#sign-in-modal .input-wrapper label
+, #sign-in-modal .input-wrapper input {
+    display: block;
+}
+
+/* sns btn wrapper */
+#sns-sign-in-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    width: 100%;
+}
+
+#sns-sign-in-wrapper div {
+    width: 32px;
+    border-radius: 5px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#kakao-wrapper {
+    background: #FFEB3B;
+}
+
+#google-wrapper {
+    height: 32px;
+
+    border: 1px solid #8F8F8F;
+}
+
+#facebook-wrapper {
+    background: #1877F2;
+}
+
+#sns-sign-in-wrapper img {
+    width: 30px;
+}
+
+/* google icon is smaller */
+#sns-sign-in-wrapper #sign-in-google {
+    width: 20px;
+}
+
+/* auto login wrapper */
+#auto-sign-in-wrapper {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#sign-in-auto-login {
+    border: none;
+    background: #F2F2F2;
+}
+
+/* sign in submit btn style */
+#sign-in-submit-btn {
+    width: 100px;
+    padding: 5px;
+    background: #52C1FF;
+    color: #fff;
+
+    border-radius: 5px;
+}
+
+/* pw forgot style */
+#pw-forgot-wrapper a {
+    font-size: 0.9em;
+    color: #2E93CC;
+}
+
+/* common navigation bar style */
+#common-nav-bar {
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.common-menu-wrapper > a {
+    font-size: 25px;
+    color: #fff;
+}
+
+.common-menu-wrapper > a:hover {
+    font-weight: 600;
+    color: #FFE2B6;
+}
+
+/* ad-wrapper style */
+#ad-wrapper {
+    height: 120px;
+    background: #fff;
+
+    text-align: center;
+    line-height: 120px;
+}
+
+/* fixed-btn-wrapper */
+#fixed-btn-wrapper {
+    position: fixed;
+    right: 280px;
+    bottom: 50px;
+
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+
+    z-index: 2;
+}
+
+.fixed-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #000;
+    background: #fff;
+}
+
+.fixed-btn:active {
+    opacity: 0.8;
+}
+
+.fixed-btn > img {
+    width: 30px;
+}
+
+#chatting-btn {
+    margin-top: 10px;
+
+    position: relative;
+}
+
+#unread-chatting-count {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+
+    display: none;
+    /* 값이 있을때 block으로 바꾸기 */
+    /* display: block */
+    background: #FF0000;
+    padding: 1px;
+    border-radius: 5px;
+
+    color: #fff;
+    font-weight: bold;
+}
