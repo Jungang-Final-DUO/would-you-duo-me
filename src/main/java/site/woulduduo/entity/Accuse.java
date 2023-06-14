@@ -20,7 +20,7 @@ public class Accuse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long accuseNo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_account")
     private User user;
 

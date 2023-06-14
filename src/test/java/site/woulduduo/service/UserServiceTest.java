@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
+import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.enumeration.Position;
 
 import javax.servlet.http.HttpSession;
@@ -39,6 +42,17 @@ class UserServiceTest {
         boolean b = userService.registerDUO(userCommentRequestDTO);
 
         assertTrue(b);
+    }
+
+    @Test
+    @DisplayName("관리자 유저 리스트 dto 변환")
+    void userExchangeDTO(){
+//        AdminSearchType search = new AdminSearchType();
+//        search.setSize(3);
+//        search.getKeyword();
+//        ListResponseDTO<UsersByAdminResponseDTO> userListByAdmin = userService.getUserListByAdmin(search);
+//        System.out.println("userListByAdmin = " + userListByAdmin);
+
     }
 
 }

@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;

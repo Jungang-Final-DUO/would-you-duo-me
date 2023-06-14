@@ -12,6 +12,7 @@ import site.woulduduo.repository.UserRepository;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import site.woulduduo.dto.request.page.AdminSearchType;
@@ -70,23 +71,22 @@ public class UserService {
     public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type){
 
         List<User> all = userRepository.findAll();
-            all.forEach(user -> {
+        List<UsersByAdminResponseDTO> userListByAdmin = new ArrayList<>();
+        UsersByAdminResponseDTO dto = new UsersByAdminResponseDTO();
+        for (User user : all) {
+            //bc,rc,rc,fc 카운터 찾는 메서드
 
-                //userPoint 찾기
-                Long byUserCurrentPoint = userRepository.findByUserCurrentPoint(user.getUserAccount());
+            dto.setUserAccount(user.getUserAccount());
+            dto.setGender(user.getUserGender().toString());
+            dto.setBoardCount(3);
+            dto.setReplyCount(3);
+            dto.setReportCount(3);
+            dto.setPoint(user.getUserCurrentPoint());
+            dto.setFollowCount(3);
 
-
-                UsersByAdminResponseDTO dto
-                        =new UsersByAdminResponseDTO();
-                dto.setUserAccount(user.getUserAccount());
-                dto.setGender(user.getUserGender().toString());
-//                dto.setBoardCount();
-//                dto.setReplyCount();
-//                dto.setReportCount();
-                dto.setPoint(user.getUserCurrentPoint());
-//                dto.setFollowCount();
-            });
         }
+        List<UsersByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
+        System.out.println("userListByAdmin1 = " + userListByAdmin1);
 
         return null;
     }

@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="/src/main/resources/static/css/amdin/admin.css">
+<link rel="stylesheet" href="/assets/css/amdin/admin.css">
 
 </head>
 <body>
