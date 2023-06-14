@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "attendanceNo")
 @ToString(exclude = {"user"})
-
 public class Attendance {
 
     @Id
@@ -24,15 +23,11 @@ public class Attendance {
     private long attendanceNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_account")
+    @JoinColumn(name = "user_account")
     private User user;
 
     @CreationTimestamp
     @Column(updatable = false,name="attendance_date")
     private LocalDate attendanceDate;
-
-
-
-
 
 }

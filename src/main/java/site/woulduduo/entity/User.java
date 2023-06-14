@@ -3,50 +3,57 @@ package site.woulduduo.entity;
 import lombok.*;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GeneratorType;
-import org.hibernate.annotations.UpdateTimestamp;
+import site.woulduduo.enumeration.Gender;
+import site.woulduduo.enumeration.LoginType;
+import site.woulduduo.enumeration.Position;
+import site.woulduduo.enumeration.Tier;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+import javax.persistence.CascadeType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import static site.woulduduo.enumeration.LoginType.NORMAL;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import static site.woulduduo.enumeration.LoginType.NORMAL;
+
 @Setter
 @Getter
-@ToString(exclude = {"board", "user","attendanceList","accuseList"})
+@ToString(exclude = {"replyList", "userProfileList", "attendanceList", "accuseList", "followToList", "followFromList", "pointList", "boardList"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "userAccount")
 @Builder
 @Entity
 @Table(name = "duo_user")
-@Check(constraints = "current_date - user_birthday >= 19")
 public class User {
 
     @Id
-    @Column(length = 50)
+    @Column(name = "user_account", length = 50)
     private String userAccount;
 
-    @Column(length = 15, nullable = false, unique = true)
+    @Column(name = "user_nickname", length = 15, nullable = false, unique = true)
     private String userNickname;
 
-    @Column(nullable = false)
+    @Column(name = "user_password", nullable = false)
     private String userPassword;
 
-    @Column(nullable = false)
+    @Column(name = "user_birthday", nullable = false)
+    @Check(constraints = "TIMESTAMPDIFF(YEAR, user_birthday, CURDATE()) > 18")
     private LocalDate userBirthday;
 
-    @Column(length = 20, nullable = false, unique = true)
+    @Column(name = "lol_ninkname", length = 20, nullable = false, unique = true)
     private String lolNickname;
 
-    @Column(nullable = false)
+    @Column(name = "user_gender", nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender userGender;
 
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(name = "user_join_date", updatable = false)
     private LocalDate userJoinDate;
 
     private LocalDateTime userRecentLoginDate;
@@ -90,26 +97,116 @@ public class User {
     @Builder.Default
     private String userSessionId = "none";
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private LoginType userLoginType = NORMAL;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    // 쓴 댓글들
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Reply> replyList = new ArrayList<>();
+
+    // 프로필 사진들
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<UserProfile> userProfileList = new ArrayList<>();
+
+    // 포인트 증감 내역
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<Point> pointList = new ArrayList<>();
+
+    // 작성한 게시글들
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Board> boardList = new ArrayList<>();
+
+    // 내가 팔로우한 사람들
+    @OneToMany(mappedBy = "followFrom", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<Follow> followToList = new ArrayList<>();
+
+    // 나를 팔로우하는 사람들
+    @OneToMany(mappedBy = "followTo", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<Follow> followFromList = new ArrayList<>();
+
+    // 신고 내역
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
     private List<Accuse> accuseList = new ArrayList<>();
 
-    public void addAccuseList(Accuse accuse){
+    // 출석 내역
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<Attendance> attendanceList = new ArrayList<>();
+
+    // 출석도장 내
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<AttendanceStamp> attendanceStampList = new ArrayList<>();
+
+    // 양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
+    public void addReply(Reply reply) {
+        replyList.add(reply);
+        if (this != reply.getUser()) {
+            reply.setUser(this);
+        }
+    }
+
+    public void addUserProfile(UserProfile userProfile) {
+        userProfileList.add(userProfile);
+        if (this != userProfile.getUser()) {
+            userProfile.setUser(this);
+        }
+    }
+
+    public void addPoint(Point point) {
+        pointList.add(point);
+        if (this != point.getUser()) {
+            point.setUser(this);
+        }
+    }
+
+    public void addAccuse(Accuse accuse) {
         accuseList.add(accuse);
-        if(this!=accuse.getUser()){
+        if (this != accuse.getUser()) {
             accuse.setUser(this);
         }
     }
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Attendance> attendanceList = new ArrayList<>();
-
-    public void addAttendanceList(Attendance attendance){
+    public void addAttendance(Attendance attendance) {
         attendanceList.add(attendance);
-        if(this!=attendance.getUser()){
+        if (this != attendance.getUser()) {
             attendance.setUser(this);
+        }
+    }
+
+    public void addBoard(Board board) {
+        boardList.add(board);
+        if (this != board.getUser()) {
+            board.setUser(this);
+        }
+    }
+
+    public void addFollowTo(Follow follow) {
+        followToList.add(follow);
+        if (this != follow.getFollowFrom()) {
+            follow.setFollowFrom(this);
+        }
+    }
+
+    public void addFollowFrom(Follow follow) {
+        followFromList.add(follow);
+        if (this != follow.getFollowTo()) {
+            follow.setFollowTo(this);
+        }
+    }
+
+    public void addAttendanceStamp(AttendanceStamp attendanceStamp) {
+        attendanceStampList.add(attendanceStamp);
+        if (this != attendanceStamp.getUser()) {
+            attendanceStamp.setUser(this);
         }
     }
 }

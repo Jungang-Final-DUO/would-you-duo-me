@@ -2,7 +2,6 @@ package site.woulduduo.entity;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,13 +19,14 @@ public class Reply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "reply_no")
     private Long replyNo;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "reply_content", nullable = false, length = 100)
     private String replyContent;
 
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(name = "reply_written_date", updatable = false)
     private LocalDateTime replyWrittenDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
