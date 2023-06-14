@@ -10,23 +10,14 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="stylesheet" href="/assets/css/common.css">
-    <link rel="stylesheet" href="/assets/css/mypage/mypage-duoprofile.css">
+    <!-- <link rel="stylesheet" href="/assets/css/common.css"> -->
+    <link rel="stylesheet" href="/assets/css/my-page/mypage-duoprofile.css">
     <!--    <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">-->
 </head>
-<body>
-
-<div id="main-wrapper">
-    <!--    마이페이지 좌측 메뉴바 영역 -->
-    <div id="my-page-sidebar">
-        <div id="my-page-menu-list">
-            <p class="my-page-menu">내 정보 확인 / 변경</p>
-            <p id = "register-duo-profile" class="my-page-menu">듀오 프로필 등록 / 수정</p>
-            <p class = "my-page-menu">내가 쓴 글 / 댓글</p>
-            <p id = "mypage-calendar" class="my-page-menu">출석 체크</p>
-            <p class="my-page-menu">비밀번호 변경</p>
-        </div>
-    </div>
+<!-- <body>
+    <div id="main-wrapper"> -->
+<%@ include file="../common/header.jsp" %>
+<%@ include file="../my-page/my-page.jsp" %>
 <!-- -----------------------페이지 인클루드 영역 ----------------------------------------------- -->
 
     <!--    마이페이지 우측 콘텐츠 영역 -->

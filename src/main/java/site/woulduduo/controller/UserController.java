@@ -18,8 +18,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/user/register-duo")
-    public String registerDUO(/*HttpSession session*/, Model model) {
+    public String registerDUO(/*HttpSession session, */Model model) {
 
-        return "";
+        return "my-page/mypage-duoprofile";
     }
 }
