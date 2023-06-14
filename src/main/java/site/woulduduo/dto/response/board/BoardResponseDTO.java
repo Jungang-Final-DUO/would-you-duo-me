@@ -13,7 +13,7 @@ import java.util.List;
 
 @Setter@Getter
 @ToString
-public class BoardResponseDTO<T>{
+public class BoardResponseDTO{
     private Long boardNo;
     private int boardLike;
 
@@ -32,7 +32,7 @@ public class BoardResponseDTO<T>{
 
 
 
-    public BoardResponseDTO (Board<T> board){
+    public BoardResponseDTO (Board board){
 
         this.boardNo = board.getBoardNo();
         this.boardLike = board.getBoardLike();

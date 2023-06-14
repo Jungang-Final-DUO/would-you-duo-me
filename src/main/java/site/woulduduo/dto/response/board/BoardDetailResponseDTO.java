@@ -47,13 +47,14 @@ public class BoardDetailResponseDTO {
         //reply 타입을 list 배열의 길이
         //reply 댓글목록에서 댓글 수 를 뽑 는 법
         // list 길이
-        this.replyCount = board.getReplyList();
+        this.replyCount = board.getReplyList().size();
 //        this.replyCount = board.getReplyList();
         this.boardCategory =board.getBoardCategory();
         this.userNickname = board.getUser();
         this.writtenDate = board.getBoardWrittenDate();
         this.boardContent = board.getBoardContent();
-        this.likeStatus = board.getlikeStatus();
+        this.likeStatus = likeStatus;
+        //likestatus 맞나?
 
 
 

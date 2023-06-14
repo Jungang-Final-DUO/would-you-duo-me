@@ -1,5 +1,6 @@
 package site.woulduduo.dto.request.board;
 
+import site.woulduduo.entity.Board;
 import site.woulduduo.enumeration.BoardCategory;
 
 import javax.validation.constraints.NotBlank;
@@ -15,4 +16,16 @@ public class BoardWriteRequestDTO {
 
     private String boardContent;
 
+//    public BoardWriteRequestDTO(Board saved) {
+//    }
+
+
+    public Board toEntity(){
+        return Board.builder()
+                .boardTitle(this.boardTitle)
+                .boardCategory(this.boardCategory)
+                .boardContent(this.boardContent)
+                .build();
+
+    }
 }

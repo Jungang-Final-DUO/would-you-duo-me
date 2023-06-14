@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "duo_board")
-public class Board<T> {
+public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

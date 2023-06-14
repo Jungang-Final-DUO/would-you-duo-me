@@ -1,8 +1,15 @@
 package site.woulduduo.dto.request.board;
 
+import lombok.*;
+import site.woulduduo.entity.Board;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+@Setter @Getter
+@ToString @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 public class BoardModifyRequestDTO {
     private Long boardNo;
 
@@ -12,4 +19,6 @@ public class BoardModifyRequestDTO {
 
     private String boardContent;
 
+    public BoardModifyRequestDTO(Board modfiedBoard) {
+    }
 }
