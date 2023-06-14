@@ -1,0 +1,55 @@
+package site.woulduduo.service;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.user.UserCommentRequestDTO;
+import site.woulduduo.entity.User;
+import site.woulduduo.enumeration.Gender;
+import site.woulduduo.enumeration.Tier;
+import site.woulduduo.repository.UserRepository;
+
+import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.util.Optional;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+@Transactional
+public class UserService {
+    private final UserRepository userRepository;
+
+    final String id = "abc1234";
+    public boolean registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
+
+        User exUser = User.builder()
+                .userSessionId("abc1234@ddd.com")
+                .userAccount("abc1234@ddd.com")
+                .userPassword("12345678")
+                .lolTier(Tier.CHA)
+                .userGender(Gender.M)
+                .userBirthday(LocalDate.of(2000, 03, 16))
+                .userNickname("HongChaa")
+                .lolNickname("HongChaa")
+                .build();
+
+        userRepository.save(exUser);
+
+        Optional<User> user = userRepository.findById(exUser.getUserSessionId());
+
+        System.out.println("user = " + user);
+        if(user.isEmpty()) {
+            return false;
+        }
+        user.ifPresent(u -> {
+            u.setUserPosition(dto.getUserPosition());
+            u.setUserComment(dto.getUserComment());
+            u.setUserMatchingPoint(dto.getUserMatchingPoint());
+
+            userRepository.save(u);
+        });
+        return true;
+    }
+}
