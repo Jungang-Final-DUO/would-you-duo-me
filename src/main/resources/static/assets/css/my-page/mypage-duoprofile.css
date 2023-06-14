@@ -2,8 +2,7 @@ body::-webkit-scrollbar {
     display: none;
 }
 
-#main-wrapper {
-    /*border: 1px solid #fff;*/
+#my-page-wrapper {
     display: flex;
 }
 
