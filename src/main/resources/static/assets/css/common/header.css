@@ -298,6 +298,8 @@ header {
     display: flex;
     flex-flow: column;
     justify-content: space-between;
+
+    z-index: 2;
 }
 
 .fixed-btn {
@@ -306,8 +308,6 @@ header {
     border-radius: 50%;
     border: 2px solid #000;
     background: #fff;
-
-    z-index: 2;
 }
 
 .fixed-btn:active {
@@ -329,7 +329,9 @@ header {
     top: 1px;
     right: 1px;
 
-    display: block;
+    display: none;
+    /* 값이 있을때 block으로 바꾸기 */
+    /* display: block */
     background: #FF0000;
     padding: 1px;
     border-radius: 5px;
