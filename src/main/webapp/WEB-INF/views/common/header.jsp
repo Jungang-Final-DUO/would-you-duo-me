@@ -16,7 +16,7 @@
                         <img src="/assets/img/header/sign-in.png" alt="로그인 아이콘" class="user-icon">
                     </button>
                     <!--         로그인 모달           -->
-                    <div class="modal-wrapper close">
+                    <div class="modal-wrapper invisible">
                         <div id="sign-in-modal" class="user-modal">
                             <div id="id-input-wrapper" class="input-wrapper">
                                 <label for="sign-in-user-account">아이디</label>

@@ -147,7 +147,7 @@ header {
 }
 
 /* 모달 래퍼 공통 */
-.close {
+.invisible {
     display: none;
 }
 
