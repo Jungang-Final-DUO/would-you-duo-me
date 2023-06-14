@@ -1,0 +1,319 @@
+@import "common/common.css";
+
+body {
+    color: white;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* 모든 검색 조건 묶어놓은 메뉴바 */
+#search-bar {
+    /*border: 1px solid #fff;*/
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
+    /*position: absolute;*/
+    /*top: 280px;*/
+    background-color: #111E30;
+    /*z-index: 2;*/
+    width: 1400px;
+    margin-top: 20px;
+}
+
+/* 검색창 */
+#searchBy-nickname {
+    /*border: 1px solid #fff;*/
+    width: 200px;
+    height: 30px;
+    font-size: 16px;
+    line-height: 30px;
+    outline: none;
+}
+
+/* 포지션 검색 */
+#searchBy-position {
+    /*border: 1px solid #fff;*/
+    display: flex;
+    width: 180px;
+    height: 30px;
+    margin-left: 20px;
+}
+
+.position-option {
+    display: block;
+    width: 30px;
+    cursor: pointer;
+}
+
+.select-position {
+    /*border: 1px solid #fff;*/
+    margin: 0;
+    padding: 0;
+    display: none;
+}
+
+.select-position:checked + .position-image{
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.position-image {
+    /*border: 1px solid #fff;*/
+    width: 25px;
+    margin: 0;
+    padding: 0;
+    /*background: #242526;*/
+}
+
+.position-image:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* 성별 검색 */
+#searchBy-gender {
+    /*border: 1px solid #fff;*/
+    font-size: 18px;
+    display: flex;
+    height: 30px;
+    margin-left: 20px;
+}
+
+.gender-option {
+    display: block;
+    width: 40px;
+    text-align: center;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+    line-height: 30px;
+    cursor: pointer;
+    /*background: #242526;*/
+}
+
+.gender-option:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+ }
+
+.select-gender {
+    display: none;
+}
+
+.select-gender:checked + label {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+}
+
+/* 티어 검색 */
+#searchByTier {
+    /*border: 1px solid #fff;*/
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    height: 50px;
+    margin-left: 20px;
+}
+
+.tier-option {
+    display: block;
+    width: 55px;
+    cursor: pointer;
+}
+
+.select-tier {
+    display: none;
+}
+
+.tier-image {
+    width: 60px;
+    opacity: 50%;
+}
+
+.select-tier:checked + .tier-image {
+    opacity: 100%;
+}
+
+.tier-image:hover {
+    opacity: 100%;
+}
+
+/* 전체보기, 팔로잉, 정렬 박스 */
+#sort-box {
+    /*border: 1px solid #fff;*/
+    font-size: 18px;
+    width: 300px;
+    display: flex;
+    margin-left: 20px;
+}
+
+.sortby-menubar {
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.sortby-menubar:hover {
+    font-weight: 700;
+}
+
+/* 정렬 셀렉트 */
+#order-list {
+    width: 100px;
+    font-size: 18px;
+    background-color: #111E30;
+    color: white;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+#order-list:hover {
+    /*font-weight: 700;*/
+}
+
+/*---------------------------------검색 필터 영역 끝------------------------------------------*/
+
+/* 프로필 카드 영역 */
+#profile-cards-wrapper {
+    /*border: 1px solid #fff;*/
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+}
+
+/* 프로필 카드 1장 */
+.duo-profile {
+    /*border: 1px solid #fff;*/
+    display: flex;
+    padding: 10px;
+    width: 335px;
+    height: 220px;
+    background: #242F4B;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    position: relative;
+    margin-left: 16px;
+    margin-bottom: 20px;
+}
+
+#profile-cards-wrapper .duo-profile:nth-child(4n + 1){
+    margin-left: 0;
+}
+
+/* 듀오 프로필 상단 티어 아이콘 */
+.duo-tier {
+    position: absolute;
+    left: -8px;
+    top: -30px;
+    width: 60px;
+}
+
+.duo-profile .profile-left-side{
+    /*border: 1px solid #fff;*/
+    width: 40%;
+    margin-left: 4px;
+}
+
+/* 프로필 사진 영역 */
+.profile-frame {
+    /*border: 1px solid #fff;*/
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+}
+
+.profile-image {
+    width: 100%;
+}
+
+/* sns 아이콘 영역 */
+.profile-sns {
+    display: flex;
+}
+
+.sns-image {
+    width: 30px;
+    margin-top: 12px;
+    margin-right: 3px;
+}
+
+.profile-right-side {
+    /*border: 1px solid #fff;*/
+    width: 50%;
+    margin-left: 25px;
+    position: relative;
+}
+
+/* 포지션, 닉네임, 하트 영역 */
+.position-nickname {
+    display: flex;
+}
+
+.preferred-position {
+    /*border: 1px solid #fff;*/
+    width: 20px;
+}
+
+.user-nickname {
+    /*border: 1px solid #fff;*/
+    width: fit-content;
+    margin-left: 10px;
+}
+
+.follow-status {
+    width: 20px;
+    position: absolute;
+    right: 0;
+}
+
+/* 호감도, 매칭포인트 */
+.rate-matching-point {
+    display: flex;
+    margin-top: 5px;
+}
+
+.matching-point-box {
+    margin-left: 15px;
+}
+
+.rate-matching-point-image {
+    width: 15px;
+}
+
+.rate-matching-point-image + p {
+    margin-left: 5px;
+}
+
+/* 자기 소개 */
+.profile-comment {
+    /*border: 1px solid #fff;*/
+    margin-top: 20px;
+    width: 90%;
+}
+
+.profile-comment > p {
+    font-size: 15px;
+    line-height: 1.3em;
+}
+
+/* 모스트픽 */
+.champ-list {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.most-pic {
+    width: 45px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-right: 7px;
+}
+
+.most-pic > img {
+    width: 45px;
+}
