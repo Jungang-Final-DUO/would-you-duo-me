@@ -5,21 +5,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.enumeration.Gender;
-import site.woulduduo.enumeration.Tier;
+import site.woulduduo.enumeration.Position;
 import site.woulduduo.repository.UserRepository;
 
 import javax.transaction.Transactional;
-
 import java.time.LocalDate;
-
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
-import site.woulduduo.dto.request.user.UserCommentRequestDTO;
-import site.woulduduo.enumeration.Position;
-
-import javax.servlet.http.HttpSession;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -50,7 +44,6 @@ class UserServiceTest {
                 .userBirthday(LocalDate.of(2000, 1, 1))
                 .lolNickname("코뚱잉")
                 .userGender(Gender.M)
-                .lolTier(Tier.MAS)
                 .build();
 
         // When
@@ -71,7 +64,6 @@ class UserServiceTest {
                 .userBirthday(LocalDate.of(2000, 1, 1))
                 .lolNickname("lolnickname1")
                 .userGender(Gender.M)
-                .lolTier(Tier.MAS)
                 .build();
 
         UserRegisterRequestDTO dto2 = UserRegisterRequestDTO.builder()
@@ -101,7 +93,6 @@ class UserServiceTest {
                 .userBirthday(LocalDate.of(2000, 1, 1))
                 .lolNickname("lolnickname1")
                 .userGender(Gender.M)
-                .lolTier(Tier.BRO)
                 .build();
 
         UserRegisterRequestDTO dto2 = UserRegisterRequestDTO.builder()
@@ -111,7 +102,6 @@ class UserServiceTest {
                 .userBirthday(LocalDate.of(2000, 2, 2))
                 .lolNickname("lolnickname2")
                 .userGender(Gender.F)
-                .lolTier(Tier.SIL)
                 .build();
 
         // When
