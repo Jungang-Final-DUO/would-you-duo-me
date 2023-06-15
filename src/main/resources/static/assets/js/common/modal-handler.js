@@ -1,10 +1,12 @@
+import {setAutofocus} from "../chatting/chatting-modal.js";
+
 function modalHandler($dropDownBtn) {
 
     $dropDownBtn.onclick = e => {
         e.preventDefault();
-
-        e.target.closest('.modal-btn').nextElementSibling.classList.toggle('invisible');
-
+        const target = e.target.closest('.modal-btn').nextElementSibling;
+        target.classList.toggle('invisible');
+        setAutofocus(target);
     }
 }
 

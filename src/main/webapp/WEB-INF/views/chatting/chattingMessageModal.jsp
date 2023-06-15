@@ -26,7 +26,7 @@
         <div class="chatting-message-body"></div>
 
             <form id = "chat-form" class="chatting-message-input-box">
-                <input id = "msg" class="message-send-box" type="text" placeholder="메시지를 입력해주세요" required autofocus>
+                <input id = "msg" class="message-send-box" type="text" placeholder="메시지를 입력해주세요" required>
                 <button class="message-send-btn">전송</button>
             </form>
         </div>
