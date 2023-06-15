@@ -15,6 +15,7 @@ import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.service.UserService;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -39,7 +40,7 @@ public class UserController {
 
     //관리자 페이지 리스트 가져오기
     public ResponseEntity<?> getUserListByAdmin(AdminSearchType type){
-        ListResponseDTO<UsersByAdminResponseDTO>
+        List<UsersByAdminResponseDTO>
                 userListByAdmin = userService.getUserListByAdmin(type);
 
 

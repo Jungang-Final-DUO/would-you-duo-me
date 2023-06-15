@@ -2,6 +2,10 @@ package site.woulduduo.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
@@ -68,13 +72,25 @@ public class UserService {
         return true;
     }
 
-    public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type){
+    public List<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type){
 
-        List<User> all = userRepository.findAll();
+        // Pageable객체 생성
+        Pageable pageable = PageRequest.of(
+                type.getPage() - 1,
+                type.getSize(),
 
+                Sort.by("createDate").descending()
+        );
+
+        //전체불러오기
+        Page<User> all = userRepository.findAll(pageable);
+        //user정보
+        List<User> users = all.getContent();
+
+        //dto리스트생성 및 dto 생성
         List<UsersByAdminResponseDTO> userListByAdmin = new ArrayList<>();
         UsersByAdminResponseDTO dto = new UsersByAdminResponseDTO();
-        for (User user : all) {
+        for (User user : users) {
             //bc,rc,rc,fc 카운터 찾는 메서드
             long accuseCount = accuseRepository.countByUser(user);
             long boardCount = boardRepository.countByUser(user);
@@ -95,7 +111,7 @@ public class UserService {
         List<UsersByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
         System.out.println("userListByAdmin1 = " + userListByAdmin1);
 
-        return null;
+        return userListByAdmin1;
     }
 
 

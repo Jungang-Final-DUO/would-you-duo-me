@@ -8,7 +8,7 @@ import site.woulduduo.entity.User;
 
 public interface FollowRepository extends JpaRepository<Follow, FollowCompositeKey> {
 
-    @Query(value="SELECT count(*) FROM duo_user_follow WHERE follow_to =:userAccount ", nativeQuery = true)
-    Long findByUserfollowTo(String userAccount);
+//    @Query(value="SELECT count(*) FROM duo_user_follow WHERE follow_to =:userAccount ", nativeQuery = true)
+//    Long findByUserfollowTo(String userAccount);
 
 }

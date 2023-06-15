@@ -32,13 +32,6 @@ class UserRepositoryTest {
     AccuseRepository accuseRepository;
 
     @Test
-    @DisplayName("전제 조회")
-    void findAll(){
-        List<User> all = userRepository.findAll();
-        System.out.println("all = " + all);
-    }
-
-    @Test
     @DisplayName("사용자 저장")
     void saveTest(){
         User user2 = User.builder()
@@ -99,32 +92,37 @@ class UserRepositoryTest {
     }
 
 
+
     @BeforeEach
     void bulkInsert() {
         // 학생을 147명 저장
         for (int i = 1; i <= 147; i++) {
-            User s = User.builder()
+            User user = User.builder()
                     .userAccount("i")
                     .userNickname("i")
                     .userPassword("i")
-                    .userCurrentPoint(i)
+                    .userCurrentPoint(123)
                     .userBirthday(LocalDate.of(1999,11,07))
                     .lolNickname("i")
                     .userGender(Gender.F)
                     .lolTier(Tier.DIA)
-//                .accuseList(Accuse)
                     .build();
-            userRepository.save(s);
+            userRepository.save(user);
         }
+    }
 
-
-}
     @Test
-    @DisplayName("사용자 포인트 조회")
+    @DisplayName("전제 조회")
+    void findAll(){
+        List<User> all = userRepository.findAll();
+        System.out.println("all = " + all);
+    }
+    @Test
+    @DisplayName("페이징처리")
     void searchTest() {
 
          int page =1;
-         String keyword = "123";
+         String keyword = "";
          int size =10;
 
         Pageable pageInfo

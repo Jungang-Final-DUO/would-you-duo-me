@@ -8,9 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.page.AdminSearchType;
+import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
+import site.woulduduo.enumeration.AdminViewType;
 import site.woulduduo.enumeration.Position;
 
 import javax.servlet.http.HttpSession;
@@ -47,12 +49,11 @@ class UserServiceTest {
     @Test
     @DisplayName("관리자 유저 리스트 dto 변환")
     void userExchangeDTO(){
-//        AdminSearchType search = new AdminSearchType();
-//        search.setSize(3);
-//        search.getKeyword();
-//        ListResponseDTO<UsersByAdminResponseDTO> userListByAdmin = userService.getUserListByAdmin(search);
-//        System.out.println("userListByAdmin = " + userListByAdmin);
+        AdminSearchType build = AdminSearchType.builder()
+                .adminViewType(AdminViewType.TODAY)
+                .build();
 
+        userService.getUserListByAdmin(build);
     }
 
 }
