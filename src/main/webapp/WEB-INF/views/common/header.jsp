@@ -10,14 +10,14 @@
 
     <nav id="nav-bar">
         <nav id="user-nav-bar">
-            <div class="user-icon-wrapper">
-                <form action="/user/sign-in" method="post">
-                    <button id="sign-in-btn" class="modal-btn">
-                        <img src="/assets/img/header/sign-in.png" alt="로그인 아이콘" class="user-icon">
-                    </button>
-                    <!--         로그인 모달           -->
-                    <dialog>
-                        <div class="modal-wrapper">
+            <c:if test="true">
+                <div class="user-icon-wrapper">
+                    <form action="/user/sign-in" method="post">
+                        <button id="sign-in-btn" class="modal-btn">
+                            <img src="/assets/img/header/sign-in.png" alt="로그인 아이콘" class="user-icon">
+                        </button>
+                        <!--         로그인 모달           -->
+                        <dialog id="sign-in-dialog">
                             <div id="sign-in-modal" class="user-modal">
                                 <div id="id-input-wrapper" class="input-wrapper">
                                     <label for="sign-in-user-account">아이디</label>
@@ -48,10 +48,10 @@
                                     <a href="#" class="btn">비밀번호를 잊으셨나요?</a>
                                 </div>
                             </div>
-                        </div>
-                    </dialog>
-                </form>
-            </div>
+                        </dialog>
+                    </form>
+                </div>
+            </c:if>
             <div class="user-icon-wrapper">
                 <a href="/user/sign-up">
                     <img src="/assets/img/header/sign-up.png" alt="회원가입 아이콘" class="user-icon">
@@ -109,18 +109,18 @@
     </button>
 
     <div>
-    <!--   로그인 안했으면 아래 버튼은 안보입니다  -->
+        <!--   로그인 안했으면 아래 버튼은 안보입니다  -->
 
-    <c:if test="true">
-        <button class="fixed-btn btn modal-btn" id="chatting-btn">
-            <img class = ".modal-btn" src="/assets/img/header/chatting.png" alt="채팅 버튼 아이콘">
-            <!--     읽지 않은 채팅 표시   -->
-            <span id="unread-chatting-count">
-                ${false}
-            </span>
-        </button>
-        <%@ include file="../chatting/chattingModal.jsp"%>
-    </c:if>
+        <c:if test="true">
+            <button class="fixed-btn btn modal-btn" id="chatting-btn">
+                <img class=".modal-btn" src="/assets/img/header/chatting.png" alt="채팅 버튼 아이콘">
+                <!--     읽지 않은 채팅 표시   -->
+                <span id="unread-chatting-count">
+                        ${false}
+                </span>
+            </button>
+            <%@ include file="../chatting/chattingModal.jsp" %>
+        </c:if>
 
 
     </div>
