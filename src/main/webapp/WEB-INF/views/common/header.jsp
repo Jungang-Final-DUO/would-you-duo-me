@@ -101,14 +101,17 @@
         <img src="/assets/img/header/to-top.png" alt="위로 버튼 아이콘">
     </button>
 
+    <div>
     <!--   로그인 안했으면 아래 버튼은 안보입니다  -->
-    <button class="fixed-btn btn" id="chatting-btn">
-        <img src="/assets/img/header/chatting.png" alt="채팅 버튼 아이콘">
+    <button class="fixed-btn btn .modal-btn" id="chatting-btn">
+        <img class = ".modal-btn" src="/assets/img/header/chatting.png" alt="채팅 버튼 아이콘">
         <!--     읽지 않은 채팅 표시   -->
         <span id="unread-chatting-count">
             <%--                ${}--%>
         </span>
     </button>
+    <%@ include file="../chatting/chattingModal.jsp"%>
+    </div>
 </div>
 <!-- 고정 버튼 끝 -->
 
