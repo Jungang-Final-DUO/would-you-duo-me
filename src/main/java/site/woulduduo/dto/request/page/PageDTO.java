@@ -14,6 +14,9 @@ public class PageDTO{
     private int size;
 
     public PageDTO(){
+
         this.page=1;
+        this.keyword="";
+        this.size=10;
     }
 }

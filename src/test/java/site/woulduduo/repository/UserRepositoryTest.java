@@ -1,9 +1,14 @@
 package site.woulduduo.repository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
@@ -93,13 +98,62 @@ class UserRepositoryTest {
 
     }
 
-//    @Test
-//    @DisplayName("사용자 포인트 조회")
-//    void searchTest() {
-//        Long point = userRepository.findByUserCurrentPoint("계정");
-//        System.out.println("point = " + point);
-//
-//    }
 
+    @BeforeEach
+    void bulkInsert() {
+        // 학생을 147명 저장
+        for (int i = 1; i <= 147; i++) {
+            User s = User.builder()
+                    .userAccount("i")
+                    .userNickname("i")
+                    .userPassword("i")
+                    .userCurrentPoint(i)
+                    .userBirthday(LocalDate.of(1999,11,07))
+                    .lolNickname("i")
+                    .userGender(Gender.F)
+                    .lolTier(Tier.DIA)
+//                .accuseList(Accuse)
+                    .build();
+            userRepository.save(s);
+        }
+
+
+}
+    @Test
+    @DisplayName("사용자 포인트 조회")
+    void searchTest() {
+
+         int page =1;
+         String keyword = "123";
+         int size =10;
+
+        Pageable pageInfo
+                = PageRequest.of(page - 1,
+                size,
+                //Sort.by("name").descending() // 정렬기준 필드명
+                Sort.by(
+                        Sort.Order.desc("userJoinDate")
+                )
+        );
+
+        Page<User> users = userRepository.findAll(pageInfo);
+        List<User> userList = users.getContent();
+
+        int totalPages = users.getTotalPages();
+        long totalElements = users.getTotalElements();
+
+        Pageable prev = users.getPageable().previousOrFirst();
+        Pageable next = users.getPageable().next();
+
+        //then
+        System.out.println("\n\n\n");
+        System.out.println("totalPages = " + totalPages);
+        System.out.println("totalElements = " + totalElements);
+        System.out.println("prev = " + prev);
+        System.out.println("next = " + next);
+        System.out.println("\n\n\n");
+        userList.forEach(System.out::println);
+        System.out.println("\n\n\n");
+    }
 
 }

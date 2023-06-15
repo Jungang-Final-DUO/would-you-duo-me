@@ -90,6 +90,7 @@ public class UserService {
             dto.setPoint(user.getUserCurrentPoint());
             dto.setFollowCount(3);
 
+            userListByAdmin.add(dto);
         }
         List<UsersByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
         System.out.println("userListByAdmin1 = " + userListByAdmin1);
