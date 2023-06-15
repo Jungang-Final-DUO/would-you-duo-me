@@ -3,6 +3,7 @@ package site.woulduduo.dto.request.user;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import site.woulduduo.enumeration.Gender;
+import site.woulduduo.enumeration.Tier;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -47,5 +48,8 @@ public class UserRegisterRequestDTO {
 
     @NotNull(message = "성별은 필수 입력값입니다.")
     private Gender userGender;
+
+    @NotNull(message = "티어는 필수 입력값입니다.")
+    private Tier lolTier;
 
 }
