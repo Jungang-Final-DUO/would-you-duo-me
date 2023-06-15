@@ -39,6 +39,10 @@
 /*    display: block;*/
 /*}*/
 
+.chatting-modal-wrapper::backdrop {
+    background: none;
+}
+
 .chatting-card {
     width: 90%;
     /* border: 1px solid #00ff88; */
