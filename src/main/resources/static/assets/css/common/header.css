@@ -1,6 +1,8 @@
 @import "common.css";
 @import "../main.css";
 @import "footer.css";
+@import "../chatting/chattingModal.css";
+@import "../chatting/chattingMessageModal.css";
 
 /* header style */
 header {
