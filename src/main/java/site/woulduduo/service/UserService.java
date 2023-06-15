@@ -52,7 +52,7 @@ public class UserService {
                 .userFacebook(dto.getUserFacebook())
                 .lolNickname(dto.getLolNickname())
                 .userGender(dto.getUserGender() == Gender.M ? Gender.M : Gender.F)
-                .lolTier(dto.getLolTier())
+                .lolTier()
                 .build();
 
         userRepository.save(user);
