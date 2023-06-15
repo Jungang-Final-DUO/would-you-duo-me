@@ -148,11 +148,6 @@ header {
     content: "";
 }
 
-/* 모달 래퍼 공통 */
-.invisible {
-    display: none;
-}
-
 /* sign in modal */
 #sign-in-modal {
     right: -65px;
