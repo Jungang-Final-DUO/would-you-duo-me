@@ -11,38 +11,40 @@
     <nav id="nav-bar">
         <nav id="user-nav-bar">
             <div class="user-icon-wrapper">
-                <a href="#" id="sign-in-btn">
-                    <img src="/assets/img/header/sign-in.png" alt="로그인 아이콘" class="user-icon">
-                </a>
-                <!--         로그인 모달           -->
                 <form action="/user/sign-in" method="post">
-                    <div id="sign-in-modal" class="user-modal">
-                        <div id="id-input-wrapper" class="input-wrapper">
-                            <label for="sign-in-user-account">아이디</label>
-                            <input type="text" name="userAccount" id="sign-in-user-account">
-                        </div>
-                        <div id="pw-input-wrapper" class="input-wrapper">
-                            <label for="sign-in-user-pw">비밀번호</label>
-                            <input type="password" name="userPassword" id="sign-in-user-pw">
-                        </div>
-                        <div id="sns-sign-in-wrapper">
-                            <div id="kakao-wrapper"><a href="#"><img src="/assets/img/header/kakao.png"
-                                                                     alt="카카오 아이콘"></a></div>
-                            <div id="google-wrapper"><a href="#"><img src="/assets/img/header/google.png"
-                                                                      alt="구글 아이콘" id="sign-in-google"></a></div>
-                            <div id="facebook-wrapper"><a href="#"><img src="/assets/img/header/facebook.png"
-                                                                        alt="페이스북 아이콘"></a></div>
-                        </div>
-                        <div id="auto-sign-in-wrapper">
+                    <button id="sign-in-btn" class="modal-btn">
+                        <img src="/assets/img/header/sign-in.png" alt="로그인 아이콘" class="user-icon">
+                    </button>
+                    <!--         로그인 모달           -->
+                    <div class="modal-wrapper invisible">
+                        <div id="sign-in-modal" class="user-modal">
+                            <div id="id-input-wrapper" class="input-wrapper">
+                                <label for="sign-in-user-account">아이디</label>
+                                <input type="text" name="userAccount" id="sign-in-user-account">
+                            </div>
+                            <div id="pw-input-wrapper" class="input-wrapper">
+                                <label for="sign-in-user-pw">비밀번호</label>
+                                <input type="password" name="userPassword" id="sign-in-user-pw">
+                            </div>
+                            <div id="sns-sign-in-wrapper">
+                                <div id="kakao-wrapper"><a href="#"><img src="/assets/img/header/kakao.png"
+                                                                         alt="카카오 아이콘"></a></div>
+                                <div id="google-wrapper"><a href="#"><img src="/assets/img/header/google.png"
+                                                                          alt="구글 아이콘" id="sign-in-google"></a></div>
+                                <div id="facebook-wrapper"><a href="#"><img src="/assets/img/header/facebook.png"
+                                                                            alt="페이스북 아이콘"></a></div>
+                            </div>
+                            <div id="auto-sign-in-wrapper">
 
-                            <label>
-                                <input type="checkbox" name="autoLogin" id="sign-in-auto-login">
-                                자동 로그인
-                            </label>
-                            <button type="submit" id="sign-in-submit-btn" class="btn">로그인</button>
-                        </div>
-                        <div id="pw-forgot-wrapper">
-                            <a href="#" class="btn">비밀번호를 잊으셨나요?</a>
+                                <label>
+                                    <input type="checkbox" name="autoLogin" id="sign-in-auto-login">
+                                    자동 로그인
+                                </label>
+                                <button type="submit" id="sign-in-submit-btn" class="btn">로그인</button>
+                            </div>
+                            <div id="pw-forgot-wrapper">
+                                <a href="#" class="btn">비밀번호를 잊으셨나요?</a>
+                            </div>
                         </div>
                     </div>
                 </form>
