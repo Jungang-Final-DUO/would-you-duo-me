@@ -1,4 +1,5 @@
-const ChatForm = document.getElementById('chat-form');
+const ChatForm = document.querySelectorAll('.chat-form');
+const chatMessages = document.querySelectorAll('.chatting-message-body');
 
 document.addEventListener("DOMContentLoaded", function () {
     const socket = io("http://localhost:3000");
@@ -7,17 +8,24 @@ document.addEventListener("DOMContentLoaded", function () {
     socket.on('message', message => {
         console.log(message);
         outputMessage(message);
+
+        //scroll down
+        chatMessages.forEach(cm => {
+            cm.scrollTop = cm.scrollHeight;
+        })
     });
 
     // Message submit
-    ChatForm.addEventListener('submit', (e) => {
-       e.preventDefault();
+    ChatForm.forEach(cf => {
+        cf.addEventListener('submit', (e) => {
+            e.preventDefault();
 
-       //Get message Text
-       const msg = e.target.elements.msg.value;
+            //Get message Text
+            const msg = e.target.querySelector('.msg').value;
 
-       //Emit message to server
-        socket.emit('chatMessage', msg);
+            //Emit message to server
+            socket.emit('chatMessage', msg);
+        });
     });
 
     //output message to DOM
