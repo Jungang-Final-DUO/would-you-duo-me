@@ -4,9 +4,11 @@ function modalHandler($dropDownBtn) {
 
     $dropDownBtn.onclick = e => {
         e.preventDefault();
-        const target = e.target.closest('.modal-btn').nextElementSibling;
-        target.classList.toggle('invisible');
-        setAutofocus(target);
+        const $target = e.target.closest('.modal-btn').nextElementSibling;
+        $target.classList.toggle('invisible');
+        if ($target.matches('dialog')) {
+            $target.showModal();
+        }
     }
 }
 

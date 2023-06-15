@@ -19,6 +19,6 @@ export function setAutofocus(target){
     const $input = target.querySelector('#msg');
 
     $input.removeAttribute('autofocus');
-    $input.setAttribute('autofocus', 'autofocus');
+    $input.setAttribute('autofocus', 'true');
 
 }

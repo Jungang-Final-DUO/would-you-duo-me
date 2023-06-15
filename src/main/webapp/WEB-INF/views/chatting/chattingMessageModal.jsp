@@ -3,7 +3,7 @@
 
 <%--    <div class="modal-background show-modal"></div>--%>
 <%--<div class="modal-background show-modal"></div>--%>
-<div class="invisible chatting-message-modal-wrapper">
+<dialog class="invisible chatting-message-modal-wrapper">
     <div class="chatting-message-modal-container">
         <div class="chatting-message-head">
             <img class="chatting-arrow-img toBack" src="/assets/img/chattingModal/arrows.png" alt="뒤로가기">
@@ -25,9 +25,9 @@
         </div>
         <div class="chatting-message-body"></div>
 
-            <form id = "chat-form" class="chatting-message-input-box">
-                <input id = "msg" class="message-send-box" type="text" placeholder="메시지를 입력해주세요" required>
-                <button class="message-send-btn">전송</button>
-            </form>
-        </div>
+        <form id="chat-form" class="chatting-message-input-box">
+            <input id="msg" class="message-send-box" type="text" placeholder="메시지를 입력해주세요" required autofocus>
+            <button class="message-send-btn">전송</button>
+        </form>
     </div>
+</dialog>
