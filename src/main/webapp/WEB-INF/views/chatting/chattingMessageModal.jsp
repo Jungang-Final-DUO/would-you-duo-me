@@ -3,7 +3,7 @@
 
 <%--    <div class="modal-background show-modal"></div>--%>
 <%--<div class="modal-background show-modal"></div>--%>
-<dialog>
+<dialog class = "message-dialog">
 <div class=" chatting-message-modal-wrapper">
     <div class="chatting-message-modal-container">
         <div class="chatting-message-head">
@@ -24,7 +24,18 @@
                 </button>
             </div>
         </div>
-        <div class="chatting-message-body"></div>
+        <div class="chatting-message-body">
+            <div class="chatting-message-card message-from">
+                <img class="chatting-profile" src="/assets/img/chattingModal/woogi.jpg" alt="프로필이미지">
+                <div class="message-content-container">
+                    <div class="message-nickname">상대방</div>
+                    <div class="message-content-wrapper">
+                        <div class="message-content">하이하이하이하이하이항히아하이하이ㅏㅎ이하이ㅏㅎ이항히ㅏㅇ히아히아힝히ㅏ이항히ㅏ이ㅏㅎ이</div>
+                        <span class="send-time">22:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <form class="chatting-message-input-box chat-form">
             <input class="message-send-box msg" type="text" placeholder="메시지를 입력해주세요" required autofocus>

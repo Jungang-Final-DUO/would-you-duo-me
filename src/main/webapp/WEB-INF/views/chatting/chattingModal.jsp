@@ -5,8 +5,8 @@
 <dialog>
 <div class="chatting-modal-wrapper">
         <ul class="chatting-modal-container">
-            <li class="chatting-card">
-                <div>
+            <li id = "rm1" class="chatting-card">
+                <div class = "chat-card">
                 <div class="chatting-card-inner modal-btn">
                     <img src="/assets/img/chattingModal/woogi.jpg" alt="프로필 이미지" class="chatting-profile-img"></img>
                     <div class="chatting-info">
@@ -18,7 +18,7 @@
                 <%@ include file="chattingMessageModal.jsp"%>
                 </div>
             </li>
-            <li class="chatting-card">
+            <li id = "rm2" class="chatting-card">
                 <div>
                     <div class="chatting-card-inner modal-btn">
                         <img src="/assets/img/chattingModal/woogi.jpg" alt="프로필 이미지" class="chatting-profile-img"></img>
@@ -31,7 +31,7 @@
                     <%@ include file="chattingMessageModal.jsp"%>
                 </div>
             </li>
-            <li class="chatting-card">
+            <li id = "rm3" class="chatting-card">
                 <div>
                     <div class="chatting-card-inner modal-btn">
                         <img src="/assets/img/chattingModal/woogi.jpg" alt="프로필 이미지" class="chatting-profile-img"></img>
@@ -44,7 +44,7 @@
                     <%@ include file="chattingMessageModal.jsp"%>
                 </div>
             </li>
-            <li class="chatting-card">
+            <li id = "rm4" class="chatting-card">
                 <div>
                     <div class="chatting-card-inner modal-btn">
                         <img src="/assets/img/chattingModal/woogi.jpg" alt="프로필 이미지" class="chatting-profile-img"></img>
@@ -57,7 +57,7 @@
                     <%@ include file="chattingMessageModal.jsp"%>
                 </div>
             </li>
-            <li class="chatting-card">
+            <li id = "rm5" class="chatting-card">
                 <div>
                     <div class="chatting-card-inner modal-btn">
                         <img src="/assets/img/chattingModal/woogi.jpg" alt="프로필 이미지" class="chatting-profile-img"></img>
@@ -70,7 +70,7 @@
                     <%@ include file="chattingMessageModal.jsp"%>
                 </div>
             </li>
-            <li class="chatting-card">
+            <li id = "rm6" class="chatting-card">
                 <div>
                     <div class="chatting-card-inner modal-btn">
                         <img src="/assets/img/chattingModal/woogi.jpg" alt="프로필 이미지" class="chatting-profile-img"></img>

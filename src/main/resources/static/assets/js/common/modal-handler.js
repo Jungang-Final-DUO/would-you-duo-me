@@ -1,5 +1,3 @@
-import {setAutofocus} from "../chatting/chatting-modal.js";
-
 function modalHandler($dropDownBtn) {
 
     $dropDownBtn.onclick = e => {
