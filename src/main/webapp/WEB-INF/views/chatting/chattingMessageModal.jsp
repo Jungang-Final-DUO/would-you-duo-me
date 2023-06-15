@@ -6,7 +6,7 @@
 <div class="invisible chatting-message-modal-wrapper">
     <div class="chatting-message-modal-container">
         <div class="chatting-message-head">
-            <img class="chatting-arrow-img" src="/assets/img/chattingModal/arrows.png" alt="뒤로가기">
+            <img class="chatting-arrow-img toBack" src="/assets/img/chattingModal/arrows.png" alt="뒤로가기">
             <div class="chatting-message-nickname">홍차</div>
         </div>
         <div class="chatting-message-option">
