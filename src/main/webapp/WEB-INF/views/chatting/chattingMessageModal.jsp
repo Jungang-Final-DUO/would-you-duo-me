@@ -3,7 +3,7 @@
 
 <%--    <div class="modal-background show-modal"></div>--%>
 <%--<div class="modal-background show-modal"></div>--%>
-<dialog class="invisible chatting-message-modal-wrapper">
+<dialog class=" chatting-message-modal-wrapper">
     <div class="chatting-message-modal-container">
         <div class="chatting-message-head">
             <img class="chatting-arrow-img toBack" src="/assets/img/chattingModal/arrows.png" alt="뒤로가기">

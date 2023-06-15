@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%--    <div class="modal-background show-modal"></div>--%>
-    <div class="chatting-modal-wrapper invisible">
+    <dialog class="chatting-modal-wrapper ">
         <ul class="chatting-modal-container">
             <li class="chatting-card">
                 <div>
@@ -68,4 +68,4 @@
                 </div>
             </li>
         </ul>
-    </div>
+    </dialog>
