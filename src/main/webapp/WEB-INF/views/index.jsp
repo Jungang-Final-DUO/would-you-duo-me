@@ -1017,7 +1017,8 @@
 
     <%@ include file="common/footer.jsp" %>
 </div>
+<script type="module" src="/assets/js/common/header.js"></script>
 <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <script src="/assets/js/chatting/main.js"></script>
+<script src="/assets/js/chatting/main.js"></script>
 </body>
 </html>

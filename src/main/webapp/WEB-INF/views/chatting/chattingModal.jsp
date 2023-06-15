@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%--    <div class="modal-background show-modal"></div>--%>
-    <div class="chatting-modal-wrapper show-chatting-modal">
+    <div class="chatting-modal-wrapper invisible">
         <ul class="chatting-modal-container">
             <li class="chatting-card">
                 <div>
-                <div class="chatting-card-inner .modal-btn">
+                <div class="chatting-card-inner modal-btn">
                     <img src="/assets/img/chattingModal/woogi.jpg" alt="프로필 이미지" class="chatting-profile-img"></img>
                     <div class="chatting-info">
                         <div class="chatting-nickname">woogi</div>

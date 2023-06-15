@@ -2,8 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%--    <div class="modal-background show-modal"></div>--%>
-<div class="modal-background show-modal"></div>
-<div class="chatting-message-modal-wrapper show-chatting-message-modal">
+<%--<div class="modal-background show-modal"></div>--%>
+<div class="invisible chatting-message-modal-wrapper">
     <div class="chatting-message-modal-container">
         <div class="chatting-message-head">
             <img class="chatting-arrow-img" src="/assets/img/chattingModal/arrows.png" alt="뒤로가기">
@@ -26,7 +26,7 @@
         <div class="chatting-message-body"></div>
 
             <form id = "chat-form" class="chatting-message-input-box">
-                <input id = "msg" class="message-send-box" type="text" placeholder="메시지를 입력해주세요" required>
+                <input id = "msg" class="message-send-box" type="text" placeholder="메시지를 입력해주세요" required autofocus>
                 <button class="message-send-btn">전송</button>
             </form>
         </div>

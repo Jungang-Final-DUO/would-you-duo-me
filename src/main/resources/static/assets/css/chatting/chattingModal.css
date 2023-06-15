@@ -6,36 +6,38 @@
 
 
 /* 모달 뒷배경 css */
-.modal-background {
-    width: 100vh;
-    height: 100vh;
-    background: #000;
-    opacity: 50%;
-    z-index: 100;
-    position: absolute;
-    display: none;
-}
-.modal-background.show-modal {
-    display: block;
-}
+/*.modal-background {*/
+/*    width: 100vh;*/
+/*    height: 100vh;*/
+/*    background: #000;*/
+/*    opacity: 50%;*/
+/*    z-index: 100;*/
+/*    position: absolute;*/
+/*    display: none;*/
+/*}*/
+/*.modal-background.show-modal {*/
+/*    display: block;*/
+/*}*/
 
 /* 채팅목록 모달 css */
 .chatting-modal-wrapper {
     width: 400px;
     height: 550px;
-    display: none;
-    position: absolute;
+    /*display: none;*/
+    position: fixed;
+    bottom: 50px;
+    right: 360px;
     background: #fff;
     /* border: 2px solid #ff0c0c; */
     border-radius: 25px;
-    transform: translate(300%, 70%);
+    /*transform: translate(300%, 70%);*/
     z-index: 500;
 
     padding: 20px 15px 15px 0px;
 }
-.chatting-modal-wrapper.show-chatting-modal {
-    display: block;
-}
+/*.chatting-modal-wrapper.show-chatting-modal {*/
+/*    display: block;*/
+/*}*/
 
 .chatting-card {
     width: 90%;
@@ -65,6 +67,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 /* 채팅카드의 자식태그 inline */

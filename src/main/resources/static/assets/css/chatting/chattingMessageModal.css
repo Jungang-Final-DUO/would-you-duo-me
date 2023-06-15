@@ -7,41 +7,40 @@
 
 
 /* 모달 뒷배경 css */
-.modal-background {
-    width: 100%;
-    height: 100%;
-    display: none;
-    background: #000;
-    opacity: 50%;
-    z-index: 100;
-    position: absolute;
-}
+/*.modal-background {*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    display: none;*/
+/*    background: #000;*/
+/*    opacity: 50%;*/
+/*    z-index: 100;*/
+/*    position: absolute;*/
+/*}*/
 
-.modal-background.show-modal {
-    display: block;
-}
+/*.modal-background.show-modal {*/
+/*    display: block;*/
+/*}*/
 
 /* 채팅목록 모달 css */
 .chatting-message-modal-wrapper {
     width: 400px;
     height: 550px;
-    margin: 0 auto;
-    position: absolute;
-    left: 50vw;
-    top: 50vh;
-    transform: translate(-50%, -50%);
     /*display: none;*/
-    background: #E3E3E3;
+    position: fixed;
+    bottom: 50px;
+    right: 360px;
+    background: #fff;
     /* border: 2px solid #ff0c0c; */
     border-radius: 25px;
+    /*transform: translate(300%, 70%);*/
     z-index: 500;
 
     padding: 20px 15px 15px 0px;
 }
 
-.chatting-message-modal-wrapper.show-chatting-message-modal {
-    display: block;
-}
+/*.chatting-message-modal-wrapper.show-chatting-message-modal {*/
+/*    display: block;*/
+/*}*/
 
 /* 채팅방헤더 상대닉네임 부분 */
 .chatting-message-head {

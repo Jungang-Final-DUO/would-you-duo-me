@@ -105,7 +105,7 @@
 
     <div>
     <!--   로그인 안했으면 아래 버튼은 안보입니다  -->
-    <button class="fixed-btn btn .modal-btn" id="chatting-btn">
+    <button class="fixed-btn btn modal-btn" id="chatting-btn">
         <img class = ".modal-btn" src="/assets/img/header/chatting.png" alt="채팅 버튼 아이콘">
         <!--     읽지 않은 채팅 표시   -->
         <span id="unread-chatting-count">
