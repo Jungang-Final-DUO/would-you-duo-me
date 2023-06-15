@@ -11,7 +11,7 @@
     <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">
 
     <%@ include file="common/static-head.jsp"%>
-    
+
 </head>
 <body>
 <!--    프로필 카드 상단 검색 조건 메뉴바 -->
@@ -1017,11 +1017,8 @@
 
     <%@ include file="common/footer.jsp" %>
 </div>
+<script type="module" src="/assets/js/common/header.js"></script>
 <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const socket = io("http://localhost:3000");
-    });
-</script>
+<script src="/assets/js/chatting/main.js"></script>
 </body>
 </html>
