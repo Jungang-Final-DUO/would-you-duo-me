@@ -50,7 +50,6 @@ public class UserController {
         return "redirect:/user/sign-in";
     }
 
-
     // 마이페이지 - 프로필 카드 등록페이지 열기
     @GetMapping("/user/register-duo")
     public String registerDUO(/*HttpSession session, */Model model) {
