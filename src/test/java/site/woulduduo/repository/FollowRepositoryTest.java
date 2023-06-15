@@ -6,42 +6,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
-import site.woulduduo.entity.Accuse;
+import site.woulduduo.entity.Follow;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Tier;
 
 import java.time.LocalDate;
-import java.util.List;
 
-import static java.util.Calendar.YEAR;
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @Rollback(false)
-class UserRepositoryTest {
+class FollowRepositoryTest {
+    @Autowired
+    FollowRepository followRepository;
+
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    AccuseRepository accuseRepository;
 
     @Test
-    @DisplayName("전제 조회")
-    void findAll(){
-        List<User> all = userRepository.findAll();
-        System.out.println("all = " + all);
-    }
-
-    @Test
-    @DisplayName("사용자 저장")
-    void saveTest(){
+    @DisplayName("사용자 저장 및 팔로우설정")
+    void saveTest() {
         User user2 = User.builder()
                 .userAccount("123")
                 .userNickname("123")
                 .userPassword("123")
                 .userCurrentPoint(123)
-                .userBirthday(LocalDate.of(1999,11,07))
+                .userBirthday(LocalDate.of(1999, 11, 07))
                 .lolNickname("123")
                 .userGender(Gender.F)
                 .lolTier(Tier.DIA)
@@ -52,7 +43,7 @@ class UserRepositoryTest {
                 .userNickname("234")
                 .userPassword("234")
                 .userCurrentPoint(234)
-                .userBirthday(LocalDate.of(1999,11,07))
+                .userBirthday(LocalDate.of(1999, 11, 07))
                 .lolNickname("234")
                 .userGender(Gender.F)
                 .lolTier(Tier.DIA)
@@ -63,43 +54,31 @@ class UserRepositoryTest {
                 .userNickname("345")
                 .userPassword("345")
                 .userCurrentPoint(345)
-                .userBirthday(LocalDate.of(1999,11,07))
+                .userBirthday(LocalDate.of(1999, 11, 07))
                 .lolNickname("345")
                 .userGender(Gender.F)
                 .lolTier(Tier.DIA)
-//                .accuseList(Accuse)
                 .build();
         User save = userRepository.save(user2);
         User save1 = userRepository.save(user3);
         User save2 = userRepository.save(user4);
 
 
-        Accuse accuse = Accuse.builder()
-                .user(save)
-                .accuseType("경고")
-                .build();
-        Accuse accuse1 = Accuse.builder()
-                .user(save1)
-                .accuseType("경고")
-                .build();
-        Accuse accuse2 = Accuse.builder()
-                .user(save2)
-                .accuseType("경고")
+        Follow follow1 = Follow.builder()
+                .followTo(user2)
+                .followFrom(user3)
                 .build();
 
-        Accuse asave = accuseRepository.save(accuse);
-        Accuse asave1 = accuseRepository.save(accuse1);
-        Accuse asave2 = accuseRepository.save(accuse2);
+        Follow follow2 = Follow.builder()
+                .followTo(user3)
+                .followFrom(user2)
+                .build();
+
+
+        Follow save3 = followRepository.save(follow1);
+        Follow save4 = followRepository.save(follow2);
+//        Follow save5 = followRepository.save(follow3);
+//        Follow save6 = followRepository.save(follow4);
 
     }
-
-//    @Test
-//    @DisplayName("사용자 포인트 조회")
-//    void searchTest() {
-//        Long point = userRepository.findByUserCurrentPoint("계정");
-//        System.out.println("point = " + point);
-//
-//    }
-
-
 }

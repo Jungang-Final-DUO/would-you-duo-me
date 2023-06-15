@@ -5,15 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
+import site.woulduduo.entity.Accuse;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Tier;
-import site.woulduduo.repository.UserRepository;
+import site.woulduduo.repository.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.*;
 
 import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
@@ -21,10 +22,7 @@ import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.UserDetailByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.entity.User;
-import site.woulduduo.repository.BoardRepository;
 import site.woulduduo.repository.UserRepository;
-
-import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
@@ -35,6 +33,8 @@ import static java.util.stream.Collectors.toList;
 public class UserService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final AccuseRepository accuseRepository;
+    private final ReplyRepository replyRepository;
 
     final String id = "abc1234";
     public boolean registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
@@ -71,16 +71,22 @@ public class UserService {
     public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type){
 
         List<User> all = userRepository.findAll();
+
         List<UsersByAdminResponseDTO> userListByAdmin = new ArrayList<>();
         UsersByAdminResponseDTO dto = new UsersByAdminResponseDTO();
         for (User user : all) {
             //bc,rc,rc,fc 카운터 찾는 메서드
+            long accuseCount = accuseRepository.countByUser(user);
+            long boardCount = boardRepository.countByUser(user);
+            long replyCount = replyRepository.countByUser(user);
+
+
 
             dto.setUserAccount(user.getUserAccount());
             dto.setGender(user.getUserGender().toString());
-            dto.setBoardCount(3);
-            dto.setReplyCount(3);
-            dto.setReportCount(3);
+            dto.setBoardCount(boardCount);
+            dto.setReplyCount(replyCount);
+            dto.setReportCount(accuseCount);
             dto.setPoint(user.getUserCurrentPoint());
             dto.setFollowCount(3);
 
@@ -90,6 +96,7 @@ public class UserService {
 
         return null;
     }
+
 
 
 //    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount){

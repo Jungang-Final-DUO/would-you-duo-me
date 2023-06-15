@@ -21,11 +21,11 @@ public class UsersByAdminResponseDTO {
     private int rowNum;
     private String userAccount;
     private String gender;
-    private int boardCount;
-    private int replyCount;
-    private int reportCount;
+    private long boardCount;
+    private long replyCount;
+    private long reportCount;
     private int point;
-    private int followCount;
+    private long followCount;
     private LocalDate joinDate;
 
     private UsersByAdminResponseDTO(User user){
