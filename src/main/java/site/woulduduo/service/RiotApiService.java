@@ -46,13 +46,18 @@ public class RiotApiService {
 
         LeagueV4DTO soloRankInfo = null;
         try {
-            soloRankInfo = Objects.requireNonNull(responseDTO)[0];
+            for (LeagueV4DTO leagueV4DTO : responseDTO) {
+                if (leagueV4DTO.getQueueType().equals("RANKED_SOLO_5x5")) {
+                    soloRankInfo = leagueV4DTO;
+                    break;
+                }
+            }
         } catch (ArrayIndexOutOfBoundsException e) {
             // 솔로랭크 정보가 없을 때
             return Tier.UNR;
         }
 
-        return soloRankInfo.getTierEnum();
+        return Objects.requireNonNull(soloRankInfo).getTierEnum();
     }
 
     /**
