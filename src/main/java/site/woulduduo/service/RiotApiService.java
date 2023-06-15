@@ -208,7 +208,7 @@ public class RiotApiService {
                 .map(m -> {
 
                     // 플레이어 중에서 해당 소환사의 인덱스
-                    String[] participants = m.getMetaData().getParticipants();
+                    String[] participants = m.getMetadata().getParticipants();
 
                     int index = 0;
                     for (int i = 0; i < participants.length; i++) {

@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class MatchV5DTO {
 
-    private MatchMetaData metaData;
+    private MatchMetaData metadata;
 
     private MatchInfo info;
 
