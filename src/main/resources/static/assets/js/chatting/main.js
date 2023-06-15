@@ -34,10 +34,10 @@ document.addEventListener("DOMContentLoaded", function () {
         div.classList.add('chatting-message-card');
         div.innerHTML = `<img class="chatting-profile" src="/assets/img/chattingModal/woogi.jpg" alt="프로필이미지">
                     <div class="message-content-container">
-                        <div class="message-nickname">워녕</div>
+                        <div class="message-nickname">${message.username}</div>
                         <div class="message-content-wrapper">
-                            <div class="message-content">${message}</div>
-                            <span class="send-time">22:00</span>
+                            <div class="message-content">${message.text}</div>
+                            <span class="send-time">${message.time}</span>
                         </div>
                     </div>`;
         document.querySelector('.chatting-message-body').appendChild(div);
