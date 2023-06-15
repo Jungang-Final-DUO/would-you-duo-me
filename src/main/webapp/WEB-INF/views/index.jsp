@@ -11,6 +11,7 @@
     <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">
 
     <%@ include file="common/static-head.jsp"%>
+    <link rel="stylesheet" href="/assets/css/main.css">
 
 </head>
 <body>
