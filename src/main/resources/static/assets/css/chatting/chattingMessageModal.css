@@ -1,4 +1,4 @@
-@import "../common/common.css";
+/*@import "../common/common.css";*/
 
 /* 채팅방 모달 띄우는 css */
 
@@ -41,7 +41,7 @@
 
 .chatting-message-modal-wrapper.show-chatting-message-modal {
     display: block;
-} 
+}
 
 /* 채팅방헤더 상대닉네임 부분 */
 .chatting-message-head {
@@ -63,7 +63,7 @@
     opacity: 80%;
     cursor: pointer;
     /* display: inline-block; */
-    
+
 }
 .chatting-message-nickname {
     font-weight: 700;
@@ -89,16 +89,23 @@
     /* border: 1px solid #000; */
     background: #fff;
     border-radius: 15px;
-    width: 75px;
+    width: 120px;
     height: 25px;
     font-weight: 700;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chatting-message-option button:hover {
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .matching-accept-container {
     display: inline-block;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /* cursor: pointer; */
+
 }
 .chatting-handshake-img {
     width: 25px;
@@ -108,6 +115,8 @@
 
 .gameover-container {
     display: inline-block;
+    cursor: pointer;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -120,13 +129,17 @@
 
 /* 채팅 메시지 부분 */
 .chatting-message-body {
-    height: 390px;
+    height: 380px;
     padding-left: 10px;
     overflow-y: scroll;
 }
 .chatting-message-body::-webkit-scrollbar {
-    width: 2px;
-    background-color: transparent
+    display: none;
+    /* width: 0.2px;
+    background-color: transparent; */
+}
+.message-content-container {
+    margin: 20px;
 }
 .chatting-message-card {
     display: flex;
@@ -137,25 +150,48 @@
     width: 50px;
     height: 60px;
     border-radius: 10px;
-    margin: 15px;
+    margin: 15px 5px;
+    align-self: start;
+}
+.message-nickname {
+    font-size: 11px;
+    margin-bottom: 10px;
+}
+.message-content-wrapper {
+    display: flex;
+    align-items: end;
+}
+
+.message-from .message-content-wrapper {
+    flex-flow: row-reverse;
+}
+.message-from .send-time {
+    margin-right: 10px;
 }
 .message-content {
     color: black;
-    font-weight: 400;
-    max-width: 230px;
+    max-width: 200px;
     display: inline-block;
     padding: 10px;
     /* border: 1px solid #000; */
-    border-radius: 10px;
+    border-radius: 5px;
     background: #fff;
-    font-size: 14px;
-    /*font-weight: 700;*/
+    font-size: 13px;
+    word-wrap: break-word;
+    line-height: 20px;
+
+}
+.send-time {
+    font-size: 11px;
+    margin-left: 10px;
 }
 
 .message-from {
-    /* float: right; */
     display: flex;
-    justify-content: flex-end;
+    flex-flow: row-reverse;
+}
+.message-from .message-nickname {
+    text-align: right;
 }
 
 /* 메시지 입력창 부분 */
@@ -166,7 +202,8 @@
 
     border-radius: 5px;
     margin: 5px 10px 0px 20px;
-    margin-top: 5px;
+    margin-top: 10px;
+    outline: none;
 }
 
 .message-send-btn {
@@ -176,4 +213,8 @@
     border-radius: 5px;
     font-weight: 600;
     background: #fff;
+}
+
+.message-send-btn:hover {
+    background: #d3cdcd;
 }
