@@ -2,10 +2,11 @@ export function toTopBtnHandler() {
 
     const $topBtn = document.getElementById('to-top-btn');
 
-    $topBtn.onclick = e => {
+    $topBtn.onmouseup = e => {
         window.scrollTo({
             top: 0,
-            behavior: "smooth"
+            left: 0,
+            // behavior: "smooth" // 가끔 동작안할때 있어서 주석처리
         });
     }
 
