@@ -1,17 +1,14 @@
-@import "common.css";
 
 .wrapper {
 
-    margin: 0 auto;
     width: 60%;
-    Margin-top: 500px;
+    margin: 40px auto 0;
     /* align-items: center; */
     /* background:red; */
     /* display: flex;
     flex-direction: column;
     align-items: center;
     border: 1px solid #ffffff; */
-
 
 }
 
@@ -25,7 +22,7 @@
     font-style: normal;
     font-weight: 400;
     font-size: 20px;
-    line-height: 15px;
+    line-height: 20px;
     /* text-align: center; */
     color: #FFFFFF;
     /* border: 1px solid #000; */
