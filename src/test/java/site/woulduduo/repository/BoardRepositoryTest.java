@@ -33,9 +33,7 @@ class BoardRepositoryTest {
             );
 
 
-//            Board build = Board.builder()
-//                    .build();
-//                    boardRepository.save(build);
+
 
 
 
@@ -46,19 +44,7 @@ class BoardRepositoryTest {
 
 
 
-// 강의교안
-//    @Test
-//    @DisplayName("bulk insert")
-//    void bulkInsert() {
-//        for (int i = 1; i <= 378; i++) {
-//            postRepository.save(
-//                    Post.builder()
-//                            .title("하하호호제목" + i)
-//                            .content("깔깔깔깔내용" + i)
-//                            .writer("꾸까꾸까" + i)
-//                            .build()
-//            );
-//        }
-//    }
+
+
 
 }
