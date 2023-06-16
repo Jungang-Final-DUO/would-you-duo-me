@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import site.woulduduo.dto.response.chatting.ChattingListResponseDTO;
+import site.woulduduo.dto.response.chatting.ChattingDetailResponseDTO;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.User;
 import site.woulduduo.repository.ChattingRepository;
+import site.woulduduo.repository.MessageRepository;
+import site.woulduduo.repository.UserProfileRepository;
 import site.woulduduo.repository.UserRepository;
 
 import javax.servlet.http.HttpSession;
@@ -21,15 +23,19 @@ import java.util.Optional;
 public class ChattingService {
 
     private final ChattingRepository chattingRepository;
+    private final MessageRepository messageRepository;
     private final UserRepository userRepository;
+    private final UserProfileRepository userProfileRepository;
 
     //채팅 신청하기
     public boolean makeChatting(
             HttpSession session,
             String userAccount
     ) {
+
         User chattingUser = null;
 
+//        추후 세션에서 꺼내온 아이디로 변경해야함
         Optional<User> user = userRepository.findById(userAccount);
         if (user.isPresent()) {
             chattingUser = user.get();
@@ -53,6 +59,23 @@ public class ChattingService {
 
             return true;
         }
+    }
+
+    //메세지 내역 가져오기
+    public ChattingDetailResponseDTO getChattingDetail(/*session.getAttribute()*/ User user, long chattingNo){
+//        채팅 가져오기
+        Chatting chatting = chattingRepository.findByChattingNo(chattingNo);
+        ChattingDetailResponseDTO dto = new ChattingDetailResponseDTO();
+
+//      채팅상대 닉네임 구하기
+//      추후 세션에서 꺼내온 아이디로 변경해야함
+        if(chatting.getChattingFrom() == /*session.getAttribute()*/ user){
+            dto.setUserNickname(chatting.getChattingTo().getUserNickname());
+
+        } else {
+            dto.setUserNickname(chatting.getChattingFrom().getUserNickname());
+        }
+
     }
 
     //채팅 목록 가져오기
