@@ -26,13 +26,6 @@ public class ChattingController {
         return "index";
     }
 
-    //채팅 목록 가져오기
-    @GetMapping("/api/v1/chattings")
-    public ResponseEntity<?> getChattingList(
-            HttpSession session
-    ){
-        chattingService.getChattingList(session);
-        return;
-    }
+
 
 }
