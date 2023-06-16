@@ -20,9 +20,9 @@ import javax.servlet.http.HttpSession;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final ReplyRepository replyRepository;
+//    private final ReplyRepository replyRepository;
 
-    private final BoardLikeRepository boardLikeRepository;
+//    private final BoardLikeRepository boardLikeRepository;
 
 
     //조회
@@ -58,21 +58,21 @@ public class BoardService {
 
 
     //수정
-    public boolean modifyBoard(BoardModifyRequestDTO dto) {
-
-        //수정 전 데이터 조회
-
-        final Board boardEntity = getBoard(dto.getBoardNo());
-        if (boardEntity == null) {
-            return false;
-        }
-
-        //수정 시작
-        boardEntity.setBoardTitle(dto.getBoardTitle());
-        //수정완료
-        Board modfiedBoard = boardRepository.save(boardEntity);
-//        return  new BoardModifyRequestDTO(modfiedBoard);
-    }
+//    public boolean modifyBoard(BoardModifyRequestDTO dto) {
+//
+//        //수정 전 데이터 조회
+//
+//        final Board boardEntity = getBoard(dto.getBoardNo());
+//        if (boardEntity == null) {
+//            return false;
+//        }
+//
+//        //수정 시작
+//        boardEntity.setBoardTitle(dto.getBoardTitle());
+//        //수정완료
+//        Board modfiedBoard = boardRepository.save(boardEntity);
+////        return  new BoardModifyRequestDTO(modfiedBoard);
+//    }
 
 
 }

@@ -9,11 +9,11 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.board.BoardWriteRequestDTO;
 import site.woulduduo.entity.Board;
+import site.woulduduo.enumeration.BoardCategory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@DataJpaTest
 @Rollback(false)
 @Transactional
 class BoardRepositoryTest {
@@ -23,11 +23,29 @@ class BoardRepositoryTest {
     @DisplayName("bulk insert")
     void bulkinser() {
         for (int i = 1; i <= 200; i++) {
-            Board build = Board.builder()
-                    .build();
-                    boardRepository.save(build);
-        }
+            boardRepository.save(
+                    Board.builder()
+                            .boardTitle("아라랑")
+                            .boardContent("jpa넘어렵 ㅜ")
+                            .boardCategory(BoardCategory.NOTICE)
+                            .build()
+
+            );
+
+
+//            Board build = Board.builder()
+//                    .build();
+//                    boardRepository.save(build);
+
+
+
+       }
     }
+
+
+
+
+
 // 강의교안
 //    @Test
 //    @DisplayName("bulk insert")
