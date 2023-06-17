@@ -2,6 +2,7 @@ package site.woulduduo.dto.response.user;
 
 import lombok.*;
 import site.woulduduo.dto.riot.MatchV5DTO;
+import site.woulduduo.dto.riot.MostChampInfo;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 
@@ -40,7 +41,7 @@ public class UserDUOResponseDTO {
 
     private int last20WinCount;
     private int last20LoseCount;
-    private int last20WinRate;
+    private double last20WinRate;
 
     private double last20KDA;
     private double last20Kill;
@@ -49,21 +50,34 @@ public class UserDUOResponseDTO {
 
     private List<MostChampInfo> mostChampInfos;
 
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @EqualsAndHashCode
-    @ToString
-    @Builder
-    private static class MostChampInfo {
-        private String champName;
-        private int winCount;
-        private int loseCount;
-        private double winRate;
-        private double KDA;
-    }
-
-    private List<MatchV5DTO> last20Matches;
+    private List<MatchV5DTO.MatchInfo.ParticipantDTO> last20Matches;
 
     private List<UserReviewResponseDTO> userReviews;
+
+    // 빌더 커스텀
+    public static class UserDUOResponseDTOBuilder {
+
+        public UserDUOResponseDTOBuilder last20Matches(List<MatchV5DTO.MatchInfo.ParticipantDTO> last20Matches) {
+            this.last20Matches = last20Matches;
+            this.last20WinCount = (int) last20Matches.stream()
+                    .filter(MatchV5DTO.MatchInfo.ParticipantDTO::isWin).count();
+            this.last20LoseCount = (int) last20Matches.stream()
+                    .filter(m -> !m.isWin()).count();
+            this.last20WinRate = (double) this.last20WinCount / (this.last20WinCount + this.last20LoseCount);
+            this.last20KDA = last20Matches.stream()
+                    .mapToDouble(m -> ((double) m.getKills() + m.getAssists()) / m.getDeaths())
+                    .average().orElse(0.0);
+            this.last20Kill = last20Matches.stream()
+                    .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getKills)
+                    .sum();
+            this.last20Death = last20Matches.stream()
+                    .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getDeaths)
+                    .sum();
+            this.last20Assist = last20Matches.stream()
+                    .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getAssists)
+                    .sum();
+
+            return this;
+        }
+    }
 }
