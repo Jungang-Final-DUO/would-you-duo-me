@@ -1,6 +1,7 @@
 package site.woulduduo.dto.response.user;
 
 import lombok.*;
+import site.woulduduo.entity.Matching;
 
 @Getter
 @NoArgsConstructor
@@ -12,7 +13,14 @@ public class UserReviewResponseDTO {
 
     private String userAccount;
     private String profileImage;
-    private String matchingReviewRate;
+    private Integer matchingReviewRate;
     private String matchingReviewContent;
+
+    public UserReviewResponseDTO(Matching matching) {
+        this.userAccount = matching.getChatting().getChattingFrom().getUserAccount();
+        this.profileImage = matching.getChatting().getChattingFrom().getLatestProfileImage();
+        this.matchingReviewRate = matching.getMatchingReviewRate();
+        this.matchingReviewContent = matching.getMatchingReviewContent();
+    }
 
 }
