@@ -1,6 +1,6 @@
-
 // 모든 모달 버튼에 이벤트를 등록하는 함수
 function modalHandler($modalBtn) {
+
 
     $modalBtn.onclick = e => {
         e.preventDefault();

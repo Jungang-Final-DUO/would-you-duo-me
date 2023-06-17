@@ -17,8 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import site.woulduduo.dto.request.page.AdminSearchType;
+import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.service.UserService;
@@ -31,6 +33,8 @@ import javax.servlet.http.HttpSession;
 public class UserController {
 
     private final UserService userService;
+
+
 
     // 회원 가입 양식 요청
     @GetMapping("/user/sign-up")
@@ -47,10 +51,22 @@ public class UserController {
     }
 
 
+    // 마이페이지 - 프로필 카드 등록페이지 열기
     @GetMapping("/user/register-duo")
     public String registerDUO(/*HttpSession session, */Model model) {
 
         return "my-page/mypage-duoprofile";
+    }
+
+    // 마이페이지 - 프로필카드 등록 처리
+    @PostMapping("/user/register-duo")
+    public String registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
+
+        boolean b = userService.registerDUO(/*session, */dto);
+        log.info("프로필카드등록 성공여부 : {}", b);
+        log.info("@@@@dto@@@@ :{}", dto);
+
+        return "redirect:/user/register-duo";
     }
 
     @GetMapping("/user/admin")
