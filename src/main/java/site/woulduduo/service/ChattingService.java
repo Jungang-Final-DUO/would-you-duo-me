@@ -9,6 +9,7 @@ import site.woulduduo.dto.response.chatting.MessageListResponseDTO;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Message;
 import site.woulduduo.entity.User;
+import site.woulduduo.entity.UserProfile;
 import site.woulduduo.repository.ChattingRepository;
 import site.woulduduo.repository.MessageRepository;
 import site.woulduduo.repository.UserProfileRepository;
@@ -77,8 +78,16 @@ public class ChattingService {
 //      추후 세션에서 꺼내온 아이디로 변경해야함
         if (chatting.getChattingFrom() == /*session.getAttribute()*/ user) {
             dto.setUserNickname(chatting.getChattingTo().getUserNickname());
-            dto.setMyProfileImage(chatting.getChattingFrom().getUserProfileList().get(0).getProfileImage());
-            dto.setYourProfileImage(chatting.getChattingTo().getUserProfileList().get(0).getProfileImage());
+
+//          우리 회원가입 할때 프로필 사진 널값 체크 할건가..?
+            List<UserProfile> myProfileList = chatting.getChattingFrom().getUserProfileList();
+            if(myProfileList.size() != 0){
+                dto.setMyProfileImage(chatting.getChattingFrom().getUserProfileList().get(0).getProfileImage());
+            }
+            List<UserProfile> yourProfileList = chatting.getChattingTo().getUserProfileList();
+            if(yourProfileList.size() != 0){
+                dto.setMyProfileImage(chatting.getChattingTo().getUserProfileList().get(0).getProfileImage());
+            }
 
         } else {
             dto.setUserNickname(chatting.getChattingFrom().getUserNickname());
@@ -92,7 +101,18 @@ public class ChattingService {
     }
 
     private List<MessageListResponseDTO> getMessages (Chatting chatting){
-        return messageRepository.findByChatting(chatting).stream()
+        List<Message> messages = messageRepository.findByChatting(chatting);
+        if(messages.size() == 0){
+            Message message = Message.builder()
+                    .user(chatting.getChattingTo())
+                    .messageContent("안녕하세요, 대화를 신청해주셔서 감사합니다!")
+                    .chatting(chatting)
+                    .build();
+            Message saved = messageRepository.save(message);
+            messages.add(saved);
+        }
+
+        return messages.stream()
                 .map(MessageListResponseDTO::new)
                 .collect(Collectors.toList());
     }

@@ -13,6 +13,7 @@ import site.woulduduo.entity.Message;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Tier;
+import site.woulduduo.service.ChattingService;
 import site.woulduduo.service.UserService;
 
 import java.time.LocalDate;
@@ -33,28 +34,21 @@ class MessageRepositoryTest {
     @Autowired
     ChattingRepository chattingRepository;
 
-    @BeforeEach
-    void makeChattingTest(){
+    // 메세지 저장하기
+    // 6/17 테스트 완료
+    @Test
+    @DisplayName("메세지를 저장할 수 있다")
+    void saveTest(){
+        User user = userRepository.findByUserAccount("test1");
+        Chatting chatting = chattingRepository.findByChattingNo(6L);
 
-        List<User> users = userRepository.findAll();
-
-        Chatting chatting = Chatting.builder()
-                .chattingFrom(users.get(1))
-                .chattingTo(users.get(2))
+        Message message = Message.builder()
+                .user(user)
+                .messageContent("안녕하세요, 대화를 신청해주셔서 감사합니다!")
+                .chatting(chatting)
                 .build();
-        chattingRepository.save(chatting);
+        Message saved = messageRepository.save(message);
+        assertEquals(1, messageRepository.count());
     }
-
-//    @BeforeEach
-//    void insertDummyMessages(){
-//
-//        List<User> users = userRepository.findAll();
-//
-//        Message.builder()
-//                .user(users.get(1))
-//                .messageContent("테스트지롱")
-//                .chatting()
-//                .build();
-//    }
 
 }
