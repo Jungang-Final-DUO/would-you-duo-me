@@ -7,17 +7,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.response.chatting.ChattingDetailResponseDTO;
-import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.User;
 import site.woulduduo.entity.UserProfile;
-import site.woulduduo.repository.ChattingRepository;
 import site.woulduduo.repository.UserRepository;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Transactional

@@ -2,14 +2,17 @@ package site.woulduduo.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 import site.woulduduo.service.BoardService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import site.woulduduo.dto.request.board.BoardModifyRequestDTO;
 import site.woulduduo.dto.request.board.BoardWriteRequestDTO;
-import site.woulduduo.dto.response.board.BoardDetailResponseDTO;
+import site.woulduduo.service.BoardService;
 
 import javax.servlet.http.HttpSession;
 
