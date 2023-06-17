@@ -69,7 +69,7 @@ public class UserService {
                 .userFacebook(dto.getUserFacebook())
                 .lolNickname(dto.getLolNickname())
                 .userGender(dto.getUserGender() == Gender.M ? Gender.M : Gender.F)
-                .lolTier(riotApiService.getTier(dto.getUserNickname()))
+                .lolTier(riotApiService.getTier(dto.getLolNickname()))
                 .build();
 
         userRepository.save(user);
@@ -119,13 +119,14 @@ public class UserService {
                 () -> new RuntimeException("해당하는 유저가 없습니다.")
         );
 
-        userProfileRepository
+//        userProfileRepository
+//
+//        return UserDUOResponseDTO.builder()
+//                .userAccount(userAccount)
+//                .profileImage()
+//                .build();
 
-        return UserDUOResponseDTO.builder()
-                .userAccount(userAccount)
-                .profileImage()
-                .build();
-
+        return null;
     }
 
 

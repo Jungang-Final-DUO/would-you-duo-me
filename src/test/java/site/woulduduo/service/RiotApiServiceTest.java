@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class RiotApiServiceTest {
 
     @Autowired
-    RiotApiService riotApiService;
+    private RiotApiService riotApiService;
 
     @Test
     @DisplayName("stargazer 소환사 이름을 넣으면 결과가 _l3OJ8Lnjiea6zwUQ4pbr6F2zYLt1W-qHbKKd62MtA0y0A 가 나와야 한다.")

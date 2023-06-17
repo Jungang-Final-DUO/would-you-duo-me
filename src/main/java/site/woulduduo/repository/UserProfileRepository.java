@@ -5,6 +5,4 @@ import site.woulduduo.entity.UserProfile;
 
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
 
-    UserProfile findByUser_UserAccount(String userAccount);
-
 }
