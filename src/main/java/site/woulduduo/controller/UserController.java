@@ -2,26 +2,16 @@ package site.woulduduo.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.XSlf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.service.UserService;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
+import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.user.UserDUOResponseDTO;
 import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.service.UserService;
 
@@ -33,7 +23,6 @@ import javax.servlet.http.HttpSession;
 public class UserController {
 
     private final UserService userService;
-
 
 
     // 회원 가입 양식 요청
@@ -105,4 +94,16 @@ public class UserController {
 //
 //        return "";
 //    }
+
+    @GetMapping("/user/duo")
+    public String showDUOUser(HttpSession session, Model model, String userAccount){
+
+        log.info("/user/duo?userAccount={} GET", userAccount);
+
+        UserDUOResponseDTO dto = userService.getUserDUOInfo(session, userAccount);
+
+        model.addAttribute(dto);
+
+        return "user/duo";
+    }
 }

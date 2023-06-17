@@ -1,4 +1,4 @@
-package site.woulduduo.Service;
+package site.woulduduo.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,11 +8,7 @@ import site.woulduduo.dto.request.board.BoardModifyRequestDTO;
 import site.woulduduo.dto.request.board.BoardWriteRequestDTO;
 import site.woulduduo.entity.Board;
 import site.woulduduo.enumeration.BoardCategory;
-import site.woulduduo.repository.BoardLikeRepository;
 import site.woulduduo.repository.BoardRepository;
-import site.woulduduo.repository.ReplyRepository;
-
-import javax.servlet.http.HttpSession;
 @Service
 @Slf4j
 @RequiredArgsConstructor

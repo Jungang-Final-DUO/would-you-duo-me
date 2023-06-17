@@ -1,19 +1,22 @@
-package site.woulduduo.Service;
+package site.woulduduo.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.test.annotation.Rollback;
 import site.woulduduo.dto.request.board.BoardWriteRequestDTO;
-import site.woulduduo.entity.Board;
 import site.woulduduo.enumeration.BoardCategory;
-import site.woulduduo.repository.BoardRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import javax.transaction.Transactional;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@Transactional
+@Rollback(value = false)
 class BoardServiceTest {
+
     @Autowired
     private BoardService boardService;
 
@@ -37,10 +40,10 @@ class BoardServiceTest {
 
 
     }
-    @Test
-    @DisplayName("update")
-    void update(){
-        for(int 1 =1;)
-    }
+//    @Test
+//    @DisplayName("update")
+//    void update(){
+//        for(int 1 =1;)
+//    }
 
 }

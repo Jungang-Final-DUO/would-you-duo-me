@@ -9,12 +9,17 @@ import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.user.UserDUOResponseDTO;
 import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Tier;
+import site.woulduduo.repository.FollowRepository;
+import site.woulduduo.repository.MatchingRepository;
+import site.woulduduo.repository.UserProfileRepository;
 import site.woulduduo.repository.UserRepository;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -27,6 +32,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RiotApiService riotApiService;
+    private final MatchingRepository matchingRepository;
+    private final FollowRepository followRepository;
+    private final UserProfileRepository userProfileRepository;
 
     final String id = "abc1234";
 
@@ -61,7 +69,7 @@ public class UserService {
                 .userFacebook(dto.getUserFacebook())
                 .lolNickname(dto.getLolNickname())
                 .userGender(dto.getUserGender() == Gender.M ? Gender.M : Gender.F)
-                .lolTier(riotApiService.getTier(dto.getUserNickname()))
+                .lolTier(riotApiService.getTier(dto.getLolNickname()))
                 .build();
 
         userRepository.save(user);
@@ -103,6 +111,31 @@ public class UserService {
     public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
         userRepository.count();
         return null;
+    }
+
+    public UserDUOResponseDTO getUserDUOInfo(HttpSession session, String userAccount) {
+
+        User foundUser = userRepository.findById(userAccount).orElseThrow(
+                () -> new RuntimeException("해당하는 유저가 없습니다.")
+        );
+
+        return UserDUOResponseDTO.builder()
+                .userAccount(userAccount)
+                .profileImage(foundUser.getLatestProfileImage())
+                .userNickname(foundUser.getUserNickname())
+                .userPosition(foundUser.getUserPosition())
+                .isFollowed(followRepository.existsByFollowFromAndFollowTo(session.getAttribute("로그인키").toString(), userAccount))
+                .userAvgRate(foundUser.getUserAvgRate())
+                .userMatchingPoint(foundUser.getUserMatchingPoint())
+                .userInstagram(foundUser.getUserInstagram())
+                .userFacebook(foundUser.getUserFacebook())
+                .userTwitter(foundUser.getUserTwitter())
+                .lolNickname(foundUser.getLolNickname())
+                .userComment(foundUser.getUserComment())
+                .lolTier(foundUser.getLolTier())
+                // riot api 를 통해 얻어오는 데이터
+                .build();
+
     }
 
 
