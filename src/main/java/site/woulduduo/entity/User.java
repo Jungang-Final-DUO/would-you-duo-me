@@ -138,10 +138,20 @@ public class User {
     @Builder.Default
     private List<Attendance> attendanceList = new ArrayList<>();
 
-    // 출석도장 내
+    // 출석도장 내역
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Builder.Default
     private List<AttendanceStamp> attendanceStampList = new ArrayList<>();
+
+    // 내가 건 채팅 내역
+    @OneToMany(mappedBy = "chattingFrom", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Chatting> chattingToList = new ArrayList<>();
+
+    // 내가 받은 채팅 내역
+    @OneToMany(mappedBy = "chattingTo", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Chatting> chattingFromList = new ArrayList<>();
 
     // 양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
     public void addReply(Reply reply) {
@@ -204,6 +214,20 @@ public class User {
         attendanceStampList.add(attendanceStamp);
         if (this != attendanceStamp.getUser()) {
             attendanceStamp.setUser(this);
+        }
+    }
+
+    public void addChattingToList(Chatting chatting) {
+        chattingToList.add(chatting);
+        if (this != chatting.getChattingFrom()) {
+            chatting.setChattingFrom(this);
+        }
+    }
+
+    public void addChattingFromList(Chatting chatting) {
+        chattingFromList.add(chatting);
+        if (this != chatting.getChattingTo()) {
+            chatting.setChattingTo(this);
         }
     }
 
