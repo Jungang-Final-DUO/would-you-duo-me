@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
-import site.woulduduo.Service.BoardService;
+import site.woulduduo.service.BoardService;
 import site.woulduduo.dto.request.board.BoardModifyRequestDTO;
 import site.woulduduo.dto.request.board.BoardWriteRequestDTO;
 import site.woulduduo.dto.response.board.BoardDetailResponseDTO;

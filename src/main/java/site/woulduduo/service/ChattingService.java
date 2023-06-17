@@ -16,6 +16,7 @@ import site.woulduduo.repository.UserProfileRepository;
 import site.woulduduo.repository.UserRepository;
 
 import javax.servlet.http.HttpSession;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 public class ChattingService {
 
     private final ChattingRepository chattingRepository;
-    private final MessageRepository messageRepository;
+    private final MessageService messageService;
     private final UserRepository userRepository;
 
     //채팅 신청하기
@@ -68,56 +69,73 @@ public class ChattingService {
     //채팅방 디테일 내역 가져오기
     public ChattingDetailResponseDTO getChattingDetail(/*session.getAttribute()*/ String userAccount, long chattingNo) {
 
-//        채팅 상대방 찾기
+//        채팅 상대방 찾기 - 테스트완
         User user = userRepository.findByUserAccount(userAccount);
 //        채팅 가져오기
         Chatting chatting = chattingRepository.findByChattingNo(chattingNo);
-        ChattingDetailResponseDTO dto = new ChattingDetailResponseDTO();
+        log.info("chattingNo = {}", chatting.getChattingNo());
 
-//      채팅상대 닉네임, 프로필 사진 구하기
-//      추후 세션에서 꺼내온 아이디로 변경해야함
+        ChattingDetailResponseDTO chattingResponseDTO = new ChattingDetailResponseDTO();
+
+//      대표 프로필 사진 구하기 - 테스트완
+        String fromImage = getRepresentativeProfile(chatting.getChattingFrom());
+        String toImage = getRepresentativeProfile(chatting.getChattingTo());
+
+//      내가 채팅을 걸었을 때
         if (chatting.getChattingFrom() == /*session.getAttribute()*/ user) {
-            dto.setUserNickname(chatting.getChattingTo().getUserNickname());
 
-//          우리 회원가입 할때 프로필 사진 널값 체크 할건가..?
-            List<UserProfile> myProfileList = chatting.getChattingFrom().getUserProfileList();
-            if(myProfileList.size() != 0){
-                dto.setMyProfileImage(chatting.getChattingFrom().getUserProfileList().get(0).getProfileImage());
-            }
-            List<UserProfile> yourProfileList = chatting.getChattingTo().getUserProfileList();
-            if(yourProfileList.size() != 0){
-                dto.setMyProfileImage(chatting.getChattingTo().getUserProfileList().get(0).getProfileImage());
-            }
+//          대화 상대 닉네임
+            chattingResponseDTO.setUserNickname(chatting.getChattingTo().getUserNickname());
 
+//          나와 대화 상대의 프로필사진
+            chattingResponseDTO.setMyProfileImage(fromImage);
+            chattingResponseDTO.setYourProfileImage(toImage);
+
+//      내가 채팅을 받았을 때
         } else {
-            dto.setUserNickname(chatting.getChattingFrom().getUserNickname());
-            dto.setMyProfileImage(chatting.getChattingTo().getUserProfileList().get(0).getProfileImage());
-            dto.setYourProfileImage(chatting.getChattingFrom().getUserProfileList().get(0).getProfileImage());
+            chattingResponseDTO.setUserNickname(chatting.getChattingFrom().getUserNickname());
+            chattingResponseDTO.setMyProfileImage(toImage);
+            chattingResponseDTO.setYourProfileImage(fromImage);
         }
 
-        dto.setMessageList(getMessages(chatting));
+        chattingResponseDTO.setMessageList(messageService.getMessages(chatting));
 
-        return dto;
+        return chattingResponseDTO;
     }
 
-    private List<MessageListResponseDTO> getMessages (Chatting chatting){
-        List<Message> messages = messageRepository.findByChatting(chatting);
-        if(messages.size() == 0){
-            Message message = Message.builder()
-                    .user(chatting.getChattingTo())
-                    .messageContent("안녕하세요, 대화를 신청해주셔서 감사합니다!")
-                    .chatting(chatting)
-                    .build();
-            Message saved = messageRepository.save(message);
-            messages.add(saved);
+//  대표 프로필 사진 가져오기
+    public static String getRepresentativeProfile(User user) {
+        List<UserProfile> profileList = null;
+        try {
+            profileList = user.getUserProfileList().stream()
+                    .sorted(Comparator.comparing(UserProfile::getProfileNo).reversed())
+                    .limit(1)
+                    .collect(Collectors.toList());
+            return profileList.get(0).getProfileImage();
+        } catch (IndexOutOfBoundsException e) {
+            return "프로필 사진이 존재하지 않습니다."; // default 이미지 경로로 변경예정
         }
-
-        return messages.stream()
-                .map(MessageListResponseDTO::new)
-                .collect(Collectors.toList());
     }
 
-        //채팅 목록 가져오기
+////    메세지 내역 가져오기
+//    public List<MessageListResponseDTO> getMessages (Chatting chatting){
+//        List<Message> messages = messageRepository.findByChatting(chatting);
+//        if(messages.size() == 0){
+//            Message message = Message.builder()
+//                    .user(chatting.getChattingTo())
+//                    .messageContent("안녕하세요, 대화를 신청해주셔서 감사합니다!")
+//                    .chatting(chatting)
+//                    .build();
+//            Message saved = messageRepository.save(message);
+//            messages.add(saved);
+//        }
+//
+//        return messages.stream()
+//                .map(MessageListResponseDTO::new)
+//                .collect(Collectors.toList());
+//    }
+
+    //채팅 목록 가져오기
 ///    public ChattingListResponseDTO getChattingList(
 ////            HttpSession session
 //            User user
@@ -127,4 +145,4 @@ public class ChattingService {
 //
 //
 //    }
-    }
+}

@@ -8,17 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.dto.response.chatting.MessageListResponseDTO;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Message;
 import site.woulduduo.entity.User;
-import site.woulduduo.enumeration.Gender;
-import site.woulduduo.enumeration.Tier;
-import site.woulduduo.service.ChattingService;
-import site.woulduduo.service.UserService;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
