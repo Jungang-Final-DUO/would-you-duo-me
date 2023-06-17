@@ -15,4 +15,5 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query(value = "SELECT COUNT(*) FROM duo_user WHERE lol_nickname = :lolNickname", nativeQuery = true)
     int countByLolNickname(@Param("lolNickname") String lolNickname);
 
+    User findByUserAccount(String userAccount);
 }

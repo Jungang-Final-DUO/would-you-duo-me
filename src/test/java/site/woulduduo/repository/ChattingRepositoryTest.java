@@ -5,26 +5,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
+import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.entity.Chatting;
+import site.woulduduo.entity.User;
 
-import javax.transaction.Transactional;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 @Transactional
 @Rollback(value = false)
-class UserRepositoryTest {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Test
-    @DisplayName("유저어카운트로 유저를 조회할 수 있다")
-    void findByUserAccountTest(){
-
-        userRepository.findByUserAccount("test1");
-
-    }
+class ChattingRepositoryTest {
 
 
 }
