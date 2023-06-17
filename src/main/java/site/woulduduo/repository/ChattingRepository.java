@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ChattingRepository extends JpaRepository<Chatting, Long> {
 
-    List<Chatting> findByChattingFromAndChattingTo(User chattingFrom, User chattingTo);
+    Chatting findByChattingFromAndChattingTo(User chattingFrom, User chattingTo);
 
     Chatting findByChattingNo(long chattingNo);
 }
