@@ -9,13 +9,10 @@ import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import static site.woulduduo.enumeration.LoginType.NORMAL;
-
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static site.woulduduo.enumeration.LoginType.NORMAL;
@@ -208,5 +205,13 @@ public class User {
         if (this != attendanceStamp.getUser()) {
             attendanceStamp.setUser(this);
         }
+    }
+
+    public String getLatestProfileImage() {
+        return this.userProfileList.stream()
+                .sorted(Comparator.comparing(UserProfile::getProfileImage).reversed())
+                .map(UserProfile::getProfileImage)
+                .findFirst()
+                .orElse(null);
     }
 }

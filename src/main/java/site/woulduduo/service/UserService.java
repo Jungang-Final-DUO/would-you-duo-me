@@ -119,14 +119,23 @@ public class UserService {
                 () -> new RuntimeException("해당하는 유저가 없습니다.")
         );
 
-//        userProfileRepository
-//
-//        return UserDUOResponseDTO.builder()
-//                .userAccount(userAccount)
-//                .profileImage()
-//                .build();
+        return UserDUOResponseDTO.builder()
+                .userAccount(userAccount)
+                .profileImage(foundUser.getLatestProfileImage())
+                .userNickname(foundUser.getUserNickname())
+                .userPosition(foundUser.getUserPosition())
+                .isFollowed(followRepository.existsByFollowFromAndFollowTo(session.getAttribute("로그인키").toString(), userAccount))
+                .userAvgRate(foundUser.getUserAvgRate())
+                .userMatchingPoint(foundUser.getUserMatchingPoint())
+                .userInstagram(foundUser.getUserInstagram())
+                .userFacebook(foundUser.getUserFacebook())
+                .userTwitter(foundUser.getUserTwitter())
+                .lolNickname(foundUser.getLolNickname())
+                .userComment(foundUser.getUserComment())
+                .lolTier(foundUser.getLolTier())
+                // riot api 를 통해 얻어오는 데이터
+                .build();
 
-        return null;
     }
 
 
