@@ -28,6 +28,7 @@ class FollowRepositoryTest {
         User acvd2 = userRepository.findByUserAccount("acvd2");
         User acvd3 = userRepository.findByUserAccount("acvd3");
 
+
         System.out.println("acvd1 = " + acvd1);
         System.out.println("acvd2 = " + acvd2);
         System.out.println("acvd3 = " + acvd3);
