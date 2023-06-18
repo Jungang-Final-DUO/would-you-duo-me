@@ -24,6 +24,8 @@ import site.woulduduo.repository.*;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 import java.util.stream.Collectors;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -66,6 +68,7 @@ public class UserService {
         }
 
         // 회원 정보 저장
+
         User user = User.builder()
                 .userAccount(dto.getUserEmail())
                 .userNickname(dto.getUserNickname())
@@ -115,52 +118,11 @@ public class UserService {
         return true;
     }
 
-//    public ListResponseDTO<UserByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
+//    public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
 //        userRepository.count();
 //        return null;
 //    }
 
-    public List<UserByAdminResponseDTO> getUserListByAdmin( ){
-
-
-//        // Pageable객체 생성
-//        Pageable pageable = PageRequest.of(
-//                type.getPage() - 1,
-//                type.getSize(),
-//                Sort.by("createDate").descending()
-//        );
-
-        //전체불러오기
-        List<User> all = userRepository.findAll();
-        //user정보
-//        List<User> users = all.getContent();
-
-        //dto리스트생성 및 dto 생성
-        List<UserByAdminResponseDTO> userListByAdmin = new ArrayList<>();
-        UserByAdminResponseDTO dto = new UserByAdminResponseDTO();
-        for (User user : all) {
-            //bc,rc,rc,fc 카운터 찾는 메서드
-            long accuseCount = accuseRepository.countByUser(user);
-            long boardCount = boardRepository.countByUser(user);
-            long replyCount = replyRepository.countByUser(user);
-//            long followToCount = followRepository.findToByAccount(user);
-
-
-            dto.setUserAccount(user.getUserAccount());
-            dto.setGender(user.getUserGender().toString());
-            dto.setBoardCount(boardCount);
-            dto.setReplyCount(replyCount);
-            dto.setReportCount(accuseCount);
-            dto.setPoint(user.getUserCurrentPoint());
-            dto.setFollowCount(3);
-
-            userListByAdmin.add(dto);
-        }
-        List<UserByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
-        System.out.println("userListByAdmin1 = " + userListByAdmin1);
-
-        return userListByAdmin;
-    }
 
     public Map<String,Integer>countByAdmin(){
         Map<String,Integer>adminCount = new HashMap<>();
@@ -221,6 +183,54 @@ public class UserService {
         return allWithJoinDate;
     }
 
+
+    //유저리스트 DTO변환(Admin)
+    public List<UserByAdminResponseDTO> getUserListByAdmin(/*AdminSearchType type*/){
+
+
+//        // Pageable객체 생성
+//        Pageable pageable = PageRequest.of(
+//                type.getPage() - 1,
+//                type.getSize(),
+//                Sort.by("createDate").descending()
+//        );
+
+        //user정보
+//        List<User> users = all.getContent();
+
+        //전체불러오기
+        List<User> all = userRepository.findAll();
+
+        //dto리스트생성 및 dto 생성
+        List<UserByAdminResponseDTO> userListByAdmin = new ArrayList<>();
+        int i=1;
+        for (User user : all) {
+            UserByAdminResponseDTO dto = new UserByAdminResponseDTO();
+
+            //bc,rc,rc,fc 카운터 찾는 메서드
+            long accuseCount = accuseRepository.countByUser(user);
+            long boardCount = boardRepository.countByUser(user);
+            long replyCount = replyRepository.countByUser(user);
+            long followCount = followRepository.findAllWithFollowTo(user.getUserAccount());
+
+            dto.setRowNum(i);
+            dto.setUserAccount(user.getUserAccount());
+            dto.setGender(user.getUserGender().toString());
+            dto.setBoardCount(boardCount);
+            dto.setReplyCount(replyCount);
+            dto.setReportCount(accuseCount);
+            dto.setPoint(user.getUserCurrentPoint());
+            dto.setFollowCount(followCount);
+            i++;
+
+            userListByAdmin.add(dto);
+            List<UserByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
+        }
+        List<UserByAdminResponseDTO> userListByAdmin2 = userListByAdmin;
+
+        return userListByAdmin;
+    }
+
 //    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount){
 //
 //        return null;
@@ -266,11 +276,11 @@ public class UserService {
         List<UserReviewResponseDTO> reviews = foundUser.getChattingFromList().stream()
                 .map(c -> c.getMatchingList().stream()
                         .map(UserReviewResponseDTO::new)
-                        .collect(Collectors.toList())
-                ).collect(Collectors.toList())
+                        .collect(toList())
+                ).collect(toList())
                 .stream()
                 .flatMap(List::stream)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         boolean isFollowed = false;
         try {
@@ -282,7 +292,7 @@ public class UserService {
                 .map(m -> {
                     List<MatchV5DTO.MatchInfo.ParticipantDTO> championMatchInfoList = last20ParticipantDTOList.stream()
                             .filter(p -> p.getChampionName().equals(m))
-                            .collect(Collectors.toList());
+                            .collect(toList());
 
                     int winCount = (int) championMatchInfoList.stream()
                             .filter(MatchV5DTO.MatchInfo.ParticipantDTO::isWin).count();
@@ -311,7 +321,7 @@ public class UserService {
                             .kda(kda)
                             .build();
                 })
-                .collect(Collectors.toList());
+                .collect(toList());
 
         return UserHistoryResponseDTO.builder()
                 .userAccount(userAccount)
