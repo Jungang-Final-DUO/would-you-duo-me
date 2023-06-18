@@ -2,7 +2,10 @@ package site.woulduduo.dto.response.user;
 
 import lombok.*;
 import site.woulduduo.entity.User;
+import site.woulduduo.repository.UserRepository;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.time.LocalDate;
 @Setter
 @Getter
@@ -11,46 +14,26 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class UsersByAdminResponseDTO {
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int rowNum;
     private String userAccount;
     private String gender;
-    private int boardCount;
-    private int replyCount;
-    private int reportCount;
+    private long boardCount;
+    private long replyCount;
+    private long reportCount;
     private int point;
-    private int followCount;
+    private long followCount;
     private LocalDate joinDate;
 
     private UsersByAdminResponseDTO(User user){
-        this.rowNum=1;
         this.userAccount=user.getUserAccount();
         this.gender=user.getUserGender().toString();
-        this.boardCount=userGetBoardCount(user);
-        this.replyCount=userGetreplyCount(user);
-        this.reportCount=userGetreportCount(user);
         this.point=user.getUserCurrentPoint();
-        this.followCount=getUserPoint();
-
-
+        this.joinDate=user.getUserJoinDate();
     }
 
-    private int getUserPoint() {
-        return 0;
-    }
-
-    private int userGetreportCount(User user) {
-
-    return 0;
-    };
-
-    public int userGetBoardCount(User user){
-        user.getBoardList();
-        return 1;
-    }
-    public int userGetreplyCount(User user){
-        user.getReplyList();
-        return 1;
-    }
 
 }
