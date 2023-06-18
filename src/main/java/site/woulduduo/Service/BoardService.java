@@ -6,11 +6,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.board.BoardModifyRequestDTO;
 import site.woulduduo.dto.request.board.BoardWriteRequestDTO;
+import site.woulduduo.dto.response.board.BoardsByAdminResponseDTO;
 import site.woulduduo.entity.Board;
 import site.woulduduo.enumeration.BoardCategory;
 import site.woulduduo.repository.BoardLikeRepository;
 import site.woulduduo.repository.BoardRepository;
 import site.woulduduo.repository.ReplyRepository;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
@@ -78,13 +83,13 @@ public class BoardService {
     }
 
     //전체 BoardList DTO 변환 (Admin)
-//    public List<BoardsByAdminResponseDTO> getBoardListByAdmin(){
-//        List<BoardsByAdminResponseDTO> boardListDTO = boardRepository.findAll()
-//                .stream()
-//                .map(BoardsByAdminResponseDTO::new)
-//                .collect(toList());
-//
-//        return boardListDTO;
-//    }
+    public List<BoardsByAdminResponseDTO> getBoardListByAdmin(){
+        List<BoardsByAdminResponseDTO> boardListDTO = boardRepository.findAll()
+                .stream()
+                .map(BoardsByAdminResponseDTO::new)
+                .collect(toList());
+
+        return boardListDTO;
+    }
 
 }
