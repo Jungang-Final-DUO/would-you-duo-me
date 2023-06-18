@@ -24,7 +24,8 @@ import site.woulduduo.repository.*;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
@@ -180,12 +181,8 @@ public class UserService {
     }
 
 
-//    public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
-//        userRepository.count();
-//        return null;
-//    }
-
-    public List<UserByAdminResponseDTO> getUserListByAdmin(){
+    //유저리스트 DTO변환(Admin)
+    public List<UserByAdminResponseDTO> getUserListByAdmin(/*AdminSearchType type*/){
 
 
 //        // Pageable객체 생성
@@ -195,15 +192,14 @@ public class UserService {
 //                Sort.by("createDate").descending()
 //        );
 
-        //전체불러오기
-        List<User> all = userRepository.findAll();
-
         //user정보
 //        List<User> users = all.getContent();
 
+        //전체불러오기
+        List<User> all = userRepository.findAll();
+
         //dto리스트생성 및 dto 생성
         List<UserByAdminResponseDTO> userListByAdmin = new ArrayList<>();
-//        AtomicInteger rowNum = new AtomicInteger(1);
         int i=1;
         for (User user : all) {
             UserByAdminResponseDTO dto = new UserByAdminResponseDTO();
@@ -213,7 +209,6 @@ public class UserService {
             long boardCount = boardRepository.countByUser(user);
             long replyCount = replyRepository.countByUser(user);
             long followCount = followRepository.findAllWithFollowTo(user.getUserAccount());
-//            int nextRowNum = rowNum.getAndIncrement();
 
             dto.setRowNum(i);
             dto.setUserAccount(user.getUserAccount());
@@ -232,10 +227,6 @@ public class UserService {
 
         return userListByAdmin;
     }
-
-
-
-
 
 //    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount){
 //
@@ -282,11 +273,11 @@ public class UserService {
         List<UserReviewResponseDTO> reviews = foundUser.getChattingFromList().stream()
                 .map(c -> c.getMatchingList().stream()
                         .map(UserReviewResponseDTO::new)
-                        .collect(Collectors.toList())
-                ).collect(Collectors.toList())
+                        .collect(toList())
+                ).collect(toList())
                 .stream()
                 .flatMap(List::stream)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         boolean isFollowed = false;
         try {
@@ -298,7 +289,7 @@ public class UserService {
                 .map(m -> {
                     List<MatchV5DTO.MatchInfo.ParticipantDTO> championMatchInfoList = last20ParticipantDTOList.stream()
                             .filter(p -> p.getChampionName().equals(m))
-                            .collect(Collectors.toList());
+                            .collect(toList());
 
                     int winCount = (int) championMatchInfoList.stream()
                             .filter(MatchV5DTO.MatchInfo.ParticipantDTO::isWin).count();
@@ -327,7 +318,7 @@ public class UserService {
                             .kda(kda)
                             .build();
                 })
-                .collect(Collectors.toList());
+                .collect(toList());
 
         return UserHistoryResponseDTO.builder()
                 .userAccount(userAccount)
