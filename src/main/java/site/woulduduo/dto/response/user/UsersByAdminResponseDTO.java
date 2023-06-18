@@ -2,11 +2,11 @@ package site.woulduduo.dto.response.user;
 
 import lombok.*;
 import site.woulduduo.entity.User;
-import site.woulduduo.repository.UserRepository;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.time.LocalDate;
+
 @Setter
 @Getter
 @ToString

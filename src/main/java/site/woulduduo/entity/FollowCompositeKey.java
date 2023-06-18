@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Builder
 public class FollowCompositeKey implements Serializable {
 
-    private User followFrom;
+    private String followFrom;
 
-    private User followTo;
+    private String followTo;
 }

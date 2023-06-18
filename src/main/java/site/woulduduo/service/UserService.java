@@ -24,6 +24,7 @@ import site.woulduduo.repository.*;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -137,15 +138,17 @@ public class UserService {
         //dto리스트생성 및 dto 생성
         List<UsersByAdminResponseDTO> userListByAdmin = new ArrayList<>();
         UsersByAdminResponseDTO dto = new UsersByAdminResponseDTO();
+        AtomicInteger rowNum = new AtomicInteger(1);
+
         for (User user : all) {
             //bc,rc,rc,fc 카운터 찾는 메서드
             long accuseCount = accuseRepository.countByUser(user);
             long boardCount = boardRepository.countByUser(user);
             long replyCount = replyRepository.countByUser(user);
 //            long followToCount = followRepository.findToByAccount(user);
+            int nextRowNum = rowNum.getAndIncrement();
 
-
-            dto.setUserAccount(user.getUserAccount());
+            dto.setRowNum(nextRowNum);
             dto.setGender(user.getUserGender().toString());
             dto.setBoardCount(boardCount);
             dto.setReplyCount(replyCount);
