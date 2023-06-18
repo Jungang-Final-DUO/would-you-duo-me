@@ -9,7 +9,7 @@ import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
-import site.woulduduo.dto.response.user.UserDUOResponseDTO;
+import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
 import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.dto.riot.LeagueV4DTO;
@@ -126,7 +126,7 @@ public class UserService {
      * @param userAccount - 대상 사용자
      * @return - 응답 DTO
      */
-    public UserDUOResponseDTO getUserDUOInfo(HttpSession session, String userAccount) {
+    public UserHistoryResponseDTO getUserHistoryInfo(HttpSession session, String userAccount) {
 
         User foundUser = userRepository.findById(userAccount).orElseThrow(
                 () -> new RuntimeException("해당하는 유저가 없습니다.")
@@ -197,7 +197,7 @@ public class UserService {
                 })
                 .collect(Collectors.toList());
 
-        return UserDUOResponseDTO.builder()
+        return UserHistoryResponseDTO.builder()
                 .userAccount(userAccount)
                 .profileImage(foundUser.getLatestProfileImage())
                 .userNickname(foundUser.getUserNickname())

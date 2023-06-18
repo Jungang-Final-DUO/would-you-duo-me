@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.user.UserDUOResponseDTO;
+import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.repository.UserRepository;
@@ -129,7 +129,7 @@ class UserServiceTest {
     @Test
     @DisplayName("유저 전적페이지에 쓰이는 정보들을 보여줄 수 있어야 한다")
     void getUserDUOInfoTest() {
-        UserDUOResponseDTO userDUOInfo = userService.getUserDUOInfo(null, "test@example.com");
+        UserHistoryResponseDTO userDUOInfo = userService.getUserHistoryInfo(null, "test@example.com");
         System.out.println("userDUOInfo = " + userDUOInfo);
     }
 

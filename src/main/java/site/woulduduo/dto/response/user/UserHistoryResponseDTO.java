@@ -14,7 +14,7 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 @Builder
-public class UserDUOResponseDTO {
+public class UserHistoryResponseDTO {
 
     // 데이터베이스에서 가져오는 유저 정보
     private String userAccount;
@@ -55,9 +55,9 @@ public class UserDUOResponseDTO {
     private List<UserReviewResponseDTO> userReviews;
 
     // 빌더 커스텀
-    public static class UserDUOResponseDTOBuilder {
+    public static class UserHistoryResponseDTOBuilder {
 
-        public UserDUOResponseDTOBuilder last20Matches(List<MatchV5DTO.MatchInfo.ParticipantDTO> last20Matches) {
+        public UserHistoryResponseDTOBuilder last20Matches(List<MatchV5DTO.MatchInfo.ParticipantDTO> last20Matches) {
             this.last20Matches = last20Matches;
             this.last20WinCount = (int) last20Matches.stream()
                     .filter(MatchV5DTO.MatchInfo.ParticipantDTO::isWin).count();
