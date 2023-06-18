@@ -129,7 +129,10 @@ public class UserService {
 
     public List<UserProfilesResponseDTO> getUserProfileList(/*HttpSession session, */UserSearchType userSearchType) {
         List<UserProfilesResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
-        log.info("@@@ userProfileList @@@@@ : {}", userProfileList);
+
+        for (UserProfilesResponseDTO userProfile : userProfileList) {
+            log.info("@@@ userProfile @@@@@ : {}", userProfile.toString());
+        }
         return userProfileList;
     }
 

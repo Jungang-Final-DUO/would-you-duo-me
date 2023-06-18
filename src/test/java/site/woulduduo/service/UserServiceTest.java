@@ -46,10 +46,12 @@ class UserServiceTest {
                     .userGender(Gender.M)
                     .lolTier(Tier.CHA)
                     .userPosition(Position.MID)
+                    .userComment("안녕하세요 트롤아닙니다." + i)
+                    .userMatchingPoint(500)
                     .build();
             userRepository.save(user);
         }
-        for (int i = 42; i < 64; i++) {
+        for (int i = 42; i < 100; i++) {
             User user = User.builder()
                     .userAccount("user" + i)
                     .userNickname("nickname" + i)
@@ -59,6 +61,8 @@ class UserServiceTest {
                     .userGender(Gender.M)
                     .lolTier(Tier.DIA)
                     .userPosition(Position.MID)
+                    .userComment("안녕하세요 트롤아닙니다." + i)
+                    .userMatchingPoint(500)
                     .build();
             userRepository.save(user);
         }
@@ -78,7 +82,7 @@ class UserServiceTest {
 
         List<UserProfilesResponseDTO> userProfileList = userService.getUserProfileList(userSearchType);
 
-        assertEquals(userProfileList.size(), 63);
+        assertEquals(userProfileList.size(), 40);
     }
 
     @Test

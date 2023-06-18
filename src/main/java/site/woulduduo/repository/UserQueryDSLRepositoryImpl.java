@@ -57,14 +57,16 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                     .userPosition(user.getUserPosition())
                     .userNickname(user.getUserNickname())
                     .avgRate(user.getUserAvgRate())
-                    .profileImage(user.getUserProfileList().get(1).getProfileImage())
+//                    .profileImage()
                     .build();
 
             userProfiles.add(dto);
         }
 
+        for (User user : userList) {
+        System.out.println("Repository QueryDSL user = " + user);
 
-        System.out.println("Repository QueryDSL userList = " + userList);
+        }
 
         return userProfiles;
     }
@@ -89,7 +91,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
     // 검색 키워드가 null인지 체크
     private BooleanExpression keywordContains(String keyword) {
-        return StringUtils.isNullOrEmpty(keyword)? user.userNickname.contains(keyword) : null;
+        return StringUtils.isNullOrEmpty(keyword)? null : user.userNickname.contains(keyword);
     }
 
 
