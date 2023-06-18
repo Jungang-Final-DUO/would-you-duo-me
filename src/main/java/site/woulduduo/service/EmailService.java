@@ -2,6 +2,7 @@ package site.woulduduo.service;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.Random;
 
 import static site.woulduduo.util.EmailUtil.EMAIL_KEY;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailService {
@@ -49,6 +51,8 @@ public class EmailService {
         createCode();
         String setFrom = "woulduduo@gmail.com";    // 보내는 사람
         String title = "Duo해 Duo 인증번호"; // 메일 제목
+
+        log.info(email);
 
         MimeMessage message = emailSender.createMimeMessage();
         message.addRecipients(MimeMessage.RecipientType.TO, email);

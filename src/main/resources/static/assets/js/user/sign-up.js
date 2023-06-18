@@ -110,7 +110,7 @@ function showConfirmationModal() {
         }
         remainTime--;
         confirmCodeInput.placeholder = "남은 시간 : " + remainTime + '초';
-    });
+    }, 1000);
 
     modal.showModal();
 
