@@ -5,8 +5,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
+import site.woulduduo.entity.User;
+import site.woulduduo.enumeration.Gender;
+import site.woulduduo.enumeration.Tier;
+import site.woulduduo.repository.UserQueryDSLRepositoryCustom;
+import site.woulduduo.repository.UserRepository;
+
+import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.util.List;
+
 import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
@@ -15,19 +27,14 @@ import site.woulduduo.dto.riot.MatchV5DTO;
 import site.woulduduo.dto.riot.MostChampInfo;
 import site.woulduduo.entity.Accuse;
 import site.woulduduo.entity.Board;
-import site.woulduduo.entity.User;
-import site.woulduduo.enumeration.Gender;
-import site.woulduduo.enumeration.Tier;
+
 import site.woulduduo.exception.NoRankException;
 import site.woulduduo.repository.*;
 
-import javax.servlet.http.HttpSession;
-import java.time.LocalDate;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
-import java.util.stream.Collectors;
-import java.time.format.DateTimeFormatter;
+
 import java.util.Optional;
 
 @Service
@@ -36,6 +43,7 @@ import java.util.Optional;
 @Transactional
 public class UserService {
 
+    private final UserQueryDSLRepositoryCustom userQueryDSLRepositoryCustom;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final AccuseRepository accuseRepository;
@@ -365,6 +373,15 @@ public class UserService {
 //
 //        return false;
 //    }
+
+    public List<UserProfilesResponseDTO> getUserProfileList(/*HttpSession session, */UserSearchType userSearchType) {
+        List<UserProfilesResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
+
+        for (UserProfilesResponseDTO userProfile : userProfileList) {
+            log.info("@@@ userProfile @@@@@ : {}", userProfile.toString());
+        }
+        return userProfileList;
+    }
 
 
 }

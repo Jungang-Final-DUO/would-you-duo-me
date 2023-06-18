@@ -5,6 +5,8 @@ import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.List;
 
 @Setter
@@ -18,29 +20,33 @@ public class UserProfilesResponseDTO {
 
     private String userAccount;
 
-    private Gender gender;
+    @Enumerated(EnumType.STRING)
+    private Gender userGender;
 
-    private String comment;
+    private String userComment;
 
-    private int matchingPoint;
+    private int userMatchingPoint;
 
+    @Enumerated(EnumType.STRING)
     private Tier tier;
 
-    private String instagram;
+    private String userInstagram;
 
-    private String facebook;
+    private String userFacebook;
 
-    private String twitter;
+    private String userTwitter;
 
     private boolean isFollowed;
 
-    private Position position;  // 디비에서 꺼낸거 넣는건데 String 안되나
+    @Enumerated(EnumType.STRING)
+    private Position userPosition;
 
-    private String nickname;
+    private String userNickname;
 
     private double avgRate;
 
     private List<String> mostChampList;
 
     private String profileImage;
+
 }
