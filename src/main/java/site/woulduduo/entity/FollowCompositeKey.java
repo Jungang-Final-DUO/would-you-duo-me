@@ -15,4 +15,5 @@ public class FollowCompositeKey implements Serializable {
     private String followFrom;
 
     private String followTo;
+
 }
