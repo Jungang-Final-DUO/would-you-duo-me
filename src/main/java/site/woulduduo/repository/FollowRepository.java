@@ -11,4 +11,8 @@ public interface FollowRepository extends JpaRepository<Follow, FollowCompositeK
 //    @Query(value="SELECT count(*) FROM duo_user_follow WHERE follow_to =:userAccount ", nativeQuery = true)
 //    Long findByUserfollowTo(String userAccount);
 
+
+    @Query("SELECT COUNT(*) FROM Follow f WHERE f.followFrom.userAccount = :followFrom AND f.followTo.userAccount = :followTo")
+    boolean existsByFollowFromAndFollowTo(String followFrom, String followTo);
+
 }

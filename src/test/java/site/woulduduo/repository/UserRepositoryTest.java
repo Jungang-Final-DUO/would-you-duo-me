@@ -3,6 +3,8 @@ package site.woulduduo.repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -11,11 +13,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.annotation.Rollback;
 import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.entity.Accuse;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Tier;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,8 +28,9 @@ import static java.util.Calendar.YEAR;
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
-@Rollback(false)
+@Rollback(value = false)
 class UserRepositoryTest {
+
     @Autowired
     UserRepository userRepository;
     @Autowired

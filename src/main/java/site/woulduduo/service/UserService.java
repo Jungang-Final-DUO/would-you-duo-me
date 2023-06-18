@@ -6,21 +6,39 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.entity.Accuse;
 import site.woulduduo.entity.Board;
+import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.user.UserDUOResponseDTO;
+import site.woulduduo.dto.response.user.UserReviewResponseDTO;
+import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
+import site.woulduduo.dto.riot.LeagueV4DTO;
+import site.woulduduo.dto.riot.MatchV5DTO;
+import site.woulduduo.dto.riot.MostChampInfo;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Tier;
 import site.woulduduo.repository.*;
+import site.woulduduo.exception.NoRankException;
+import site.woulduduo.repository.FollowRepository;
+import site.woulduduo.repository.MatchingRepository;
+import site.woulduduo.repository.UserProfileRepository;
+import site.woulduduo.repository.UserRepository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
@@ -37,12 +55,58 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
+
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final AccuseRepository accuseRepository;
     private final ReplyRepository replyRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RiotApiService riotApiService;
+    private final MatchingRepository matchingRepository;
+    private final FollowRepository followRepository;
+    private final UserProfileRepository userProfileRepository;
 
     final String id = "abc1234";
+
+    public void register(UserRegisterRequestDTO dto) {
+
+        // 이메일 중복 검사
+        if (userRepository.existsById(dto.getUserEmail())) {
+            throw new IllegalArgumentException("이미 등록된 이메일입니다.");
+        }
+
+        // 닉네임 중복 검사
+        int nicknameCount = userRepository.countByUserNickname(dto.getUserNickname());
+        if (nicknameCount > 0) {
+            throw new IllegalArgumentException("이미 등록된 닉네임입니다.");
+        }
+
+        // 소환사 아이디 중복 검사
+        int lolNicknameCount = userRepository.countByLolNickname(dto.getLolNickname());
+        if (lolNicknameCount > 0) {
+            throw new IllegalArgumentException("이미 등록된 롤 닉네임입니다.");
+        }
+
+        // 회원 정보 저장
+
+        User user = User.builder()
+                .userAccount(dto.getUserEmail())
+                .userNickname(dto.getUserNickname())
+                .userPassword(passwordEncoder.encode(dto.getUserPassword()))
+                .userBirthday(dto.getUserBirthday())
+                .userInstagram(dto.getUserInstagram())
+                .userTwitter(dto.getUserTwitter())
+                .userFacebook(dto.getUserFacebook())
+                .lolNickname(dto.getLolNickname())
+                .userGender(dto.getUserGender() == Gender.M ? Gender.M : Gender.F)
+                .lolTier(riotApiService.getTier(dto.getLolNickname()))
+                .build();
+
+        userRepository.save(user);
+
+        log.info("회원 가입이 완료되었습니다.");
+    }
+
     public boolean registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
 
         User exUser = User.builder()
@@ -61,7 +125,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(exUser.getUserSessionId());
 
         System.out.println("user = " + user);
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             return false;
         }
         user.ifPresent(u -> {
@@ -72,6 +136,11 @@ public class UserService {
             userRepository.save(u);
         });
         return true;
+    }
+
+    public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
+        userRepository.count();
+        return null;
     }
 
 //    public List<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type){
@@ -190,6 +259,108 @@ public class UserService {
 //        return false;
 //    }
 
+    /**
+     * 사용자의 듀오 정보를 구하는 메서드
+     * @param session - 접속한 사용자
+     * @param userAccount - 대상 사용자
+     * @return - 응답 DTO
+     */
+    public UserDUOResponseDTO getUserDUOInfo(HttpSession session, String userAccount) {
 
+        User foundUser = userRepository.findById(userAccount).orElseThrow(
+                () -> new RuntimeException("해당하는 유저가 없습니다.")
+        );
+        String lolNickname = foundUser.getLolNickname();
 
+        List<MatchV5DTO.MatchInfo.ParticipantDTO> last20ParticipantDTOList = riotApiService.getLast20ParticipantDTOList(lolNickname);
+
+        LeagueV4DTO rankInfo = null;
+        try {
+            rankInfo = riotApiService.getRankInfo(lolNickname, "RANKED_SOLO_5x5");
+        } catch (NoRankException e) {
+            try {
+                rankInfo = riotApiService.getRankInfo(lolNickname, "RANKED_FLEX_SR");
+            } catch (NoRankException ex) {
+                rankInfo = LeagueV4DTO.builder().build();
+            }
+        }
+
+        // 사용자가 받은 모든 리뷰
+        List<UserReviewResponseDTO> reviews = foundUser.getChattingFromList().stream()
+                .map(c -> c.getMatchingList().stream()
+                        .map(UserReviewResponseDTO::new)
+                        .collect(Collectors.toList())
+                ).collect(Collectors.toList())
+                .stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+
+        boolean isFollowed = false;
+        try {
+            isFollowed = followRepository.existsByFollowFromAndFollowTo(session.getAttribute("로그인키").toString(), userAccount);
+        } catch (NullPointerException ignored) {
+        }
+
+        List<MostChampInfo> mostChampInfoList = riotApiService.getMost3Champions(lolNickname).stream()
+                .map(m -> {
+                    List<MatchV5DTO.MatchInfo.ParticipantDTO> championMatchInfoList = last20ParticipantDTOList.stream()
+                            .filter(p -> p.getChampionName().equals(m))
+                            .collect(Collectors.toList());
+
+                    int winCount = (int) championMatchInfoList.stream()
+                            .filter(MatchV5DTO.MatchInfo.ParticipantDTO::isWin).count();
+
+                    int loseCount = (int) championMatchInfoList.stream()
+                            .filter(c -> !c.isWin()).count();
+
+                    double winRate = (double) winCount / (winCount + loseCount) * 100;
+
+                    int kills = championMatchInfoList.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getKills).sum();
+
+                    int deaths = championMatchInfoList.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getDeaths).sum();
+
+                    int assists = championMatchInfoList.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getAssists).sum();
+
+                    double kda = (double) (kills + assists) / deaths;
+
+                    return MostChampInfo.builder()
+                            .champName(m)
+                            .winCount(winCount)
+                            .loseCount(loseCount)
+                            .winRate(winRate)
+                            .kda(kda)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        return UserDUOResponseDTO.builder()
+                .userAccount(userAccount)
+                .profileImage(foundUser.getLatestProfileImage())
+                .userNickname(foundUser.getUserNickname())
+                .userPosition(foundUser.getUserPosition())
+                .isFollowed(isFollowed)
+                .userAvgRate(foundUser.getUserAvgRate())
+                .userMatchingPoint(foundUser.getUserMatchingPoint())
+                .userInstagram(foundUser.getUserInstagram())
+                .userFacebook(foundUser.getUserFacebook())
+                .userTwitter(foundUser.getUserTwitter())
+                .lolNickname(lolNickname)
+                .userComment(foundUser.getUserComment())
+                .lolTier(foundUser.getLolTier())
+                .userReviews(reviews)
+                // 모스트 3 챔피언 정보
+                .mostChampInfos(mostChampInfoList)
+                // riot api 를 통해 얻어오는 솔로랭크 혹은 자유랭크 데이터
+                .leaguePoints(rankInfo.getLeaguePoints())
+                .totalWinCount(rankInfo.getWins())
+                .totalLoseCount(rankInfo.getLosses())
+                .winRate(rankInfo.getWinRate())
+                // 최근 20 매치의 정보 데이터
+                .last20Matches(last20ParticipantDTOList)
+                .build();
+
+    }
 }

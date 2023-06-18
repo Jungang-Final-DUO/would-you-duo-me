@@ -4,13 +4,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import site.woulduduo.entity.Board;
 import site.woulduduo.entity.User;
-
+//메서드 쿼리 커스텀 할라면 넣어야 함
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+public interface BoardRepository extends JpaRepository<Board,Long> {
 
-public interface BoardRepository extends
-        JpaRepository<Board,Long> {
+
+
+
+
 
     //해당 id 게시글 작성
     long countByUser(User user);
