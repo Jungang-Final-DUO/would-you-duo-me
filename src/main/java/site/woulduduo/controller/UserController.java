@@ -95,6 +95,7 @@ public class UserController {
 //        return "";
 //    }
 
+    // 유저 전적 페이지 이동
     @GetMapping("/user/duo")
     public String showDUOUser(HttpSession session, Model model, String userAccount){
 

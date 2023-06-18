@@ -13,6 +13,8 @@ import site.woulduduo.dto.response.user.UserDUOResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
 import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.dto.riot.LeagueV4DTO;
+import site.woulduduo.dto.riot.MatchV5DTO;
+import site.woulduduo.dto.riot.MostChampInfo;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Tier;
@@ -129,13 +131,16 @@ public class UserService {
         User foundUser = userRepository.findById(userAccount).orElseThrow(
                 () -> new RuntimeException("해당하는 유저가 없습니다.")
         );
+        String lolNickname = foundUser.getLolNickname();
+
+        List<MatchV5DTO.MatchInfo.ParticipantDTO> last20ParticipantDTOList = riotApiService.getLast20ParticipantDTOList(lolNickname);
 
         LeagueV4DTO rankInfo = null;
         try {
-            rankInfo = riotApiService.getRankInfo(foundUser.getLolNickname(), "RANKED_SOLO_5x5");
+            rankInfo = riotApiService.getRankInfo(lolNickname, "RANKED_SOLO_5x5");
         } catch (NoRankException e) {
             try {
-                rankInfo = riotApiService.getRankInfo(foundUser.getLolNickname(), "RANKED_FLEX_SR");
+                rankInfo = riotApiService.getRankInfo(lolNickname, "RANKED_FLEX_SR");
             } catch (NoRankException ex) {
                 rankInfo = LeagueV4DTO.builder().build();
             }
@@ -157,6 +162,41 @@ public class UserService {
         } catch (NullPointerException ignored) {
         }
 
+        List<MostChampInfo> mostChampInfoList = riotApiService.getMost3Champions(lolNickname).stream()
+                .map(m -> {
+                    List<MatchV5DTO.MatchInfo.ParticipantDTO> championMatchInfoList = last20ParticipantDTOList.stream()
+                            .filter(p -> p.getChampionName().equals(m))
+                            .collect(Collectors.toList());
+
+                    int winCount = (int) championMatchInfoList.stream()
+                            .filter(MatchV5DTO.MatchInfo.ParticipantDTO::isWin).count();
+
+                    int loseCount = (int) championMatchInfoList.stream()
+                            .filter(c -> !c.isWin()).count();
+
+                    double winRate = (double) winCount / (winCount + loseCount) * 100;
+
+                    int kills = championMatchInfoList.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getKills).sum();
+
+                    int deaths = championMatchInfoList.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getDeaths).sum();
+
+                    int assists = championMatchInfoList.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getAssists).sum();
+
+                    double kda = (double) (kills + assists) / deaths;
+
+                    return MostChampInfo.builder()
+                            .champName(m)
+                            .winCount(winCount)
+                            .loseCount(loseCount)
+                            .winRate(winRate)
+                            .kda(kda)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
         return UserDUOResponseDTO.builder()
                 .userAccount(userAccount)
                 .profileImage(foundUser.getLatestProfileImage())
@@ -168,21 +208,22 @@ public class UserService {
                 .userInstagram(foundUser.getUserInstagram())
                 .userFacebook(foundUser.getUserFacebook())
                 .userTwitter(foundUser.getUserTwitter())
-                .lolNickname(foundUser.getLolNickname())
+                .lolNickname(lolNickname)
                 .userComment(foundUser.getUserComment())
                 .lolTier(foundUser.getLolTier())
                 .userReviews(reviews)
+                // 모스트 3 챔피언 정보
+                .mostChampInfos(mostChampInfoList)
                 // riot api 를 통해 얻어오는 솔로랭크 혹은 자유랭크 데이터
                 .leaguePoints(rankInfo.getLeaguePoints())
                 .totalWinCount(rankInfo.getWins())
                 .totalLoseCount(rankInfo.getLosses())
                 .winRate(rankInfo.getWinRate())
                 // 최근 20 매치의 정보 데이터
-                .last20Matches(riotApiService.getLast20ParticipantDTOList(foundUser.getLolNickname()))
+                .last20Matches(last20ParticipantDTOList)
                 .build();
 
     }
-
 
 //    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount){
 //
