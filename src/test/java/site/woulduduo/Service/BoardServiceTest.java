@@ -6,12 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import site.woulduduo.dto.request.board.BoardWriteRequestDTO;
-import site.woulduduo.dto.response.board.BoardsByAdminResponseDTO;
 import site.woulduduo.enumeration.BoardCategory;
 
 import javax.transaction.Transactional;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -52,15 +49,15 @@ class BoardServiceTest {
 
 //
 //}
-
-    @Test
-    @DisplayName("관리자용 전체 boardList dto변환")
-    void getBoardListByAdmin(){
-        List<BoardsByAdminResponseDTO> boardListByAdmin =
-                boardService.getBoardListByAdmin();
-
-        System.out.println("boardListByAdmin = " + boardListByAdmin);
-    }
+//
+//    @Test
+//    @DisplayName("관리자용 전체 boardList dto변환")
+//    void getBoardListByAdmin(){
+//        List<BoardsByAdminResponseDTO> boardListByAdmin =
+//                boardService.getBoardListByAdmin();
+//
+//        System.out.println("boardListByAdmin = " + boardListByAdmin);
+//    }
 
 
 }
