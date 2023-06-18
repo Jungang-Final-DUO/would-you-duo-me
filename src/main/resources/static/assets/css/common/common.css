@@ -39,6 +39,11 @@ button {
     opacity: 0.8;
 }
 
+dialog {
+    padding: 0;
+    border: none;
+}
+
 /* dialog backdrop */
 dialog {
     padding: 0;
