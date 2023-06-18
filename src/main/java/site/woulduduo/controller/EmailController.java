@@ -10,7 +10,10 @@ import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.service.EmailService;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
+
+import static site.woulduduo.util.EmailUtil.EMAIL_KEY;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,12 +22,29 @@ public class EmailController {
     private final EmailService emailService;
 
     @PostMapping("/user/send-email")
-    public ResponseEntity<String> sendEmail(@RequestBody UserRegisterRequestDTO dto) {
+    public ResponseEntity<?> sendEmail(
+            HttpSession session,
+            @RequestBody UserRegisterRequestDTO dto
+    ) {
         try {
             String authCode = emailService.sendEmail(dto.getUserEmail());
-            return ResponseEntity.ok(authCode);
+            session.setAttribute(EMAIL_KEY, authCode);
+            return ResponseEntity.ok().build();
         } catch (MessagingException | UnsupportedEncodingException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이메일 전송에 실패했습니다.");
+        }
+    }
+
+    @PostMapping("/user/check-email")
+    public ResponseEntity<?> checkEmail(
+            HttpSession session,
+            @RequestBody String authCode
+    ) {
+        if (emailService.checkEmail(session, authCode)) {
+            return ResponseEntity.ok("인증성공");
+        } else {
+            // 인증 실패했을떄 위 메서드처럼 에러 보내도
+            return ResponseEntity.status(499).build();
         }
     }
 
