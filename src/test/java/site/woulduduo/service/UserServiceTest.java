@@ -56,7 +56,22 @@ class UserServiceTest {
                     .build();
             userRepository.save(user);
         }
-        for (int i = 42; i < 100; i++) {
+        for (int i = 42; i < 66; i++) {
+            User user = User.builder()
+                    .userAccount("user" + i)
+                    .userNickname("nickname" + i)
+                    .userPassword("pwd" + i)
+                    .userBirthday(LocalDate.of(2000, 1, 1))
+                    .lolNickname("lolNickname" + i)
+                    .userGender(Gender.F)
+                    .lolTier(Tier.DIA)
+                    .userPosition(Position.MID)
+                    .userComment("안녕하세요 트롤아닙니다." + i)
+                    .userMatchingPoint(500)
+                    .build();
+            userRepository.save(user);
+        }
+        for (int i = 66; i < 89; i++) {
             User user = User.builder()
                     .userAccount("user" + i)
                     .userNickname("nickname" + i)
@@ -73,21 +88,21 @@ class UserServiceTest {
         }
 
 
-
     }
 
     @Test
     @DisplayName("QueryDSL을 이용해 필터와 정렬 조건에 맞춰 userList가 출력되어야한다.")
     void testGetUserProfileList() {
         UserSearchType userSearchType = new UserSearchType();
+        userSearchType.setKeyword("4");
         userSearchType.setPosition(Position.MID);
-        userSearchType.setGender(Gender.M);
+//        userSearchType.setGender(Gender.M);
         userSearchType.setTier(Tier.DIA);
         userSearchType.setSort("avgRate");
 
         List<UserProfilesResponseDTO> userProfileList = userService.getUserProfileList(userSearchType);
 
-        assertEquals(userProfileList.size(), 40);
+        assertEquals(userProfileList.size(), 11);
     }
 
     @Test

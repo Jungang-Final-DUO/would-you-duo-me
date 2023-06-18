@@ -42,6 +42,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                 .orderBy(user.userAvgRate.desc())
                 .fetch();
 
+    //
         List<UserProfilesResponseDTO> userProfiles = new ArrayList<>();
         for (User user : userList) {
             UserProfilesResponseDTO dto = UserProfilesResponseDTO.builder()
@@ -53,11 +54,11 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                     .userInstagram(user.getUserInstagram())
                     .userFacebook(user.getUserFacebook())
                     .userTwitter(user.getUserTwitter())
-//                    .isFollowed(user.get)
+//                  .isFollowed(user.get)
                     .userPosition(user.getUserPosition())
                     .userNickname(user.getUserNickname())
                     .avgRate(user.getUserAvgRate())
-//                    .profileImage()
+//                    .profileImage(user.getUserProfileList().get(0).getProfileImage())
                     .build();
 
             userProfiles.add(dto);
