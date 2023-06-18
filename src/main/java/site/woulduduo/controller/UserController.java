@@ -14,6 +14,7 @@ import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.service.UserService;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,6 @@ public class UserController {
 
     private final UserService userService;
 
-
     // 회원 가입 양식 요청
     @GetMapping("/user/sign-up")
     public String signUp() {
@@ -32,10 +32,14 @@ public class UserController {
         return "user/sign-up";
     }
 
-    //회원가입 처리 요청
+    // 회원가입 처리 요청
     @PostMapping("/user/sign-up")
-    public String signUp(UserRegisterRequestDTO dto) {
+    public String signUp(@Valid UserRegisterRequestDTO dto) {
         log.info("/user/sign-up POST! ");
+
+        // UserRegisterRequestDTO를 UserService의 회원가입 메서드로 전달하여 저장
+        userService.register(dto);
+
         return "redirect:/user/sign-in";
     }
 

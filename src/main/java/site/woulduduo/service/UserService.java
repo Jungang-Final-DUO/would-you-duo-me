@@ -25,6 +25,8 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -64,7 +66,6 @@ public class UserService {
         }
 
         // 회원 정보 저장
-
         User user = User.builder()
                 .userAccount(dto.getUserEmail())
                 .userNickname(dto.getUserNickname())
