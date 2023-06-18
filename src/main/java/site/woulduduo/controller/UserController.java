@@ -4,38 +4,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.service.EmailService;
-import site.woulduduo.service.UserService;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import site.woulduduo.dto.request.page.AdminSearchType;
-import site.woulduduo.dto.response.ListResponseDTO;
-import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.service.UserService;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
-import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Controller
 @Slf4j
@@ -43,8 +24,6 @@ import java.time.format.DateTimeFormatter;
 public class UserController {
 
     private final UserService userService;
-    private final EmailService emailService;
-
 
     // 회원 가입 양식 요청
     @GetMapping("/user/sign-up")
