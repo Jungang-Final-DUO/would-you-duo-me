@@ -236,8 +236,9 @@ public class UserService {
         LocalDate currentDate = LocalDate.now();
 
         for (UserByAdminResponseDTO userByAdminResponseDTO : userListByAdmin) {
+            System.out.println("userByAdminResponseDTO = " + userByAdminResponseDTO);
             LocalDate joinDate = userByAdminResponseDTO.getJoinDate();
-            if (joinDate != null && joinDate.equals(currentDate)) {
+            if (joinDate!=null&&joinDate.equals(currentDate)) {
                 todayUserList.add(userByAdminResponseDTO);
             }
         }
