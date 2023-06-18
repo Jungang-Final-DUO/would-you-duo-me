@@ -241,11 +241,12 @@ public class RiotApiService {
 
     /**
      * 리스트에서 가장 많이 들어있는 n 개를 구하는 메서드
+     *
      * @param items - 리스트
-     * @param n - 갯수
+     * @param n     - 갯수
      * @return - n 개의 리스트
      */
-    public static <T> List<T> getTop3PopularityItems(List<T> items, int n) {
+    private static <T> List<T> getTop3PopularityItems(List<T> items, int n) {
         // Step 1: Create a HashMap to store the frequency of each item
         Map<T, Integer> frequencyMap = new HashMap<>();
 
@@ -272,8 +273,9 @@ public class RiotApiService {
 
     /**
      * 랭크 정보를 얻는 메서드
+     *
      * @param lolNickname - 찾고자하는 소환사명
-     * @param rankType - 랭크 타입
+     * @param rankType    - 랭크 타입
      * @return - 리그 정보
      */
     public LeagueV4DTO getRankInfo(String lolNickname, String rankType) throws NoRankException {
