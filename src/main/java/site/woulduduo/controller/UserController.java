@@ -2,7 +2,6 @@ package site.woulduduo.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.XSlf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,24 +11,15 @@ import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 import site.woulduduo.service.UserService;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
-import site.woulduduo.dto.response.ListResponseDTO;
-import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
-import site.woulduduo.service.UserService;
-
+import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -38,8 +28,6 @@ public class UserController {
 
     private final UserService userService;
 
-
-
     // 회원 가입 양식 요청
     @GetMapping("/user/sign-up")
     public String signUp() {
@@ -47,10 +35,14 @@ public class UserController {
         return "user/sign-up";
     }
 
-    //회원가입 처리 요청
+    // 회원가입 처리 요청
     @PostMapping("/user/sign-up")
-    public String signUp(UserRegisterRequestDTO dto) {
+    public String signUp(@Valid UserRegisterRequestDTO dto) {
         log.info("/user/sign-up POST! ");
+
+        // UserRegisterRequestDTO를 UserService의 회원가입 메서드로 전달하여 저장
+        userService.register(dto);
+
         return "redirect:/user/sign-in";
     }
 
@@ -74,15 +66,16 @@ public class UserController {
 
     @GetMapping("/user/admin")
     //관리자 페이지 열기
-    public String showAdminpage(HttpSession session, Model model){
-
+    public String showAdminpage(/*HttpSession session, */Model model) {
+        Map<String, Integer> countByAdmin = userService.countByAdmin();
+        model.addAttribute("count", countByAdmin);
+        countByAdmin.get("ua");
         return "admin/admin";
     }
 
     //관리자 페이지 리스트 가져오기
-    public ResponseEntity<?> getUserListByAdmin(AdminSearchType type){
-        ListResponseDTO<UsersByAdminResponseDTO>
-                userListByAdmin = userService.getUserListByAdmin(type);
+    public ResponseEntity<?> getUserListByAdmin(/*AdminSearchType type*/) {
+        List<UserByAdminResponseDTO> userListByAdmin = userService.getUserListByAdmin();
 
 
         return ResponseEntity
@@ -108,8 +101,9 @@ public class UserController {
 //
 //        return "";
 //    }
+
     @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
-    public ResponseEntity<?> getUserProfileList(int page, String keyword, int size, Position position , Gender gender, Tier tier, String sort/*, HttpSession session*/) {
+    public ResponseEntity<?> getUserProfileList(int page, String keyword, int size, Position position, Gender gender, Tier tier, String sort/*, HttpSession session*/) {
 //        UserSearchType userSearchType = UserSearchType.builder()
 //                .position(Position.MID)
 //                .gender(Gender.M)
@@ -125,4 +119,19 @@ public class UserController {
 
         return ResponseEntity.ok().body(userService.getUserProfileList(userSearchType));
     }
-}
+
+        // 유저 전적 페이지 이동
+        @GetMapping("/user/user-history")
+        public String showUserHistory (HttpSession session, Model model, String userAccount){
+
+            log.info("/user/history?userAccount={} GET", userAccount);
+
+            UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
+
+            model.addAttribute("history", dto);
+
+            return "user/user-history";
+
+        }
+    }
+
