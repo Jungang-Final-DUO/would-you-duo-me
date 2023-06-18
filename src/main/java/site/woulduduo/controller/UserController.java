@@ -96,7 +96,7 @@ public class UserController {
 //    }
 
     // 유저 전적 페이지 이동
-    @GetMapping("/user/history")
+    @GetMapping("/user/user-history")
     public String showUserHistory(HttpSession session, Model model, String userAccount){
 
         log.info("/user/history?userAccount={} GET", userAccount);
@@ -105,6 +105,6 @@ public class UserController {
 
         model.addAttribute(dto);
 
-        return "user/history";
+        return "user/user-history";
     }
 }

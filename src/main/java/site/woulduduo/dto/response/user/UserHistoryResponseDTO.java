@@ -31,7 +31,7 @@ public class UserHistoryResponseDTO {
     private String userTwitter;
     private String lolNickname;
     private String userComment;
-    private Tier lolTier;
+    private String tier;
 
     // riot api 를 통해 얻어오는 데이터
     private int leaguePoints;
@@ -56,6 +56,41 @@ public class UserHistoryResponseDTO {
 
     // 빌더 커스텀
     public static class UserHistoryResponseDTOBuilder {
+
+        public UserHistoryResponseDTOBuilder tier(Tier tier) {
+            switch (tier) {
+                case UNR:
+                    this.tier = "Challenger";
+                    break;
+                case IRO:
+                    this.tier = "Iron";
+                    break;
+                case BRO:
+                    this.tier = "Bronze";
+                    break;
+                case SIL:
+                    this.tier = "Silver";
+                    break;
+                case GOL:
+                    this.tier = "Gold.png";
+                    break;
+                case PLA:
+                    this.tier = "Platinum";
+                    break;
+                case DIA:
+                    this.tier = "Diamond";
+                    break;
+                case MAS:
+                    this.tier = "Master";
+                    break;
+                case GRA:
+                    this.tier = "Grandmaster";
+                    break;
+                default:
+                    this.tier = null;
+            }
+            return this;
+        }
 
         public UserHistoryResponseDTOBuilder last20Matches(List<MatchV5DTO.MatchInfo.ParticipantDTO> last20Matches) {
             this.last20Matches = last20Matches;

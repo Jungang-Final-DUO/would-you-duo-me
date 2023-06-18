@@ -210,7 +210,7 @@ public class UserService {
                 .userTwitter(foundUser.getUserTwitter())
                 .lolNickname(lolNickname)
                 .userComment(foundUser.getUserComment())
-                .lolTier(foundUser.getLolTier())
+                .tier(foundUser.getLolTier())
                 .userReviews(reviews)
                 // 모스트 3 챔피언 정보
                 .mostChampInfos(mostChampInfoList)
