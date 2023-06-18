@@ -1,15 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="/src/main/resources/static/css/amdin/admin.css">
+<%@ include file="../common/static-head.jsp"%>
+<link rel="stylesheet" href="/assets/css/admin/admin.css">
 
 </head>
 <body>
     <div id="main-wrapper">
+    <%@ include file="../common/header.jsp" %>
+
+    <div id="admin-wrapper">
         <div class="menu" id="left_menu">
             <ul class="Today_Total">
                 <li>Today</li>
@@ -19,48 +24,48 @@
                 <ul class="two_box">
                     <a href="${getUserListByAdmin}" class="one_box">
                         <ul class="one_box_text">
-                            <li class="pic"><img class="admin_img" id="sign" src="/assets/img/dongwoo/금일가입자수.png" alt="today_user"></li>
+                            <li class="pic"><img class="admin_img" id="sign" src="/assets/img/admin/금일가입자수.png" alt="today_user"></li>
                             <li class="admin_category">금일 가입자</li>
-                            <li class="mem_count">${} 명</li>
+                            <li class="mem_count">${count.get("ut")} 명</li>
                         </ul>
                     </a>
                     <a href="${getUserListByAdmin}" class="one_box">
                         <ul class="one_box_text">
-                            <li class="pic"><img class="admin_img" id="member"src="/assets/img/dongwoo/회원관리.png" alt="user_management"></li>
+                            <li class="pic"><img class="admin_img" id="member"src="/assets/img/admin/회원관리.png" alt="user_management"></li>
                             <li class="admin_category">회원관리</li>
-                            <li class="mem_count">${} 명</li>
+                            <li class="mem_count">${count.get("ua")} 명</li>
                         </ul>
                     </a>
                 </ul>
                 <ul class="two_box">
                     <a href="/api/v1/accuses/{type}/{page}" class="one_box">
                         <ul class="one_box_text">
-                            <li class="pic"><img class="admin_img accuse" src="/assets/img/dongwoo/신고사진.png" alt="today_accuse"></li>
+                            <li class="pic"><img class="admin_img accuse" src="/assets/img/admin/신고사진.png" alt="today_accuse"></li>
                             <li class="admin_category">금일 신고</li>
-                            <li class="mem_count">${} 회</li>
+                            <li class="mem_count">${count.get("at")} 회</li>
                         </ul>
                     </a>
                     <a href="/api/v1/accuses/{type}/{page}" class="one_box">
                         <ul class="one_box_text">
-                            <li class="pic"><img class="admin_img accuse" src="/assets/img/dongwoo/신고사진.png" alt="accuse_management"></li>
+                            <li class="pic"><img class="admin_img accuse" src="/assets/img/admin/신고사진.png" alt="accuse_management"></li>
                             <li class="admin_category">신고 관리</li>
-                            <li class="mem_count">${} 회</li>
+                            <li class="mem_count">${count.get("aa")}회</li>
                         </ul>
                     </a>
                 </ul>
                 <ul class="two_box">
                     <a href="/api/v1/boards/admin" class="one_box">
                         <ul class="one_box_text">
-                            <li class="pic"><img class="admin_img accuse" src="/assets/img/dongwoo/게시판관리.png" alt="today_board"></li>
+                            <li class="pic"><img class="admin_img accuse" src="/assets/img/admin/게시판관리.png" alt="today_board"></li>
                             <li class="admin_category">금일 작성 게시물</li>
-                            <li class="mem_count">${} 건</li>
+                            <li class="mem_count">${count.get("bt")}건</li>
                         </ul>
                     </a>
                     <a href="/api/v1/boards/admin" class="one_box">
                         <ul class="one_box_text">
-                            <li class="pic"><img class="admin_img accuse" src="/assets/img/dongwoo/게시판관리.png" alt="board_management"></li>
+                            <li class="pic"><img class="admin_img accuse" src="/assets/img/admin/게시판관리.png" alt="board_management"></li>
                             <li class="admin_category">게시물 관리</li>
-                            <li class="mem_count">${} 건</li>
+                            <li class="mem_count">${count.get("ba")}건</li>
                         </ul>
                     </a>
                 </ul>
@@ -77,7 +82,7 @@
             <div class="top_menu">
                 <div class="search">
                     <input name="keyword" type="text">
-                    <button><img src="/assets/img/dongwoo/검색.png" alt="search"></button>
+                    <button><img src="/assets/img/admin/검색.png" alt="search"></button>
                 </div>
                 <ul class="admin_board">
                     <li><a href="/board/write">글쓰기</a></li>
@@ -195,6 +200,6 @@
 
             </div>
         </div>
-
+</div>
 </body>
 </html>
