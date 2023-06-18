@@ -8,7 +8,10 @@ import site.woulduduo.dto.request.board.BoardModifyRequestDTO;
 import site.woulduduo.dto.request.board.BoardWriteRequestDTO;
 import site.woulduduo.entity.Board;
 import site.woulduduo.enumeration.BoardCategory;
+import site.woulduduo.repository.BoardLikeRepository;
 import site.woulduduo.repository.BoardRepository;
+import site.woulduduo.repository.ReplyRepository;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -16,9 +19,8 @@ import site.woulduduo.repository.BoardRepository;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-//    private final ReplyRepository replyRepository;
-
-//    private final BoardLikeRepository boardLikeRepository;
+    private final ReplyRepository replyRepository;
+    private final BoardLikeRepository boardLikeRepository;
 
 
     //조회
@@ -75,5 +77,14 @@ public class BoardService {
 
     }
 
+    //전체 BoardList DTO 변환 (Admin)
+//    public List<BoardsByAdminResponseDTO> getBoardListByAdmin(){
+//        List<BoardsByAdminResponseDTO> boardListDTO = boardRepository.findAll()
+//                .stream()
+//                .map(BoardsByAdminResponseDTO::new)
+//                .collect(toList());
+//
+//        return boardListDTO;
+//    }
 
 }
