@@ -58,7 +58,7 @@ public class MatchV5DTO {
             private int item5;
             private int item6;
             private int kills;
-            private PerksDTO statPerks;
+            private PerksDTO perks;
             private String summonerName;
             // 소환사 주문 정보 summoner.json에 있다.
             private int summoner1Id;

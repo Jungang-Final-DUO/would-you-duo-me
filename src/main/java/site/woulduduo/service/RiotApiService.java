@@ -13,9 +13,11 @@ import site.woulduduo.dto.riot.LeagueV4DTO;
 import site.woulduduo.dto.riot.MatchV5DTO;
 import site.woulduduo.dto.riot.SummonerV4DTO;
 import site.woulduduo.enumeration.Tier;
+import site.woulduduo.exception.NoRankException;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -64,9 +66,9 @@ public class RiotApiService {
      * 랭크 정보 데이터를 담은 DTO 를 반환
      *
      * @param lolNickname - 소환사명
-     * @return - 랭크 정보 데이터 배열 (0번은 솔로랭크, 1번은 자유랭크)
+     * @return - 랭크 정보 데이터 배열 (queueType 에 솔로랭크인지 자유랭크인지에 관한 정보가 저장)
      */
-    private LeagueV4DTO[] getLeagueV4DTO(String lolNickname) {
+    public LeagueV4DTO[] getLeagueV4DTO(String lolNickname) {
         String encryptedSummonerId = getSummonerV4DTO(lolNickname).getId();
 
         String leagueV4RequestUri = RIOT_URI + "/league/v4/entries/by-summoner/"
@@ -197,7 +199,7 @@ public class RiotApiService {
      * @param lolNickname - 소환사명
      * @return - 해당 소환사의 20게임 내 정보
      */
-    private List<MatchV5DTO.MatchInfo.ParticipantDTO> getLast20ParticipantDTOList(String lolNickname) {
+    public List<MatchV5DTO.MatchInfo.ParticipantDTO> getLast20ParticipantDTOList(String lolNickname) {
         // puuid를 얻어온다.
         String puuid = getSummonerV4DTO(lolNickname).getPuuid();
 
@@ -228,7 +230,7 @@ public class RiotApiService {
      * @param lolNickname - 소환사명
      * @return -
      */
-    private List<MatchV5DTO> getLast20MatchInfo(String lolNickname) {
+    public List<MatchV5DTO> getLast20MatchInfo(String lolNickname) {
         SummonerV4DTO v4DTO = getSummonerV4DTO(lolNickname);
 
         List<String> last20Games = getLast20Games(v4DTO.getPuuid());
@@ -239,11 +241,12 @@ public class RiotApiService {
 
     /**
      * 리스트에서 가장 많이 들어있는 n 개를 구하는 메서드
+     *
      * @param items - 리스트
-     * @param n - 갯수
+     * @param n     - 갯수
      * @return - n 개의 리스트
      */
-    public static <T> List<T> getTop3PopularityItems(List<T> items, int n) {
+    private static <T> List<T> getTop3PopularityItems(List<T> items, int n) {
         // Step 1: Create a HashMap to store the frequency of each item
         Map<T, Integer> frequencyMap = new HashMap<>();
 
@@ -266,6 +269,20 @@ public class RiotApiService {
         }
 
         return top3PopularityItems;
+    }
+
+    /**
+     * 랭크 정보를 얻는 메서드
+     *
+     * @param lolNickname - 찾고자하는 소환사명
+     * @param rankType    - 랭크 타입
+     * @return - 리그 정보
+     */
+    public LeagueV4DTO getRankInfo(String lolNickname, String rankType) throws NoRankException {
+        return Stream.of(getLeagueV4DTO(lolNickname))
+                .filter(l -> l.getQueueType().equals(rankType))
+                .findFirst()
+                .orElseThrow(() -> new NoRankException("랭크 정보가 없습니다."));
     }
 
 }
