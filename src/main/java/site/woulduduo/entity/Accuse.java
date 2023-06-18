@@ -1,8 +1,10 @@
 package site.woulduduo.entity;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -29,5 +31,9 @@ public class Accuse {
 
     @Column(length = 20, name = "accuse_etc")
     private String accuseEtc;
+
+    @CreationTimestamp
+    @Column(name = "accuse_written_date", updatable = false)
+    private LocalDateTime accuseWrittenDate;
 
 }

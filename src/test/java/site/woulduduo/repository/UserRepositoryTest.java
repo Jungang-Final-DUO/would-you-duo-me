@@ -33,13 +33,13 @@ class UserRepositoryTest {
 
     @Test
     @DisplayName("사용자 저장")
-    void saveTest(){
+    void saveTest() {
         User user2 = User.builder()
                 .userAccount("123")
                 .userNickname("123")
                 .userPassword("123")
                 .userCurrentPoint(123)
-                .userBirthday(LocalDate.of(1999,11,07))
+                .userBirthday(LocalDate.of(1999, 11, 07))
                 .lolNickname("123")
                 .userGender(Gender.F)
                 .lolTier(Tier.DIA)
@@ -50,7 +50,7 @@ class UserRepositoryTest {
                 .userNickname("234")
                 .userPassword("234")
                 .userCurrentPoint(234)
-                .userBirthday(LocalDate.of(1999,11,07))
+                .userBirthday(LocalDate.of(1999, 11, 07))
                 .lolNickname("234")
                 .userGender(Gender.F)
                 .lolTier(Tier.DIA)
@@ -61,7 +61,7 @@ class UserRepositoryTest {
                 .userNickname("345")
                 .userPassword("345")
                 .userCurrentPoint(345)
-                .userBirthday(LocalDate.of(1999,11,07))
+                .userBirthday(LocalDate.of(1999, 11, 07))
                 .lolNickname("345")
                 .userGender(Gender.F)
                 .lolTier(Tier.DIA)
@@ -92,38 +92,38 @@ class UserRepositoryTest {
     }
 
 
-
-    @BeforeEach
-    void bulkInsert() {
-        // 학생을 147명 저장
-        for (int i = 1; i <= 147; i++) {
-            User user = User.builder()
-                    .userAccount("i")
-                    .userNickname("i")
-                    .userPassword("i")
-                    .userCurrentPoint(123)
-                    .userBirthday(LocalDate.of(1999,11,07))
-                    .lolNickname("i")
-                    .userGender(Gender.F)
-                    .lolTier(Tier.DIA)
-                    .build();
-            userRepository.save(user);
-        }
-    }
+//    @BeforeEach
+//    void bulkInsert() {
+//        // 학생을 147명 저장
+//        for (int i = 1; i <= 147; i++) {
+//            User User1 = User.builder()
+//                    .userAccount("acvd" + i)
+//                    .userNickname("asd" + i)
+//                    .userPassword("12345")
+//                    .userCurrentPoint(123)
+//                    .userBirthday(LocalDate.of(1990, 11, 07))
+//                    .lolNickname("asd" + i)
+//                    .userGender(Gender.F)
+//                    .lolTier(Tier.DIA)
+//                    .build();
+//            userRepository.save(User1);
+//        }
+//    }
 
     @Test
     @DisplayName("전제 조회")
-    void findAll(){
+    void findAll() {
         List<User> all = userRepository.findAll();
         System.out.println("all = " + all);
     }
+
     @Test
     @DisplayName("페이징처리")
     void searchTest() {
 
-         int page =1;
-         String keyword = "";
-         int size =10;
+        int page = 1;
+        String keyword = "";
+        int size = 10;
 
         Pageable pageInfo
                 = PageRequest.of(page - 1,
@@ -152,6 +152,42 @@ class UserRepositoryTest {
         System.out.println("\n\n\n");
         userList.forEach(System.out::println);
         System.out.println("\n\n\n");
+    }
+
+
+    @Test
+    @DisplayName("전체회원수 확인")
+    void countTest() {
+
+        List<User> all = userRepository.findAll();
+        int size = all.size();
+        System.out.println("size = " + size);
+    }
+
+    @Test
+    @DisplayName("금일 가입자 count 확인")
+    void todaySaveTest() {
+        User user2 = User.builder()
+                .userAccount("123")
+                .userNickname("123")
+                .userPassword("123")
+                .userCurrentPoint(123)
+                .userBirthday(LocalDate.of(1999, 11, 07))
+                .lolNickname("123")
+                .userGender(Gender.F)
+                .lolTier(Tier.DIA)
+//                .accuseList(Accuse)
+                .build();
+
+        User save = userRepository.save(user2);
+        List<User> all = userRepository.findAll();
+        System.out.println("all = " + all);
+
+        int allWithSQL = userRepository.findAllWithJoinDate(LocalDate.of(2023, 06, 18));
+        System.out.println("allWithSQL = " + allWithSQL);
+
+        LocalDate userJoinDate = save.getUserJoinDate();
+        System.out.println("userJoinDate = " + userJoinDate);
     }
 
 }

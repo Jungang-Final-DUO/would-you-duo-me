@@ -49,11 +49,11 @@ class UserServiceTest {
     @Test
     @DisplayName("관리자 유저 리스트 dto 변환")
     void userExchangeDTO(){
-        AdminSearchType build = AdminSearchType.builder()
-                .adminViewType(AdminViewType.TODAY)
-                .build();
+//        AdminSearchType build = AdminSearchType.builder()
+//                .adminViewType(AdminViewType.TODAY)
+//                .build();
 
-        userService.getUserListByAdmin(build);
+//        userService.getUserListByAdmin(build);
     }
 
 }

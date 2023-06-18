@@ -4,9 +4,8 @@ import lombok.*;
 import site.woulduduo.enumeration.AdminViewType;
 
 @Getter @Setter
-@Builder
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
 public class AdminSearchType extends PageDTO{
     AdminViewType adminViewType;

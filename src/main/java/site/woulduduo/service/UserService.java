@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.entity.Accuse;
+import site.woulduduo.entity.Board;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Tier;
@@ -18,6 +19,7 @@ import site.woulduduo.repository.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import site.woulduduo.dto.request.page.AdminSearchType;
@@ -72,49 +74,106 @@ public class UserService {
         return true;
     }
 
-    public List<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type){
+//    public List<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type){
+//
+//        // Pageable객체 생성
+//        Pageable pageable = PageRequest.of(
+//                type.getPage() - 1,
+//                type.getSize(),
+//
+//                Sort.by("createDate").descending()
+//        );
+//
+//        //전체불러오기
+//        Page<User> all = userRepository.findAll(pageable);
+//        //user정보
+//        List<User> users = all.getContent();
+//
+//        //dto리스트생성 및 dto 생성
+//        List<UsersByAdminResponseDTO> userListByAdmin = new ArrayList<>();
+//        UsersByAdminResponseDTO dto = new UsersByAdminResponseDTO();
+//        for (User user : users) {
+//            //bc,rc,rc,fc 카운터 찾는 메서드
+//            long accuseCount = accuseRepository.countByUser(user);
+//            long boardCount = boardRepository.countByUser(user);
+//            long replyCount = replyRepository.countByUser(user);
+//
+//
+//
+//            dto.setUserAccount(user.getUserAccount());
+//            dto.setGender(user.getUserGender().toString());
+//            dto.setBoardCount(boardCount);
+//            dto.setReplyCount(replyCount);
+//            dto.setReportCount(accuseCount);
+//            dto.setPoint(user.getUserCurrentPoint());
+//            dto.setFollowCount(3);
+//
+//            userListByAdmin.add(dto);
+//        }
+//        List<UsersByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
+//        System.out.println("userListByAdmin1 = " + userListByAdmin1);
+//
+//        return userListByAdmin1;
+//    }
 
-        // Pageable객체 생성
-        Pageable pageable = PageRequest.of(
-                type.getPage() - 1,
-                type.getSize(),
+    public Map<String,Integer>countByAdmin(){
+        Map<String,Integer>adminCount = new HashMap<>();
+        int userFindAllCount = userFindAllCount();
+        int userFindByToday = userFindByToday();
+        int accuseFindAllCount = accuseFindAllCount();
+        int accuseFindByToday = accuseFindByToday();
+        int boardFindAllCount = boardFindAllCount();
+        int boardFindByToday = boardFindByToday();
 
-                Sort.by("createDate").descending()
-        );
+        adminCount.put("ua",userFindAllCount);
+        adminCount.put("ut",userFindByToday);
+        adminCount.put("aa",accuseFindAllCount);
+        adminCount.put("at",accuseFindByToday);
+        adminCount.put("ba",boardFindAllCount);
+        adminCount.put("bt",boardFindByToday);
 
-        //전체불러오기
-        Page<User> all = userRepository.findAll(pageable);
-        //user정보
-        List<User> users = all.getContent();
+        return adminCount;
 
-        //dto리스트생성 및 dto 생성
-        List<UsersByAdminResponseDTO> userListByAdmin = new ArrayList<>();
-        UsersByAdminResponseDTO dto = new UsersByAdminResponseDTO();
-        for (User user : users) {
-            //bc,rc,rc,fc 카운터 찾는 메서드
-            long accuseCount = accuseRepository.countByUser(user);
-            long boardCount = boardRepository.countByUser(user);
-            long replyCount = replyRepository.countByUser(user);
-
-
-
-            dto.setUserAccount(user.getUserAccount());
-            dto.setGender(user.getUserGender().toString());
-            dto.setBoardCount(boardCount);
-            dto.setReplyCount(replyCount);
-            dto.setReportCount(accuseCount);
-            dto.setPoint(user.getUserCurrentPoint());
-            dto.setFollowCount(3);
-
-            userListByAdmin.add(dto);
-        }
-        List<UsersByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
-        System.out.println("userListByAdmin1 = " + userListByAdmin1);
-
-        return userListByAdmin1;
     }
 
+    //전체 user 조회수(admin)
+    public int userFindAllCount(){
+        List<User> all = userRepository.findAll();
+        int userSize = all.size();
+        return userSize;
+    }
 
+    //오늘 가입한 회원 수(admin)
+    public int userFindByToday(){
+        int allWithJoinDate = userRepository.findAllWithJoinDate(LocalDate.now());
+        return allWithJoinDate;
+    }
+
+    //전체 accuse 조회수(admin)
+    public int accuseFindAllCount(){
+        List<Accuse> all = accuseRepository.findAll();
+        int accuseSize = all.size();
+        return accuseSize;
+    }
+
+    //오늘 accuse 조회수(admin)
+    public int accuseFindByToday(){
+        int allWithAccuseWrittenDate = accuseRepository.findAllWithAccuseWrittenDate();
+        return allWithAccuseWrittenDate;
+    }
+
+    //전체 게시글 조회수(admin)
+    public int boardFindAllCount(){
+        List<Board> all = boardRepository.findAll();
+        int boardsize = all.size();
+        return boardsize;
+    }
+
+    //오늘 작성된 게시글 조회수(admin)
+    public int boardFindByToday(){
+        int allWithJoinDate = boardRepository.findAllWithBoardWrittenDate();
+        return allWithJoinDate;
+    }
 
 //    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount){
 //

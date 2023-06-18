@@ -16,11 +16,11 @@ import site.woulduduo.service.UserService;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -33,21 +33,22 @@ public class UserController {
 
     @GetMapping("/user/admin")
     //관리자 페이지 열기
-    public String showAdminpage(HttpSession session, Model model){
-
+    public String showAdminpage(/*HttpSession session, */Model model){
+        Map<String, Integer> countByAdmin = userService.countByAdmin();
+        model.addAttribute("count",countByAdmin);
         return "admin/admin";
     }
 
     //관리자 페이지 리스트 가져오기
-    public ResponseEntity<?> getUserListByAdmin(AdminSearchType type){
-        List<UsersByAdminResponseDTO>
-                userListByAdmin = userService.getUserListByAdmin(type);
-
-
-        return ResponseEntity
-                .ok()
-                .body(userListByAdmin);
-    }
+//    public ResponseEntity<?> getUserListByAdmin(AdminSearchType type){
+//        List<UsersByAdminResponseDTO>
+//                userListByAdmin = userService.getUserListByAdmin(type);
+//
+//
+//        return ResponseEntity
+//                .ok()
+//                .body(userListByAdmin);
+//    }
 
 //    @GetMapping("/user/detail/admin")
 //    //관리자 페이지 자세히 보기
