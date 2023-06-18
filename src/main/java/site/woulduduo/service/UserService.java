@@ -119,47 +119,6 @@ public class UserService {
 //        return null;
 //    }
 
-    public List<UsersByAdminResponseDTO> getUserListByAdmin( ){
-
-
-//        // Pageable객체 생성
-//        Pageable pageable = PageRequest.of(
-//                type.getPage() - 1,
-//                type.getSize(),
-//                Sort.by("createDate").descending()
-//        );
-
-        //전체불러오기
-        List<User> all = userRepository.findAll();
-        //user정보
-//        List<User> users = all.getContent();
-
-        //dto리스트생성 및 dto 생성
-        List<UsersByAdminResponseDTO> userListByAdmin = new ArrayList<>();
-        UsersByAdminResponseDTO dto = new UsersByAdminResponseDTO();
-        for (User user : all) {
-            //bc,rc,rc,fc 카운터 찾는 메서드
-            long accuseCount = accuseRepository.countByUser(user);
-            long boardCount = boardRepository.countByUser(user);
-            long replyCount = replyRepository.countByUser(user);
-//            long followToCount = followRepository.findToByAccount(user);
-
-
-            dto.setUserAccount(user.getUserAccount());
-            dto.setGender(user.getUserGender().toString());
-            dto.setBoardCount(boardCount);
-            dto.setReplyCount(replyCount);
-            dto.setReportCount(accuseCount);
-            dto.setPoint(user.getUserCurrentPoint());
-            dto.setFollowCount(3);
-
-            userListByAdmin.add(dto);
-        }
-        List<UsersByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
-        System.out.println("userListByAdmin1 = " + userListByAdmin1);
-
-        return userListByAdmin;
-    }
 
     public Map<String,Integer>countByAdmin(){
         Map<String,Integer>adminCount = new HashMap<>();
@@ -226,7 +185,7 @@ public class UserService {
 //        return null;
 //    }
 
-    public List<UsersByAdminResponseDTO> getUserListByAdmin( ){
+    public List<UserByAdminResponseDTO> getUserListByAdmin(){
 
 
 //        // Pageable객체 생성
@@ -243,11 +202,11 @@ public class UserService {
 //        List<User> users = all.getContent();
 
         //dto리스트생성 및 dto 생성
-        List<UsersByAdminResponseDTO> userListByAdmin = new ArrayList<>();
+        List<UserByAdminResponseDTO> userListByAdmin = new ArrayList<>();
 //        AtomicInteger rowNum = new AtomicInteger(1);
         int i=1;
         for (User user : all) {
-            UsersByAdminResponseDTO dto = new UsersByAdminResponseDTO();
+            UserByAdminResponseDTO dto = new UserByAdminResponseDTO();
 
             //bc,rc,rc,fc 카운터 찾는 메서드
             long accuseCount = accuseRepository.countByUser(user);
@@ -267,9 +226,9 @@ public class UserService {
             i++;
 
             userListByAdmin.add(dto);
-            List<UsersByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
+            List<UserByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
         }
-        List<UsersByAdminResponseDTO> userListByAdmin2 = userListByAdmin;
+        List<UserByAdminResponseDTO> userListByAdmin2 = userListByAdmin;
 
         return userListByAdmin;
     }
