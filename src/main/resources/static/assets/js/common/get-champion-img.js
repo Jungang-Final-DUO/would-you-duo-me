@@ -1,3 +1,3 @@
 export function getChampionImg(championName) {
-    return `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${championName}_0.jpg`
+    return `/assets/img/user-history/champions/${championName}_0.jpg`
 }

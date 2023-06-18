@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.user.UserDUOResponseDTO;
-import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -69,7 +69,7 @@ public class UserController {
 
     //관리자 페이지 리스트 가져오기
     public ResponseEntity<?> getUserListByAdmin(/*AdminSearchType type*/){
-        List<UsersByAdminResponseDTO>
+        List<UserByAdminResponseDTO>
 
                 userListByAdmin = userService.getUserListByAdmin();
 
@@ -99,15 +99,15 @@ public class UserController {
 //    }
 
     // 유저 전적 페이지 이동
-    @GetMapping("/user/duo")
-    public String showDUOUser(HttpSession session, Model model, String userAccount){
+    @GetMapping("/user/user-history")
+    public String showUserHistory(HttpSession session, Model model, String userAccount) {
 
-        log.info("/user/duo?userAccount={} GET", userAccount);
+        log.info("/user/history?userAccount={} GET", userAccount);
 
-        UserDUOResponseDTO dto = userService.getUserDUOInfo(session, userAccount);
+        UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
 
-        model.addAttribute(dto);
+        model.addAttribute("history", dto);
 
-        return "user/duo";
+        return "user/user-history";
     }
 }

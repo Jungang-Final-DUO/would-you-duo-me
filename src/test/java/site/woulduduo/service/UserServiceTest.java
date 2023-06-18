@@ -9,8 +9,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.user.UserDUOResponseDTO;
-import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.repository.UserRepository;
@@ -132,7 +132,7 @@ class UserServiceTest {
     @Test
     @DisplayName("관리자 유저 리스트 dto 변환")
     void userExchangeDTO(){
-        List<UsersByAdminResponseDTO> userListByAdmin =
+        List<UserByAdminResponseDTO> userListByAdmin =
                 userService.getUserListByAdmin();
 
         System.out.println("userListByAdmin = " + userListByAdmin);
@@ -143,7 +143,7 @@ class UserServiceTest {
     @Test
     @DisplayName("유저 전적페이지에 쓰이는 정보들을 보여줄 수 있어야 한다")
     void getUserDUOInfoTest() {
-        UserDUOResponseDTO userDUOInfo = userService.getUserDUOInfo(null, "test@example.com");
+        UserHistoryResponseDTO userDUOInfo = userService.getUserHistoryInfo(null, "test@example.com");
         System.out.println("userDUOInfo = " + userDUOInfo);
     }
 

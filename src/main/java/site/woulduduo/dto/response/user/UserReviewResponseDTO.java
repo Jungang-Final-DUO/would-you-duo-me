@@ -11,13 +11,13 @@ import site.woulduduo.entity.Matching;
 @Builder
 public class UserReviewResponseDTO {
 
-    private String userAccount;
+    private String userNickname;
     private String profileImage;
     private Integer matchingReviewRate;
     private String matchingReviewContent;
 
     public UserReviewResponseDTO(Matching matching) {
-        this.userAccount = matching.getChatting().getChattingFrom().getUserAccount();
+        this.userNickname = matching.getChatting().getChattingFrom().getUserNickname();
         this.profileImage = matching.getChatting().getChattingFrom().getLatestProfileImage();
         this.matchingReviewRate = matching.getMatchingReviewRate();
         this.matchingReviewContent = matching.getMatchingReviewContent();
