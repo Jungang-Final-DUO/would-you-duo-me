@@ -72,7 +72,7 @@ public class UserHistoryResponseDTO {
                     this.tier = "Silver";
                     break;
                 case GOL:
-                    this.tier = "Gold.png";
+                    this.tier = "Gold";
                     break;
                 case PLA:
                     this.tier = "Platinum";
@@ -84,7 +84,7 @@ public class UserHistoryResponseDTO {
                     this.tier = "Master";
                     break;
                 case GRA:
-                    this.tier = "Grandmaster";
+                    this.tier = "GrandMaster";
                     break;
                 default:
                     this.tier = null;
@@ -98,7 +98,7 @@ public class UserHistoryResponseDTO {
                     .filter(MatchV5DTO.MatchInfo.ParticipantDTO::isWin).count();
             this.last20LoseCount = (int) last20Matches.stream()
                     .filter(m -> !m.isWin()).count();
-            this.last20WinRate = (double) this.last20WinCount / (this.last20WinCount + this.last20LoseCount);
+            this.last20WinRate = (double) this.last20WinCount / (this.last20WinCount + this.last20LoseCount) * 100;
             this.last20KDA = last20Matches.stream()
                     .mapToDouble(m -> ((double) m.getKills() + m.getAssists()) / m.getDeaths())
                     .average().orElse(0.0);

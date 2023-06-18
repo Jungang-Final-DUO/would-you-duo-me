@@ -60,13 +60,13 @@ public class UserController {
 
     @GetMapping("/user/admin")
     //관리자 페이지 열기
-    public String showAdminpage(HttpSession session, Model model){
+    public String showAdminpage(HttpSession session, Model model) {
 
         return "admin/admin";
     }
 
     //관리자 페이지 리스트 가져오기
-    public ResponseEntity<?> getUserListByAdmin(AdminSearchType type){
+    public ResponseEntity<?> getUserListByAdmin(AdminSearchType type) {
         ListResponseDTO<UsersByAdminResponseDTO>
                 userListByAdmin = userService.getUserListByAdmin(type);
 
@@ -97,13 +97,13 @@ public class UserController {
 
     // 유저 전적 페이지 이동
     @GetMapping("/user/user-history")
-    public String showUserHistory(HttpSession session, Model model, String userAccount){
+    public String showUserHistory(HttpSession session, Model model, String userAccount) {
 
         log.info("/user/history?userAccount={} GET", userAccount);
 
         UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
 
-        model.addAttribute(dto);
+        model.addAttribute("history", dto);
 
         return "user/user-history";
     }
