@@ -19,7 +19,8 @@ import static site.woulduduo.enumeration.LoginType.NORMAL;
 
 @Setter
 @Getter
-@ToString(exclude = {"replyList", "userProfileList", "attendanceList", "accuseList", "followToList", "followFromList", "pointList", "boardList"})
+@ToString(exclude = {"replyList", "userProfileList", "attendanceList", "accuseList", "followToList", "followFromList",
+        "pointList", "boardList", "chattingToList", "chattingFromList", "attendanceStampList"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "userAccount")

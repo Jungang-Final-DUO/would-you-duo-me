@@ -68,7 +68,7 @@ class RiotApiServiceTest {
     @Test
     @DisplayName("stargazer의 모스트 3개 챔피언을 구한다.")
     void getMost3ChampionsTest() {
-        List<String> most3Champions = riotApiService.getMost3Champions("stargazer");
+        List<String> most3Champions = riotApiService.getMost3Champions("코뚱잉");
 
         most3Champions.forEach(System.out::println);
     }

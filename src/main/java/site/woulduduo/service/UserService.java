@@ -5,27 +5,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.ListResponseDTO;
-import site.woulduduo.dto.response.user.UserDUOResponseDTO;
+import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
-import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.dto.riot.LeagueV4DTO;
+import site.woulduduo.dto.riot.MatchV5DTO;
+import site.woulduduo.dto.riot.MostChampInfo;
+import site.woulduduo.entity.Accuse;
+import site.woulduduo.entity.Board;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Tier;
 import site.woulduduo.exception.NoRankException;
-import site.woulduduo.repository.FollowRepository;
-import site.woulduduo.repository.MatchingRepository;
-import site.woulduduo.repository.UserProfileRepository;
-import site.woulduduo.repository.UserRepository;
+import site.woulduduo.repository.*;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +33,9 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
+    private final AccuseRepository accuseRepository;
+    private final ReplyRepository replyRepository;
     private final PasswordEncoder passwordEncoder;
     private final RiotApiService riotApiService;
     private final MatchingRepository matchingRepository;
@@ -113,10 +114,126 @@ public class UserService {
         return true;
     }
 
-    public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
-        userRepository.count();
-        return null;
+//    public ListResponseDTO<UserByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
+//        userRepository.count();
+//        return null;
+//    }
+
+    public List<UserByAdminResponseDTO> getUserListByAdmin( ){
+
+
+//        // Pageable객체 생성
+//        Pageable pageable = PageRequest.of(
+//                type.getPage() - 1,
+//                type.getSize(),
+//                Sort.by("createDate").descending()
+//        );
+
+        //전체불러오기
+        List<User> all = userRepository.findAll();
+        //user정보
+//        List<User> users = all.getContent();
+
+        //dto리스트생성 및 dto 생성
+        List<UserByAdminResponseDTO> userListByAdmin = new ArrayList<>();
+        UserByAdminResponseDTO dto = new UserByAdminResponseDTO();
+        for (User user : all) {
+            //bc,rc,rc,fc 카운터 찾는 메서드
+            long accuseCount = accuseRepository.countByUser(user);
+            long boardCount = boardRepository.countByUser(user);
+            long replyCount = replyRepository.countByUser(user);
+//            long followToCount = followRepository.findToByAccount(user);
+
+
+            dto.setUserAccount(user.getUserAccount());
+            dto.setGender(user.getUserGender().toString());
+            dto.setBoardCount(boardCount);
+            dto.setReplyCount(replyCount);
+            dto.setReportCount(accuseCount);
+            dto.setPoint(user.getUserCurrentPoint());
+            dto.setFollowCount(3);
+
+            userListByAdmin.add(dto);
+        }
+        List<UserByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
+        System.out.println("userListByAdmin1 = " + userListByAdmin1);
+
+        return userListByAdmin;
     }
+
+    public Map<String,Integer>countByAdmin(){
+        Map<String,Integer>adminCount = new HashMap<>();
+        int userFindAllCount = userFindAllCount();
+        int userFindByToday = userFindByToday();
+        int accuseFindAllCount = accuseFindAllCount();
+        int accuseFindByToday = accuseFindByToday();
+        int boardFindAllCount = boardFindAllCount();
+        int boardFindByToday = boardFindByToday();
+
+        adminCount.put("ua",userFindAllCount);
+        adminCount.put("ut",userFindByToday);
+        adminCount.put("aa",accuseFindAllCount);
+        adminCount.put("at",accuseFindByToday);
+        adminCount.put("ba",boardFindAllCount);
+        adminCount.put("bt",boardFindByToday);
+
+        return adminCount;
+
+    }
+
+    //전체 user 조회수(admin)
+    public int userFindAllCount(){
+        List<User> all = userRepository.findAll();
+        int userSize = all.size();
+        return userSize;
+    }
+
+    //오늘 가입한 회원 수(admin)
+    public int userFindByToday(){
+        int allWithJoinDate = userRepository.findAllWithJoinDate(LocalDate.now());
+        return allWithJoinDate;
+    }
+
+    //전체 accuse 조회수(admin)
+    public int accuseFindAllCount(){
+        List<Accuse> all = accuseRepository.findAll();
+        int accuseSize = all.size();
+        return accuseSize;
+    }
+
+    //오늘 accuse 조회수(admin)
+    public int accuseFindByToday(){
+        int allWithAccuseWrittenDate = accuseRepository.findAllWithAccuseWrittenDate();
+        return allWithAccuseWrittenDate;
+    }
+
+    //전체 게시글 조회수(admin)
+    public int boardFindAllCount(){
+        List<Board> all = boardRepository.findAll();
+        int boardsize = all.size();
+        return boardsize;
+    }
+
+    //오늘 작성된 게시글 조회수(admin)
+    public int boardFindByToday(){
+        int allWithJoinDate = boardRepository.findAllWithBoardWrittenDate();
+        return allWithJoinDate;
+    }
+
+//    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount){
+//
+//        return null;
+//    }
+//
+//    public boolean increaseUserPoint(UserModifyRequestDTO dto){
+//
+//        return false;
+//    }
+//
+//    public boolean changeUserPoint(UserModifyRequestDTO dto){
+//
+//        return false;
+//    }
 
     /**
      * 사용자의 듀오 정보를 구하는 메서드
@@ -124,18 +241,21 @@ public class UserService {
      * @param userAccount - 대상 사용자
      * @return - 응답 DTO
      */
-    public UserDUOResponseDTO getUserDUOInfo(HttpSession session, String userAccount) {
+    public UserHistoryResponseDTO getUserHistoryInfo(HttpSession session, String userAccount) {
 
         User foundUser = userRepository.findById(userAccount).orElseThrow(
                 () -> new RuntimeException("해당하는 유저가 없습니다.")
         );
+        String lolNickname = foundUser.getLolNickname();
+
+        List<MatchV5DTO.MatchInfo.ParticipantDTO> last20ParticipantDTOList = riotApiService.getLast20ParticipantDTOList(lolNickname);
 
         LeagueV4DTO rankInfo = null;
         try {
-            rankInfo = riotApiService.getRankInfo(foundUser.getLolNickname(), "RANKED_SOLO_5x5");
+            rankInfo = riotApiService.getRankInfo(lolNickname, "RANKED_SOLO_5x5");
         } catch (NoRankException e) {
             try {
-                rankInfo = riotApiService.getRankInfo(foundUser.getLolNickname(), "RANKED_FLEX_SR");
+                rankInfo = riotApiService.getRankInfo(lolNickname, "RANKED_FLEX_SR");
             } catch (NoRankException ex) {
                 rankInfo = LeagueV4DTO.builder().build();
             }
@@ -144,8 +264,8 @@ public class UserService {
         // 사용자가 받은 모든 리뷰
         List<UserReviewResponseDTO> reviews = foundUser.getChattingFromList().stream()
                 .map(c -> c.getMatchingList().stream()
-                                .map(UserReviewResponseDTO::new)
-                                .collect(Collectors.toList())
+                        .map(UserReviewResponseDTO::new)
+                        .collect(Collectors.toList())
                 ).collect(Collectors.toList())
                 .stream()
                 .flatMap(List::stream)
@@ -157,7 +277,42 @@ public class UserService {
         } catch (NullPointerException ignored) {
         }
 
-        return UserDUOResponseDTO.builder()
+        List<MostChampInfo> mostChampInfoList = riotApiService.getMost3Champions(lolNickname).stream()
+                .map(m -> {
+                    List<MatchV5DTO.MatchInfo.ParticipantDTO> championMatchInfoList = last20ParticipantDTOList.stream()
+                            .filter(p -> p.getChampionName().equals(m))
+                            .collect(Collectors.toList());
+
+                    int winCount = (int) championMatchInfoList.stream()
+                            .filter(MatchV5DTO.MatchInfo.ParticipantDTO::isWin).count();
+
+                    int loseCount = (int) championMatchInfoList.stream()
+                            .filter(c -> !c.isWin()).count();
+
+                    double winRate = (double) winCount / (winCount + loseCount) * 100;
+
+                    int kills = championMatchInfoList.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getKills).sum();
+
+                    int deaths = championMatchInfoList.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getDeaths).sum();
+
+                    int assists = championMatchInfoList.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getAssists).sum();
+
+                    double kda = (double) (kills + assists) / deaths;
+
+                    return MostChampInfo.builder()
+                            .champName(m)
+                            .winCount(winCount)
+                            .loseCount(loseCount)
+                            .winRate(winRate)
+                            .kda(kda)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        return UserHistoryResponseDTO.builder()
                 .userAccount(userAccount)
                 .profileImage(foundUser.getLatestProfileImage())
                 .userNickname(foundUser.getUserNickname())
@@ -168,21 +323,22 @@ public class UserService {
                 .userInstagram(foundUser.getUserInstagram())
                 .userFacebook(foundUser.getUserFacebook())
                 .userTwitter(foundUser.getUserTwitter())
-                .lolNickname(foundUser.getLolNickname())
+                .lolNickname(lolNickname)
                 .userComment(foundUser.getUserComment())
-                .lolTier(foundUser.getLolTier())
+                .tier(foundUser.getLolTier())
                 .userReviews(reviews)
+                // 모스트 3 챔피언 정보
+                .mostChampInfos(mostChampInfoList)
                 // riot api 를 통해 얻어오는 솔로랭크 혹은 자유랭크 데이터
                 .leaguePoints(rankInfo.getLeaguePoints())
                 .totalWinCount(rankInfo.getWins())
                 .totalLoseCount(rankInfo.getLosses())
                 .winRate(rankInfo.getWinRate())
                 // 최근 20 매치의 정보 데이터
-                .last20Matches(riotApiService.getLast20ParticipantDTOList(foundUser.getLolNickname()))
+                .last20Matches(last20ParticipantDTOList)
                 .build();
 
     }
-
 
 //    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount){
 //

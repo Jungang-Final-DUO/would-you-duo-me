@@ -7,15 +7,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.ListResponseDTO;
-import site.woulduduo.dto.response.user.UserDUOResponseDTO;
-import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.service.UserService;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -60,15 +60,18 @@ public class UserController {
 
     @GetMapping("/user/admin")
     //관리자 페이지 열기
-    public String showAdminpage(HttpSession session, Model model){
-
+    public String showAdminpage(/*HttpSession session, */Model model){
+        Map<String, Integer> countByAdmin = userService.countByAdmin();
+        model.addAttribute("count",countByAdmin);
+        countByAdmin.get("ua");
         return "admin/admin";
     }
 
     //관리자 페이지 리스트 가져오기
-    public ResponseEntity<?> getUserListByAdmin(AdminSearchType type){
-        ListResponseDTO<UsersByAdminResponseDTO>
-                userListByAdmin = userService.getUserListByAdmin(type);
+    public ResponseEntity<?> getUserListByAdmin(/*AdminSearchType type*/){
+        List<UserByAdminResponseDTO>
+
+                userListByAdmin = userService.getUserListByAdmin();
 
 
         return ResponseEntity
@@ -95,15 +98,16 @@ public class UserController {
 //        return "";
 //    }
 
-    @GetMapping("/user/duo")
-    public String showDUOUser(HttpSession session, Model model, String userAccount){
+    // 유저 전적 페이지 이동
+    @GetMapping("/user/user-history")
+    public String showUserHistory(HttpSession session, Model model, String userAccount) {
 
-        log.info("/user/duo?userAccount={} GET", userAccount);
+        log.info("/user/history?userAccount={} GET", userAccount);
 
-        UserDUOResponseDTO dto = userService.getUserDUOInfo(session, userAccount);
+        UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
 
-        model.addAttribute(dto);
+        model.addAttribute("history", dto);
 
-        return "user/duo";
+        return "user/user-history";
     }
 }
