@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.extern.slf4j.XSlf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.service.EmailService;
 import site.woulduduo.service.UserService;
 
 import lombok.AllArgsConstructor;
@@ -17,13 +17,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.service.UserService;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 @Slf4j
@@ -31,6 +35,7 @@ import javax.servlet.http.HttpSession;
 public class UserController {
 
     private final UserService userService;
+    private final EmailService emailService;
 
     // 회원 가입 양식 요청
     @GetMapping("/user/sign-up")
@@ -39,10 +44,14 @@ public class UserController {
         return "user/sign-up";
     }
 
-    //회원가입 처리 요청
+    // 회원가입 처리 요청
     @PostMapping("/user/sign-up")
-    public String signUp(UserRegisterRequestDTO dto) {
+    public String signUp(@Valid UserRegisterRequestDTO dto) {
         log.info("/user/sign-up POST! ");
+
+        // UserRegisterRequestDTO를 UserService의 회원가입 메서드로 전달하여 저장
+        userService.register(dto);
+
         return "redirect:/user/sign-in";
     }
 

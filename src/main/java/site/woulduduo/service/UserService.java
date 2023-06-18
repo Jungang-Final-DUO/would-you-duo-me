@@ -16,6 +16,7 @@ import site.woulduduo.enumeration.Tier;
 import site.woulduduo.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
@@ -50,7 +51,6 @@ public class UserService {
         }
 
         // 회원 정보 저장
-
         User user = User.builder()
                 .userAccount(dto.getUserEmail())
                 .userNickname(dto.getUserNickname())
@@ -61,7 +61,7 @@ public class UserService {
                 .userFacebook(dto.getUserFacebook())
                 .lolNickname(dto.getLolNickname())
                 .userGender(dto.getUserGender() == Gender.M ? Gender.M : Gender.F)
-                .lolTier(riotApiService.getTier(dto.getUserNickname()))
+                .lolTier(riotApiService.getTier(dto.getLolNickname()))
                 .build();
 
         userRepository.save(user);
