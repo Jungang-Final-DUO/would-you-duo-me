@@ -7,7 +7,6 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-
 public class PageDTO{
     private int page;
     private String keyword;

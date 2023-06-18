@@ -6,7 +6,11 @@ import lombok.extern.slf4j.XSlf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.enumeration.Gender;
+import site.woulduduo.enumeration.Position;
+import site.woulduduo.enumeration.Tier;
 import site.woulduduo.service.UserService;
 
 import lombok.AllArgsConstructor;
@@ -104,4 +108,21 @@ public class UserController {
 //
 //        return "";
 //    }
+    @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
+    public ResponseEntity<?> getUserProfileList(int page, String keyword, int size, Position position , Gender gender, Tier tier, String sort/*, HttpSession session*/) {
+//        UserSearchType userSearchType = UserSearchType.builder()
+//                .position(Position.MID)
+//                .gender(Gender.M)
+//                .tier(Tier.DIA)
+//                .sort("avgRate")
+//                .build();
+
+        UserSearchType userSearchType = new UserSearchType();
+        userSearchType.setPosition(position);
+        userSearchType.setGender(gender);
+        userSearchType.setTier(tier);
+        userSearchType.setSort(sort);
+
+        return ResponseEntity.ok().body(userService.getUserProfileList(userSearchType));
+    }
 }

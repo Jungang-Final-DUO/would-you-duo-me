@@ -6,16 +6,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.page.AdminSearchType;
+import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
 import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Tier;
+import site.woulduduo.repository.UserQueryDSLRepositoryCustom;
 import site.woulduduo.repository.UserRepository;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +29,7 @@ import java.util.Optional;
 @Transactional
 public class UserService {
 
+    private final UserQueryDSLRepositoryCustom userQueryDSLRepositoryCustom;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RiotApiService riotApiService;
@@ -120,6 +126,12 @@ public class UserService {
 //
 //        return false;
 //    }
+
+    public List<UserProfilesResponseDTO> getUserProfileList(/*HttpSession session, */UserSearchType userSearchType) {
+        List<UserProfilesResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
+        log.info("@@@ userProfileList @@@@@ : {}", userProfileList);
+        return userProfileList;
+    }
 
 
 }
