@@ -11,4 +11,8 @@ public interface ChattingRepository extends JpaRepository<Chatting, Long> {
     Chatting findByChattingFromAndChattingTo(User chattingFrom, User chattingTo);
 
     Chatting findByChattingNo(long chattingNo);
+
+    List<Chatting> findByChattingFrom(User user);
+
+    List<Chatting> findByChattingTo(User user);
 }

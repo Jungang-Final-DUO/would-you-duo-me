@@ -5,21 +5,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.response.chatting.ChattingDetailResponseDTO;
-import site.woulduduo.dto.response.chatting.MessageListResponseDTO;
+import site.woulduduo.dto.response.chatting.ChattingListResponseDTO;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Message;
 import site.woulduduo.entity.User;
 import site.woulduduo.entity.UserProfile;
 import site.woulduduo.repository.ChattingRepository;
 import site.woulduduo.repository.MessageRepository;
-import site.woulduduo.repository.UserProfileRepository;
 import site.woulduduo.repository.UserRepository;
 
-import javax.servlet.http.HttpSession;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -29,6 +27,7 @@ public class ChattingService {
 
     private final ChattingRepository chattingRepository;
     private final MessageService messageService;
+    private final MessageRepository messageRepository;
     private final UserRepository userRepository;
 
     //채팅 신청하기
@@ -37,7 +36,7 @@ public class ChattingService {
             String myName,
             String userAccount
     ) {
-
+//
         long chattingNo;
 
 //        추후 세션에서 꺼내온 아이디로 변경해야함
@@ -60,6 +59,12 @@ public class ChattingService {
             Chatting saved = chattingRepository.save(chatting);
             chattingNo = saved.getChattingNo();
 
+            Message message = Message.builder()
+                    .user(saved.getChattingTo())
+                    .messageContent("안녕하세요, 대화를 신청해주셔서 감사합니다!")
+                    .chatting(saved)
+                    .build();
+            Message firstMessage = messageRepository.save(message);
         }
 
 //      chattingNo 리턴 후 프론트에서 해당 번호로 채팅방 열어주기
@@ -98,6 +103,7 @@ public class ChattingService {
             chattingResponseDTO.setYourProfileImage(fromImage);
         }
 
+//        메세지 내역 가져오기
         chattingResponseDTO.setMessageList(messageService.getMessages(chatting));
 
         return chattingResponseDTO;
@@ -117,32 +123,35 @@ public class ChattingService {
         }
     }
 
-////    메세지 내역 가져오기
-//    public List<MessageListResponseDTO> getMessages (Chatting chatting){
-//        List<Message> messages = messageRepository.findByChatting(chatting);
-//        if(messages.size() == 0){
-//            Message message = Message.builder()
-//                    .user(chatting.getChattingTo())
-//                    .messageContent("안녕하세요, 대화를 신청해주셔서 감사합니다!")
-//                    .chatting(chatting)
-//                    .build();
-//            Message saved = messageRepository.save(message);
-//            messages.add(saved);
-//        }
-//
-//        return messages.stream()
-//                .map(MessageListResponseDTO::new)
-//                .collect(Collectors.toList());
-//    }
-
     //채팅 목록 가져오기
-///    public ChattingListResponseDTO getChattingList(
-////            HttpSession session
-//            User user
-//    ) {
-////        String userAccount = session.getAttribute("");
-//        Optional<Chatting> chattings = chattingRepository.findByChattingFromAndChattingTo(user, user);
-//
-//
-//    }
+    public List<ChattingListResponseDTO> getChattingList(
+//            HttpSession session
+            User user
+    ) {
+//       내가 보낸 채팅
+        List<Chatting> fromList = chattingRepository.findByChattingFrom(user);
+//       내가 받은 채팅
+        List<Chatting> toList = chattingRepository.findByChattingTo(user);
+
+//       보낸 채팅 받은 채팅 합치고 최신 메세지순으로 정렬
+        List<Chatting> chattingList = Stream.concat(fromList.stream(), toList.stream()).sorted(Chatting::compareTo).collect(Collectors.toList());
+        List<ChattingListResponseDTO> dtoList = chattingList.stream()
+                .map(ChattingListResponseDTO::new)
+                .collect(Collectors.toList());
+
+//      상대방 닉네임, 프로필 사진 세팅
+        for (int i = 0; i < dtoList.size(); i++) {
+            if(chattingList.get(i).getChattingFrom() == user){
+                dtoList.get(i).setUserNickname(chattingList.get(i).getChattingTo().getUserNickname());
+                dtoList.get(i).setProfileImage(getRepresentativeProfile(chattingList.get(i).getChattingTo()));
+            } else {
+                dtoList.get(i).setUserNickname(chattingList.get(i).getChattingFrom().getUserNickname());
+                dtoList.get(i).setProfileImage(getRepresentativeProfile(chattingList.get(i).getChattingFrom()));
+            }
+//           최신 메세지 세팅
+            dtoList.get(i).setMessageContent(messageRepository.findByChattingOrderByMessageTimeDesc(chattingList.get(i)).get(0).getMessageContent());
+        }
+
+        return dtoList;
+    }
 }
