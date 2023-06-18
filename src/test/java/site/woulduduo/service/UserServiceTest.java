@@ -116,6 +116,29 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("관리자 전체유저 리스트 dto 변환")
+    void userExchangeDTO(){
+        List<UserByAdminResponseDTO> userListByAdmin =
+                userService.getUserListByAdmin();
+
+        System.out.println("userListByAdmin = " + userListByAdmin);
+
+
+    }
+    @Test
+    @DisplayName("관리자 금일가입유저 리스트 dto 변환")
+    void todayUserExchangeDTO(){
+        List<UserByAdminResponseDTO> todayUserListByAdmin =
+                userService.todayUserByAdMin();
+
+        int size = todayUserListByAdmin.size();
+        System.out.println("size = " + size);
+        System.out.println("todayUserListByAdmin = " + todayUserListByAdmin);
+
+
+    }
+
+    @Test
     @DisplayName("회원의 프로필 카드 등록에 성공해야 한다.")
     void registerDUO() {
         UserCommentRequestDTO userCommentRequestDTO = UserCommentRequestDTO.builder()
@@ -127,17 +150,6 @@ class UserServiceTest {
         boolean b = userService.registerDUO(userCommentRequestDTO);
 
         assertTrue(b);
-    }
-
-    @Test
-    @DisplayName("관리자 유저 리스트 dto 변환")
-    void userExchangeDTO(){
-        List<UserByAdminResponseDTO> userListByAdmin =
-                userService.getUserListByAdmin();
-
-        System.out.println("userListByAdmin = " + userListByAdmin);
-
-
     }
 
     @Test

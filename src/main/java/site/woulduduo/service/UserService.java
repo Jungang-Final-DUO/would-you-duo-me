@@ -228,6 +228,24 @@ public class UserService {
         return userListByAdmin;
     }
 
+    //금일 가입자(Admin)
+
+    public List<UserByAdminResponseDTO> todayUserByAdMin() {
+        List<UserByAdminResponseDTO> userListByAdmin = getUserListByAdmin();
+        List<UserByAdminResponseDTO> todayUserList = new ArrayList<>();
+        LocalDate currentDate = LocalDate.now();
+
+        for (UserByAdminResponseDTO userByAdminResponseDTO : userListByAdmin) {
+            LocalDate joinDate = userByAdminResponseDTO.getJoinDate();
+            if (joinDate != null && joinDate.equals(currentDate)) {
+                todayUserList.add(userByAdminResponseDTO);
+            }
+        }
+
+        System.out.println("todayUserList = " + todayUserList);
+        return todayUserList;
+    }
+
 //    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount){
 //
 //        return null;
