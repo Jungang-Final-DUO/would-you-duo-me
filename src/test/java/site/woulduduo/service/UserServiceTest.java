@@ -7,20 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import site.woulduduo.dto.request.page.AdminSearchType;
-import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
-import site.woulduduo.dto.response.ListResponseDTO;
-import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
-import site.woulduduo.enumeration.AdminViewType;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.user.UserDUOResponseDTO;
+import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.repository.UserRepository;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -135,11 +132,12 @@ class UserServiceTest {
     @Test
     @DisplayName("관리자 유저 리스트 dto 변환")
     void userExchangeDTO(){
-//        AdminSearchType build = AdminSearchType.builder()
-//                .adminViewType(AdminViewType.TODAY)
-//                .build();
+        List<UsersByAdminResponseDTO> userListByAdmin =
+                userService.getUserListByAdmin();
 
-//        userService.getUserListByAdmin(build);
+        System.out.println("userListByAdmin = " + userListByAdmin);
+
+
     }
 
     @Test
@@ -148,4 +146,13 @@ class UserServiceTest {
         UserDUOResponseDTO userDUOInfo = userService.getUserDUOInfo(null, "test@example.com");
         System.out.println("userDUOInfo = " + userDUOInfo);
     }
+
+    @Test
+    @DisplayName("관리자페이지 정보 count 확인")
+    void getCountByAdmin() {
+        Map<String, Integer> stringIntegerMap = userService.countByAdmin();
+        System.out.println("stringIntegerMap = " + stringIntegerMap);
+    }
+
+
 }

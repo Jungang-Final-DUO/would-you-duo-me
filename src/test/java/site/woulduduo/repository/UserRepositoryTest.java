@@ -3,8 +3,6 @@ package site.woulduduo.repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -13,19 +11,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.test.annotation.Rollback;
-import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.entity.Accuse;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Tier;
 
-
 import java.time.LocalDate;
 import java.util.List;
-
-import static java.util.Calendar.YEAR;
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @Rollback(value = false)
@@ -97,23 +89,23 @@ class UserRepositoryTest {
     }
 
 
-//    @BeforeEach
-//    void bulkInsert() {
-//        // 학생을 147명 저장
-//        for (int i = 1; i <= 147; i++) {
-//            User User1 = User.builder()
-//                    .userAccount("acvd" + i)
-//                    .userNickname("asd" + i)
-//                    .userPassword("12345")
-//                    .userCurrentPoint(123)
-//                    .userBirthday(LocalDate.of(1990, 11, 07))
-//                    .lolNickname("asd" + i)
-//                    .userGender(Gender.F)
-//                    .lolTier(Tier.DIA)
-//                    .build();
-//            userRepository.save(User1);
-//        }
-//    }
+    @BeforeEach
+    void bulkInsert() {
+        // 학생을 147명 저장
+        for (int i = 1; i <= 147; i++) {
+            User User1 = User.builder()
+                    .userAccount("acvd" + i)
+                    .userNickname("asd" + i)
+                    .userPassword("12345")
+                    .userCurrentPoint(123)
+                    .userBirthday(LocalDate.of(1990, 11, 07))
+                    .lolNickname("asd" + i)
+                    .userGender(Gender.F)
+                    .lolTier(Tier.DIA)
+                    .build();
+            userRepository.save(User1);
+        }
+    }
 
     @Test
     @DisplayName("전제 조회")

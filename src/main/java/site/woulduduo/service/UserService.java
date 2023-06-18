@@ -2,53 +2,29 @@ package site.woulduduo.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
-import site.woulduduo.entity.Accuse;
-import site.woulduduo.entity.Board;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.UserDUOResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
 import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.dto.riot.LeagueV4DTO;
 import site.woulduduo.dto.riot.MatchV5DTO;
 import site.woulduduo.dto.riot.MostChampInfo;
+import site.woulduduo.entity.Accuse;
+import site.woulduduo.entity.Board;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Tier;
-import site.woulduduo.repository.*;
 import site.woulduduo.exception.NoRankException;
-import site.woulduduo.repository.FollowRepository;
-import site.woulduduo.repository.MatchingRepository;
-import site.woulduduo.repository.UserProfileRepository;
-import site.woulduduo.repository.UserRepository;
+import site.woulduduo.repository.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
-import site.woulduduo.dto.request.page.AdminSearchType;
-import site.woulduduo.dto.request.user.UserModifyRequestDTO;
-import site.woulduduo.dto.response.ListResponseDTO;
-import site.woulduduo.dto.response.user.UserDetailByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
-import site.woulduduo.entity.User;
-import site.woulduduo.repository.UserRepository;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
@@ -138,52 +114,52 @@ public class UserService {
         return true;
     }
 
-    public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
-        userRepository.count();
-        return null;
-    }
+//    public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
+//        userRepository.count();
+//        return null;
+//    }
 
-//    public List<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type){
-//
+    public List<UsersByAdminResponseDTO> getUserListByAdmin( ){
+
+
 //        // Pageable객체 생성
 //        Pageable pageable = PageRequest.of(
 //                type.getPage() - 1,
 //                type.getSize(),
-//
 //                Sort.by("createDate").descending()
 //        );
-//
-//        //전체불러오기
-//        Page<User> all = userRepository.findAll(pageable);
-//        //user정보
+
+        //전체불러오기
+        List<User> all = userRepository.findAll();
+        //user정보
 //        List<User> users = all.getContent();
-//
-//        //dto리스트생성 및 dto 생성
-//        List<UsersByAdminResponseDTO> userListByAdmin = new ArrayList<>();
-//        UsersByAdminResponseDTO dto = new UsersByAdminResponseDTO();
-//        for (User user : users) {
-//            //bc,rc,rc,fc 카운터 찾는 메서드
-//            long accuseCount = accuseRepository.countByUser(user);
-//            long boardCount = boardRepository.countByUser(user);
-//            long replyCount = replyRepository.countByUser(user);
-//
-//
-//
-//            dto.setUserAccount(user.getUserAccount());
-//            dto.setGender(user.getUserGender().toString());
-//            dto.setBoardCount(boardCount);
-//            dto.setReplyCount(replyCount);
-//            dto.setReportCount(accuseCount);
-//            dto.setPoint(user.getUserCurrentPoint());
-//            dto.setFollowCount(3);
-//
-//            userListByAdmin.add(dto);
-//        }
-//        List<UsersByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
-//        System.out.println("userListByAdmin1 = " + userListByAdmin1);
-//
-//        return userListByAdmin1;
-//    }
+
+        //dto리스트생성 및 dto 생성
+        List<UsersByAdminResponseDTO> userListByAdmin = new ArrayList<>();
+        UsersByAdminResponseDTO dto = new UsersByAdminResponseDTO();
+        for (User user : all) {
+            //bc,rc,rc,fc 카운터 찾는 메서드
+            long accuseCount = accuseRepository.countByUser(user);
+            long boardCount = boardRepository.countByUser(user);
+            long replyCount = replyRepository.countByUser(user);
+//            long followToCount = followRepository.findToByAccount(user);
+
+
+            dto.setUserAccount(user.getUserAccount());
+            dto.setGender(user.getUserGender().toString());
+            dto.setBoardCount(boardCount);
+            dto.setReplyCount(replyCount);
+            dto.setReportCount(accuseCount);
+            dto.setPoint(user.getUserCurrentPoint());
+            dto.setFollowCount(3);
+
+            userListByAdmin.add(dto);
+        }
+        List<UsersByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
+        System.out.println("userListByAdmin1 = " + userListByAdmin1);
+
+        return userListByAdmin;
+    }
 
     public Map<String,Integer>countByAdmin(){
         Map<String,Integer>adminCount = new HashMap<>();

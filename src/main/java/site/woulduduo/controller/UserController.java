@@ -7,10 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.UserDUOResponseDTO;
 import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.service.UserService;
@@ -65,19 +63,21 @@ public class UserController {
     public String showAdminpage(/*HttpSession session, */Model model){
         Map<String, Integer> countByAdmin = userService.countByAdmin();
         model.addAttribute("count",countByAdmin);
+        countByAdmin.get("ua");
         return "admin/admin";
     }
 
     //관리자 페이지 리스트 가져오기
-//    public ResponseEntity<?> getUserListByAdmin(AdminSearchType type){
-//        List<UsersByAdminResponseDTO>
-//                userListByAdmin = userService.getUserListByAdmin(type);
-//
-//
-//        return ResponseEntity
-//                .ok()
-//                .body(userListByAdmin);
-//    }
+    public ResponseEntity<?> getUserListByAdmin(/*AdminSearchType type*/){
+        List<UsersByAdminResponseDTO>
+
+                userListByAdmin = userService.getUserListByAdmin();
+
+
+        return ResponseEntity
+                .ok()
+                .body(userListByAdmin);
+    }
 
 //    @GetMapping("/user/detail/admin")
 //    //관리자 페이지 자세히 보기
