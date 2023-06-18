@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.user.UserDUOResponseDTO;
+import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
-import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
 import site.woulduduo.dto.riot.LeagueV4DTO;
 import site.woulduduo.dto.riot.MatchV5DTO;
 import site.woulduduo.dto.riot.MostChampInfo;
@@ -114,12 +114,12 @@ public class UserService {
         return true;
     }
 
-//    public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
+//    public ListResponseDTO<UserByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
 //        userRepository.count();
 //        return null;
 //    }
 
-    public List<UsersByAdminResponseDTO> getUserListByAdmin( ){
+    public List<UserByAdminResponseDTO> getUserListByAdmin( ){
 
 
 //        // Pageable객체 생성
@@ -135,8 +135,8 @@ public class UserService {
 //        List<User> users = all.getContent();
 
         //dto리스트생성 및 dto 생성
-        List<UsersByAdminResponseDTO> userListByAdmin = new ArrayList<>();
-        UsersByAdminResponseDTO dto = new UsersByAdminResponseDTO();
+        List<UserByAdminResponseDTO> userListByAdmin = new ArrayList<>();
+        UserByAdminResponseDTO dto = new UserByAdminResponseDTO();
         for (User user : all) {
             //bc,rc,rc,fc 카운터 찾는 메서드
             long accuseCount = accuseRepository.countByUser(user);
@@ -155,7 +155,7 @@ public class UserService {
 
             userListByAdmin.add(dto);
         }
-        List<UsersByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
+        List<UserByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
         System.out.println("userListByAdmin1 = " + userListByAdmin1);
 
         return userListByAdmin;
@@ -241,7 +241,7 @@ public class UserService {
      * @param userAccount - 대상 사용자
      * @return - 응답 DTO
      */
-    public UserDUOResponseDTO getUserDUOInfo(HttpSession session, String userAccount) {
+    public UserHistoryResponseDTO getUserHistoryInfo(HttpSession session, String userAccount) {
 
         User foundUser = userRepository.findById(userAccount).orElseThrow(
                 () -> new RuntimeException("해당하는 유저가 없습니다.")
@@ -312,7 +312,7 @@ public class UserService {
                 })
                 .collect(Collectors.toList());
 
-        return UserDUOResponseDTO.builder()
+        return UserHistoryResponseDTO.builder()
                 .userAccount(userAccount)
                 .profileImage(foundUser.getLatestProfileImage())
                 .userNickname(foundUser.getUserNickname())
@@ -325,7 +325,7 @@ public class UserService {
                 .userTwitter(foundUser.getUserTwitter())
                 .lolNickname(lolNickname)
                 .userComment(foundUser.getUserComment())
-                .lolTier(foundUser.getLolTier())
+                .tier(foundUser.getLolTier())
                 .userReviews(reviews)
                 // 모스트 3 챔피언 정보
                 .mostChampInfos(mostChampInfoList)
@@ -339,4 +339,21 @@ public class UserService {
                 .build();
 
     }
+
+//    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount){
+//
+//        return null;
+//    }
+//
+//    public boolean increaseUserPoint(UserModifyRequestDTO dto){
+//
+//        return false;
+//    }
+//
+//    public boolean changeUserPoint(UserModifyRequestDTO dto){
+//
+//        return false;
+//    }
+
+
 }
