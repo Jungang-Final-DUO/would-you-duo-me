@@ -27,4 +27,15 @@ class AccuseServiceTest {
         System.out.println("accuseListByAdmin = " + accuseListByAdmin);
     }
 
+    @Test
+    @DisplayName("관리자용 금일 accuseList 확인")
+    void todayBoardByAdmin(){
+        List<AccuseListResponseDTO> accuseByAdminResponseDTOS =
+                accuseService.todayAccuseByAdmin();
+
+        System.out.println("accuseByAdminResponseDTOS = " + accuseByAdminResponseDTOS);
+        int size = accuseByAdminResponseDTOS.size();
+        System.out.println("size = " + size);
+    }
+
 }

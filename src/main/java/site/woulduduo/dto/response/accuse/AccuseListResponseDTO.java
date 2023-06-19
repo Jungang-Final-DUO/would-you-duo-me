@@ -3,6 +3,9 @@ package site.woulduduo.dto.response.accuse;
 import lombok.*;
 import site.woulduduo.entity.Accuse;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @ToString
@@ -16,6 +19,7 @@ public class AccuseListResponseDTO {
     private String userAccount;
     private String accuseType;
     private String accuseETC;
+    private LocalDate accuseWrittenDate;
 
 
     public AccuseListResponseDTO(Accuse accuse){
@@ -23,5 +27,12 @@ public class AccuseListResponseDTO {
         this.userAccount=accuse.getUser().getUserAccount();
         this.accuseType=accuse.getAccuseType();
         this.accuseETC=accuse.getAccuseEtc();
+        this.accuseWrittenDate=accuseDate(accuse.getAccuseWrittenDate());
+    }
+
+    public LocalDate accuseDate(LocalDateTime dateTime){
+
+        LocalDate localDate = dateTime.toLocalDate();
+        return localDate;
     }
 }

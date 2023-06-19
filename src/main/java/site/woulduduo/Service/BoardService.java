@@ -13,6 +13,9 @@ import site.woulduduo.repository.BoardLikeRepository;
 import site.woulduduo.repository.BoardRepository;
 import site.woulduduo.repository.ReplyRepository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -90,6 +93,26 @@ public class BoardService {
                 .collect(toList());
 
         return boardListDTO;
+    }
+
+    //금일 작성 게시물 (ADMIN)
+    public List<BoardsByAdminResponseDTO> todayBoardByAdmin(){
+        List<BoardsByAdminResponseDTO> boardListByAdmin = getBoardListByAdmin();
+        List<BoardsByAdminResponseDTO> todayBoardList = new ArrayList<>();
+        LocalDate currentDate = LocalDate.now();
+
+        for (BoardsByAdminResponseDTO boardsByAdminResponseDTO : boardListByAdmin) {
+            System.out.println("boardsByAdminResponseDTO = " + boardsByAdminResponseDTO);
+            LocalDateTime writtenDate = boardsByAdminResponseDTO.getBoardWrittenDate();
+            LocalDate localDate = writtenDate.toLocalDate();
+            if(localDate!=null&&localDate.equals(currentDate)){
+                todayBoardList.add(boardsByAdminResponseDTO);
+            }
+        }
+        System.out.println("todayBoardList = " + todayBoardList);
+        return todayBoardList;
+
+
     }
 
 }

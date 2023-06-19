@@ -61,6 +61,17 @@ class BoardServiceTest {
         System.out.println("boardListByAdmin = " + boardListByAdmin);
     }
 
+    @Test
+    @DisplayName("관리자용 금일 boardList 확인")
+    void todayBoardByAdmin(){
+        List<BoardsByAdminResponseDTO> boardsByAdminResponseDTOS =
+                boardService.todayBoardByAdmin();
+
+        System.out.println("boardsByAdminResponseDTOS = " + boardsByAdminResponseDTOS);
+        int size = boardsByAdminResponseDTOS.size();
+        System.out.println("size = " + size);
+    }
+
 
 }
 

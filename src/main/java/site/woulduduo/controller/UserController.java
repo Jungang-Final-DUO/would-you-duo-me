@@ -70,11 +70,15 @@ public class UserController {
     //관리자 페이지 리스트 가져오기
     public ResponseEntity<?> getUserListByAdmin(/*AdminSearchType type*/){
         List<UserByAdminResponseDTO> userListByAdmin = userService.getUserListByAdmin();
+        List<UserByAdminResponseDTO> todayUserList = userService.todayUserByAdMin();
+
 
 
         return ResponseEntity
                 .ok()
                 .body(userListByAdmin);
+
+
     }
 
 //    @GetMapping("/user/detail/admin")
