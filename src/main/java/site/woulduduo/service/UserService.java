@@ -5,13 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserDetailByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
-import site.woulduduo.dto.response.user.UserReviewResponseDTO;
+import site.woulduduo.dto.response.user.*;
 import site.woulduduo.dto.riot.LeagueV4DTO;
 import site.woulduduo.dto.riot.MatchV5DTO;
 import site.woulduduo.dto.riot.MostChampInfo;
@@ -35,6 +33,7 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class UserService {
 
+    private final UserQueryDSLRepositoryCustom userQueryDSLRepositoryCustom;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final AccuseRepository accuseRepository;
@@ -132,59 +131,59 @@ public class UserService {
         int boardFindAllCount = boardFindAllCount();
         int boardFindByToday = boardFindByToday();
 
-        adminCount.put("ua",userFindAllCount);
-        adminCount.put("ut",userFindByToday);
-        adminCount.put("aa",accuseFindAllCount);
-        adminCount.put("at",accuseFindByToday);
-        adminCount.put("ba",boardFindAllCount);
-        adminCount.put("bt",boardFindByToday);
+        adminCount.put("ua", userFindAllCount);
+        adminCount.put("ut", userFindByToday);
+        adminCount.put("aa", accuseFindAllCount);
+        adminCount.put("at", accuseFindByToday);
+        adminCount.put("ba", boardFindAllCount);
+        adminCount.put("bt", boardFindByToday);
 
         return adminCount;
 
     }
 
     //전체 user 조회수(admin)
-    public int userFindAllCount(){
+    public int userFindAllCount() {
         List<User> all = userRepository.findAll();
         int userSize = all.size();
         return userSize;
     }
 
     //오늘 가입한 회원 수(admin)
-    public int userFindByToday(){
+    public int userFindByToday() {
         int allWithJoinDate = userRepository.findAllWithJoinDate(LocalDate.now());
         return allWithJoinDate;
     }
 
     //전체 accuse 조회수(admin)
-    public int accuseFindAllCount(){
+    public int accuseFindAllCount() {
         List<Accuse> all = accuseRepository.findAll();
         int accuseSize = all.size();
         return accuseSize;
     }
 
     //오늘 accuse 조회수(admin)
-    public int accuseFindByToday(){
+    public int accuseFindByToday() {
         int allWithAccuseWrittenDate = accuseRepository.findAllWithAccuseWrittenDate();
         return allWithAccuseWrittenDate;
     }
 
     //전체 게시글 조회수(admin)
-    public int boardFindAllCount(){
+    public int boardFindAllCount() {
         List<Board> all = boardRepository.findAll();
         int boardsize = all.size();
         return boardsize;
     }
 
     //오늘 작성된 게시글 조회수(admin)
-    public int boardFindByToday(){
+    public int boardFindByToday() {
         int allWithJoinDate = boardRepository.findAllWithBoardWrittenDate();
         return allWithJoinDate;
     }
 
 
     //유저리스트 DTO변환(Admin)
-    public List<UserByAdminResponseDTO> getUserListByAdmin(/*AdminSearchType type*/){
+    public List<UserByAdminResponseDTO> getUserListByAdmin(/*AdminSearchType type*/) {
 
 
 //        // Pageable객체 생성
@@ -302,7 +301,8 @@ public class UserService {
 
     /**
      * 사용자의 듀오 정보를 구하는 메서드
-     * @param session - 접속한 사용자
+     *
+     * @param session     - 접속한 사용자
      * @param userAccount - 대상 사용자
      * @return - 응답 DTO
      */
@@ -383,7 +383,7 @@ public class UserService {
                 .userNickname(foundUser.getUserNickname())
                 .userPosition(foundUser.getUserPosition())
                 .isFollowed(isFollowed)
-                .userAvgRate(foundUser.getUserAvgRate())
+                .userAvgRate(String.format("%.2f", foundUser.getUserAvgRate()))
                 .userMatchingPoint(foundUser.getUserMatchingPoint())
                 .userInstagram(foundUser.getUserInstagram())
                 .userFacebook(foundUser.getUserFacebook())
@@ -398,9 +398,11 @@ public class UserService {
                 .leaguePoints(rankInfo.getLeaguePoints())
                 .totalWinCount(rankInfo.getWins())
                 .totalLoseCount(rankInfo.getLosses())
-                .winRate(rankInfo.getWinRate())
+                .winRate(Math.round(rankInfo.getWinRate() * 100))
                 // 최근 20 매치의 정보 데이터
-                .last20Matches(last20ParticipantDTOList)
+                .last20Matches(last20ParticipantDTOList.stream()
+                        .map(MatchResponseDTO::new)
+                        .collect(toList()))
                 .build();
 
     }

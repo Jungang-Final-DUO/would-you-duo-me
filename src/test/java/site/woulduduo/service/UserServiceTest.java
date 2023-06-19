@@ -7,14 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserDetailByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
+import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
+import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
+import site.woulduduo.enumeration.Tier;
 import site.woulduduo.repository.UserRepository;
 
 import java.time.LocalDate;
@@ -36,7 +40,53 @@ class UserServiceTest {
 
     @BeforeEach
     void userInsert() {
+        for (int i = 1; i < 42; i++) {
+            User user = User.builder()
+                    .userAccount("user" + i)
+                    .userNickname("nickname" + i)
+                    .userPassword("pwd" + i)
+                    .userBirthday(LocalDate.of(2000, 1, 1))
+                    .lolNickname("lolNickname" + i)
+                    .userGender(Gender.M)
+                    .lolTier(Tier.CHA)
+                    .userPosition(Position.MID)
+                    .userComment("안녕하세요 트롤아닙니다." + i)
+                    .userMatchingPoint(500)
+                    .build();
+            userRepository.save(user);
+        }
+        for (int i = 42; i < 100; i++) {
+            User user = User.builder()
+                    .userAccount("user" + i)
+                    .userNickname("nickname" + i)
+                    .userPassword("pwd" + i)
+                    .userBirthday(LocalDate.of(2000, 1, 1))
+                    .lolNickname("lolNickname" + i)
+                    .userGender(Gender.M)
+                    .lolTier(Tier.DIA)
+                    .userPosition(Position.MID)
+                    .userComment("안녕하세요 트롤아닙니다." + i)
+                    .userMatchingPoint(500)
+                    .build();
+            userRepository.save(user);
+        }
 
+
+
+    }
+
+    @Test
+    @DisplayName("QueryDSL을 이용해 필터와 정렬 조건에 맞춰 userList가 출력되어야한다.")
+    void testGetUserProfileList() {
+        UserSearchType userSearchType = new UserSearchType();
+        userSearchType.setPosition(Position.MID);
+        userSearchType.setGender(Gender.M);
+        userSearchType.setTier(Tier.DIA);
+        userSearchType.setSort("avgRate");
+
+        List<UserProfilesResponseDTO> userProfileList = userService.getUserProfileList(userSearchType);
+
+        assertEquals(userProfileList.size(), 40);
     }
 
     @Test
@@ -44,11 +94,11 @@ class UserServiceTest {
     void testRegisterWithValidUserInfo() {
         // Given
         UserRegisterRequestDTO dto = UserRegisterRequestDTO.builder()
-                .userEmail("test@example.com")
+                .userEmail("test1@example.com")
                 .userPassword("abC123@")
-                .userNickname("가나다")
+                .userNickname("송유근")
                 .userBirthday(LocalDate.of(2000, 1, 1))
-                .lolNickname("코뚱잉")
+                .lolNickname("결속의반지")
                 .userGender(Gender.M)
                 .build();
 

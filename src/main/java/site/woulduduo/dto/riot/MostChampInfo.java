@@ -13,7 +13,7 @@ public class MostChampInfo {
     private String champName;
     private int winCount;
     private int loseCount;
-    private double winRate;
+    private int winRate;
     private double kda;
 
 }
