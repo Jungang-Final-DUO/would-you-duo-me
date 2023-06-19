@@ -218,6 +218,7 @@ public class UserService {
             dto.setReportCount(accuseCount);
             dto.setPoint(user.getUserCurrentPoint());
             dto.setFollowCount(followCount);
+            dto.setJoinDate(user.getUserJoinDate());
             i++;
 
             userListByAdmin.add(dto);

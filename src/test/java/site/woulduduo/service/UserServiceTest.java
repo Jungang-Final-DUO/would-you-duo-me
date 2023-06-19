@@ -116,6 +116,14 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("관리자페이지 정보 count 확인")
+    void getCountByAdmin() {
+        Map<String, Integer> stringIntegerMap = userService.countByAdmin();
+        System.out.println("stringIntegerMap = " + stringIntegerMap);
+    }
+
+
+    @Test
     @DisplayName("관리자 전체유저 리스트 dto 변환")
     void userExchangeDTO(){
         List<UserByAdminResponseDTO> userListByAdmin =
@@ -125,9 +133,13 @@ class UserServiceTest {
 
 
     }
+
+
     @Test
     @DisplayName("관리자 금일가입유저 리스트 dto 변환")
     void todayUserExchangeDTO(){
+
+
         List<UserByAdminResponseDTO> todayUserListByAdmin =
                 userService.todayUserByAdMin();
 
@@ -159,12 +171,6 @@ class UserServiceTest {
         System.out.println("userDUOInfo = " + userDUOInfo);
     }
 
-    @Test
-    @DisplayName("관리자페이지 정보 count 확인")
-    void getCountByAdmin() {
-        Map<String, Integer> stringIntegerMap = userService.countByAdmin();
-        System.out.println("stringIntegerMap = " + stringIntegerMap);
-    }
 
 
 }
