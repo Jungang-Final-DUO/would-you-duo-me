@@ -1,6 +1,7 @@
 package site.woulduduo.dto.response.user;
 
 import lombok.*;
+import site.woulduduo.entity.User;
 
 import java.time.LocalDate;
 
@@ -23,12 +24,15 @@ public class UserByAdminResponseDTO {
     private long followCount;
     private LocalDate joinDate;
 
-//    private UserByAdminResponseDTO(User user){
-//        this.userAccount=user.getUserAccount();
-//        this.gender=user.getUserGender().toString();
-//        this.point=user.getUserCurrentPoint();
-//        this.joinDate=user.getUserJoinDate();
-//    }
 
-
+    public UserByAdminResponseDTO(User user) {
+        this.userAccount=user.getUserAccount();
+        this.gender=user.getUserGender().toString();
+        this.point=user.getUserCurrentPoint();
+        this.boardCount=user.getBoardList().size();
+        this.replyCount=user.getReplyList().size();
+        this.reportCount=user.getAccuseList().size();
+        this.followCount=user.getFollowToList().size();
+        this.joinDate=user.getUserJoinDate();
+    }
 }

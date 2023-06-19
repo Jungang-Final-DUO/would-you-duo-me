@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserDetailByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.service.UserService;
 
@@ -68,6 +69,7 @@ public class UserController {
     }
 
     //관리자 페이지 리스트 가져오기
+    @GetMapping("/api/v1/users/admin")
     public ResponseEntity<?> getUserListByAdmin(/*AdminSearchType type*/){
         List<UserByAdminResponseDTO> userListByAdmin = userService.getUserListByAdmin();
         List<UserByAdminResponseDTO> todayUserList = userService.todayUserByAdMin();
@@ -81,13 +83,16 @@ public class UserController {
 
     }
 
-//    @GetMapping("/user/detail/admin")
-//    //관리자 페이지 자세히 보기
-//    public String showDetailByAdmin(HttpSession session,Model model, String userAccount){
-//
-//        return "";
-//    }
-//
+    @GetMapping("/user/detail/admin")
+    //관리자 페이지 자세히 보기
+    public String showDetailByAdmin(HttpSession session,Model model, String userAccount){
+        UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userAccount);
+
+        model.addAttribute("udByAdmin",userDetailByAdmin);
+        return "admin/admin_user";
+
+    }
+
 //    @GetMapping("/user/ban")
 //    public String changeBanStatus(HttpSession session, String userAccount){
 //

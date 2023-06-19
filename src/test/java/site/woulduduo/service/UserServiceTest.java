@@ -8,8 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
+import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserDetailByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
@@ -147,6 +149,66 @@ class UserServiceTest {
         System.out.println("size = " + size);
         System.out.println("todayUserListByAdmin = " + todayUserListByAdmin);
 
+
+    }
+
+    @Test
+    @DisplayName("유저 디테일 dto 변환")
+    void getUserDetailByAdmin(){
+
+
+        UserDetailByAdminResponseDTO UserByAdmin =
+                userService.getUserDetailByAdmin("345");
+
+        System.out.println("todayUserListByAdmin = " + UserByAdmin);
+
+    }
+
+    @Test
+    @DisplayName("포인트 증가")
+    void increaseUserPoint() {
+        UserModifyRequestDTO modify = UserModifyRequestDTO.builder()
+                .userNickname("123")
+                .userBirthday(LocalDate.of(2012, 01, 01))
+                .lolNickname("아무나")
+                .userPassword("123")
+                .userInstagram("123")
+                .userFacebook("123")
+                .userTwitter("123")
+                .userCurrentPoint(123123)
+                .userAddPoint(33333)
+                .userIsBanned(0)
+                .build();
+
+
+
+        System.out.println("modify1 = " + modify);
+        boolean b123 = userService.increaseUserPoint(modify);
+        System.out.println("b123 = " + b123);
+        System.out.println("modify2 = " + modify);
+
+    }
+
+    @Test
+    @DisplayName("밴 boolean")
+    void changeBanStatus() {
+        UserModifyRequestDTO modify = UserModifyRequestDTO.builder()
+                .userNickname("123")
+                .userBirthday(LocalDate.of(2012, 01, 01))
+                .lolNickname("아무나")
+                .userPassword("123")
+                .userInstagram("123")
+                .userFacebook("123")
+                .userTwitter("123")
+                .userCurrentPoint(123123)
+                .userAddPoint(33333)
+                .userIsBanned(0)
+                .build();
+
+        System.out.println("modify1 = " + modify);
+        boolean b123 = userService.changeBanStatus(modify);
+        System.out.println("b123 = " + b123);
+        System.out.println("modify2 = " + modify);
 
     }
 

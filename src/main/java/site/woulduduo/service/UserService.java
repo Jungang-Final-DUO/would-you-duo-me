@@ -6,8 +6,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
+import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserDetailByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
 import site.woulduduo.dto.riot.LeagueV4DTO;
@@ -196,41 +198,22 @@ public class UserService {
 //        List<User> users = all.getContent();
 
         //전체불러오기
-        List<User> all = userRepository.findAll();
+        List<UserByAdminResponseDTO> collect = userRepository.findAll()
+                .stream()
+                .map(UserByAdminResponseDTO::new)
+                .collect(toList());
 
-        //dto리스트생성 및 dto 생성
-        List<UserByAdminResponseDTO> userListByAdmin = new ArrayList<>();
         int i=1;
-        for (User user : all) {
-            UserByAdminResponseDTO dto = new UserByAdminResponseDTO();
-
-            //bc,rc,rc,fc 카운터 찾는 메서드
-            long accuseCount = accuseRepository.countByUser(user);
-            long boardCount = boardRepository.countByUser(user);
-            long replyCount = replyRepository.countByUser(user);
-            long followCount = followRepository.findAllWithFollowTo(user.getUserAccount());
-
-            dto.setRowNum(i);
-            dto.setUserAccount(user.getUserAccount());
-            dto.setGender(user.getUserGender().toString());
-            dto.setBoardCount(boardCount);
-            dto.setReplyCount(replyCount);
-            dto.setReportCount(accuseCount);
-            dto.setPoint(user.getUserCurrentPoint());
-            dto.setFollowCount(followCount);
-            dto.setJoinDate(user.getUserJoinDate());
+        for (UserByAdminResponseDTO user : collect) {
+            user.setRowNum(i);
             i++;
-
-            userListByAdmin.add(dto);
-            List<UserByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
         }
-        List<UserByAdminResponseDTO> userListByAdmin2 = userListByAdmin;
+        System.out.println("collect = " + collect);
 
-        return userListByAdmin;
+        return collect;
     }
 
     //금일 가입자(Admin)
-
     public List<UserByAdminResponseDTO> todayUserByAdMin() {
         List<UserByAdminResponseDTO> userListByAdmin = getUserListByAdmin();
         List<UserByAdminResponseDTO> todayUserList = new ArrayList<>();
@@ -248,16 +231,70 @@ public class UserService {
         return todayUserList;
     }
 
-//    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount){
-//
-//        return null;
-//    }
-//
-//    public boolean increaseUserPoint(UserModifyRequestDTO dto){
-//
-//        return false;
-//    }
-//
+
+    //userDetailByAdmin
+    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount) {
+        User oneUser = userRepository.findByUserAccount("345");
+        UserDetailByAdminResponseDTO userDetail =
+                new UserDetailByAdminResponseDTO(oneUser);
+
+
+
+        return userDetail;
+    }
+
+
+//포인트 증가
+    public boolean increaseUserPoint(UserModifyRequestDTO dto){
+        //지급포인트
+        int userAddPoint = dto.getUserAddPoint();
+        //현재포인트
+        int userCurrentPoint = dto.getUserCurrentPoint();
+        String currentPoint = String.valueOf(userCurrentPoint);
+        //더한값
+        int total = userCurrentPoint + userAddPoint;
+
+        //-99999 ~ +99999 가 맞는지 확인
+        boolean matches = currentPoint.matches("-?[0-9]{1,5}");
+
+        //현재포인트와 total이 같지 않다면 저장
+        if(userCurrentPoint!=total){
+            //
+            if(matches!=false) {
+                User userByNickName = findUserByNickName(dto);
+                userByNickName.setUserCurrentPoint(total);
+                User save = userRepository.save(userByNickName);
+                System.out.println("save = " + save);
+                return true;
+            }
+        }return false;
+
+    }
+
+    //밴 boolean
+    public boolean changeBanStatus(UserModifyRequestDTO dto){
+        int userIsBanned = dto.getUserIsBanned();
+        User userByNickName = findUserByNickName(dto);
+
+        //userIsBanned가 1이면 참
+        if(userIsBanned==1) {
+            userByNickName.setUserIsBanned(true);
+            User save = userRepository.save(userByNickName);
+            return true;
+        }userByNickName.setUserIsBanned(false);
+        User save = userRepository.save(userByNickName);
+        return false;
+
+    }
+
+    //닉네임으로 user 찾기
+    public User findUserByNickName(UserModifyRequestDTO dto){
+        String userNickname = dto.getUserNickname();
+        User userByNickName = userRepository.findByNickName(userNickname);
+
+        return userByNickName;
+    }
+
 //    public boolean changeUserPoint(UserModifyRequestDTO dto){
 //
 //        return false;
@@ -368,20 +405,8 @@ public class UserService {
 
     }
 
-//    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount){
-//
-//        return null;
-//    }
-//
-//    public boolean increaseUserPoint(UserModifyRequestDTO dto){
-//
-//        return false;
-//    }
-//
-//    public boolean changeUserPoint(UserModifyRequestDTO dto){
-//
-//        return false;
-//    }
+
+
 
 
 }

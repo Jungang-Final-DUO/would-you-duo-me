@@ -20,5 +20,6 @@ public class UserModifyRequestDTO {
     private String userFacebook;
     private String userTwitter;
     private int userCurrentPoint;
+    private int userAddPoint;
     private int userIsBanned;
 }

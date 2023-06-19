@@ -187,4 +187,12 @@ class UserRepositoryTest {
         System.out.println("userJoinDate = " + userJoinDate);
     }
 
+    @Test
+    @DisplayName("nickname으로 User 객체 찾기")
+    void searchUserByNickName() {
+        User byNickName = userRepository.findByNickName("345");
+        System.out.println("byNickName = " + byNickName);
+    }
+
+
 }
