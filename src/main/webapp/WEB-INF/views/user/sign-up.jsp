@@ -23,7 +23,7 @@
         </h1>
         <h2>회원가입</h2>
     </header>
-    <form action="/user/sign-up" method="post">
+    <form action="/user/sign-up" id="signupResult" method="post">
         <div id="sign-up-wrapper">
             <section id="profile-img-section">
                 <h2>프로필 사진</h2>
@@ -47,6 +47,7 @@
                 <div id="sign-up-request-input-wrapper">
                     <label for="user-nickname">닉네임</label>
                     <input type="text" id="user-nickname" name="userNickname">
+                    <div id="nicknameChk"></div>
 
                     <label>
                         <select name="userGender" id="user-gender" class="btn">
@@ -58,6 +59,7 @@
 
                     <label for="user-email">이메일</label>
                     <input type="text" id="user-email" name="userEmail">
+<%--                    <div id="emailChk"></div>--%>
 
                     <button id="verification-btn" class="btn modal-btn">인증</button>
                     <dialog>
@@ -81,19 +83,19 @@
 
                     <label for="user-password">비밀번호</label>
                     <input type="password" id="user-password" name="userPassword">
-                    <div></div>
+                    <div id="pwChk"></div>
 
                     <label for="user-password-check">비밀번호 확인</label>
                     <input type="password" id="user-password-check">
-                    <div></div>
+                    <div id="pwChk2"></div>
 
                     <label for="user-birthday">생년월일</label>
                     <input type="date" id="user-birthday" name="userBirthday">
-                    <div></div>
+                    <div id="birthdayChk"></div>
 
                     <label for="lol-nickname">롤계정</label>
                     <input type="text" id="lol-nickname" name="lolNickname">
-                    <div></div>
+                    <div id="lolNicknameChk"></div>
 
                     <!--                     빈칸 -->
                     <div class="space"></div>
@@ -105,26 +107,29 @@
                     <div>SNS</div>
                     <div class="sns-input-wrapper">
                         <label for="instagram"><img src="/assets/img/main/instagram.png" alt=""></label>
-                        <input type="text" id="instagram" name="userInstagram" placeholder="sns id를 입력하세요">
+                        <input type="text" id="instagram" name="userInstagram" placeholder="사용자 아이디를 입력하세요">
+                        <div id="instagramChk"></div>
                     </div>
                     <div></div>
 
                     <div></div>
                     <div class="sns-input-wrapper">
                         <label for="facebook"><img src="/assets/img/main/facebook.png" alt=""></label>
-                        <input type="text" id="facebook" name="userFacebook" placeholder="sns id를 입력하세요">
+                        <input type="text" id="facebook" name="userFacebook" placeholder="사용자 아이디를 입력하세요">
+                        <div id="facebookChk"></div>
                     </div>
                     <div></div>
 
                     <div></div>
                     <div class="sns-input-wrapper">
                         <label for="twitter"><img src="/assets/img/main/twitter.png" alt=""></label>
-                        <input type="text" id="twitter" name="userTwitter" placeholder="sns id를 입력하세요">
+                        <input type="text" id="twitter" name="userTwitter" placeholder="사용자 아이디를 입력하세요">
+                        <div id="twitterChk"></div>
                     </div>
                     <div></div>
                 </div>
                 <div id="submit-btn-wrapper">
-                    <button type="submit" class="btn">
+                    <button type="submit" id="signup-btn" class="btn">
                         회원가입
                     </button>
                 </div>

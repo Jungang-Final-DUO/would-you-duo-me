@@ -34,19 +34,17 @@ public class UserService {
     public void register(UserRegisterRequestDTO dto) {
 
         // 이메일 중복 검사
-        if (userRepository.existsById(dto.getUserEmail())) {
+        if (userRepository.countByUserEmail(dto.getUserEmail()) > 0) {
             throw new IllegalArgumentException("이미 등록된 이메일입니다.");
         }
 
         // 닉네임 중복 검사
-        int nicknameCount = userRepository.countByUserNickname(dto.getUserNickname());
-        if (nicknameCount > 0) {
+        if (userRepository.countByUserNickname(dto.getUserNickname()) > 0) {
             throw new IllegalArgumentException("이미 등록된 닉네임입니다.");
         }
 
         // 소환사 아이디 중복 검사
-        int lolNicknameCount = userRepository.countByLolNickname(dto.getLolNickname());
-        if (lolNicknameCount > 0) {
+        if (userRepository.countByLolNickname(dto.getLolNickname()) > 0) {
             throw new IllegalArgumentException("이미 등록된 롤 닉네임입니다.");
         }
 
@@ -68,6 +66,31 @@ public class UserService {
 
         log.info("회원 가입이 완료되었습니다.");
     }
+
+    // 중복검사 서비스 처리
+    public int checkSignUpValue(String type, String keyword) {
+        int flagNum;
+
+        switch (type) {
+            case "email":
+                flagNum = userRepository.countByUserEmail(keyword);
+                break;
+            case "nickname":
+                flagNum = userRepository.countByUserNickname(keyword);
+                break;
+            case "lolNickname":
+                flagNum = userRepository.countByLolNickname(keyword);
+                break;
+            default:
+                throw new IllegalArgumentException("잘못된 검사 타입입니다.");
+        }
+
+        return flagNum;
+    }
+
+
+
+
 
     public boolean registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
 

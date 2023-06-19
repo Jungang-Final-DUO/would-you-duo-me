@@ -6,6 +6,7 @@ import lombok.extern.slf4j.XSlf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.EmailService;
 import site.woulduduo.service.UserService;
 
@@ -36,6 +37,7 @@ public class UserController {
 
     private final UserService userService;
     private final EmailService emailService;
+    private final UserRepository userRepository;
 
     // 회원 가입 양식 요청
     @GetMapping("/user/sign-up")
@@ -54,6 +56,34 @@ public class UserController {
 
         return "redirect:/user/sign-in";
     }
+
+    // 중복검사
+    @GetMapping("/check")
+    @ResponseBody
+    public ResponseEntity<Boolean> check(@RequestParam String type, @RequestParam String keyword) {
+        boolean isDuplicate;
+        switch (type) {
+            case "email":
+                isDuplicate = userRepository.countByUserEmail(keyword) > 0;
+                break;
+            case "nickname":
+                isDuplicate = userRepository.countByUserNickname(keyword) > 0;
+                break;
+            case "lolNickname":
+                isDuplicate = userRepository.countByLolNickname(keyword) > 0;
+                break;
+            default:
+                throw new IllegalArgumentException("잘못된 검사 타입입니다.");
+        }
+
+        return ResponseEntity.ok(isDuplicate); // 중복되지 않은 경우에 true 반환
+    }
+
+
+
+
+
+
 
 
     @GetMapping("/user/register-duo")
