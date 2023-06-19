@@ -5,7 +5,8 @@ export function outputMessage(message) {
     div.classList.add('chatting-message-card');
 
     if (message.username === '원영이') {
-        div.classList.add('chatting-message-card message-from');
+        div.classList.add('chatting-message-card');
+        div.classList.add('message-from');
         div.innerHTML = `
                 <img class="chatting-profile" src="/assets/img/chattingModal/woogi.jpg" alt="프로필이미지">
                 <div class="message-content-container">
@@ -17,7 +18,8 @@ export function outputMessage(message) {
                 </div>
             `;
     } else {
-        div.classList.add('chatting-message-card message-to');
+        div.classList.add('chatting-message-card');
+        div.classList.add('message-to');
         div.innerHTML = `
                 <img class="chatting-profile" src="/assets/img/chattingModal/woogi.jpg" alt="프로필이미지">
                 <div class="message-content-container">
