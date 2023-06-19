@@ -5,8 +5,8 @@ export function connectSocket(ChatForm) {
     const username = '바보';
 // const username = '원영이';
     const socket = io("http://localhost:3000");
-    console.log(ChatForm);
-    console.log(socket);
+    // console.log(ChatForm);
+    // console.log(socket);
 
     //Message from server
     socket.on('message', message => {
@@ -24,7 +24,7 @@ export function connectSocket(ChatForm) {
     ChatForm.forEach(cf => {
         cf.addEventListener('submit', (e) => {
             e.preventDefault();
-            console.log(e.target);
+            // console.log(e.target);
 
             //Get message text and room
             const msg = e.target.querySelector('.msg').value;
