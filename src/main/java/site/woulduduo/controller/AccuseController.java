@@ -2,10 +2,8 @@ package site.woulduduo.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import site.woulduduo.dto.request.accuse.UserAccuseRequestDTO;
 import site.woulduduo.dto.response.accuse.AccuseListResponseDTO;
 import site.woulduduo.enumeration.AdminViewType;
 import site.woulduduo.service.AccuseService;
@@ -24,5 +22,13 @@ public class AccuseController {
     public List<?> getAccuseListByAdmin(HttpSession session, @PathVariable AdminViewType type, @PathVariable int Page){
         List<AccuseListResponseDTO> accuseListByAdmin = accuseService.getAccuseListByAdmin();
         return accuseListByAdmin;
+    }
+
+    @PostMapping("/user/accuse")
+    public String accuseUser(HttpSession session, UserAccuseRequestDTO dto){
+        accuseService.accuseUser(dto);
+
+
+        return "admin/accuseModal";
     }
 }

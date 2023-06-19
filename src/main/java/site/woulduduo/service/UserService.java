@@ -354,7 +354,7 @@ public class UserService {
                     int loseCount = (int) championMatchInfoList.stream()
                             .filter(c -> !c.isWin()).count();
 
-                    double winRate = (double) winCount / (winCount + loseCount) * 100;
+                    int winRate = winCount * 100 / (winCount + loseCount);
 
                     int kills = championMatchInfoList.stream()
                             .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getKills).sum();
@@ -405,6 +405,14 @@ public class UserService {
                         .collect(toList()))
                 .build();
 
+    }
+    public List<UserProfilesResponseDTO> getUserProfileList(/*HttpSession session, */UserSearchType userSearchType) {
+        List<UserProfilesResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
+
+        for (UserProfilesResponseDTO userProfile : userProfileList) {
+            log.info("@@@ userProfile @@@@@ : {}", userProfile.toString());
+        }
+        return userProfileList;
     }
 
 
