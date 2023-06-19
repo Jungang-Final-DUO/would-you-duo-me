@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
+
+import static site.woulduduo.util.EmailUtil.EMAIL_KEY;
 
 @Service
 @RequiredArgsConstructor
@@ -83,5 +86,10 @@ public class EmailService {
         emailSender.send(emailForm);
 
         return authNum; //인증 코드 반환
+    }
+
+    // 인증 코드 확인
+    public boolean checkEmail(HttpSession session, String authCode) {
+        return session.getAttribute(EMAIL_KEY).equals(authCode);
     }
 }

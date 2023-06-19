@@ -5,6 +5,7 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 
     addModalBtnEvent();
     addModalCloseEvent();
+    addConfirmBtnHandler();
 
     document.getElementById("verification-btn").addEventListener("click", function () {
         var userEmail = document.getElementById("user-email").value;
@@ -284,7 +285,23 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
         }
     };
 
+    // 인증 버튼 핸들러
+    function addConfirmBtnHandler() {
+        document.getElementById('email-confirm-modal')
+            .querySelector('button').onclick = async e => {
+            e.preventDefault();
+            const res = await fetch("/user/check-email",
+                {
+                    method: 'POST',
+                    body: document.getElementById('confirm-code').value
+                });
 
+            if (res.status === 499) {
+                alert('인증번호가 맞지 않습니다!');
+            } else if (res.status === 200) {
+                alert('인증되었습니다!');
+            }
 
-
+        }
+    }
 })();

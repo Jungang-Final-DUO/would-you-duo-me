@@ -329,6 +329,10 @@ header {
     width: 30px;
 }
 
+#to-top-btn {
+    display: none;
+}
+
 #chatting-btn {
     margin-top: 10px;
 
