@@ -49,8 +49,8 @@
     border-radius: 5px;
     background: #111E30;
     color: #fff;
-    margin: 0px auto 5px;
-    padding: 10px;
+    margin: 0 auto 5px;
+    padding: 10px 25px;
 }
 
 .chatting-modal-container {
@@ -69,7 +69,7 @@
 
 .chatting-card-inner {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     cursor: pointer;
 }
@@ -89,6 +89,7 @@
 
 .chatting-card-inner .chatting-info {
     margin-right: 15px;
+    width: 197px;
 }
 .chatting-card-inner .chatting-nickname {
     display: block;
