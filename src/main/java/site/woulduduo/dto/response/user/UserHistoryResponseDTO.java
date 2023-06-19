@@ -1,7 +1,6 @@
 package site.woulduduo.dto.response.user;
 
 import lombok.*;
-import site.woulduduo.dto.riot.MatchV5DTO;
 import site.woulduduo.dto.riot.MostChampInfo;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
@@ -24,7 +23,7 @@ public class UserHistoryResponseDTO {
     private Position userPosition;
     // session 에 로그인된 사용자가 이 사용자를 팔로우했는지 여부
     private boolean isFollowed;
-    private Double userAvgRate;
+    private String userAvgRate;
     private Integer userMatchingPoint;
     private String userInstagram;
     private String userFacebook;
@@ -43,14 +42,14 @@ public class UserHistoryResponseDTO {
     private int last20LoseCount;
     private double last20WinRate;
 
-    private double last20KDA;
-    private double last20Kill;
-    private double last20Death;
-    private double last20Assist;
+    private String last20KDA;
+    private int last20Kill;
+    private int last20Death;
+    private int last20Assist;
 
     private List<MostChampInfo> mostChampInfos;
 
-    private List<MatchV5DTO.MatchInfo.ParticipantDTO> last20Matches;
+    private List<MatchResponseDTO> last20Matches;
 
     private List<UserReviewResponseDTO> userReviews;
 
@@ -92,25 +91,23 @@ public class UserHistoryResponseDTO {
             return this;
         }
 
-        public UserHistoryResponseDTOBuilder last20Matches(List<MatchV5DTO.MatchInfo.ParticipantDTO> last20Matches) {
+        public UserHistoryResponseDTOBuilder last20Matches(List<MatchResponseDTO> last20Matches) {
             this.last20Matches = last20Matches;
             this.last20WinCount = (int) last20Matches.stream()
-                    .filter(MatchV5DTO.MatchInfo.ParticipantDTO::isWin).count();
+                    .filter(MatchResponseDTO::isWin).count();
             this.last20LoseCount = (int) last20Matches.stream()
                     .filter(m -> !m.isWin()).count();
-            this.last20WinRate = (double) this.last20WinCount / (this.last20WinCount + this.last20LoseCount) * 100;
-            this.last20KDA = last20Matches.stream()
-                    .mapToDouble(m -> ((double) m.getKills() + m.getAssists()) / m.getDeaths())
-                    .average().orElse(0.0);
+            this.last20WinRate = Math.round((double) this.last20WinCount / (this.last20WinCount + this.last20LoseCount) * 100);
             this.last20Kill = last20Matches.stream()
-                    .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getKills)
+                    .mapToInt(MatchResponseDTO::getKills)
                     .sum();
             this.last20Death = last20Matches.stream()
-                    .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getDeaths)
+                    .mapToInt(MatchResponseDTO::getDeaths)
                     .sum();
             this.last20Assist = last20Matches.stream()
-                    .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getAssists)
+                    .mapToInt(MatchResponseDTO::getAssists)
                     .sum();
+            this.last20KDA = String.format("%.2f", ((double) last20Kill + last20Assist) / last20Death);
 
             return this;
         }

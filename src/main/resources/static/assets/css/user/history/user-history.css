@@ -212,7 +212,7 @@
 
 #most-champ-grid-wrapper {
     display: grid;
-    grid-template-columns: 1fr 0.7fr 1.7fr 1fr 0.7fr;
+    grid-template-columns: 1fr 1.7fr 1fr 1fr;
     align-items: center;
     justify-items: center;
     row-gap: 10px;
@@ -325,7 +325,7 @@
 }
 
 #game-result-wrapper .each-item-wrapper img {
-    width: 40px;
+    width: 30px;
     margin-right: 6px;
 }
 
@@ -370,8 +370,6 @@
     width: 130px;
     height: 140px;
     border-radius: 5px;
-    /* 임시 이미지 */
-    background: url("https://i.namu.wiki/i/-BO7m4nlr6HAifi1A7oJrs6EFeP4z4gg7mvRy9sKhdDXnw_e0bKn7wo-0shhcAQuL3kvhs5YSeXuyxaMXDh9vjUx5qjK4ONEmonhqmyKHJ3sCLdgDBQI3SCnSlAn1ir7A37bgicvwlBFqyg-s-ouPw.webp") center / cover;
 }
 
 #review-section .review-user-nickname {

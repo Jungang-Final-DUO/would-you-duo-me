@@ -6,15 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.ListResponseDTO;
-import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
-import site.woulduduo.entity.User;
-import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
+import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
+import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
@@ -22,9 +21,7 @@ import site.woulduduo.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import java.util.Map;
-
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -95,11 +92,11 @@ class UserServiceTest {
     void testRegisterWithValidUserInfo() {
         // Given
         UserRegisterRequestDTO dto = UserRegisterRequestDTO.builder()
-                .userEmail("test@example.com")
+                .userEmail("test1@example.com")
                 .userPassword("abC123@")
-                .userNickname("가나다")
+                .userNickname("송유근")
                 .userBirthday(LocalDate.of(2000, 1, 1))
-                .lolNickname("코뚱잉")
+                .lolNickname("결속의반지")
                 .userGender(Gender.M)
                 .build();
 
