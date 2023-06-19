@@ -1,3 +1,7 @@
+function renderChattingRooms(){
+    fetch()
+}
+
 function closeRecentModal($toBack){
     $toBack.onclick = e => {
         const $dialog = e.target.closest('dialog');

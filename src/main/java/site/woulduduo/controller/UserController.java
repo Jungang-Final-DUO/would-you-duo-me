@@ -28,6 +28,12 @@ public class UserController {
 
     private final UserService userService;
 
+//    메인페이지로 이동
+    @GetMapping("/main")
+    public String test(){
+        return "index";
+    }
+
     // 회원 가입 양식 요청
     @GetMapping("/user/sign-up")
     public String signUp() {
