@@ -150,6 +150,7 @@ public class ChattingService {
             }
 //           최신 메세지 세팅
             dtoList.get(i).setMessageContent(messageRepository.findByChattingOrderByMessageTimeDesc(chattingList.get(i)).get(0).getMessageContent());
+            dtoList.get(i).setMessageUnreadCount(messageRepository.countByChattingAndUserIsNotAndMessageIsRead(chattingList.get(i), user, false));
         }
 
         return dtoList;
