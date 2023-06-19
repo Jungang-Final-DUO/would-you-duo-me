@@ -53,6 +53,7 @@ public class UserService {
     private final MatchingRepository matchingRepository;
     private final FollowRepository followRepository;
     private final UserProfileRepository userProfileRepository;
+    private final MostChampRepository mostChampRepository;
 
     final String id = "abc1234";
 

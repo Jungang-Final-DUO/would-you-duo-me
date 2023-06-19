@@ -24,8 +24,7 @@ import java.util.List;
 public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    QUser user =  QUser.user;
-
+    private final QUser user =  QUser.user;
 
     @Override
     public List<UserProfilesResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/) {
@@ -37,12 +36,12 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                         , tiereq(userSearchType.getTier())
                         , user.userMatchingPoint.isNotNull()
                 )
-                .offset(userSearchType.getPage())
+                .offset(userSearchType.getPage() - 1)
                 .limit(userSearchType.getSize())
                 .orderBy(user.userAvgRate.desc())
                 .fetch();
 
-    //
+    // select 로 불러온 user 리스트 UserProfilesResponseDTO로 변환해 리스트에 담아주기
         List<UserProfilesResponseDTO> userProfiles = new ArrayList<>();
         for (User user : userList) {
             UserProfilesResponseDTO dto = UserProfilesResponseDTO.builder()
