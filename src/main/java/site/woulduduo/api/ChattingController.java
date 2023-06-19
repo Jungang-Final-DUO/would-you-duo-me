@@ -34,6 +34,4 @@ public class ChattingController {
         return ResponseEntity.ok().body(chattingList);
     }
 
-
-
 }
