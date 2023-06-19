@@ -39,7 +39,7 @@
 /*    display: block;*/
 /*}*/
 
-.chatting-modal-wrapper::backdrop {
+.chatting-modal-dialog::backdrop {
     background: none;
 }
 

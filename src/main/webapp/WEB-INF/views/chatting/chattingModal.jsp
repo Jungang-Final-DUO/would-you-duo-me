@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%--    <div class="modal-background show-modal"></div>--%>
-<dialog>
+<dialog class = "chatting-modal-dialog">
 <div class="chatting-modal-wrapper">
         <ul class="chatting-modal-container">
             <li id = "rm1" class="chatting-card">
