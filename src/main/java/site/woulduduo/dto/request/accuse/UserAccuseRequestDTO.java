@@ -1,6 +1,7 @@
 package site.woulduduo.dto.request.accuse;
 
 import lombok.*;
+import site.woulduduo.entity.Accuse;
 
 import java.util.List;
 
@@ -16,6 +17,13 @@ public class UserAccuseRequestDTO {
     private List<String> accuseType;
     private String accuseEtc;
 
+    public Accuse toEntity(){
+        Accuse accuse = Accuse.builder()
+                .accuseType(this.accuseType.toString())
+                .accuseEtc(this.accuseEtc)
+                .build();
 
+        return accuse;
+    }
 
 }

@@ -4,8 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.accuse.UserAccuseRequestDTO;
 import site.woulduduo.dto.response.accuse.AccuseListResponseDTO;
+import site.woulduduo.entity.Accuse;
+import site.woulduduo.entity.User;
 import site.woulduduo.repository.AccuseRepository;
+import site.woulduduo.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,8 +22,13 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 @Transactional
 public class AccuseService {
-    //신고내역(ADMIN)
+
     private final AccuseRepository accuseRepository;
+    private final UserRepository userRepository;
+
+
+    //신고내역(ADMIN)
+
     public List<AccuseListResponseDTO> getAccuseListByAdmin() {
         List<AccuseListResponseDTO> accuseListDTO = accuseRepository.findAll()
                 .stream()
@@ -46,5 +55,28 @@ public class AccuseService {
         return todayAccuseList;
 
 
+    }
+
+    //경고 데이터 전달
+    public boolean accuseUser(UserAccuseRequestDTO dto){
+
+        String userAccount = dto.getUserAccount();
+        User byUserAccount = userRepository.findByUserAccount(userAccount);
+
+        Accuse entity = dto.toEntity();
+        entity.setUser(byUserAccount);
+
+        String accuseType = entity.getAccuseType();
+        System.out.println("accuseType = " + accuseType);
+
+        String accuseEtc = entity.getAccuseEtc();
+        System.out.println("accuseEtc = " + accuseEtc);
+
+        if(accuseEtc!=null||accuseType!=null) {
+            Accuse save = accuseRepository.save(entity);
+            System.out.println("save = " + save);
+            return true;
+        }
+        return false;
     }
 }
