@@ -2,7 +2,7 @@ import {outputMessage} from "./messageRendering.js";
 
 export function connectSocket(ChatForm) {
     const chatMessages = document.querySelectorAll('.chatting-message-body');
-    const username = '바보';
+    const username = 'test1';
 // const username = '원영이';
     const socket = io("http://localhost:3000");
     // console.log(ChatForm);

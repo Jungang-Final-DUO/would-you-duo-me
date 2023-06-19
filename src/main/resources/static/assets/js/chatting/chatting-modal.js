@@ -1,4 +1,5 @@
 import {addModalBtnEvent} from "../common/modal-handler.js";
+import {getMessages} from "./messageRendering.js";
 
 export function getChattingList() {
     // 추후 session에 회원정보 담기면 경로 수정
@@ -25,7 +26,7 @@ async function renderChattingList(result) {
             chattings += `<li id = "${chattingNo}" class="chatting-card">
                 <div class = "chat-card">
                 <div class="chatting-card-inner modal-btn">
-                    <img src="${profileImage}" alt="프로필 이미지" class="chatting-profile-img"></img>
+                    <img src="${profileImage}" alt="프로필 이미지" class="chatting-profile-img">
                     <div class="chatting-info">
                         <div class="chatting-nickname">${userNickname}</div>
                         <div class="chatting-current-message">${messageContent}</div>
@@ -59,6 +60,12 @@ async function renderChattingList(result) {
 
         }
         document.querySelector('.chatting-modal-container').innerHTML = chattings;
+        [...document.querySelectorAll('.chatting-card')].forEach(
+            cc => {
+                const {id} = cc;
+                cc.addEventListener('click', getMessages(id))
+            }
+        )
     }
     addModalBtnEvent();
     toBack();
