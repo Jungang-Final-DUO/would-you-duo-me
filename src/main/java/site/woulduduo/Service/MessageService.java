@@ -72,4 +72,8 @@ public class MessageService {
             messageRepository.save(m);
         });
     }
+
+    public Message findByChattingOrderByMessageTimeDesc(Chatting chatting) {
+        return messageRepository.findByChattingOrderByMessageTimeDesc(chatting).get(0);
+    }
 }

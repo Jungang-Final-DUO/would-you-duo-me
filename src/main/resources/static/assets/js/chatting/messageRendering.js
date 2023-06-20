@@ -8,6 +8,14 @@ export function messageRender(){
     )
 }
 
+export function scrollDown() {
+    const chatMessages = document.querySelectorAll('.chatting-message-body');
+    //scroll down
+    chatMessages.forEach(cm => {
+        cm.scrollTop = cm.scrollHeight;
+    });
+}
+
 //메세지박스 렌더링
 export function outputMessage(message) {
     const room = document.getElementById(message.room);
@@ -33,7 +41,7 @@ export function outputMessage(message) {
         div.classList.add('chatting-message-card');
         div.classList.add('message-to');
         div.innerHTML = `
-                <img class="chatting-profile" src="${otherProfile}" alt="프로필이미지">
+                <img class="chatting-profile" src="/assets/img/chattingModal/woogi.jpg" alt="프로필이미지">
                 <div class="message-content-container">
                         <div class="message-nickname">${message.username}</div>
                         <div class="message-content-wrapper">
@@ -45,13 +53,12 @@ export function outputMessage(message) {
     }
 
     room.querySelector('.chatting-message-body').appendChild(div);
-
 }
 
 //DB에서 메세지 읽어오기
 export function getMessages(e){
     const chattingNo = e.target.closest('.chatting-card').id;
-    console.log(chattingNo);
+    // console.log(chattingNo);
     const userId = 'test1';
 
     fetch(`/api/v1/chat/messages/${userId}/${chattingNo}`)
@@ -76,6 +83,7 @@ function setChattingDetailBox(chattingNo, result){
             time : messageTime
         }
         outputMessage(message);
+        scrollDown();
     }
     renderUnreadMessages(chattingNo);
 

@@ -8,6 +8,7 @@ import site.woulduduo.dto.request.chatting.MessageRequestDTO;
 import site.woulduduo.dto.response.chatting.ChattingDetailResponseDTO;
 import site.woulduduo.dto.response.chatting.ChattingListResponseDTO;
 import site.woulduduo.entity.Chatting;
+import site.woulduduo.entity.Message;
 import site.woulduduo.entity.User;
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.ChattingService;
@@ -78,6 +79,16 @@ public class ChattingController {
         int unreadMessages = chattingService.countUnreadMessages(chatting, user);
 
         return ResponseEntity.ok().body(unreadMessages);
+    }
+
+    // 최신 메세지 읽어오기
+    @GetMapping("/messages/recent/{chattingNo}")
+    public ResponseEntity<?> getUnreadMessageCount(
+            @PathVariable long chattingNo
+    ){
+        Chatting chatting = chattingService.findByChattingNo(chattingNo);
+        Message recentMessage = messageService.findByChattingOrderByMessageTimeDesc(chatting);
+        return ResponseEntity.ok().body(recentMessage);
     }
 
 

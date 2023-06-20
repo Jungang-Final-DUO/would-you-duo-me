@@ -60,6 +60,7 @@ async function renderChattingList(result) {
 
         }
         document.querySelector('.chatting-modal-container').innerHTML = chattings;
+
     }
 
     return [...document.querySelectorAll('.chat-form')];
@@ -78,16 +79,26 @@ export function toBack() {
     [...document.querySelectorAll('.toBack')].forEach(
         $toBack => closeRecentModal($toBack)
     );
-
 }
+
+// function renderRecentMessage($dialog){
+//     const chattingNo = $dialog.closest('.chatting-card').id;
+//     let recentMsg = chattingNo.querySelector('.chatting-current-message').textContent;
+//
+//     fetch(`/api/v1/chat/messages/recent/${chattingNo}`)
+//         .then(res => res.json())
+//         .then(result => {
+//             recentMsg = result;
+//         })
+// }
 
 export function renderUnreadMessages(chattingNo){
     const $chatting = document.getElementById(chattingNo);
-    console.log($chatting);
+    // console.log($chatting);
     const $target = $chatting.querySelector('.chatting-unread');
-    console.log($target);
+    // console.log($target);
 
-    const userId = "test3";
+    const userId = "test1";
     fetch(`/api/v1/chat/messages/unread/${userId}/${chattingNo}`)
         .then(res => res.json())
         .then(unread => {
