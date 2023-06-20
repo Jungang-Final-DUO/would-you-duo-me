@@ -91,7 +91,8 @@
     <!--    프로필카드 리스트 영역 -->
     <div id="profile-cards-wrapper">
         <!--        프로필 카드 한 장 -->
-        <div class="duo-profile">
+<%--        가장 바깥 div에 유저아이디 넣기 --%>
+        <div id = "test4" class="duo-profile">
             <img class="duo-tier" src="/assets/img/main/TFT_Regalia_Challenger.png" alt="tier">
             <!--            프로필 카드 좌측 -->
             <div class="profile-left-side">

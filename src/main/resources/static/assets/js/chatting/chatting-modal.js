@@ -10,6 +10,33 @@ export function getChattingList() {
         );
 }
 
+function makeChatting(chat) {
+    const userId = 'test1';
+    const userAccount = chat.closest('.duo-profile').id;
+
+    chat.onclick = () => {
+        const requestInfo = {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: userId
+        }
+
+        fetch(`/api/v1/chat/chattings/${userAccount}`, requestInfo)
+            .then(res => res.json())
+            .then(result => {
+                console.log(result);
+            })
+    }
+}
+
+export function makeChattingRoom(){
+    [...document.querySelectorAll('.chatting-icon')].forEach(
+        chat => makeChatting(chat)
+    );
+}
+
 async function renderChattingList(result) {
 
     let chattings = '';

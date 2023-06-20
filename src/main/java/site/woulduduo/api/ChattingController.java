@@ -91,5 +91,14 @@ public class ChattingController {
         return ResponseEntity.ok().body(recentMessage);
     }
 
+    @PostMapping("/chattings/{userAccount}")
+    public ResponseEntity<?> makeChatting(
+            //            HttpSession session
+            String userId
+            ,@PathVariable String userAccount
+    ){
+        long chattingNo = chattingService.makeChatting(userId, userAccount);
+        return ResponseEntity.ok().body(chattingNo);
+    }
 
 }
