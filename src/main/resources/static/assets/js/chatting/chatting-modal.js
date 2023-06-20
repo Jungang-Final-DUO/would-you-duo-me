@@ -2,13 +2,13 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 import {messageRender} from "./messageRendering.js";
 import {connectSocket} from "./main.js";
 
-export function getChattingList() {
-    console.log('chatting-modal.js까지 도달')
+export function getChattingList(socket) {
+    // console.log('chatting-modal.js까지 도달')
     // 추후 session에 회원정보 담기면 경로 수정
     const userId = 'test1';
     fetch(`/api/v1/chat/chattings/${userId}`)
         .then(res => res.json())
-        .then(result => renderChattingList(result))
+        .then(result => renderChattingList(socket, result))
         .then(result => messageRender(result));
 
 }
@@ -16,8 +16,10 @@ export function getChattingList() {
 function makeChatting(chat) {
     const userId = 'test1';
     const userAccount = chat.closest('.duo-profile').id;
+    console.log(userAccount);
 
     chat.onclick = () => {
+    console.log('makeChatting 도달');
         const requestInfo = {
             method: 'POST',
             headers: {
@@ -29,19 +31,23 @@ function makeChatting(chat) {
         fetch(`/api/v1/chat/chattings/${userAccount}`, requestInfo)
             .then(res => res.json())
             .then(result => {
+                //getChattingList
+                document.getElementById('chatting-btn').click();
                 console.log(result);
+                document.getElementById(result).click();
             })
     }
 }
 
 export function makeChattingRoom(){
+    console.log('makeChattingRoom 도달');
     [...document.querySelectorAll('.chatting-icon')].forEach(
         chat => makeChatting(chat)
     );
 }
 
-function renderChattingList(result) {
-    console.log('renderChattingList 도달');
+function renderChattingList(socket, result) {
+    // console.log('renderChattingList 도달');
     let chattings = '';
     if (result.length === 0) {
         chattings = document.createElement('li');
@@ -96,7 +102,7 @@ function renderChattingList(result) {
     }
 
     const chatForm =  [...document.querySelectorAll('.chat-form')];
-    connectSocket(chatForm);
+    connectSocket(socket, chatForm);
     return [...document.querySelectorAll('.chatting-card')];
 }
 
@@ -140,8 +146,8 @@ export function renderUnreadMessages(chattingNo){
         })
 }
 
-export function openChattingList(){
+export function openChattingList(socket){
     const $chatBtn = document.getElementById('chatting-btn');
-    $chatBtn.addEventListener('click', getChattingList);
-    console.log('openChattingList까지 도달');
+    $chatBtn.addEventListener('click', getChattingList(socket));
+    // console.log('openChattingList까지 도달');
 }

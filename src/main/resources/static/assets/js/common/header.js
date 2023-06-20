@@ -5,13 +5,13 @@ import {connectSocket} from "../chatting/main.js";
 import {messageRender} from "../chatting/messageRendering.js";
 
 (async () => {
-    // const socket = io("http://localhost:3000");
-
+    const socket = io("http://localhost:3000");
     // 채팅방 목록 불러오기
     // const chatForm = await getChattingList();
 
     //헤더 채팅 버튼 클릭하면 채팅 목록 렌더링
-    openChattingList();
+    openChattingList(socket);
+
 
     // 채팅 목록 클릭하면 메세지 렌더링
     // messageRender();
