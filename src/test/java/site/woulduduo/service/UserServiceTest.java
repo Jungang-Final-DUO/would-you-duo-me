@@ -70,6 +70,21 @@ class UserServiceTest {
             userRepository.save(user);
         }
 
+        User user = User.builder()
+                .userAccount("345")
+                .userNickname("345")
+                .userPassword("345")
+                .userBirthday(LocalDate.of(2000, 1, 1))
+                .lolNickname("345")
+                .userGender(Gender.M)
+                .lolTier(Tier.DIA)
+                .userJoinDate(LocalDate.of(2023,06,20))
+                .userPosition(Position.MID)
+                .userComment("345")
+                .userMatchingPoint(500)
+                .build();
+        userRepository.save(user);
+
 
 
     }

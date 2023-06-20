@@ -84,6 +84,7 @@ public class UserController {
 
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
 
+        log.info("userbyadmin : {}",userListByAdmin);
 
         log.info("/api/v1/users/admin/");
 
@@ -96,7 +97,7 @@ public class UserController {
 
     @GetMapping("/user/detail/admin")
     //관리자 페이지 자세히 보기
-    public String showDetailByAdmin(HttpSession session,Model model, String userAccount){
+    public String showDetailByAdmin(/*HttpSession session*/Model model, String userAccount){
         UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userAccount);
 
         model.addAttribute("udByAdmin",userDetailByAdmin);
