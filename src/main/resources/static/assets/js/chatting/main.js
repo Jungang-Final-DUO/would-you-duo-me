@@ -1,4 +1,4 @@
-import {outputMessage} from "./messageRendering.js";
+import {renderAndSaveMessage} from "./messageRendering.js";
 
 export function connectSocket(ChatForm) {
     const chatMessages = document.querySelectorAll('.chatting-message-body');
@@ -12,7 +12,7 @@ export function connectSocket(ChatForm) {
     socket.on('message', message => {
 
         //output message to DOM
-        outputMessage(message);
+        renderAndSaveMessage(message);
 
         //scroll down
         chatMessages.forEach(cm => {

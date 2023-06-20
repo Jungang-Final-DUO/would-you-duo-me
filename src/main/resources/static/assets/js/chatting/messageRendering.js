@@ -1,6 +1,15 @@
+import {renderUnreadMessages} from "./chatting-modal.js";
+
+export function messageRender(){
+    [...document.querySelectorAll('.chatting-card')].forEach(
+        cc => {
+            cc.addEventListener('click', getMessages);
+        }
+    )
+}
+
 export function outputMessage(message) {
     const room = document.getElementById(message.room);
-    console.log(room);
     const otherProfile = room.querySelector('.chatting-profile-img').src;
 
     const div = document.createElement('div');
@@ -38,8 +47,10 @@ export function outputMessage(message) {
 
 }
 
-export function getMessages(chattingNo){
-
+//DB에서 메세지 읽어오기
+export function getMessages(e){
+    const chattingNo = e.target.closest('.chatting-card').id;
+    console.log(chattingNo);
     const userId = 'test1';
 
     fetch(`/api/v1/chat/messages/${userId}/${chattingNo}`)
@@ -49,6 +60,7 @@ export function getMessages(chattingNo){
         })
 }
 
+//채팅방 최초 진입시 렌더링
 function setChattingDetailBox(chattingNo, result){
     const {userNickname, myProfileImage, yourProfileImage, messageList} = result;
 
@@ -62,5 +74,35 @@ function setChattingDetailBox(chattingNo, result){
         }
         outputMessage(message);
     }
+    renderUnreadMessages(chattingNo);
 
+}
+
+// 메세지 저장
+function saveMessage(message){
+    const messageDTO = {
+        chattingNo : message.room,
+        messageContent : message.text,
+        messageFrom : message.username
+    }
+    const requestInfo = {
+        method : 'POST',
+        headers : {
+            'content-type' : 'application/json'
+        },
+        body : JSON.stringify(messageDTO)
+    };
+    fetch(`/api/v1/chat/messages`, requestInfo)
+        .then(res => res.json())
+        .then(flag => {
+            if(flag) console.log('메세지 저장 성공');
+            else console.log('메세지 저장 실패');
+        })
+
+}
+
+// 채팅 중일때 메세지 실시간 렌더 및 DB 저장
+export function renderAndSaveMessage(message){
+    outputMessage(message);
+    saveMessage(message);
 }
