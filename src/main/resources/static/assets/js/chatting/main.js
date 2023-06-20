@@ -1,28 +1,27 @@
-import {outputMessage} from "./messageRendering.js";
-const ChatForm = document.querySelectorAll('.chat-form');
-const chatMessages = document.querySelectorAll('.chatting-message-body');
-const username = '바보';
-// const username = '원영이';
+import {renderAndSaveMessage, scrollDown} from "./messageRendering.js";
 
-document.addEventListener("DOMContentLoaded", function () {
+export function connectSocket(ChatForm) {
+    console.log('connectSocket 도달');
+
+    const username = 'test1';
+// const username = '원영이';
     const socket = io("http://localhost:3000");
+    console.log(ChatForm);
+    console.log(socket);
 
     //Message from server
     socket.on('message', message => {
 
         //output message to DOM
-        outputMessage(message);
+        renderAndSaveMessage(message);
+        scrollDown();
 
-        //scroll down
-        chatMessages.forEach(cm => {
-            cm.scrollTop = cm.scrollHeight;
-        })
     });
-
     // Message submit
     ChatForm.forEach(cf => {
         cf.addEventListener('submit', (e) => {
             e.preventDefault();
+            // console.log(e.target);
 
             //Get message text and room
             const msg = e.target.querySelector('.msg').value;
@@ -34,6 +33,5 @@ document.addEventListener("DOMContentLoaded", function () {
             //clear message
             e.target.querySelector('.msg').value = '';
         });
-    })
-
-});
+    });
+}

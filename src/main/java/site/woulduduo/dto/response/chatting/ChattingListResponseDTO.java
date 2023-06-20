@@ -16,7 +16,7 @@ public class ChattingListResponseDTO {
     private String profileImage;
     private String userNickname;
     private String messageContent;
-
+    private int messageUnreadCount;
 
     public ChattingListResponseDTO(Chatting chatting){
         this.chattingNo = chatting.getChattingNo();

@@ -30,7 +30,7 @@
                 <div>
                     <div id="user-nickname-etc-wrapper">
                         <!-- 달러랑 중괄호는 살짝 아래로 내려가있기 때문에 중앙정렬이 안맞아 보이는 것-->
-                        <div id="user-nickname">${history.userAccount}</div>
+                        <div id="user-nickname">${history.userNickname}</div>
                         <div id="user-position">
                             <img src="/assets/img/main/TOP.png" alt="탑">
                         </div>
@@ -109,23 +109,24 @@
                 <div id="win-rate-graph-wrapper">
                     <div>20전 ${history.last20WinCount}승 ${history.last20LoseCount}패</div>
                     <div id="win-rate-graph">
-                        <span id="numeric-win-rate">${history.last20WinRate}%</span>
+                        <span id="numeric-win-rate"
+                              data-win-rate="${history.last20WinRate}">${history.last20WinRate}%</span>
                     </div>
                 </div>
                 <div id="avg-point-wrapper">
                     <div id="avg-point">평점</div>
                     <div id="avg-kda">${history.last20KDA}</div>
-                    <div id="avg-detail-kda">${history.last20Kill} / ${history.last20Death} / ${history.last20Assist}</div>
+                    <div id="avg-detail-kda">${history.last20Kill} / ${history.last20Death}
+                        / ${history.last20Assist}</div>
                 </div>
                 <div id="most-champ-wrapper">
                     <div>선호 챔피언 (최근 20 게임)</div>
                     <div id="most-champ-grid-wrapper">
                         <c:forEach var="champ" items="${history.mostChampInfos}">
                             <img src="/assets/img/user-history/champions/${champ.champName}_0.jpg" alt="모스트 챔피언 아이콘">
-                            <div>${champ.champName}</div>
                             <div>${champ.winCount}승 ${champ.loseCount}패</div>
-                            <div class="champ-win-rate">${champ.winRate * 100}%</div>
-                            <div>${champ.kda}</div>
+                            <div class="champ-win-rate">${champ.winRate}%</div>
+                            <div>${String.format("%.2f", champ.kda)}</div>
                         </c:forEach>
                     </div>
                 </div>
@@ -135,7 +136,12 @@
         <div id="game-result-review-wrapper">
             <div id="game-result-wrapper">
                 <c:forEach var="match" items="${history.last20Matches}">
-                    <div class="each-game-result-wrapper">
+                <c:if test="${match.win}">
+                <div class="each-game-result-wrapper" style="background: #BCDBFF;">
+                    </c:if>
+                    <c:if test="${!match.win}">
+                    <div class="each-game-result-wrapper" style="background: #FFBCBC">
+                        </c:if>
                         <img src="/assets/img/user-history/champions/${match.championName}_0.jpg" alt="플레이한 챔피언 아이콘"
                              class="playing-champ-img">
                         <div class="rune-spell-wrapper">
@@ -154,7 +160,8 @@
                         <div class="each-kda-item-wrapper">
                             <div class="each-kda-wrapper">
                                 <div class="each-kda">${match.kills} / ${match.deaths} / ${match.assists}</div>
-                                <div class="each-avg-kda">${(match.kills + match.assists + 0.0) / match.deaths} : 1 KDA
+                                <div class="each-avg-kda">${match.avgKda}
+                                    : 1 KDA
                                 </div>
                             </div>
                             <div class="each-item-wrapper">
@@ -169,14 +176,14 @@
                             </div>
                         </div>
                     </div>
-                </c:forEach>
-                <!-- end of each game wrapper -->
-            </div>
-            <!-- end of game result wrapper -->
-            <section id="review-section">
-                <h2>후기</h2>
-                <div id="review-wrapper">
-                    <c:forEach var="review" items="${history.userReviews}">
+                    </c:forEach>
+                    <!-- end of each game wrapper -->
+                </div>
+                <!-- end of game result wrapper -->
+                <section id="review-section">
+                    <h2>후기</h2>
+                    <div id="review-wrapper">
+                        <c:forEach var="review" items="${history.userReviews}">
                         <div class="each-review-wrapper">
                             <div class="review-profile-img"
                                  style="background-image: url('${review.profileImage}')"></div>
@@ -185,20 +192,20 @@
                                 <div class="review-comment">${review.matchingReviewContent}</div>
                             </div>
                             <div class="review-rate-wrapper">
-                                <c:forEach var="i" begin="0" end="${review.matchingReviewRate}" step="1">
+                                <c:forEach var="i" begin="1" end="${review.matchingReviewRate}" step="1">
                                     <img src="/assets/img/main/star.png" alt="별점">
                                 </c:forEach>
                             </div>
                         </div>
-                    </c:forEach>
-                    <!-- end of each review wrapper -->
-            </section>
-            <!-- end of review section -->
+                        </c:forEach>
+                        <!-- end of each review wrapper -->
+                </section>
+                <!-- end of review section -->
+            </div>
+            <!-- end of game result and review wrapper-->
         </div>
-        <!-- end of game result and review wrapper-->
+        <!--    end of history wrapper-->
     </div>
-    <!--    end of history wrapper-->
-</div>
 
 </body>
 

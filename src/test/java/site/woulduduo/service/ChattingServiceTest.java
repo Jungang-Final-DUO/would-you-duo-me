@@ -38,12 +38,25 @@ class ChattingServiceTest {
     @DisplayName("채팅 데이터 1개 생성")
     void makeChattingTest(){
 
-        String userAccount = "test1";
-        String me = "test3";
+        String userAccount = "user1";
+        String me = "user3";
 
         long chattingNo = chattingService.makeChatting(me, userAccount);
 
 //        assertEquals(3, chattingRepository.count());
+    }
+
+    @Test
+    @DisplayName("채팅 데이터 많이 생성")
+    void makeBulkChattingTest() {
+        String chattingTo = "test1@example.com";
+
+        for (int i = 0; i < 100; i++) {
+            String chattingFrom = "user" + i;
+
+            chattingService.makeChatting(chattingFrom, chattingTo);
+
+        }
     }
 
     //  대표 프로필 사진 가져오기

@@ -104,7 +104,7 @@ public class ChattingService {
         }
 
 //        메세지 내역 가져오기
-        chattingResponseDTO.setMessageList(messageService.getMessages(chatting));
+        chattingResponseDTO.setMessageList(messageService.getMessages(chatting, user));
 
         return chattingResponseDTO;
     }
@@ -150,8 +150,17 @@ public class ChattingService {
             }
 //           최신 메세지 세팅
             dtoList.get(i).setMessageContent(messageRepository.findByChattingOrderByMessageTimeDesc(chattingList.get(i)).get(0).getMessageContent());
+            dtoList.get(i).setMessageUnreadCount(messageRepository.countByChattingAndUserIsNotAndMessageIsRead(chattingList.get(i), user, false));
         }
 
         return dtoList;
+    }
+
+    public int countUnreadMessages(Chatting chatting, User user){
+        return messageRepository.countByChattingAndUserIsNotAndMessageIsRead(chatting, user, false);
+    }
+
+    public Chatting findByChattingNo(long chattingNo) {
+        return chattingRepository.findByChattingNo(chattingNo);
     }
 }
