@@ -1,11 +1,13 @@
 import {renderAndSaveMessage, scrollDown} from "./messageRendering.js";
 
 export function connectSocket(ChatForm) {
+    console.log('connectSocket 도달');
+
     const username = 'test1';
 // const username = '원영이';
     const socket = io("http://localhost:3000");
-    // console.log(ChatForm);
-    // console.log(socket);
+    console.log(ChatForm);
+    console.log(socket);
 
     //Message from server
     socket.on('message', message => {

@@ -1,11 +1,13 @@
 import {renderUnreadMessages} from "./chatting-modal.js";
 
-export function messageRender(){
-    [...document.querySelectorAll('.chatting-card')].forEach(
+export function messageRender(result){
+    console.log('messageRender까지 도달');
+    result.forEach(
         cc => {
             cc.addEventListener('click', getMessages);
         }
     )
+    return [...document.querySelectorAll('.chat-form')];
 }
 
 export function scrollDown() {
@@ -57,6 +59,7 @@ export function outputMessage(message) {
 
 //DB에서 메세지 읽어오기
 export function getMessages(e){
+    console.log('getMessages 도달');
     const chattingNo = e.target.closest('.chatting-card').id;
     // console.log(chattingNo);
     const userId = 'test1';
@@ -70,6 +73,7 @@ export function getMessages(e){
 
 //채팅방 최초 진입시 렌더링
 function setChattingDetailBox(chattingNo, result){
+    console.log('setChattingDetailBox 도달');
     const room = document.getElementById(chattingNo);
     room.querySelector('.chatting-message-body').innerHTML = '';
     const {userNickname, myProfileImage, yourProfileImage, messageList} = result;

@@ -1,13 +1,16 @@
-import {addModalBtnEvent} from "../common/modal-handler.js";
-import {getMessages} from "./messageRendering.js";
+import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
+import {messageRender} from "./messageRendering.js";
+import {connectSocket} from "./main.js";
 
 export function getChattingList() {
+    console.log('chatting-modal.js까지 도달')
     // 추후 session에 회원정보 담기면 경로 수정
     const userId = 'test1';
-    return fetch(`/api/v1/chat/chattings/${userId}`)
+    fetch(`/api/v1/chat/chattings/${userId}`)
         .then(res => res.json())
-        .then(result => renderChattingList(result)
-        );
+        .then(result => renderChattingList(result))
+        .then(result => messageRender(result));
+
 }
 
 function makeChatting(chat) {
@@ -37,8 +40,8 @@ export function makeChattingRoom(){
     );
 }
 
-async function renderChattingList(result) {
-
+function renderChattingList(result) {
+    console.log('renderChattingList 도달');
     let chattings = '';
     if (result.length === 0) {
         chattings = document.createElement('li');
@@ -87,10 +90,14 @@ async function renderChattingList(result) {
 
         }
         document.querySelector('.chatting-modal-container').innerHTML = chattings;
-
+        addModalBtnEvent();
+        addModalCloseEvent();
+        toBack();
     }
 
-    return [...document.querySelectorAll('.chat-form')];
+    const chatForm =  [...document.querySelectorAll('.chat-form')];
+    connectSocket(chatForm);
+    return [...document.querySelectorAll('.chatting-card')];
 }
 
 
@@ -131,4 +138,10 @@ export function renderUnreadMessages(chattingNo){
         .then(unread => {
             $target.innerText = unread;
         })
+}
+
+export function openChattingList(){
+    const $chatBtn = document.getElementById('chatting-btn');
+    $chatBtn.addEventListener('click', getChattingList);
+    console.log('openChattingList까지 도달');
 }
