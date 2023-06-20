@@ -8,6 +8,7 @@ export function messageRender(){
     )
 }
 
+//메세지박스 렌더링
 export function outputMessage(message) {
     const room = document.getElementById(message.room);
     const otherProfile = room.querySelector('.chatting-profile-img').src;
@@ -62,6 +63,8 @@ export function getMessages(e){
 
 //채팅방 최초 진입시 렌더링
 function setChattingDetailBox(chattingNo, result){
+    const room = document.getElementById(chattingNo);
+    room.querySelector('.chatting-message-body').innerHTML = '';
     const {userNickname, myProfileImage, yourProfileImage, messageList} = result;
 
     for (const msg of messageList) {
