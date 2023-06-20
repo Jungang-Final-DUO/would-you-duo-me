@@ -203,8 +203,15 @@
 </div>
 
 <script>
+    fetch('/api/v1/users/admin')
+    .then(res=>res.json())
+    .then(result =>{
+                console.log(result)
 
+        });
+    
 
+      
 
 
 

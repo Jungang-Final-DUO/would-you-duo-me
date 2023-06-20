@@ -180,9 +180,8 @@ class UserServiceTest {
 
 
         PageDTO dto = new PageDTO();
-        dto.setPage(25);
 
-
+        System.out.println("dto = " + dto);
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
 
         System.out.println("userListByAdmin = " + userListByAdmin);
