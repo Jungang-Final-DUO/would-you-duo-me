@@ -16,6 +16,7 @@ import site.woulduduo.dto.riot.MostChampInfo;
 import site.woulduduo.entity.Accuse;
 import site.woulduduo.entity.Board;
 import site.woulduduo.entity.User;
+import site.woulduduo.entity.UserProfile;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Tier;
 import site.woulduduo.exception.NoRankException;
@@ -23,10 +24,9 @@ import site.woulduduo.repository.*;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -69,15 +69,29 @@ public class UserService {
                 .userNickname(dto.getUserNickname())
                 .userPassword(passwordEncoder.encode(dto.getUserPassword()))
                 .userBirthday(dto.getUserBirthday())
-                .userInstagram(dto.getUserInstagram())
-                .userTwitter(dto.getUserTwitter())
-                .userFacebook(dto.getUserFacebook())
+                .userInstagram(dto.getUserInstagram().isEmpty() ? null : dto.getUserInstagram())
+                .userTwitter(dto.getUserTwitter().isEmpty() ? null : dto.getUserTwitter())
+                .userFacebook(dto.getUserFacebook().isEmpty() ? null : dto.getUserFacebook())
                 .lolNickname(dto.getLolNickname())
                 .userGender(dto.getUserGender() == Gender.M ? Gender.M : Gender.F)
                 .lolTier(riotApiService.getTier(dto.getLolNickname()))
+                .userRecentLoginDate(LocalDateTime.now())
                 .build();
 
         userRepository.save(user);
+
+        // 프로필 사진 저장
+        String[] profileImagePaths = dto.getProfileImagePaths();
+        if (profileImagePaths != null) {
+            for (String imagePath : profileImagePaths) {
+                UserProfile userProfile = UserProfile.builder()
+                        .user(user)
+                        .profileImage(imagePath)
+                        .build();
+                userProfileRepository.save(userProfile);
+            }
+        }
+
 
         log.info("회원 가입이 완료되었습니다.");
     }
@@ -104,7 +118,24 @@ public class UserService {
     }
 
 
-
+//    public List<ProfileDetailResponseDTO> getUserProfileImage(String userAccount) {
+//        log.info("userAccount: {}", userAccount);
+//        // 예시: 임시로 빈 리스트를 반환
+//        return new ArrayList<>();
+//    }
+//    public List<ProfileDetailResponseDTO> addProfile(ProfileAddRequestDTO dto) {
+//        // addProfile 메서드의 구현 내용을 추가하면 됩니다.
+//        // ...
+//
+//        // getUserProfileImage 서비스 메서드 호출
+//        List<ProfileDetailResponseDTO> profileDetails = getUserProfileImage();
+//        return profileDetails;
+//    }
+//
+//
+//    public List<ProfileDetailResponseDTO> getUserProfileImage(ProfileDeleteRequestDTO dto) {
+//
+//    }
 
 
     public boolean registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
@@ -143,7 +174,7 @@ public class UserService {
 //        return null;
 //    }
 
-    public List<UserByAdminResponseDTO> getUserListByAdmin( ){
+    public List<UserByAdminResponseDTO> getUserListByAdmin() {
 
 
 //        // Pageable객체 생성
@@ -185,8 +216,8 @@ public class UserService {
         return userListByAdmin;
     }
 
-    public Map<String,Integer>countByAdmin(){
-        Map<String,Integer>adminCount = new HashMap<>();
+    public Map<String, Integer> countByAdmin() {
+        Map<String, Integer> adminCount = new HashMap<>();
         int userFindAllCount = userFindAllCount();
         int userFindByToday = userFindByToday();
         int accuseFindAllCount = accuseFindAllCount();
@@ -194,52 +225,52 @@ public class UserService {
         int boardFindAllCount = boardFindAllCount();
         int boardFindByToday = boardFindByToday();
 
-        adminCount.put("ua",userFindAllCount);
-        adminCount.put("ut",userFindByToday);
-        adminCount.put("aa",accuseFindAllCount);
-        adminCount.put("at",accuseFindByToday);
-        adminCount.put("ba",boardFindAllCount);
-        adminCount.put("bt",boardFindByToday);
+        adminCount.put("ua", userFindAllCount);
+        adminCount.put("ut", userFindByToday);
+        adminCount.put("aa", accuseFindAllCount);
+        adminCount.put("at", accuseFindByToday);
+        adminCount.put("ba", boardFindAllCount);
+        adminCount.put("bt", boardFindByToday);
 
         return adminCount;
 
     }
 
     //전체 user 조회수(admin)
-    public int userFindAllCount(){
+    public int userFindAllCount() {
         List<User> all = userRepository.findAll();
         int userSize = all.size();
         return userSize;
     }
 
     //오늘 가입한 회원 수(admin)
-    public int userFindByToday(){
+    public int userFindByToday() {
         int allWithJoinDate = userRepository.findAllWithJoinDate(LocalDate.now());
         return allWithJoinDate;
     }
 
     //전체 accuse 조회수(admin)
-    public int accuseFindAllCount(){
+    public int accuseFindAllCount() {
         List<Accuse> all = accuseRepository.findAll();
         int accuseSize = all.size();
         return accuseSize;
     }
 
     //오늘 accuse 조회수(admin)
-    public int accuseFindByToday(){
+    public int accuseFindByToday() {
         int allWithAccuseWrittenDate = accuseRepository.findAllWithAccuseWrittenDate();
         return allWithAccuseWrittenDate;
     }
 
     //전체 게시글 조회수(admin)
-    public int boardFindAllCount(){
+    public int boardFindAllCount() {
         List<Board> all = boardRepository.findAll();
         int boardsize = all.size();
         return boardsize;
     }
 
     //오늘 작성된 게시글 조회수(admin)
-    public int boardFindByToday(){
+    public int boardFindByToday() {
         int allWithJoinDate = boardRepository.findAllWithBoardWrittenDate();
         return allWithJoinDate;
     }
@@ -261,7 +292,8 @@ public class UserService {
 
     /**
      * 사용자의 듀오 정보를 구하는 메서드
-     * @param session - 접속한 사용자
+     *
+     * @param session     - 접속한 사용자
      * @param userAccount - 대상 사용자
      * @return - 응답 DTO
      */

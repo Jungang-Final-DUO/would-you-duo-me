@@ -42,11 +42,11 @@ class UserServiceTest {
     void testRegisterWithValidUserInfo() {
         // Given
         UserRegisterRequestDTO dto = UserRegisterRequestDTO.builder()
-                .userEmail("test@example.com")
-                .userPassword("abC123@")
-                .userNickname("가나다")
-                .userBirthday(LocalDate.of(2000, 1, 1))
-                .lolNickname("코뚱잉")
+                .userEmail("999@example.com")
+                .userPassword("000abc@")
+                .userNickname("리키")
+                .userBirthday(LocalDate.of(1990, 1, 1))
+                .lolNickname("죽림초")
                 .userGender(Gender.M)
                 .build();
 

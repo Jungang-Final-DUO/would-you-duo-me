@@ -304,4 +304,39 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 
         }
     }
+
+    // 프로필 사진 관련 스크립트
+    const fileInputs = document.querySelectorAll('#sign-up-wrapper input[type="file"]');
+    const imgWrappers = document.querySelectorAll('#sign-up-wrapper .img-wrapper');
+    const profileSection = document.querySelector('#profile-img-section');
+
+    fileInputs.forEach((fileInput, index) => {
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            const imgWrapper = imgWrappers[index];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = () => {
+                    imgWrapper.style.backgroundImage = `url('${reader.result}')`;
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+
+// 프로필 추가 영역 클릭 이벤트
+    profileSection.addEventListener('click', e => {
+        const target = e.target;
+        if (target.classList.contains('img-wrapper') || target.classList.contains('btn')) {
+            const fileInput = target.querySelector('input[type="file"]');
+            fileInput.click();
+        }
+    });
+
+
+
+
 })();

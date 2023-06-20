@@ -23,18 +23,21 @@
         </h1>
         <h2>회원가입</h2>
     </header>
-    <form action="/user/sign-up" id="signupResult" method="post">
+    <form action="/user/sign-up" id="signupResult" method="post" enctype="multipart/form-data">
         <div id="sign-up-wrapper">
             <section id="profile-img-section">
                 <h2>프로필 사진</h2>
-                <div id="main-profile-img-wrapper" class="img-wrapper btn">
+                <div id="main-profile-img-wrapper" class="img-wrapper btn"
+                     style="background-image: url('/assets/img/sign-up/default-profile-img.png');">
                     <input type="file" style="display: none" name="profileImages">
                 </div>
                 <div id="sub-profile-img-wrapper">
-                    <div class="img-wrapper btn">
+                    <div class="img-wrapper btn"
+                         style="background-image: url('/assets/img/sign-up/default-profile-img.png');">
                         <input type="file" style="display: none" name="profileImages">
                     </div>
-                    <div class="img-wrapper btn">
+                    <div class="img-wrapper btn"
+                         style="background-image: url('/assets/img/sign-up/default-profile-img.png');">
                         <input type="file" style="display: none" name="profileImages">
                     </div>
                     <div class="img-wrapper btn"
