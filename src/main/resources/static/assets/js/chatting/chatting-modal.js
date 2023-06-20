@@ -1,17 +1,47 @@
-import {addModalBtnEvent} from "../common/modal-handler.js";
-import {getMessages} from "./messageRendering.js";
+import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
+import {messageRender} from "./messageRendering.js";
+import {connectSocket} from "./main.js";
 
 export function getChattingList() {
+    console.log('chatting-modal.js까지 도달')
     // 추후 session에 회원정보 담기면 경로 수정
     const userId = 'test1';
-    return fetch(`/api/v1/chat/chattings/${userId}`)
+    fetch(`/api/v1/chat/chattings/${userId}`)
         .then(res => res.json())
-        .then(result => renderChattingList(result)
-        );
+        .then(result => renderChattingList(result))
+        .then(result => messageRender(result));
+
 }
 
-async function renderChattingList(result) {
+function makeChatting(chat) {
+    const userId = 'test1';
+    const userAccount = chat.closest('.duo-profile').id;
 
+    chat.onclick = () => {
+        const requestInfo = {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: userId
+        }
+
+        fetch(`/api/v1/chat/chattings/${userAccount}`, requestInfo)
+            .then(res => res.json())
+            .then(result => {
+                console.log(result);
+            })
+    }
+}
+
+export function makeChattingRoom(){
+    [...document.querySelectorAll('.chatting-icon')].forEach(
+        chat => makeChatting(chat)
+    );
+}
+
+function renderChattingList(result) {
+    console.log('renderChattingList 도달');
     let chattings = '';
     if (result.length === 0) {
         chattings = document.createElement('li');
@@ -60,17 +90,14 @@ async function renderChattingList(result) {
 
         }
         document.querySelector('.chatting-modal-container').innerHTML = chattings;
-        [...document.querySelectorAll('.chatting-card')].forEach(
-            cc => {
-                const {id} = cc;
-                cc.addEventListener('click', getMessages(id))
-            }
-        )
+        addModalBtnEvent();
+        addModalCloseEvent();
+        toBack();
     }
-    addModalBtnEvent();
-    toBack();
 
-    return [...document.querySelectorAll('.chat-form')];
+    const chatForm =  [...document.querySelectorAll('.chat-form')];
+    connectSocket(chatForm);
+    return [...document.querySelectorAll('.chatting-card')];
 }
 
 
@@ -86,5 +113,35 @@ export function toBack() {
     [...document.querySelectorAll('.toBack')].forEach(
         $toBack => closeRecentModal($toBack)
     );
+}
 
+// function renderRecentMessage($dialog){
+//     const chattingNo = $dialog.closest('.chatting-card').id;
+//     let recentMsg = chattingNo.querySelector('.chatting-current-message').textContent;
+//
+//     fetch(`/api/v1/chat/messages/recent/${chattingNo}`)
+//         .then(res => res.json())
+//         .then(result => {
+//             recentMsg = result;
+//         })
+// }
+
+export function renderUnreadMessages(chattingNo){
+    const $chatting = document.getElementById(chattingNo);
+    // console.log($chatting);
+    const $target = $chatting.querySelector('.chatting-unread');
+    // console.log($target);
+
+    const userId = "test1";
+    fetch(`/api/v1/chat/messages/unread/${userId}/${chattingNo}`)
+        .then(res => res.json())
+        .then(unread => {
+            $target.innerText = unread;
+        })
+}
+
+export function openChattingList(){
+    const $chatBtn = document.getElementById('chatting-btn');
+    $chatBtn.addEventListener('click', getChattingList);
+    console.log('openChattingList까지 도달');
 }
