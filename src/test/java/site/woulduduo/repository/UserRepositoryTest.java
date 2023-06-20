@@ -194,5 +194,67 @@ class UserRepositoryTest {
         System.out.println("byNickName = " + byNickName);
     }
 
+    @Test
+    @DisplayName("기본 페이징 테스트")
+    void testBasicPagination() {
+        //given
+        int pageNo = 1;
+        int amount = 10;
+
+        // 페이지 정보 생성
+        // 페이지번호가 zero-based
+        Pageable pageInfo
+                = PageRequest.of(pageNo - 1,
+                amount,
+                //Sort.by("name").descending() // 정렬기준 필드명
+                Sort.by(
+                        Sort.Order.desc("userJoinDate")
+                )
+        );
+
+        //when
+        Page<User> users
+                = userRepository.findAll(pageInfo);
+
+        // 페이징 완료된 데이터셋
+        List<User> studentList = users.getContent();
+
+        // 총 페이지 수
+        int totalPages = users.getTotalPages();
+
+        // 총 학생 수
+        long totalElements = users.getTotalElements();
+
+        Pageable prev = users.getPageable().previousOrFirst();
+        Pageable next = users.getPageable().next();
+
+        //then
+        System.out.println("\n\n\n");
+        System.out.println("totalPages = " + totalPages);
+        System.out.println("totalElements = " + totalElements);
+        System.out.println("prev = " + prev);
+        System.out.println("next = " + next);
+        System.out.println("\n\n\n");
+        studentList.forEach(System.out::println);
+        System.out.println("\n\n\n");
+    }
+
+    @Test
+    @DisplayName("이름검색 + 페이징")
+    void testSearchAndPagination() {
+        //given
+        int pageNo = 1;
+        int size = 10;
+        Pageable pageInfo = PageRequest.of(pageNo - 1, size);
+        //when
+        Page<User> users
+                = userRepository.findByUserAccountContaining("123", pageInfo);
+
+        //then
+        System.out.println("\n\n\n");
+        users.getContent().forEach(System.out::println);
+        System.out.println("\n\n\n");
+    }
+
 
 }

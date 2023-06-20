@@ -2,13 +2,20 @@ package site.woulduduo.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.page.PageResponseDTO;
 import site.woulduduo.dto.response.user.*;
 import site.woulduduo.dto.riot.LeagueV4DTO;
 import site.woulduduo.dto.riot.MatchV5DTO;
@@ -23,7 +30,9 @@ import site.woulduduo.repository.*;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -122,8 +131,7 @@ public class UserService {
 //    }
 
 
-    public Map<String,Integer>countByAdmin(){
-        Map<String,Integer>adminCount = new HashMap<>();
+    public AdminPageResponseDTO getAdminPageInfo(){
         int userFindAllCount = userFindAllCount();
         int userFindByToday = userFindByToday();
         int accuseFindAllCount = accuseFindAllCount();
@@ -131,14 +139,16 @@ public class UserService {
         int boardFindAllCount = boardFindAllCount();
         int boardFindByToday = boardFindByToday();
 
-        adminCount.put("ua", userFindAllCount);
-        adminCount.put("ut", userFindByToday);
-        adminCount.put("aa", accuseFindAllCount);
-        adminCount.put("at", accuseFindByToday);
-        adminCount.put("ba", boardFindAllCount);
-        adminCount.put("bt", boardFindByToday);
+        AdminPageResponseDTO build = AdminPageResponseDTO.builder()
+                .todayBoardCount(boardFindByToday)
+                .todayJoinCount(userFindByToday)
+                .todayAccuseCount(accuseFindByToday)
+                .totalAccuseCount(accuseFindAllCount)
+                .totalBoardCount(boardFindAllCount)
+                .totalJoinCount(userFindAllCount)
+                .build();
 
-        return adminCount;
+        return build;
 
     }
 
@@ -181,54 +191,76 @@ public class UserService {
         return allWithJoinDate;
     }
 
+    //유저리스트 DTO변환(Admin) + 페이징
+    public ListResponseDTO<UserByAdminResponseDTO,User> getUserListByAdmin(PageDTO dto) {
 
-    //유저리스트 DTO변환(Admin)
-    public List<UserByAdminResponseDTO> getUserListByAdmin(/*AdminSearchType type*/) {
-
-
-//        // Pageable객체 생성
-//        Pageable pageable = PageRequest.of(
-//                type.getPage() - 1,
-//                type.getSize(),
-//                Sort.by("createDate").descending()
-//        );
-
-        //user정보
-//        List<User> users = all.getContent();
-
+        Pageable pageable = PageRequest.of(
+                dto.getPage()-1,
+                dto.getSize(),
+                Sort.by("userJoinDate").descending()
+        );
         //전체불러오기
-        List<UserByAdminResponseDTO> collect = userRepository.findAll()
-                .stream()
+        Page<User> all = userRepository.findAll(pageable);
+
+
+        List<UserByAdminResponseDTO> collect = all.stream()
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
-
+//
         int i=1;
         for (UserByAdminResponseDTO user : collect) {
             user.setRowNum(i);
             i++;
         }
-        System.out.println("collect = " + collect);
 
-        return collect;
+
+        return ListResponseDTO.builder()
+                .count(all.getSize())
+                .pageInfo(new PageResponseDTO(all))
+                .list(collect)
+                .build();
+
     }
 
     //금일 가입자(Admin)
-    public List<UserByAdminResponseDTO> todayUserByAdMin() {
-        List<UserByAdminResponseDTO> userListByAdmin = getUserListByAdmin();
-        List<UserByAdminResponseDTO> todayUserList = new ArrayList<>();
+    public ListResponseDTO<UserByAdminResponseDTO,User> todayUserByAdMin(PageDTO dto) {
+        Pageable pageable = PageRequest.of(
+                dto.getPage()-1,
+                dto.getSize(),
+                Sort.by("userJoinDate").descending()
+        );
+        //전체불러오기
+        Page<User> all = userRepository.findAll(pageable);
+        List<User> todayUserList = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
 
-        for (UserByAdminResponseDTO userByAdminResponseDTO : userListByAdmin) {
-            System.out.println("userByAdminResponseDTO = " + userByAdminResponseDTO);
-            LocalDate joinDate = userByAdminResponseDTO.getJoinDate();
+        for (User user : all) {
+            System.out.println("userByAdminResponseDTO = " + user);
+            LocalDate joinDate = user.getUserJoinDate();
             if (joinDate!=null&&joinDate.equals(currentDate)) {
-                todayUserList.add(userByAdminResponseDTO);
+                todayUserList.add(user);
             }
         }
 
-        System.out.println("todayUserList = " + todayUserList);
-        return todayUserList;
+        List<UserByAdminResponseDTO> collect = todayUserList.stream()
+                .map(UserByAdminResponseDTO::new)
+                .collect(toList());
+//
+        int i=1;
+        for (UserByAdminResponseDTO user : collect) {
+            user.setRowNum(i);
+            i++;
+        }
+
+        System.out.println("collect = " + collect);
+
+        return ListResponseDTO.builder()
+                .count(collect.size())
+                .pageInfo(new PageResponseDTO(all))
+                .list(collect)
+                .build();
     }
+
 
 
     //userDetailByAdmin

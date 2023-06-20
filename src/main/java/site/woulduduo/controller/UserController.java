@@ -6,27 +6,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import site.woulduduo.dto.request.user.UserCommentRequestDTO;
+import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
-
+import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.dto.response.user.AdminPageResponseDTO;
+import site.woulduduo.dto.response.user.UserDetailByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 import site.woulduduo.service.UserService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import site.woulduduo.dto.request.user.UserCommentRequestDTO;
-import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserDetailByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
-import site.woulduduo.service.UserService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @Slf4j
@@ -74,26 +69,42 @@ public class UserController {
     @GetMapping("/user/admin")
     //관리자 페이지 열기
     public String showAdminpage(/*HttpSession session, */Model model) {
-        Map<String, Integer> countByAdmin = userService.countByAdmin();
-        model.addAttribute("count", countByAdmin);
-        countByAdmin.get("ua");
+        AdminPageResponseDTO adminPageInfo = userService.getAdminPageInfo();
+        model.addAttribute("count", adminPageInfo);
         return "admin/admin";
     }
 
     //관리자 페이지 리스트 가져오기
     @GetMapping("/api/v1/users/admin")
-    public ResponseEntity<?> getUserListByAdmin(/*AdminSearchType type*/){
-        List<UserByAdminResponseDTO> userListByAdmin = userService.getUserListByAdmin();
-        List<UserByAdminResponseDTO> todayUserList = userService.todayUserByAdMin();
+    public ResponseEntity<?> getUserListByAdmin(
+            @PathVariable PageDTO dto){
 
+        log.info("/api/v1/users/admin/");
 
+//        AdminSearchType adminSearchType = new AdminSearchType();
+//        adminSearchType.setPage(type.getPage());
+//        adminSearchType.setSize(10);
+//        adminSearchType.setKeyword(type.getKeyword());
+//        adminSearchType.setAdminViewType(type.getAdminViewType());
 
-        return ResponseEntity
-                .ok()
-                .body(userListByAdmin);
-
-
+        //전체 userList
+//        List<UserByAdminResponseDTO> userListByAdmin = userService.getUserListByAdmin(dto);
+//        //금일 userList
+//        List<UserByAdminResponseDTO> todayUserList = userService.todayUserByAdMin(dto);
+//        //map에 추가
+//        Map<String,List<UserByAdminResponseDTO>> userList=new HashMap();
+//        List<UserByAdminResponseDTO> userList1 = userList.put("userList", userListByAdmin);
+//        List<UserByAdminResponseDTO> todayUserList1 = userList.put("todayUserList", todayUserList);
+//
+//        log.info("첫번째 put{} 두번째 put {},map{}",userList1,todayUserList1,userList);
+//        return ResponseEntity
+//                .ok()
+//                .body(userList);
+//
+//
+        return null;
     }
+
 
     @GetMapping("/user/detail/admin")
     //관리자 페이지 자세히 보기

@@ -7,14 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserDetailByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
-import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
+import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.user.*;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
@@ -23,7 +22,6 @@ import site.woulduduo.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,6 +62,7 @@ class UserServiceTest {
                     .lolNickname("lolNickname" + i)
                     .userGender(Gender.M)
                     .lolTier(Tier.DIA)
+                    .userJoinDate(LocalDate.of(2023,06,20))
                     .userPosition(Position.MID)
                     .userComment("안녕하세요 트롤아닙니다." + i)
                     .userMatchingPoint(500)
@@ -170,16 +169,21 @@ class UserServiceTest {
     @Test
     @DisplayName("관리자페이지 정보 count 확인")
     void getCountByAdmin() {
-        Map<String, Integer> stringIntegerMap = userService.countByAdmin();
-        System.out.println("stringIntegerMap = " + stringIntegerMap);
+        AdminPageResponseDTO adminPageInfo = userService.getAdminPageInfo();
+        System.out.println("stringIntegerMap = " + adminPageInfo);
     }
 
 
     @Test
-    @DisplayName("관리자 전체유저 리스트 dto 변환")
+    @DisplayName("관리자 전체유저 리스트 dto 변환+페이징")
     void userExchangeDTO(){
-        List<UserByAdminResponseDTO> userListByAdmin =
-                userService.getUserListByAdmin();
+
+
+        PageDTO dto = new PageDTO();
+        dto.setPage(25);
+
+
+        ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
 
         System.out.println("userListByAdmin = " + userListByAdmin);
 
@@ -192,12 +196,12 @@ class UserServiceTest {
     void todayUserExchangeDTO(){
 
 
-        List<UserByAdminResponseDTO> todayUserListByAdmin =
-                userService.todayUserByAdMin();
+        PageDTO dto = new PageDTO();
 
-        int size = todayUserListByAdmin.size();
-        System.out.println("size = " + size);
-        System.out.println("todayUserListByAdmin = " + todayUserListByAdmin);
+
+        ListResponseDTO<UserByAdminResponseDTO, User> userByAdminResponseDTOUserListResponseDTO = userService.todayUserByAdMin(dto);
+
+        System.out.println("userByAdminResponseDTOUserListResponseDTO = " + userByAdminResponseDTOUserListResponseDTO);
 
 
     }

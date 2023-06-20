@@ -26,14 +26,14 @@
                         <ul class="one_box_text">
                             <li class="pic"><img class="admin_img" id="sign" src="/assets/img/admin/금일가입자수.png" alt="today_user"></li>
                             <li class="admin_category">금일 가입자</li>
-                            <li class="mem_count">${count.get("ut")} 명</li>
+                            <li class="mem_count">${count.todayJoinCount} 명</li>
                         </ul>
                     </a>
                     <a href="${getUserListByAdmin}" class="one_box">
                         <ul class="one_box_text">
                             <li class="pic"><img class="admin_img" id="member"src="/assets/img/admin/회원관리.png" alt="user_management"></li>
                             <li class="admin_category">회원관리</li>
-                            <li class="mem_count">${count.get("ua")} 명</li>
+                            <li class="mem_count">${count.totalJoinCount} 명</li>
                         </ul>
                     </a>
                 </ul>
@@ -42,14 +42,14 @@
                         <ul class="one_box_text">
                             <li class="pic"><img class="admin_img accuse" src="/assets/img/admin/신고사진.png" alt="today_accuse"></li>
                             <li class="admin_category">금일 신고</li>
-                            <li class="mem_count">${count.get("at")} 회</li>
+                            <li class="mem_count">${count.todayAccuseCount} 회</li>
                         </ul>
                     </a>
                     <a href="/api/v1/accuses/{type}/{page}" class="one_box">
                         <ul class="one_box_text">
                             <li class="pic"><img class="admin_img accuse" src="/assets/img/admin/신고사진.png" alt="accuse_management"></li>
                             <li class="admin_category">신고 관리</li>
-                            <li class="mem_count">${count.get("aa")}회</li>
+                            <li class="mem_count">${count.totalAccuseCount}회</li>
                         </ul>
                     </a>
                 </ul>
@@ -58,14 +58,14 @@
                         <ul class="one_box_text">
                             <li class="pic"><img class="admin_img accuse" src="/assets/img/admin/게시판관리.png" alt="today_board"></li>
                             <li class="admin_category">금일 작성 게시물</li>
-                            <li class="mem_count">${count.get("bt")}건</li>
+                            <li class="mem_count">${count.todayBoardCount}건</li>
                         </ul>
                     </a>
                     <a href="/api/v1/boards/admin" class="one_box">
                         <ul class="one_box_text">
                             <li class="pic"><img class="admin_img accuse" src="/assets/img/admin/게시판관리.png" alt="board_management"></li>
                             <li class="admin_category">게시물 관리</li>
-                            <li class="mem_count">${count.get("ba")}건</li>
+                            <li class="mem_count">${count.totalBoardCount}건</li>
                         </ul>
                     </a>
                 </ul>

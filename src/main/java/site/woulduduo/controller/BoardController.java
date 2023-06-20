@@ -69,6 +69,7 @@ public class BoardController {
     @GetMapping("api/v1/boards/admin")
     public ResponseEntity<?> getBoardListByAdmin(/*AdminSearchType type*/){
         List<BoardsByAdminResponseDTO> boardListByAdmin = boardService.getBoardListByAdmin();
+        List<BoardsByAdminResponseDTO> boardsByAdminResponseDTOS = boardService.todayBoardByAdmin();
 
 
         return ResponseEntity
