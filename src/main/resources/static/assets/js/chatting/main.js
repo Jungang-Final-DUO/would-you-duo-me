@@ -1,23 +1,20 @@
-import {outputMessage} from "./messageRendering.js";
+import {renderAndSaveMessage, scrollDown} from "./messageRendering.js";
 
 export function connectSocket(ChatForm) {
-    const chatMessages = document.querySelectorAll('.chatting-message-body');
+    console.log('connectSocket 도달');
+
     const username = 'test1';
 // const username = '원영이';
     const socket = io("http://localhost:3000");
-    // console.log(ChatForm);
-    // console.log(socket);
+    console.log(ChatForm);
+    console.log(socket);
 
     //Message from server
     socket.on('message', message => {
 
         //output message to DOM
-        outputMessage(message);
-
-        //scroll down
-        chatMessages.forEach(cm => {
-            cm.scrollTop = cm.scrollHeight;
-        });
+        renderAndSaveMessage(message);
+        scrollDown();
 
     });
     // Message submit
