@@ -8,6 +8,8 @@ import org.springframework.test.annotation.Rollback;
 import site.woulduduo.dto.request.chatting.MatchingFixRequestDTO;
 import site.woulduduo.dto.request.chatting.MatchingMakeRequestDTO;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
+import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.user.UserReviewResponseDTO;
 import site.woulduduo.entity.Matching;
 import site.woulduduo.enumeration.MatchingStatus;
 import site.woulduduo.repository.ChattingRepository;
@@ -73,7 +75,7 @@ class MatchingServiceTest {
     void writeReviewTest() {
 
         ReviewWriteRequestDTO dto = new ReviewWriteRequestDTO();
-        dto.setMatchingNo(1L);
+        dto.setMatchingNo(2L);
         dto.setReviewRate(5);
         dto.setReviewContent("너무 재밌었어요~ 다음에도 같이 할게요");
 
@@ -101,6 +103,14 @@ class MatchingServiceTest {
             );
         });
 
+    }
+
+    @Test
+    @DisplayName("user1이 받은 모든 리뷰를 리턴하면 길이가 1이어야 한다")
+    void getWrittenReviewTest() {
+        ListResponseDTO<UserReviewResponseDTO, Matching> gottenReview = matchingService.getGottenReview("user1", 1);
+
+        assertEquals(1, gottenReview.getList().size());
     }
 
 }
