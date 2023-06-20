@@ -12,9 +12,12 @@ import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.AdminPageResponseDTO;
+import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserDetailByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
+import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
@@ -79,30 +82,15 @@ public class UserController {
     public ResponseEntity<?> getUserListByAdmin(
             @PathVariable PageDTO dto){
 
+        ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
+
+
         log.info("/api/v1/users/admin/");
 
-//        AdminSearchType adminSearchType = new AdminSearchType();
-//        adminSearchType.setPage(type.getPage());
-//        adminSearchType.setSize(10);
-//        adminSearchType.setKeyword(type.getKeyword());
-//        adminSearchType.setAdminViewType(type.getAdminViewType());
 
-        //전체 userList
-//        List<UserByAdminResponseDTO> userListByAdmin = userService.getUserListByAdmin(dto);
-//        //금일 userList
-//        List<UserByAdminResponseDTO> todayUserList = userService.todayUserByAdMin(dto);
-//        //map에 추가
-//        Map<String,List<UserByAdminResponseDTO>> userList=new HashMap();
-//        List<UserByAdminResponseDTO> userList1 = userList.put("userList", userListByAdmin);
-//        List<UserByAdminResponseDTO> todayUserList1 = userList.put("todayUserList", todayUserList);
-//
-//        log.info("첫번째 put{} 두번째 put {},map{}",userList1,todayUserList1,userList);
-//        return ResponseEntity
-//                .ok()
-//                .body(userList);
-//
-//
-        return null;
+        return ResponseEntity
+                .ok()
+                .body(userListByAdmin);
     }
 
 

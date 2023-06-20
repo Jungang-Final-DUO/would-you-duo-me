@@ -2,6 +2,7 @@ package site.woulduduo.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.woulduduo.dto.request.accuse.UserAccuseRequestDTO;
 import site.woulduduo.dto.response.accuse.AccuseListResponseDTO;
@@ -19,9 +20,14 @@ public class AccuseController {
     private final AccuseService accuseService;
 
     @GetMapping("/{type}/{page}")
-    public List<?> getAccuseListByAdmin(HttpSession session, @PathVariable AdminViewType type, @PathVariable int Page){
+    public ResponseEntity<?> getAccuseListByAdmin(HttpSession session,
+                                                  @PathVariable AdminViewType type,
+                                                  @PathVariable int Page){
+
         List<AccuseListResponseDTO> accuseListByAdmin = accuseService.getAccuseListByAdmin();
-        return accuseListByAdmin;
+        return ResponseEntity
+                .ok()
+                .body(accuseListByAdmin);
     }
 
     @PostMapping("/user/accuse")

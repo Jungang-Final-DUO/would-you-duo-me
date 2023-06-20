@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import site.woulduduo.dto.request.board.BoardModifyRequestDTO;
 import site.woulduduo.dto.request.board.BoardWriteRequestDTO;
+import site.woulduduo.dto.request.page.PageDTO;
+import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.board.BoardsByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.entity.Board;
 import site.woulduduo.service.BoardService;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -67,9 +70,9 @@ public class BoardController {
 
     //관리자페이지 boardlist 가져오기
     @GetMapping("api/v1/boards/admin")
-    public ResponseEntity<?> getBoardListByAdmin(/*AdminSearchType type*/){
-        List<BoardsByAdminResponseDTO> boardListByAdmin = boardService.getBoardListByAdmin();
-        List<BoardsByAdminResponseDTO> boardsByAdminResponseDTOS = boardService.todayBoardByAdmin();
+    public ResponseEntity<?> getBoardListByAdmin(PageDTO dto){
+        ListResponseDTO<BoardsByAdminResponseDTO, Board> boardListByAdmin = boardService.getBoardListByAdmin(dto);
+        ListResponseDTO<UserByAdminResponseDTO, Board> todayBoardList = boardService.todayBoardByAdmin(dto);
 
 
         return ResponseEntity
