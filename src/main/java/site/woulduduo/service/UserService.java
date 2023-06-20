@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
@@ -25,7 +26,6 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -280,7 +280,7 @@ public class UserService {
 
 
     //유저리스트 DTO변환(Admin)
-    public List<UserByAdminResponseDTO> getUserListByAdmin(/*AdminSearchType type*/) {
+    public List<UserByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
 
 
 //        // Pageable객체 생성
