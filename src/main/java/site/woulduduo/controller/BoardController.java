@@ -3,9 +3,6 @@ package site.woulduduo.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-
-import org.springframework.web.bind.annotation.*;
-import site.woulduduo.service.BoardService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +19,7 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/api/v1/board") //경로
 
 public class BoardController {
+
     private final BoardService boardService;
 
     //게시물 등록
@@ -64,6 +62,20 @@ public class BoardController {
         return "redirect/board/boardNo/"+boardNo;
 
     }
+
+    //관리자페이지 boardlist 가져오기
+//    @GetMapping("api/v1/boards/admin")
+//    public ResponseEntity<?> getBoardListByAdmin(/*AdminSearchType type*/){
+//        List<BoardsByAdminResponseDTO> boardListByAdmin = boardService.getBoardListByAdmin();
+//
+//
+//
+//        return ResponseEntity
+//                .ok()
+//                .body(boardListByAdmin);
+//    }
+
+
 
 
 }

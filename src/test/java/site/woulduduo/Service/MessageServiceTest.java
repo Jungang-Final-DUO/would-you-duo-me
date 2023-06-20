@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import site.woulduduo.dto.request.chatting.MessageRequestDTO;
 import site.woulduduo.dto.response.chatting.MessageListResponseDTO;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Message;
@@ -18,19 +17,17 @@ import site.woulduduo.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @Transactional
 @Rollback(false)
 class MessageServiceTest {
 
     @Autowired
-    MessageRepository messageRepository;
+    private MessageRepository messageRepository;
     @Autowired
-    ChattingRepository chattingRepository;
+    private ChattingRepository chattingRepository;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
 
     //메세지 저장하기
@@ -39,13 +36,13 @@ class MessageServiceTest {
     @DisplayName("메세지를 저장할 수 있다")
     //    메세지 저장하기
     void saveMessageTest(){
-        Chatting chatting = chattingRepository.findByChattingNo(6L);
-        User user = userRepository.findByUserAccount("test123");
+        Chatting chatting = chattingRepository.findByChattingNo(3L);
+        User user = userRepository.findByUserAccount("test3");
 
         Message message = Message.builder()
                 .chatting(chatting)
                 .user(user)
-                .messageContent("하이")
+                .messageContent("하이욤")
                 .build();
         try {
             Message saved = messageRepository.save(message);

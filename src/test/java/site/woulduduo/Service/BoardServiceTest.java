@@ -49,6 +49,15 @@ class BoardServiceTest {
 
 //
 //}
+//
+//    @Test
+//    @DisplayName("관리자용 전체 boardList dto변환")
+//    void getBoardListByAdmin(){
+//        List<BoardsByAdminResponseDTO> boardListByAdmin =
+//                boardService.getBoardListByAdmin();
+//
+//        System.out.println("boardListByAdmin = " + boardListByAdmin);
+//    }
 
 
 }

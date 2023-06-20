@@ -10,8 +10,7 @@
     <title>WOULD U DUO</title>
     <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">
 
-    <%@ include file="common/static-head.jsp"%>
-    <link rel="stylesheet" href="/assets/css/main.css">
+    <%@ include file="common/static-head.jsp" %>
 
 </head>
 <body>
@@ -1018,8 +1017,6 @@
 
     <%@ include file="common/footer.jsp" %>
 </div>
-<script type="module" src="/assets/js/common/header.js"></script>
-<script src="http://localhost:3000/socket.io/socket.io.js"></script>
-<script type="module" src="/assets/js/chatting/main.js"></script>
+
 </body>
 </html>

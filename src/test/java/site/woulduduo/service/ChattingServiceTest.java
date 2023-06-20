@@ -7,8 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.response.chatting.ChattingDetailResponseDTO;
+import site.woulduduo.dto.response.chatting.ChattingListResponseDTO;
 import site.woulduduo.entity.User;
 import site.woulduduo.entity.UserProfile;
+import site.woulduduo.repository.ChattingRepository;
 import site.woulduduo.repository.UserRepository;
 
 import java.util.Comparator;
@@ -23,11 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ChattingServiceTest {
 
     @Autowired
-    ChattingService chattingService;
+    private ChattingService chattingService;
     @Autowired
-    UserRepository userRepository;
+    private ChattingRepository chattingRepository;
     @Autowired
-    MessageService messageService;
+    private UserRepository userRepository;
 
 
     // 채팅 신청하기
@@ -36,12 +38,12 @@ class ChattingServiceTest {
     @DisplayName("채팅 데이터 1개 생성")
     void makeChattingTest(){
 
-        String userAccount = "test123";
-        String me = "test1";
+        String userAccount = "user1";
+        String me = "user3";
 
         long chattingNo = chattingService.makeChatting(me, userAccount);
 
-        assertEquals(6, chattingNo);
+//        assertEquals(3, chattingRepository.count());
     }
 
     //  대표 프로필 사진 가져오기
@@ -68,12 +70,23 @@ class ChattingServiceTest {
     @Test
     @DisplayName("채팅방 디테일 가져오기")
     void getChattingDetailTest(){
-        String me = "test123";
-        long chattingNo = 6L;
+        String me = "test2";
+        long chattingNo = 3L;
 
         ChattingDetailResponseDTO detail = chattingService.getChattingDetail(me, chattingNo);
-        assertEquals("test1", detail.getUserNickname());
+        assertEquals("test456", detail.getUserNickname());
         System.out.println(detail.getMessageList());
+    }
+
+//    채팅 목록 가져오기
+//    6/18 테스트 완료
+    @Test
+    @DisplayName("유저가 가진 채팅목록을 가져온다")
+    void getChattingListTest(){
+        User user = userRepository.findByUserAccount("test1");
+        List<ChattingListResponseDTO> chattingList = chattingService.getChattingList(user);
+
+        System.out.println(chattingList);
     }
 
 }

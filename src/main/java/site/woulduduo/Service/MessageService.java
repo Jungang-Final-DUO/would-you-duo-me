@@ -36,6 +36,7 @@ public class MessageService {
             Message saved = messageRepository.save(message);
             return true;
         } catch (Exception e) {
+            log.info("메세지 저장에 실패함");
             return false;
         }
 

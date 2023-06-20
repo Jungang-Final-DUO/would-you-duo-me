@@ -5,14 +5,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
+import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.enumeration.Gender;
+import site.woulduduo.enumeration.Position;
+import site.woulduduo.enumeration.Tier;
+import site.woulduduo.service.UserService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.repository.UserRepository;
@@ -36,6 +43,12 @@ public class UserController {
     private final UserService userService;
     private final EmailService emailService;
     private final UserRepository userRepository;
+
+//    메인페이지로 이동
+    @GetMapping("/main")
+    public String test(){
+        return "index";
+    }
 
     // 회원 가입 양식 요청
     @GetMapping("/user/sign-up")
@@ -143,18 +156,16 @@ public class UserController {
 
     @GetMapping("/user/admin")
     //관리자 페이지 열기
-    public String showAdminpage(/*HttpSession session, */Model model){
+    public String showAdminpage(/*HttpSession session, */Model model) {
         Map<String, Integer> countByAdmin = userService.countByAdmin();
-        model.addAttribute("count",countByAdmin);
+        model.addAttribute("count", countByAdmin);
         countByAdmin.get("ua");
         return "admin/admin";
     }
 
     //관리자 페이지 리스트 가져오기
-    public ResponseEntity<?> getUserListByAdmin(/*AdminSearchType type*/){
-        List<UserByAdminResponseDTO>
-
-                userListByAdmin = userService.getUserListByAdmin();
+    public ResponseEntity<?> getUserListByAdmin(/*AdminSearchType type*/) {
+        List<UserByAdminResponseDTO> userListByAdmin = userService.getUserListByAdmin();
 
 
         return ResponseEntity
@@ -181,16 +192,36 @@ public class UserController {
 //        return "";
 //    }
 
-    // 유저 전적 페이지 이동
-    @GetMapping("/user/user-history")
-    public String showUserHistory(HttpSession session, Model model, String userAccount) {
+    @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
+    public ResponseEntity<?> getUserProfileList(int page, String keyword, int size, Position position, Gender gender, Tier tier, String sort/*, HttpSession session*/) {
+//        UserSearchType userSearchType = UserSearchType.builder()
+//                .position(Position.MID)
+//                .gender(Gender.M)
+//                .tier(Tier.DIA)
+//                .sort("avgRate")
+//                .build();
 
-        log.info("/user/history?userAccount={} GET", userAccount);
+        UserSearchType userSearchType = new UserSearchType();
+        userSearchType.setPosition(position);
+        userSearchType.setGender(gender);
+        userSearchType.setTier(tier);
+        userSearchType.setSort(sort);
 
-        UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
-
-        model.addAttribute("history", dto);
-
-        return "user/user-history";
+        return ResponseEntity.ok().body(userService.getUserProfileList(userSearchType));
     }
-}
+
+        // 유저 전적 페이지 이동
+        @GetMapping("/user/user-history")
+        public String showUserHistory (HttpSession session, Model model, String userAccount){
+
+            log.info("/user/history?userAccount={} GET", userAccount);
+
+            UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
+
+            model.addAttribute("history", dto);
+
+            return "user/user-history";
+
+        }
+    }
+

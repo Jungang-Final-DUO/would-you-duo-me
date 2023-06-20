@@ -5,11 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
-import site.woulduduo.dto.response.user.UserReviewResponseDTO;
+import site.woulduduo.dto.response.user.*;
 import site.woulduduo.dto.riot.LeagueV4DTO;
 import site.woulduduo.dto.riot.MatchV5DTO;
 import site.woulduduo.dto.riot.MostChampInfo;
@@ -28,12 +27,15 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
 
+    private final UserQueryDSLRepositoryCustom userQueryDSLRepositoryCustom;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final AccuseRepository accuseRepository;
@@ -64,6 +66,7 @@ public class UserService {
         }
 
         // 회원 정보 저장
+
         User user = User.builder()
                 .userAccount(dto.getUserEmail())
                 .userNickname(dto.getUserNickname())
@@ -169,7 +172,7 @@ public class UserService {
         return true;
     }
 
-//    public ListResponseDTO<UserByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
+//    public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
 //        userRepository.count();
 //        return null;
 //    }
@@ -275,6 +278,54 @@ public class UserService {
         return allWithJoinDate;
     }
 
+
+    //유저리스트 DTO변환(Admin)
+    public List<UserByAdminResponseDTO> getUserListByAdmin(/*AdminSearchType type*/) {
+
+
+//        // Pageable객체 생성
+//        Pageable pageable = PageRequest.of(
+//                type.getPage() - 1,
+//                type.getSize(),
+//                Sort.by("createDate").descending()
+//        );
+
+        //user정보
+//        List<User> users = all.getContent();
+
+        //전체불러오기
+        List<User> all = userRepository.findAll();
+
+        //dto리스트생성 및 dto 생성
+        List<UserByAdminResponseDTO> userListByAdmin = new ArrayList<>();
+        int i = 1;
+        for (User user : all) {
+            UserByAdminResponseDTO dto = new UserByAdminResponseDTO();
+
+            //bc,rc,rc,fc 카운터 찾는 메서드
+            long accuseCount = accuseRepository.countByUser(user);
+            long boardCount = boardRepository.countByUser(user);
+            long replyCount = replyRepository.countByUser(user);
+            long followCount = followRepository.findAllWithFollowTo(user.getUserAccount());
+
+            dto.setRowNum(i);
+            dto.setUserAccount(user.getUserAccount());
+            dto.setGender(user.getUserGender().toString());
+            dto.setBoardCount(boardCount);
+            dto.setReplyCount(replyCount);
+            dto.setReportCount(accuseCount);
+            dto.setPoint(user.getUserCurrentPoint());
+            dto.setFollowCount(followCount);
+            i++;
+
+            userListByAdmin.add(dto);
+            List<UserByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
+        }
+        List<UserByAdminResponseDTO> userListByAdmin2 = userListByAdmin;
+
+        return userListByAdmin;
+    }
+
 //    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount){
 //
 //        return null;
@@ -321,11 +372,11 @@ public class UserService {
         List<UserReviewResponseDTO> reviews = foundUser.getChattingFromList().stream()
                 .map(c -> c.getMatchingList().stream()
                         .map(UserReviewResponseDTO::new)
-                        .collect(Collectors.toList())
-                ).collect(Collectors.toList())
+                        .collect(toList())
+                ).collect(toList())
                 .stream()
                 .flatMap(List::stream)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         boolean isFollowed = false;
         try {
@@ -337,7 +388,7 @@ public class UserService {
                 .map(m -> {
                     List<MatchV5DTO.MatchInfo.ParticipantDTO> championMatchInfoList = last20ParticipantDTOList.stream()
                             .filter(p -> p.getChampionName().equals(m))
-                            .collect(Collectors.toList());
+                            .collect(toList());
 
                     int winCount = (int) championMatchInfoList.stream()
                             .filter(MatchV5DTO.MatchInfo.ParticipantDTO::isWin).count();
@@ -345,7 +396,7 @@ public class UserService {
                     int loseCount = (int) championMatchInfoList.stream()
                             .filter(c -> !c.isWin()).count();
 
-                    double winRate = (double) winCount / (winCount + loseCount) * 100;
+                    int winRate = winCount * 100 / (winCount + loseCount);
 
                     int kills = championMatchInfoList.stream()
                             .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getKills).sum();
@@ -366,7 +417,7 @@ public class UserService {
                             .kda(kda)
                             .build();
                 })
-                .collect(Collectors.toList());
+                .collect(toList());
 
         return UserHistoryResponseDTO.builder()
                 .userAccount(userAccount)
@@ -374,7 +425,7 @@ public class UserService {
                 .userNickname(foundUser.getUserNickname())
                 .userPosition(foundUser.getUserPosition())
                 .isFollowed(isFollowed)
-                .userAvgRate(foundUser.getUserAvgRate())
+                .userAvgRate(String.format("%.2f", foundUser.getUserAvgRate()))
                 .userMatchingPoint(foundUser.getUserMatchingPoint())
                 .userInstagram(foundUser.getUserInstagram())
                 .userFacebook(foundUser.getUserFacebook())
@@ -389,9 +440,11 @@ public class UserService {
                 .leaguePoints(rankInfo.getLeaguePoints())
                 .totalWinCount(rankInfo.getWins())
                 .totalLoseCount(rankInfo.getLosses())
-                .winRate(rankInfo.getWinRate())
+                .winRate(Math.round(rankInfo.getWinRate() * 100))
                 // 최근 20 매치의 정보 데이터
-                .last20Matches(last20ParticipantDTOList)
+                .last20Matches(last20ParticipantDTOList.stream()
+                        .map(MatchResponseDTO::new)
+                        .collect(toList()))
                 .build();
 
     }
@@ -410,6 +463,15 @@ public class UserService {
 //
 //        return false;
 //    }
+
+    public List<UserProfilesResponseDTO> getUserProfileList(/*HttpSession session, */UserSearchType userSearchType) {
+        List<UserProfilesResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
+
+        for (UserProfilesResponseDTO userProfile : userProfileList) {
+            log.info("@@@ userProfile @@@@@ : {}", userProfile.toString());
+        }
+        return userProfileList;
+    }
 
 
 }

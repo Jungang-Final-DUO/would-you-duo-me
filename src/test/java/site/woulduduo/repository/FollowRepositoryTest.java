@@ -33,8 +33,8 @@ class FollowRepositoryTest {
         System.out.println("acvd2 = " + acvd2);
         System.out.println("acvd3 = " + acvd3);
         Follow follow1 = Follow.builder()
-                .followTo(acvd1)
-                .followFrom(acvd2)
+                .followTo(acvd2)
+                .followFrom(acvd3)
                 .build();
 
         Follow follow2 = Follow.builder()
@@ -44,7 +44,17 @@ class FollowRepositoryTest {
 
 
         Follow save4 = followRepository.save(follow2);
+        Follow save1 = followRepository.save(follow1);
 
 
     }
+
+    @Test
+    @DisplayName("팔로워 수 확인")
+    void followCount() {
+        long acvd2 = followRepository.findAllWithFollowTo("acvd2");
+        System.out.println("acvd2 = " + acvd2);
+
+    }
+
 }
