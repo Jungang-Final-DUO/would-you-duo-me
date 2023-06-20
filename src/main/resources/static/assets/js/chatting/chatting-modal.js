@@ -34,7 +34,7 @@ function makeChatting(chat) {
     }
 }
 
-export function makeChattingRoom(){
+export function makeChattingRoom() {
     [...document.querySelectorAll('.chatting-icon')].forEach(
         chat => makeChatting(chat)
     );
@@ -51,7 +51,30 @@ function renderChattingList(result) {
     } else {
         for (let i = 0; i < result.length; i++) {
 
-            const {chattingNo, profileImage, userNickname, messageContent, messageUnreadCount} = result[i];
+            const {
+                chattingNo,
+                profileImage,
+                userNickname,
+                messageContent,
+                messageUnreadCount,
+                matchingStatus
+            } = result[i];
+
+            let rightBtn = null;
+            switch (matchingStatus) {
+                case 'REQUEST':
+                    rightBtn = `<button class="gameover-btn" disabled>수락 대기중</button>`;
+                    break;
+                case 'CONFIRM':
+                    rightBtn = `<button class="gameover-btn"><img class="chatting-gameover-img" src="/assets/img/chattingModal/checkmark.png" alt="게임완료이미지">게임 완료</button>`;
+                    break;
+                case 'REJECT':
+                    rightBtn = `<button class="gameover-btn"><img class="chatting-gameover-img" src="/assets/img/chattingModal/checkmark.png" alt="게임완료이미지">게임 완료</button>`
+                    break;
+                case 'DONE':
+                    rightBtn = `<button class="gameover-btn"><img class="chatting-gameover-img" src="/assets/img/chattingModal/checkmark.png" alt="게임완료이미지">게임 완료</button>`;
+                    break;
+            }
 
             chattings += `<li id = "${chattingNo}" class="chatting-card">
                 <div class = "chat-card">
@@ -75,9 +98,7 @@ function renderChattingList(result) {
         <button class="matching-accept-btn">
         <img class="chatting-handshake-img" src="/assets/img/chattingModal/handshake.png" alt="매칭수락이미지">
         매칭 확정</button></div><div class="gameover-container">
-        <button class="gameover-btn">
-        <img class="chatting-gameover-img" src="/assets/img/chattingModal/checkmark.png" alt="게임완료이미지">
-        게임 완료</button></div></div><div class="chatting-message-body">
+        ` + rightBtn + `</div></div><div class="chatting-message-body">
         </div>
         <form class="chatting-message-input-box chat-form">
         <input class="message-send-box msg" type="text" placeholder="메시지를 입력해주세요" required autofocus>
@@ -95,7 +116,7 @@ function renderChattingList(result) {
         toBack();
     }
 
-    const chatForm =  [...document.querySelectorAll('.chat-form')];
+    const chatForm = [...document.querySelectorAll('.chat-form')];
     connectSocket(chatForm);
     return [...document.querySelectorAll('.chatting-card')];
 }
@@ -126,7 +147,7 @@ export function toBack() {
 //         })
 // }
 
-export function renderUnreadMessages(chattingNo){
+export function renderUnreadMessages(chattingNo) {
     const $chatting = document.getElementById(chattingNo);
     // console.log($chatting);
     const $target = $chatting.querySelector('.chatting-unread');
@@ -140,7 +161,7 @@ export function renderUnreadMessages(chattingNo){
         })
 }
 
-export function openChattingList(){
+export function openChattingList() {
     const $chatBtn = document.getElementById('chatting-btn');
     $chatBtn.addEventListener('click', getChattingList);
     console.log('openChattingList까지 도달');
