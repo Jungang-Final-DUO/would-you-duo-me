@@ -53,20 +53,15 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                     .userInstagram(user.getUserInstagram())
                     .userFacebook(user.getUserFacebook())
                     .userTwitter(user.getUserTwitter())
-//                  .isFollowed(user.get)
                     .userPosition(user.getUserPosition())
                     .userNickname(user.getUserNickname())
                     .avgRate(user.getUserAvgRate())
-//                    .profileImage(user.getUserProfileList().get(0).getProfileImage())
+                    .mostChampList(user.getMostChampList())
                     .build();
 
-            userProfiles.add(dto);
+                    userProfiles.add(dto);
         }
 
-        for (User user : userList) {
-        System.out.println("Repository QueryDSL user = " + user);
-
-        }
 
         return userProfiles;
     }

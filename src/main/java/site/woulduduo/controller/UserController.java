@@ -49,15 +49,10 @@ public class UserController {
     public ResponseEntity<?> getUserProfileList(@PathVariable int page, @PathVariable String keyword, @PathVariable int size
             , @PathVariable Position position, @PathVariable Gender gender
             , @PathVariable Tier tier, @PathVariable String sort/*, HttpSession session*/) {
-//        UserSearchType userSearchType = UserSearchType.builder()
-//                .position(Position.MID)
-//                .gender(Gender.M)
-//                .tier(Tier.DIA)
-//                .sort("avgRate")
-//                .build();
 
         UserSearchType userSearchType = new UserSearchType();
         userSearchType.setPage(page);
+        userSearchType.setSize(size);
         userSearchType.setPosition(position);
         userSearchType.setGender(gender);
         userSearchType.setTier(tier);
