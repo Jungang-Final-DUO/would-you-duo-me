@@ -155,7 +155,7 @@ public class User {
     private List<Chatting> chattingFromList = new ArrayList<>();
 
     // 내 모스트 챔피언들
-    @OneToMany(mappedBy = "champNo", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Builder.Default
     private List<MostChamp> mostChampList = new ArrayList<>();
 

@@ -47,17 +47,27 @@ public class UserController {
     // 메인페이지 - 프로필 카드 불러오기(비동기)
     @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
     public ResponseEntity<?> getUserProfileList(@PathVariable int page, @PathVariable String keyword, @PathVariable int size
-            , @PathVariable Position position, @PathVariable Gender gender
-            , @PathVariable Tier tier, @PathVariable String sort/*, HttpSession session*/) {
+            , @PathVariable String position, @PathVariable String gender
+            , @PathVariable String tier, @PathVariable String sort/*, HttpSession session*/) {
 
+
+//        log.info("&&&&&:{}, {}, {}, {}", );
+        System.out.println(position+ gender+ tier+ sort);
         UserSearchType userSearchType = new UserSearchType();
         userSearchType.setPage(page);
         userSearchType.setSize(size);
-        userSearchType.setPosition(position);
-        userSearchType.setGender(gender);
-        userSearchType.setTier(tier);
-        userSearchType.setSort(sort);
-
+        if (!position.equals("all")) {
+            userSearchType.setPosition(Position.valueOf(position));
+        }
+        if (!gender.equals("all")) {
+            userSearchType.setGender(Gender.valueOf(gender));
+        }
+        if (!tier.equals("all")) {
+            userSearchType.setTier(Tier.valueOf(tier));
+        }
+        if (!keyword.equals("all")) {
+            userSearchType.setSort(sort);
+        }
         return ResponseEntity.ok().body(userService.getUserProfileList(userSearchType));
     }
 

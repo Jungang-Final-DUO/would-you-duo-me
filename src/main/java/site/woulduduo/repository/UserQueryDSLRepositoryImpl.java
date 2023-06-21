@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
+import site.woulduduo.entity.QMostChamp;
 import site.woulduduo.entity.QUser;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
@@ -25,11 +26,13 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
     private final JPAQueryFactory queryFactory;
     private final QUser user =  QUser.user;
+    private final QMostChamp mostChamp = QMostChamp.mostChamp;
 
     @Override
     public List<UserProfilesResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/) {
 
         List<User> userList = queryFactory.selectFrom(user)
+                .join(user.mostChampList, mostChamp)
                 .where(keywordContains(userSearchType.getKeyword())
                         , positioneq(userSearchType.getPosition())
                         , gendereq(userSearchType.getGender())
