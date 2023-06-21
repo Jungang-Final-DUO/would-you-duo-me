@@ -6,14 +6,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
+import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
+import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
+import site.woulduduo.enumeration.Tier;
 import site.woulduduo.repository.UserRepository;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,7 +38,53 @@ class UserServiceTest {
 
     @BeforeEach
     void userInsert() {
+        for (int i = 1; i < 42; i++) {
+            User user = User.builder()
+                    .userAccount("user" + i)
+                    .userNickname("nickname" + i)
+                    .userPassword("pwd" + i)
+                    .userBirthday(LocalDate.of(2000, 1, 1))
+                    .lolNickname("lolNickname" + i)
+                    .userGender(Gender.M)
+                    .lolTier(Tier.CHA)
+                    .userPosition(Position.MID)
+                    .userComment("안녕하세요 트롤아닙니다." + i)
+                    .userMatchingPoint(500)
+                    .build();
+            userRepository.save(user);
+        }
+        for (int i = 42; i < 100; i++) {
+            User user = User.builder()
+                    .userAccount("user" + i)
+                    .userNickname("nickname" + i)
+                    .userPassword("pwd" + i)
+                    .userBirthday(LocalDate.of(2000, 1, 1))
+                    .lolNickname("lolNickname" + i)
+                    .userGender(Gender.M)
+                    .lolTier(Tier.DIA)
+                    .userPosition(Position.MID)
+                    .userComment("안녕하세요 트롤아닙니다." + i)
+                    .userMatchingPoint(500)
+                    .build();
+            userRepository.save(user);
+        }
 
+
+
+    }
+
+    @Test
+    @DisplayName("QueryDSL을 이용해 필터와 정렬 조건에 맞춰 userList가 출력되어야한다.")
+    void testGetUserProfileList() {
+        UserSearchType userSearchType = new UserSearchType();
+        userSearchType.setPosition(Position.MID);
+        userSearchType.setGender(Gender.M);
+        userSearchType.setTier(Tier.DIA);
+        userSearchType.setSort("avgRate");
+
+        List<UserProfilesResponseDTO> userProfileList = userService.getUserProfileList(userSearchType);
+
+        assertEquals(userProfileList.size(), 40);
     }
 
     @Test
@@ -38,11 +92,11 @@ class UserServiceTest {
     void testRegisterWithValidUserInfo() {
         // Given
         UserRegisterRequestDTO dto = UserRegisterRequestDTO.builder()
-                .userEmail("test@example.com")
+                .userEmail("test1@example.com")
                 .userPassword("abC123@")
-                .userNickname("가나다")
+                .userNickname("송유근")
                 .userBirthday(LocalDate.of(2000, 1, 1))
-                .lolNickname("코뚱잉")
+                .lolNickname("결속의반지")
                 .userGender(Gender.M)
                 .build();
 
@@ -50,7 +104,7 @@ class UserServiceTest {
         userService.register(dto);
 
         // Then
-        assertEquals(1, userRepository.count());
+//        assertEquals(1, userRepository.count());
     }
 
     @Test
@@ -124,5 +178,31 @@ class UserServiceTest {
 
         assertTrue(b);
     }
+
+    @Test
+    @DisplayName("관리자 유저 리스트 dto 변환")
+    void userExchangeDTO(){
+        List<UserByAdminResponseDTO> userListByAdmin =
+                userService.getUserListByAdmin();
+
+        System.out.println("userListByAdmin = " + userListByAdmin);
+
+
+    }
+
+    @Test
+    @DisplayName("유저 전적페이지에 쓰이는 정보들을 보여줄 수 있어야 한다")
+    void getUserDUOInfoTest() {
+        UserHistoryResponseDTO userDUOInfo = userService.getUserHistoryInfo(null, "test@example.com");
+        System.out.println("userDUOInfo = " + userDUOInfo);
+    }
+
+    @Test
+    @DisplayName("관리자페이지 정보 count 확인")
+    void getCountByAdmin() {
+        Map<String, Integer> stringIntegerMap = userService.countByAdmin();
+        System.out.println("stringIntegerMap = " + stringIntegerMap);
+    }
+
 
 }

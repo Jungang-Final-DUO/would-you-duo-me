@@ -69,13 +69,14 @@ header {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-
     margin-right: 20px;
+    overflow: hidden;
+}
 
-    background-size: 70px;
-    /* html 에 보여주기 위한 임시 정보 - 본 프로젝트에 합칠 때는 필요없음 */
-    background-image: url('https://i.namu.wiki/i/-BO7m4nlr6HAifi1A7oJrs6EFeP4z4gg7mvRy9sKhdDXnw_e0bKn7wo-0shhcAQuL3kvhs5YSeXuyxaMXDh9vjUx5qjK4ONEmonhqmyKHJ3sCLdgDBQI3SCnSlAn1ir7A37bgicvwlBFqyg-s-ouPw.webp');
-    background-position: top;
+#profile-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 #nickname-wrapper {
@@ -298,6 +299,8 @@ header {
 
     text-align: center;
     line-height: 120px;
+
+    margin-bottom: 40px;
 }
 
 /* fixed-btn-wrapper */
@@ -327,6 +330,10 @@ header {
 
 .fixed-btn > img {
     width: 30px;
+}
+
+#to-top-btn {
+    display: none;
 }
 
 #chatting-btn {

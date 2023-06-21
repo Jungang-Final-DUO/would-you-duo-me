@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+
 <header>
     <h1 id="logo-wrapper">
         <a href="/">
@@ -58,7 +59,7 @@
                 </a>
             </div> <!-- end of sign-in, up page -->
             <!--        로그인 하면 위의 두 버튼 대신 아래의 버튼이 보입니다        -->
-            <c:if test="false">
+            <c:if test="${login != null}">
                 <div class="user-icon-wrapper">
                     <a href="#" id="user-info-btn">
                         <img src="/assets/img/header/my-page.png" alt="마이 페이지 아이콘" class="user-icon">
@@ -66,15 +67,22 @@
 
                     <div id="my-page-modal" class="user-modal">
                         <div id="my-page-header">
-                            <div id="profile-img-wrapper"></div>
-                            <div id="nickname-wrapper">${false}</div>
+                            <div id="profile-img-wrapper">
+                                <c:if test="${login.userProfileImage == null}">
+                                    <img src="/assets/img/header/defaultProfile.jpg" alt="프로필 이미지">
+                                </c:if>
+                                <c:if test="${login.userProfileImage != null}">
+                                    <img src="${login.userProfileImage}" alt="프로필 이미지">
+                                </c:if>
+                            </div>
+                            <div id="nickname-wrapper">${login.userNickname}</div>
                         </div>
                         <div id="user-info-wrapper">
                             <div>
-                                라이엇 계정 : ${false}
+                                라이엇 계정 : ${login.lolNickname}
                             </div>
                             <div>
-                                잔여 포인트 : ${false} point
+                                잔여 포인트 : ${login.userCurrentPoint} point
                             </div>
                         </div>
                         <div id="my-page-btn-wrapper">
@@ -111,7 +119,7 @@
     <div>
         <!--   로그인 안했으면 아래 버튼은 안보입니다  -->
 
-        <c:if test="true">
+        <c:if test="${login == null}">
             <button class="fixed-btn btn modal-btn" id="chatting-btn">
                 <img class=".modal-btn" src="/assets/img/header/chatting.png" alt="채팅 버튼 아이콘">
                 <!--     읽지 않은 채팅 표시   -->

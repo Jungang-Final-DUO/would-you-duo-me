@@ -10,8 +10,7 @@
     <title>WOULD U DUO</title>
     <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">
 
-    <%@ include file="common/static-head.jsp"%>
-    <link rel="stylesheet" href="/assets/css/main.css">
+    <%@ include file="common/static-head.jsp" %>
 
 </head>
 <body>
@@ -92,7 +91,8 @@
     <!--    프로필카드 리스트 영역 -->
     <div id="profile-cards-wrapper">
         <!--        프로필 카드 한 장 -->
-        <div class="duo-profile">
+<%--        가장 바깥 div에 유저아이디 넣기 --%>
+        <div id = "test5" class="duo-profile">
             <img class="duo-tier" src="/assets/img/main/TFT_Regalia_Challenger.png" alt="tier">
             <!--            프로필 카드 좌측 -->
             <div class="profile-left-side">
@@ -1018,8 +1018,6 @@
 
     <%@ include file="common/footer.jsp" %>
 </div>
-<script type="module" src="/assets/js/common/header.js"></script>
-<script src="http://localhost:3000/socket.io/socket.io.js"></script>
-<script src="/assets/js/chatting/main.js"></script>
+
 </body>
 </html>
