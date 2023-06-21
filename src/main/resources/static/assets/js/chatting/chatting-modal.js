@@ -1,18 +1,16 @@
 import {addModalBtnEvent, addModalCloseEvent, modalHandler} from "../common/modal-handler.js";
-import {connectSocket} from "./main.js";
 
 export function getChattingList() {
-    // console.log('chatting-modal.js까지 도달')
     // 추후 session에 회원정보 담기면 경로 수정
     const userId = 'test1';
-    return fetch(`/api/v1/chat/chattings/${userId}`)
+    fetch(`/api/v1/chat/chattings/${userId}`)
         .then(res => res.json())
         .then(result => renderChattingList(result))
 }
 
+// 채팅 클릭했을때 메세지창 열어줘야함
 function makeChatting(chat) {
     const userId = 'test1';
-    // console.log(userAccount);
 
     chat.onclick = () => {
     const userAccount = chat.closest('.duo-profile').id;
@@ -43,8 +41,7 @@ export function makeChattingRoom(){
     );
 }
 
-async function renderChattingList(result) {
-    // console.log('renderChattingList 도달');
+function renderChattingList(result) {
     let chattings = '';
     if (result.length === 0) {
         chattings = document.createElement('li');
@@ -97,20 +94,7 @@ async function renderChattingList(result) {
         addModalCloseEvent();
         toBack();
     }
-
-    return [...document.querySelectorAll('.chat-form')];
-    // connectSocket(socket, chatForm);
-    // return [...document.querySelectorAll('.chatting-card')];
 }
-
-
-// function closeRecentModal($toBack) {
-//     $toBack.onclick = e => {
-//         getChattingList();
-//         const $dialog = e.target.closest('dialog');
-//         $dialog.close();
-//     }
-// }
 
 export function toBack() {
 
@@ -121,17 +105,6 @@ export function toBack() {
     }
     );
 }
-
-// function renderRecentMessage($dialog){
-//     const chattingNo = $dialog.closest('.chatting-card').id;
-//     let recentMsg = chattingNo.querySelector('.chatting-current-message').textContent;
-//
-//     fetch(`/api/v1/chat/messages/recent/${chattingNo}`)
-//         .then(res => res.json())
-//         .then(result => {
-//             recentMsg = result;
-//         })
-// }
 
 export function renderUnreadMessages(chattingNo){
     const $chatting = document.getElementById(chattingNo);
@@ -151,10 +124,9 @@ export function openChattingList(){
     const $chatBtn = document.getElementById('chatting-btn');
     $chatBtn.addEventListener('click', e => {
         //헤더 채팅 버튼 클릭하면 채팅 목록 렌더링
-        const $chatForm =  getChattingList();
+        getChattingList();
         // 채팅 대화 주고받기
-        connectSocket($chatForm);
+        // connectSocket();
     });
 
-    // console.log('openChattingList까지 도달');
 }

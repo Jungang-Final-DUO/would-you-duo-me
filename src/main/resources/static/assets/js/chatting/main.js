@@ -1,9 +1,9 @@
 import {renderAndSaveMessage, scrollDown} from "./messageRendering.js";
 
-export function connectSocket($chatForm) {
+export function connectSocket() {
     const socket = io("http://localhost:3000");
+
     console.log('connectSocket 도달');
-    console.log($chatForm);
     const username = 'test1';
 
     socket.on('message', message => {
@@ -14,24 +14,21 @@ export function connectSocket($chatForm) {
         scrollDown();
     });
 
-    // const $chatForm = document.querySelectorAll('.chat-form');
-    // console.log($chatForm);
-    $chatForm.forEach(cf => {
-        cf.addEventListener('submit', e => {
-            e.preventDefault();
-            console.log('submit 이벤트 진입');
-            console.log(e.target);
+    const $chatCard = document.querySelector('.chatting-modal-container');
+    $chatCard.addEventListener('submit', e => {
+        e.preventDefault();
+        console.log('submit 이벤트 진입');
+        console.log(e.target);
 
-            //Get message text and room
-            const msg = e.target.querySelector('.msg').value;
-            const room = e.target.closest('.chatting-card').id;
+        //Get message text and room
+        const msg = e.target.querySelector('.msg').value;
+        const room = e.target.closest('.chatting-card').id;
 
-            //Emit message to server
-            socket.emit('chatMessage', {username, room, msg});
+        //Emit message to server
+        socket.emit('chatMessage', {username, room, msg});
 
-            //clear message
-            e.target.querySelector('.msg').value = '';
-        });
+        //clear message
+        e.target.querySelector('.msg').value = '';
     });
 
 }
