@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <div id="userinfo_content">
-                        <div id="user_name">${udByAdmin.userAccount}</div>
+                        <div id="user_name">${udByAdmin.userNickname}</div>
                         <div id="detail_info">
                             <ul id="left_info">
                                 <ul class="first_info_ul">
@@ -137,7 +137,7 @@
             },
             body: JSON.stringify({
                 userAddPoint : add,
-                userNickname : "asd10"
+                userNickname : user.innerText
                 })
             })
             .then(response => {return response.json()})
@@ -154,6 +154,18 @@
 
         //Ban 클릭 변수
         const banClick = document.getElementById('is_ben');
+        
+        banClick.onclick = e =>{
+
+           
+
+            fetch('http://localhost:8282/user/ban?userNickname=asd10&userIsBanned=1')
+                .then(res=>res.json())
+                .then(result=>{
+                    
+                    banClick.style.backgroundColor = 'red';
+                })
+            }
         
         fetch
 

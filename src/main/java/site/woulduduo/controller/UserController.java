@@ -127,7 +127,9 @@ public class UserController {
         dto.setUserIsBanned(userIsBanned);
 
         log.info("{}-----------------------", dto);
-        userService.changeBanStatus(dto);
+        boolean b = userService.changeBanStatus(dto);
+        System.out.println("b111111 = " + b);
+        log.info("{}123123",b);
         return "redirect:/admin/admin_user";
     }
 //

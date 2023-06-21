@@ -333,10 +333,14 @@ public class UserService {
             if (userIsBanned1 == true) {
                 byUserNickName.setUserIsBanned(false);
                 User save = userRepository.save(byUserNickName);
+                boolean userIsBanned2 = save.isUserIsBanned();
+                System.out.println("userIsBanned2 = " + userIsBanned2);
                 return true;
             }
             byUserNickName.setUserIsBanned(true);
             User save = userRepository.save(byUserNickName);
+            boolean userIsBanned2 = save.isUserIsBanned();
+            System.out.println("userIsBanned2 = " + userIsBanned2);
             return true;
         }
         //프론트에서 ban 클릭이 되지 않은것
