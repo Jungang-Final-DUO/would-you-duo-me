@@ -8,7 +8,7 @@ export async function renderRateModal(matchingNo, userNickname) {
                                                    alt="profile"></div>
                 <div id="nickname-rate">
                     <div id="user-nickname">${userNickname}</div>
-                    <div id="give-rate">
+                    <div id="give-rate" data-rate="5">
                         <img id="rate1" class="reviewRate rate-image" src="/assets/img/chattingModal/rate-filled.png"
                              alt="rate">
                         <img id="rate2" class="reviewRate rate-image" src="/assets/img/chattingModal/rate-filled.png"
@@ -30,6 +30,28 @@ export async function renderRateModal(matchingNo, userNickname) {
             </div>
         </div>
     </div>`;
+
+    document.getElementById('send-review').onclick = async e => {
+        const res = await fetch("/api/v1/matchings/reviews",
+            {
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    matchingNo: matchingNo,
+                    reviewContent: document.getElementById('reviewContent')
+                        .innerText,
+                    reviewRate: +document.getElementById('give-rate').dataset.rate
+                })
+            });
+        
+        if (res.status === 200) {
+            alert('리뷰 등록에 성공했습니다!');
+        } else {
+            alert(`리뷰 등록에 실패했습니다. 오류 메세지 : ${await res.text()}`);
+        }
+    }
 
     return $rateModal;
 }

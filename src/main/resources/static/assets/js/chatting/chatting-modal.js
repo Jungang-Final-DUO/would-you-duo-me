@@ -1,4 +1,5 @@
 import {addModalBtnEvent, addModalCloseEvent, modalHandler} from "../common/modal-handler.js";
+import {renderRateModal} from "../review/write-rate.js";
 
 export function getChattingList() {
     // 추후 session에 회원정보 담기면 경로 수정
@@ -13,8 +14,8 @@ function makeChatting(chat) {
     const userId = 'test1';
 
     chat.onclick = () => {
-    const userAccount = chat.closest('.duo-profile').id;
-    console.log('makeChatting 도달');
+        const userAccount = chat.closest('.duo-profile').id;
+        console.log('makeChatting 도달');
         const requestInfo = {
             method: 'POST',
             headers: {
@@ -34,7 +35,7 @@ function makeChatting(chat) {
 }
 
 
-export function makeChattingRoom(){
+export function makeChattingRoom() {
     console.log('makeChattingRoom 도달');
     [...document.querySelectorAll('.chatting-icon')].forEach(
         chat => makeChatting(chat)
@@ -42,11 +43,12 @@ export function makeChattingRoom(){
 }
 
 function renderChattingList(result) {
-    let chattings = '';
+    document.querySelector('.chatting-modal-container').innerHTML = '';
+
+    let $chattings = document.createElement('li');
     if (result.length === 0) {
-        chattings = document.createElement('li');
-        chattings.id = 'empty-chatting-list';
-        chattings.innerHTML = '아직 채팅 내역이 없어요.<br>다른 듀오 회원에게 말을 걸어보세요!';
+        $chattings.id = 'empty-chatting-list';
+        $chattings.innerHTML = '아직 채팅 내역이 없어요.<br>다른 듀오 회원에게 말을 걸어보세요!';
 
     } else {
         for (let i = 0; i < result.length; i++) {
@@ -57,26 +59,37 @@ function renderChattingList(result) {
                 userNickname,
                 messageContent,
                 messageUnreadCount,
-                matchingStatus
+                matchingStatus,
+                matchingNo,
             } = result[i];
 
-            let rightBtn = null;
+            let $rightBtn = document.createElement('button');
+            $rightBtn.classList.add('gameover-btn');
+
             switch (matchingStatus) {
                 case 'REQUEST':
-                    rightBtn = `<button class="gameover-btn" disabled>수락 대기중</button>`;
+                    $rightBtn.disabled = true;
+                    $rightBtn.textContent = `수락 대기중`;
                     break;
                 case 'CONFIRM':
-                    rightBtn = `<button class="gameover-btn"><img class="chatting-gameover-img" src="/assets/img/chattingModal/checkmark.png" alt="게임완료이미지">게임 완료</button>`;
+                    $rightBtn.textContent = `요청 수락`;
                     break;
                 case 'REJECT':
-                    rightBtn = `<button class="gameover-btn"><img class="chatting-gameover-img" src="/assets/img/chattingModal/checkmark.png" alt="게임완료이미지">게임 완료</button>`
+                    $rightBtn.textContent = `요청 거절됨`;
                     break;
                 case 'DONE':
-                    rightBtn = `<button class="gameover-btn"><img class="chatting-gameover-img" src="/assets/img/chattingModal/checkmark.png" alt="게임완료이미지">게임 완료</button>`;
+                    $rightBtn.innerHTML = `<img class="chatting-gameover-img" src="/assets/img/chattingModal/checkmark.png" alt="게임완료이미지">게임 완료`;
+                    $rightBtn.onclick = async e => {
+                        const $rateModal = await renderRateModal(matchingNo, userNickname);
+                        document.body.appendChild($rateModal);
+                        $rateModal.show();
+                    }
                     break;
             }
 
-            chattings += `<li id = "${chattingNo}" class="chatting-card">
+            $chattings.classList.add('chatting-card');
+            $chattings.id = chattingNo;
+            $chattings.innerHTML = `
                 <div class = "chat-card">
                 <div class="chatting-card-inner modal-btn">
                     <img src="/assets/img/chattingModal/woogi.jpg" alt="프로필 이미지" class="chatting-profile-img">
@@ -109,10 +122,11 @@ function renderChattingList(result) {
         </div>
         </div></dialog>
         </div>
-        </li>`;
+        `;
+
+            document.querySelector('.chatting-modal-container').appendChild($chattings);
 
         }
-        document.querySelector('.chatting-modal-container').innerHTML = chattings;
         addModalBtnEvent();
         addModalCloseEvent();
         toBack();
@@ -125,7 +139,7 @@ export function toBack() {
         $toBack => $toBack.onclick = e => {
             e.target.closest('.chatting-modal-dialog').close();
             document.getElementById('chatting-btn').click();
-    }
+        }
     );
 }
 
