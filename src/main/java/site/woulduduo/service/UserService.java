@@ -193,7 +193,7 @@ public class UserService {
 
     //유저리스트 DTO변환(Admin) + 페이징
     public ListResponseDTO<UserByAdminResponseDTO,User> getUserListByAdmin(PageDTO dto) {
-
+        System.out.println();
         Pageable pageable = PageRequest.of(
                 dto.getPage()-1,
                 dto.getSize(),
@@ -202,12 +202,19 @@ public class UserService {
         //전체불러오기
         Page<User> all = userRepository.findAll(pageable);
 
+        System.out.println(all);
 
         List<UserByAdminResponseDTO> collect = all.stream()
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
 //
-        int i=1;
+        //1         10
+//        page - 1 * size + 1
+        // 1 -> 1
+        // 2 -> 11
+        // 3 -> 21
+        // 4 -> 31
+        int i= (dto.getPage() - 1) * dto.getSize() + 1 ;
         for (UserByAdminResponseDTO user : collect) {
             user.setRowNum(i);
             i++;
@@ -275,55 +282,74 @@ public class UserService {
     }
 
 
-//포인트 증가
-    public boolean increaseUserPoint(UserModifyRequestDTO dto){
+    //포인트 증가
+    public boolean increaseUserPoint(UserModifyRequestDTO dto) {
+        User byUserNickName = userRepository.findByUserNickName(dto.getUserNickname());
+
+        System.out.println("userByNickName123 = " + byUserNickName);
         //지급포인트
         int userAddPoint = dto.getUserAddPoint();
-        //현재포인트
-        int userCurrentPoint = dto.getUserCurrentPoint();
-        String currentPoint = String.valueOf(userCurrentPoint);
-        //더한값
-        int total = userCurrentPoint + userAddPoint;
+        System.out.println("userAddPoint = " + userAddPoint);
+        String addPoint = String.valueOf(userAddPoint);
 
         //-99999 ~ +99999 가 맞는지 확인
-        boolean matches = currentPoint.matches("-?[0-9]{1,5}");
+        boolean matches = addPoint.matches("-?[0-9]{1,5}");
+        System.out.println("matches = " + matches);
+        //현재포인트
+        int userCurrentPoint = byUserNickName.getUserCurrentPoint();
+        System.out.println("userCurrentPoint = " + userCurrentPoint);
+        //더한값
+        int total = userCurrentPoint + userAddPoint;
+        System.out.println("total = " + total);
+
+
 
         //현재포인트와 total이 같지 않다면 저장
-        if(userCurrentPoint!=total){
-            //
-            if(matches!=false) {
-                User userByNickName = findUserByNickName(dto);
-                userByNickName.setUserCurrentPoint(total);
-                User save = userRepository.save(userByNickName);
+        if (userCurrentPoint != total) {
+
+            if (matches != false) {
+                byUserNickName.setUserCurrentPoint(total);
+                User save = userRepository.save(byUserNickName);
                 System.out.println("save = " + save);
                 return true;
             }
-        }return false;
+            return false;
+        }
+        return false;
 
     }
 
     //밴 boolean
     public boolean changeBanStatus(UserModifyRequestDTO dto){
         int userIsBanned = dto.getUserIsBanned();
-        User userByNickName = findUserByNickName(dto);
+        System.out.println("userIsBanned = " + userIsBanned);
+        User byUserNickName = userRepository.findByUserNickName(dto.getUserNickname());
+        boolean userIsBanned1 = byUserNickName.isUserIsBanned();
+        System.out.println("userIsBanned1 = " + userIsBanned1);
 
-        //userIsBanned가 1이면 참
+        //클릭이 동작된것 front 에서 1을 보내줄것
         if(userIsBanned==1) {
-            userByNickName.setUserIsBanned(true);
-            User save = userRepository.save(userByNickName);
+            //userIsBanned가 1이면 참
+            if (userIsBanned1 == true) {
+                byUserNickName.setUserIsBanned(false);
+                User save = userRepository.save(byUserNickName);
+                return true;
+            }
+            byUserNickName.setUserIsBanned(true);
+            User save = userRepository.save(byUserNickName);
             return true;
-        }userByNickName.setUserIsBanned(false);
-        User save = userRepository.save(userByNickName);
+        }
+        //프론트에서 ban 클릭이 되지 않은것
         return false;
 
     }
 
     //닉네임으로 user 찾기
     public User findUserByNickName(UserModifyRequestDTO dto){
-        String userNickname = dto.getUserNickname();
-        User userByNickName = userRepository.findByNickName(userNickname);
+        User byUserNickName = userRepository.findByUserNickName(dto.getUserNickname());
 
-        return userByNickName;
+
+        return byUserNickName;
     }
 
 //    public boolean changeUserPoint(UserModifyRequestDTO dto){

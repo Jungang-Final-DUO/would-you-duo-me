@@ -17,4 +17,7 @@ public class AdminSearchType extends PageDTO{
 
     }
 
+//    public AdminSearchType(int page, String keyword, int size) {
+//        super(page, keyword, size);
+//    }
 }

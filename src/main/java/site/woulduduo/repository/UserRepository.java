@@ -21,7 +21,7 @@ public interface UserRepository extends
 
     //nickname으로 User 객체 찾기
     @Query(value = "SELECT * FROM duo_user WHERE user_nickname = :userNickName",nativeQuery = true)
-    User findByNickName(String userNickName);
+    User findByUserNickName(String userNickName);
     //가입수
     long countByUserAccount(String userAccount);
 

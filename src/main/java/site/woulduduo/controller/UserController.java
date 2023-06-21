@@ -5,12 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
+import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.AdminPageResponseDTO;
@@ -79,8 +78,11 @@ public class UserController {
 
     //관리자 페이지 리스트 가져오기
     @GetMapping("/api/v1/users/admin")
+    @ResponseBody
     public ResponseEntity<?> getUserListByAdmin(
-            @PathVariable PageDTO dto){
+            @RequestBody PageDTO dto){
+        System.out.println("dto = " + dto);
+
 
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
 
@@ -97,7 +99,8 @@ public class UserController {
 
     @GetMapping("/user/detail/admin")
     //관리자 페이지 자세히 보기
-    public String showDetailByAdmin(/*HttpSession session*/Model model, String userAccount){
+    public String showDetailByAdmin(HttpSession session,Model model, String userAccount){
+
         UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userAccount);
 
         model.addAttribute("udByAdmin",userDetailByAdmin);
@@ -105,11 +108,28 @@ public class UserController {
 
     }
 
-//    @GetMapping("/user/ban")
-//    public String changeBanStatus(HttpSession session, String userAccount){
-//
-//        return "redirect";
-//    }
+    @PostMapping("/user/point")
+    @ResponseBody
+    public ResponseEntity<?> changePointStatus(
+            HttpSession session, @RequestBody UserModifyRequestDTO dto){
+        log.info("{}-----------------------",dto);
+        boolean b = userService.increaseUserPoint(dto);
+        log.info("{}---123123",b);
+        return ResponseEntity
+                .ok()
+                .body(b);
+    }
+
+    @GetMapping("/user/ban")
+    public String changeBanStatus(HttpSession session, @RequestParam("userNickname") String userNickname, @RequestParam("userIsBanned") int userIsBanned) {
+        UserModifyRequestDTO dto = new UserModifyRequestDTO();
+        dto.setUserNickname(userNickname);
+        dto.setUserIsBanned(userIsBanned);
+
+        log.info("{}-----------------------", dto);
+        userService.changeBanStatus(dto);
+        return "redirect:/admin/admin_user";
+    }
 //
 //    @GetMapping("/user/duo")
 //    public String showDetailUser(HttpSession session, String userAccount){

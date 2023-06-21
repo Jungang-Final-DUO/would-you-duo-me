@@ -12,7 +12,7 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 @Builder
-public class ListResponseDTO<T,U> {
+public class ListResponseDTO<T, U> {
 
     private int count;
 

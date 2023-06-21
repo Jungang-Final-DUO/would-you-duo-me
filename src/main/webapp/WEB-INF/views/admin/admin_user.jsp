@@ -11,20 +11,21 @@
 </head>
 <body>
     <%@ include file="../common/header.jsp" %>
-
+    
     <div id="main-wrapper">
 
         <div class="side_container">
             <div class="direction_img"><img src="/assets/img/admin/왼쪽방향.png" alt="left"></div>
         </div>
-
-
-
-
-        <form action="/user/duo" method="Get" class="center_container">
+    
+    
+    
+    
+    
+        <div class="center_container">
             <div id="admin_page"><a href="/api/v1/users/admin">관리자페이지</a></div>
             <div id="main_controller">
-                <div id="is_ben">BAN</div>
+                <div id="is_ben" name="userIsBanned">BAN</div>
                 <div id="userinfo">
                     <div id="user_pic_container">
                         <button class="profile cursor" >
@@ -43,7 +44,7 @@
                         </div>
                     </div>
                     <div id="userinfo_content">
-                        <div id="user_name"><p>${udByAdmin.userAccount}</p></div>
+                        <div id="user_name">${udByAdmin.userAccount}</div>
                         <div id="detail_info">
                             <ul id="left_info">
                                 <ul class="first_info_ul">
@@ -59,18 +60,21 @@
                                     <li class="third_info_li">${udByAdmin.boardCount} 개</li>
                                     <li class="forth_info_li">${udByAdmin.replyCount} 개</li>
                                     <li class="fifth_info_li">${udByAdmin.followCount} 명</li>
-                                </ul>   
+                                </ul>
                             </ul>
                             <ul id="right_info">
                                 <ul class="first_info_ul">
                                     <li class="first_info_li">현재 포인트</li>
-                                    <li class="second_info_li">지급 포인트</li>
+                                    <li class="second_info_li">지급 포인트</li>        
                                     <li class="third_info_li">경고</li>
                                 </ul>
                                 <ul class="second_info_ul">
-                                    <li class="first_info_li">${1} point</li>
-                                    <li class="second_info_li"><input type="text" name="userCurrentPoint" id="give_point">point</li>
-                                    <div> 
+                                    <li class="first_info_li" id="userCurrentPoint" name="userCurrentPoint">1</li>
+                                    <div id="div_contain">
+                                    <li class="second_info_li" id="secound_info_li"><input type="text" name="userAddPoint" id="give_point" onchange='addPoint()'></li>
+                                    <button class="payment" id="payment">지급</button>
+                                    </div>
+                                    <div id="img_li">
                                         <a><img src="/assets/img/admin/경고W.png" alt="warn"></a>
                                         <a class="margin"><img src="/assets/img/admin/경고W.png" alt="warn"></a>
                                         <a class="margin"><img src="/assets/img/admin/경고W.png" alt="warn"></a>
@@ -79,25 +83,82 @@
                                     </div>
                                 </ul>
                             </ul>
-                            <button class="payment">지급</button>
-
+                            <!-- <button class="payment" id="payment">지급</button> -->
+    
                         </div>
-
+    
                     </div>
-
+    
                 </div>
-
+    
             </div>
-
-
-        </form>
-
-
-
+    
+    
+        </div>
+    
+    
         <div class="side_container">
             <div class="direction_img"><img src="/assets/img/admin/오른쪽방향.png" alt="left"></div>
-
+    
         </div>
     </div>
+
+    <script>
+        // 현재 포인트
+        const userCurrentPoint = document.getElementById('userCurrentPoint');
+      
+        //현재포인트 int 변환
+        const point = parseInt(userCurrentPoint.innerText);
+        // const add = parseInt(AddPoint.value);
+
+        //추가지급 입력포인트 int변환
+        function addPoint() {
+            const givePointInput = document.getElementById('give_point');
+            add = parseInt(givePointInput.value);
+
+        }
+
+        // 포인트 지급 버튼
+        const payment = document.getElementById('payment');
+        // 해당 유저 닉네임
+        const user = document.getElementById('user_name');
+
+        // 포인트 버튼 클릭 시 현재 포인트에 추가 포인트 더하기
+        payment.onclick = e => {
+
+            const total = point + add;
+
+
+            //포인트 정보 전송
+            fetch('http://localhost:8282/user/point',{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userAddPoint : add,
+                userNickname : "asd10"
+                })
+            })
+            .then(response => {return response.json()})
+            .then(res =>{
+                console.log('res  :  -' + res);
+                if(res === true){
+                    document.getElementById('userCurrentPoint').innerText =total;
+                   
+                }
+                
+            })
+        };
+
+
+        //Ban 클릭 변수
+        const banClick = document.getElementById('is_ben');
+        
+        fetch
+
+      
+
+    </script>
 </body>
 </html>
