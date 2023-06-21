@@ -1,4 +1,5 @@
 import {addModalBtnEvent, addModalCloseEvent, modalHandler} from "../common/modal-handler.js";
+import {connectSocket} from "./main.js";
 
 export function getChattingList() {
     // console.log('chatting-modal.js까지 도달')
@@ -103,18 +104,21 @@ async function renderChattingList(result) {
 }
 
 
-function closeRecentModal($toBack) {
-    $toBack.onclick = e => {
-        getChattingList();
-        const $dialog = e.target.closest('dialog');
-        $dialog.close();
-    }
-}
+// function closeRecentModal($toBack) {
+//     $toBack.onclick = e => {
+//         getChattingList();
+//         const $dialog = e.target.closest('dialog');
+//         $dialog.close();
+//     }
+// }
 
 export function toBack() {
 
     [...document.querySelectorAll('.toBack')].forEach(
-        $toBack => closeRecentModal($toBack)
+        $toBack => $toBack.onclick = e => {
+            e.target.closest('.chatting-modal-dialog').close();
+            document.getElementById('chatting-btn').click();
+    }
     );
 }
 
@@ -146,7 +150,10 @@ export function renderUnreadMessages(chattingNo){
 export function openChattingList(){
     const $chatBtn = document.getElementById('chatting-btn');
     $chatBtn.addEventListener('click', e => {
-         getChattingList();
+        //헤더 채팅 버튼 클릭하면 채팅 목록 렌더링
+        const $chatForm =  getChattingList();
+        // 채팅 대화 주고받기
+        connectSocket($chatForm);
     });
 
     // console.log('openChattingList까지 도달');

@@ -10,9 +10,7 @@ import {connectSocket} from "../chatting/main.js";
     // const chatForm = await getChattingList();
 
     //헤더 채팅 버튼 클릭하면 채팅 목록 렌더링
-    const $chatForm = await getChattingList();
-    // 채팅 대화 주고받기
-    connectSocket($chatForm);
+    openChattingList();
 
     //채팅 생성하기
     makeChattingRoom();
