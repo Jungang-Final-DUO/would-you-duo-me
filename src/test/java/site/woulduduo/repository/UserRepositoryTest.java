@@ -1,5 +1,6 @@
 package site.woulduduo.repository;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import site.woulduduo.dto.response.user.UsersByAdminResponseDTO;
@@ -12,6 +13,10 @@ class UserRepositoryTest {
     UserRepository userRepository;
 
 
+    @Test
+    void tttTest() {
+        System.out.println("zzzz");
+    }
 
 
 }
