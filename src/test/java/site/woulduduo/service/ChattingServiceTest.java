@@ -38,8 +38,8 @@ class ChattingServiceTest {
     @DisplayName("채팅 데이터 1개 생성")
     void makeChattingTest(){
 
-        String userAccount = "user1";
-        String me = "user3";
+        String userAccount = "test1";
+        String me = "test3";
 
         long chattingNo = chattingService.makeChatting(me, userAccount);
 

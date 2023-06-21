@@ -35,6 +35,7 @@ public class Chatting implements Comparable<Chatting> {
 
     @Builder.Default
     @OneToMany(mappedBy = "chatting", fetch = FetchType.LAZY)
+    @OrderBy("matchingNo desc")
     private List<Matching> matchingList = new ArrayList<>();
 
     @Builder.Default

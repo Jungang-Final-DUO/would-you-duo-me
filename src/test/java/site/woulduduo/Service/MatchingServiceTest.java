@@ -38,7 +38,7 @@ class MatchingServiceTest {
     @Test
     @DisplayName("매칭을 신청하면 매칭 번호를 리턴받는다")
     void makeMatchingTest() {
-        MatchingMakeRequestDTO dto = MatchingMakeRequestDTO.builder().chattingNo(1L).build();
+        MatchingMakeRequestDTO dto = MatchingMakeRequestDTO.builder().chattingNo(102L).build();
 
         long matchingNo = matchingService.makeMatching(dto);
 
