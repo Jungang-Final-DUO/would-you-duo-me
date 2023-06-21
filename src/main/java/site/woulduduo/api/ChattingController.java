@@ -34,7 +34,7 @@ public class ChattingController {
 //            HttpSession session
             @PathVariable String userId
             ){
-        User user = userRepository.findByUserAccount(userId);
+        User user = userRepository.findById(userId).orElseThrow();
         List<ChattingListResponseDTO> chattingList = chattingService.getChattingList(user);
 
         return ResponseEntity.ok().body(chattingList);
@@ -74,7 +74,7 @@ public class ChattingController {
             @PathVariable String userId
             ,@PathVariable long chattingNo
     ){
-        User user = userRepository.findByUserAccount(userId);
+        User user = userRepository.findById(userId).orElseThrow();
         Chatting chatting = chattingService.findByChattingNo(chattingNo);
         int unreadMessages = chattingService.countUnreadMessages(chatting, user);
 
@@ -91,12 +91,15 @@ public class ChattingController {
         return ResponseEntity.ok().body(recentMessage);
     }
 
+//    채팅 신청하기
     @PostMapping("/chattings/{userAccount}")
     public ResponseEntity<?> makeChatting(
             //            HttpSession session
-            String userId
+            @RequestBody String userId
             ,@PathVariable String userAccount
     ){
+        System.out.println("userId = " + userId);
+        System.out.println("userAccount" + userAccount);
         long chattingNo = chattingService.makeChatting(userId, userAccount);
         return ResponseEntity.ok().body(chattingNo);
     }

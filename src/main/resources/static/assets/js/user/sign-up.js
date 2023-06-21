@@ -327,7 +327,7 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
         });
     });
 
-// 프로필 추가 영역 클릭 이벤트
+    // 프로필 추가 영역 클릭 이벤트
     profileSection.addEventListener('click', e => {
         const target = e.target;
         if (target.classList.contains('img-wrapper') || target.classList.contains('btn')) {
