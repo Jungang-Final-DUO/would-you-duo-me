@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDetailByAdminResponseDTO {
-    private String userAccount;
+    private String userNickname;
     private long boardCount;
     private long replyCount;
     private long reportCount;
@@ -23,7 +23,7 @@ public class UserDetailByAdminResponseDTO {
     private boolean isBanned;
 
     public UserDetailByAdminResponseDTO(User user){
-        this.userAccount= user.getUserAccount();
+        this.userNickname= user.getUserNickname();
         this.boardCount=user.getBoardList().size();
         this.replyCount=user.getReplyList().size();
         this.reportCount=user.getAccuseList().size();
