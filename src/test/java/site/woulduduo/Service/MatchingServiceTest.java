@@ -7,6 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import site.woulduduo.dto.request.chatting.MatchingFixRequestDTO;
 import site.woulduduo.dto.request.chatting.MatchingMakeRequestDTO;
+import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
+import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.user.UserReviewResponseDTO;
 import site.woulduduo.entity.Matching;
 import site.woulduduo.enumeration.MatchingStatus;
 import site.woulduduo.repository.ChattingRepository;
@@ -16,6 +19,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
@@ -34,7 +38,7 @@ class MatchingServiceTest {
     @Test
     @DisplayName("매칭을 신청하면 매칭 번호를 리턴받는다")
     void makeMatchingTest() {
-        MatchingMakeRequestDTO dto = MatchingMakeRequestDTO.builder().chattingNo(2L).build();
+        MatchingMakeRequestDTO dto = MatchingMakeRequestDTO.builder().chattingNo(1L).build();
 
         long matchingNo = matchingService.makeMatching(dto);
 
@@ -64,6 +68,74 @@ class MatchingServiceTest {
         boolean flag = matchingService.fixSchedule(dto);
         Matching rejected = matchingRepository.findByMatchingNo(dto.getMatchingNo());
         assertEquals(MatchingStatus.CONFIRM, rejected.getMatchingStatus());
+    }
+
+    @Test
+    @DisplayName("user3 가 리뷰를 쓰면 잘 쓰여야 한다.")
+    void writeReviewTest() {
+
+        ReviewWriteRequestDTO dto = new ReviewWriteRequestDTO();
+        dto.setMatchingNo(2L);
+        dto.setReviewRate(5);
+        dto.setReviewContent("너무 재밌었어요~ 다음에도 같이 할게요");
+
+        matchingService.writeReview(
+                "user3",
+                dto
+        );
+
+    }
+
+    @Test
+    @DisplayName("user1 가 리뷰를 쓰면 런타임 오류가 발생해야 한다.")
+    @Rollback
+    void writeReviewTest2() {
+
+        ReviewWriteRequestDTO dto = new ReviewWriteRequestDTO();
+        dto.setMatchingNo(1L);
+        dto.setReviewRate(5);
+        dto.setReviewContent("너무 재밌었어요~ 다음에도 같이 할게요");
+
+        assertThrows(RuntimeException.class, () -> {
+            matchingService.writeReview(
+                    "user1",
+                    dto
+            );
+        });
+
+    }
+
+    @Test
+    @DisplayName("user1이 받은 모든 리뷰를 리턴하면 길이가 1이어야 한다")
+    void getWrittenReviewTest() {
+        ListResponseDTO<UserReviewResponseDTO, Matching> gottenReview = matchingService.getGottenReview("user1", 1);
+
+        assertEquals(1, gottenReview.getList().size());
+    }
+
+    @Test
+    @DisplayName("test1@example.com이 받은 모든 채팅에 대해 매칭을 생성해야 한다.")
+    void makeBulkMatchingTest() {
+        for (int i = 3; i < 102; i++) {
+            MatchingMakeRequestDTO dto = MatchingMakeRequestDTO.builder()
+                    .chattingNo(i)
+                    .build();
+
+            matchingService.makeMatching(dto);
+        }
+
+    }
+
+    @Test
+    @DisplayName("test1@example.com이 받은 모든 매칭에 대해 리뷰를 생성한다")
+    void writeBulkReviewTest() {
+        for (long i = 3; i < 102; i++) {
+            ReviewWriteRequestDTO dto = new ReviewWriteRequestDTO();
+            dto.setMatchingNo(i);
+            dto.setReviewRate((int) (Math.random() * 5 + 1));
+            dto.setReviewContent("리뷰내용" + i);
+            matchingService.writeReview("user" + (i - 2), dto);
+        }
     }
 
 }

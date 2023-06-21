@@ -1,7 +1,7 @@
 package site.woulduduo.dto.request.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 import site.woulduduo.enumeration.Gender;
 
 import javax.validation.constraints.*;
@@ -49,6 +49,11 @@ public class UserRegisterRequestDTO {
 
     @NotNull(message = "성별은 필수 입력값입니다.")
     private Gender userGender;
+
+    private MultipartFile[] profileImages = new MultipartFile[0];
+
+    private String[] profileImagePaths;
+
 
 
     // 생일 입력 방식을 (yyyy-mm-dd -> yyyy.mm.dd)로 바꾸는 메서드

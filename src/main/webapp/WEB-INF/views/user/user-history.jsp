@@ -192,7 +192,7 @@
                                 <div class="review-comment">${review.matchingReviewContent}</div>
                             </div>
                             <div class="review-rate-wrapper">
-                                <c:forEach var="i" begin="0" end="${review.matchingReviewRate}" step="1">
+                                <c:forEach var="i" begin="1" end="${review.matchingReviewRate}" step="1">
                                     <img src="/assets/img/main/star.png" alt="별점">
                                 </c:forEach>
                             </div>

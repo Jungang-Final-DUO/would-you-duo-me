@@ -45,14 +45,15 @@ public class EmailService {
 
     // 메일 양식 작성
     public MimeMessage createEmailForm(String email) throws MessagingException, UnsupportedEncodingException {
+        // 코드를 생성합니다.
         createCode();
-        String setFrom = "testtest12@gmail.com";
-        String toEmail = email;
-        String title = "Duo해 Duo 인증번호 테스트";
+        String setFrom = "testtest12@gmail.com";    // 보내는 사람
+        String toEmail = email;     // 받는 사람 (값 받아옴)
+        String title = "Duo해 Duo 인증번호 테스트"; // 메일 제목
 
         MimeMessage message = emailSender.createMimeMessage();
         message.addRecipients(MimeMessage.RecipientType.TO, toEmail);
-        message.setSubject(title);
+        message.setSubject(title); // 제목 설정
 
         // 메일 내용
         String msgOfEmail="";
