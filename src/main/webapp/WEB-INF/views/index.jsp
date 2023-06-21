@@ -148,6 +148,9 @@
 </div>
 
 <script>
+
+import {getChampionImg} from "/assets/js/common/get-champion-img.js";
+
 // 현재까지 렌더링된 페이지
 let page = 1;
 // 프로필카드 불러오는 URL
@@ -242,6 +245,7 @@ function getProfileCardList() {
         console.log(resResult);
         for (let rep of resResult) {
             const {avgRate, followed, mostChampList, profileImage, tier, userAccount, userComment, userFacebook, userGender, userInstagram, userMatchingPoint, userNickname, userPosition, userTwitter} = rep;
+            
             profileCardTag += <div id = "test4" class="duo-profile">
                                     <img class="duo-tier" src="/assets/img/main/TFT_Regalia_Challenger.png" alt="tier">
                                     <!--            프로필 카드 좌측 -->
