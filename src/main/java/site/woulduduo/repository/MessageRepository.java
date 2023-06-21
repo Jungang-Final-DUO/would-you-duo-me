@@ -16,4 +16,6 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findByChatting(Chatting chatting);
 
     int countByChattingAndUserIsNotAndMessageIsRead(Chatting chatting, User user, boolean flag);
+
+    List<Message> findByChattingAndUserIsNot(Chatting chatting, User user);
 }
