@@ -28,4 +28,6 @@ import {messageRender} from "../chatting/messageRendering.js";
 
     // 위로가기 버튼 이벤트
     toTopBtnHandler();
+
+
 })();

@@ -5,10 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.WebUtils;
+import site.woulduduo.dto.request.login.LoginRequestDTO;
 import site.woulduduo.dto.request.page.AdminSearchType;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.user.*;
 import site.woulduduo.dto.riot.LeagueV4DTO;
 import site.woulduduo.dto.riot.MatchV5DTO;
@@ -18,16 +21,22 @@ import site.woulduduo.entity.Board;
 import site.woulduduo.entity.User;
 import site.woulduduo.entity.UserProfile;
 import site.woulduduo.enumeration.Gender;
+import site.woulduduo.enumeration.LoginResult;
 import site.woulduduo.enumeration.Tier;
 import site.woulduduo.exception.NoRankException;
 import site.woulduduo.repository.*;
+import site.woulduduo.util.LoginUtil;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
+import static site.woulduduo.enumeration.LoginResult.*;
 
 @Service
 @Slf4j
@@ -67,7 +76,6 @@ public class UserService {
         }
 
         // 회원 정보 저장
-
         User user = User.builder()
                 .userAccount(dto.getUserEmail())
                 .userNickname(dto.getUserNickname())
@@ -88,13 +96,16 @@ public class UserService {
         String[] profileImagePaths = dto.getProfileImagePaths();
         if (profileImagePaths != null) {
             for (String imagePath : profileImagePaths) {
-                UserProfile userProfile = UserProfile.builder()
-                        .user(user)
-                        .profileImage(imagePath)
-                        .build();
-                userProfileRepository.save(userProfile);
+                if (imagePath != null) {
+                    UserProfile userProfile = UserProfile.builder()
+                            .user(user)
+                            .profileImage(imagePath)
+                            .build();
+                    userProfileRepository.save(userProfile);
+                }
             }
         }
+
 
 
         log.info("회원 가입이 완료되었습니다.");
@@ -121,25 +132,94 @@ public class UserService {
         return flagNum;
     }
 
+    // 로그인 검증
+    public LoginResult authenticate(LoginRequestDTO dto,
+                                    HttpSession session,
+                                    HttpServletResponse response) {
 
-//    public List<ProfileDetailResponseDTO> getUserProfileImage(String userAccount) {
-//        log.info("userAccount: {}", userAccount);
-//        // 예시: 임시로 빈 리스트를 반환
-//        return new ArrayList<>();
-//    }
-//    public List<ProfileDetailResponseDTO> addProfile(ProfileAddRequestDTO dto) {
-//        // addProfile 메서드의 구현 내용을 추가하면 됩니다.
-//        // ...
-//
-//        // getUserProfileImage 서비스 메서드 호출
-//        List<ProfileDetailResponseDTO> profileDetails = getUserProfileImage();
-//        return profileDetails;
-//    }
-//
-//
-//    public List<ProfileDetailResponseDTO> getUserProfileImage(ProfileDeleteRequestDTO dto) {
-//
-//    }
+        User foundUser = userRepository.findByUserAccount(dto.getUserAccount());
+
+        // 회원가입 여부 확인
+        if (foundUser == null) {
+            log.info("{} - 회원가입 안함", dto.getUserAccount());
+            return NO_ACC;
+        }
+        // 비밀번호 일치 확인
+        if (!passwordEncoder.matches(dto.getUserPassword(), foundUser.getUserPassword())) {
+            log.info("비밀번호 불일치");
+            return NO_PW;
+        }
+
+        // 자동로그인 체크 여부 확인
+        if (dto.isAutoLogin()) {
+            // 1. 쿠키 생성 - 쿠키값에 세션아이디를 저장
+            Cookie autoLoginCookie
+                    = new Cookie(LoginUtil.AUTO_LOGIN_COOKIE, session.getId());
+            // 2. 쿠키 셋팅 - 수명이랑 사용경로
+            int limitTime = 60 * 60 * 24 * 90;
+            autoLoginCookie.setMaxAge(limitTime);
+            autoLoginCookie.setPath("/"); // 전체 경로
+
+            // 3. 쿠키를 클라이언트에 응답전송
+            response.addCookie(autoLoginCookie);
+
+            // 4. DB에도 쿠키에 저장된 값과 수명을 저장
+
+
+
+        }
+
+        log.info("{}님 로그인 성공!", foundUser.getUserNickname());
+        return SUCCESS;
+
+    }
+
+    public void maintainLoginState(HttpSession session, String userAccount) {
+        // 현재 로그인한 사람의 모든 정보
+        User user = getUser(userAccount);
+
+        // 현재 로그인한 사람의 화면에 보여줄 일부정보(더 추가해야할수도 있음)
+        LoginUserResponseDTO dto = LoginUserResponseDTO.builder()
+                .userAccount(user.getUserAccount())
+                .userNickname(user.getUserNickname())
+                .lolNickname(user.getLolNickname())
+                .userCurrentPoint(user.getUserCurrentPoint())
+                .userProfileImage(user.getLatestProfileImage())
+                .build();
+
+        // userProfileImage 값 확인
+        String userProfileImage = dto.getUserProfileImage();
+        System.out.println("UserProfileImage: " + userProfileImage);
+
+        // 이 정보를 세션에 저장
+        session.setAttribute(LoginUtil.LOGIN_KEY, dto);
+
+        // 세션의 수명을 설정
+        session.setMaxInactiveInterval(60 * 60); // 1시간
+    }
+
+    // 유저 정보를 가져오는 서비스기능
+    public User getUser(String userAccount) {
+        return userRepository.findByUserAccount(userAccount);
+    }
+
+    public void autoLoginClear(HttpServletRequest request, HttpServletResponse response) {
+
+        // 1. 자동로그인 쿠키를 가져온다
+        Cookie c = WebUtils.getCookie(request, LoginUtil.AUTO_LOGIN_COOKIE);
+
+        // 2. 쿠키를 삭제 -> 쿠키의 수명을 0초로 만들어서 다시 클라이언트에게 응답
+        if (c != null) {
+            c.setMaxAge(0);
+            c.setPath("/");
+            response.addCookie(c);
+
+            // 4. 데이터베이스에도 자동로그인을 해제한다.
+
+        }
+    }
+
+
 
 
     public boolean registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
