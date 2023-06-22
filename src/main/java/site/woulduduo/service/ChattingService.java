@@ -107,7 +107,7 @@ public class ChattingService {
         }
 
 //        메세지 내역 가져오기
-        chattingResponseDTO.setMessageList(messageService.getMessages(chatting, user));
+        chattingResponseDTO.setMessageList(messageService.getMessages(chatting));
 
         return chattingResponseDTO;
     }
@@ -133,11 +133,13 @@ public class ChattingService {
     ) {
 //       내가 보낸 채팅
         List<Chatting> fromList = chattingRepository.findByChattingFrom(user);
+        fromList.forEach(messageService::getMessages);
 //       내가 받은 채팅
         List<Chatting> toList = chattingRepository.findByChattingTo(user);
-
+        toList.forEach(messageService::getMessages);
 //       보낸 채팅 받은 채팅 합치고 최신 메세지순으로 정렬
-        List<Chatting> chattingList = Stream.concat(fromList.stream(), toList.stream()).sorted(Chatting::compareTo).collect(Collectors.toList());
+        List<Chatting> chattingList = Stream.concat(fromList.stream(), toList.stream())
+                .sorted(Chatting::compareTo).collect(Collectors.toList());
         List<ChattingListResponseDTO> dtoList = chattingList.stream()
                 .map(ChattingListResponseDTO::new)
                 .collect(Collectors.toList());
