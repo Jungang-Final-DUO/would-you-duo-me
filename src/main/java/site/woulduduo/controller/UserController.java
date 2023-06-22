@@ -246,7 +246,9 @@ public class UserController {
     public String showDetailByAdmin(HttpSession session,Model model, String userAccount){
 
         UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userAccount);
-        System.out.println("userDetailByAdmin = " + userDetailByAdmin);
+
+
+        log.info("{}userDetailByAdmin99999999 = ",userDetailByAdmin);
         model.addAttribute("udByAdmin",userDetailByAdmin);
         return "admin/admin_user";
 
@@ -276,8 +278,7 @@ public class UserController {
         log.info("{}123123123",userNickname);
         log.info("{}---------userIsBanneduserIsBanned---------", dto);
         boolean b = userService.changeBanStatus(dto);
-        System.out.println("b111111 = " + b);
-        log.info("{}123123", b);
+        log.info("{}aaaaaaaaaaaaaaaaaaaa123123", b);
 
         return ResponseEntity.ok().body(b);
     }

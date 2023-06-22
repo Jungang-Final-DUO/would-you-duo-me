@@ -31,7 +31,7 @@ public class UserDetailByAdminResponseDTO {
         this.followCount=user.getFollowToList().size();
         this.joinDate=user.getUserJoinDate();
         this.recentLoginDate=user.getUserRecentLoginDate();
-        this.isBanned=isBanned();
+        this.isBanned=user.isUserIsBanned();
         this.point=user.getUserCurrentPoint();
     }
 
