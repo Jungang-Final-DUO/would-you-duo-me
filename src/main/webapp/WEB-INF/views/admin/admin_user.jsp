@@ -135,26 +135,6 @@
 
     //Ban 클릭 변수
     const banClick = document.getElementById('is_ben');
-console.log("-----------------------------------");
-
-// isBan 가져오기
-function renderBanValue(userIsBanned) {
-    console.log(userIsBanned + "aasdasdasdasdasd");
-    const $setAttribute = banClick.setAttribute('data-userIsBanned', userIsBanned);
-}
-
-const userIsBanned = banClick.getAttribute('data-userIsBanned');
-console.log(userIsBanned + "asdqwe123123123");
-
-if (userIsBanned === 'true') {
-    banClick.style.backgroundColor = 'red';
-} else {
-    banClick.style.backgroundColor = '#111E30';
-}
-
-    
-    
-
 
     banClick.onclick = e => {
     const userNickname = user.innerText;
@@ -174,7 +154,6 @@ if (userIsBanned === 'true') {
         .then(res => {
             console.log('res  :  -' + res);
 
-            renderBanValue(res);
 
             if (res===true) {
                 banClick.style.backgroundColor = 'red';
