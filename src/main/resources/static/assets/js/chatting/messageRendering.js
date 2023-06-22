@@ -1,15 +1,5 @@
 import {renderUnreadMessages} from "./chatting-modal.js";
 
-export function messageRender(result){
-    console.log('messageRender까지 도달');
-    result.forEach(
-        cc => {
-            cc.addEventListener('click', getMessages);
-        }
-    )
-    return [...document.querySelectorAll('.chat-form')];
-}
-
 export function scrollDown() {
     const chatMessages = document.querySelectorAll('.chatting-message-body');
     //scroll down
@@ -58,22 +48,20 @@ export function outputMessage(message) {
 }
 
 //DB에서 메세지 읽어오기
-export function getMessages(e){
-    console.log('getMessages 도달');
-    const chattingNo = e.target.closest('.chatting-card').id;
-    // console.log(chattingNo);
+export function getMessages(room) {
+
     const userId = 'test1';
 
-    fetch(`/api/v1/chat/messages/${userId}/${chattingNo}`)
+    fetch(`/api/v1/chat/messages/${userId}/${room}`)
         .then(res => res.json())
         .then(result => {
-            setChattingDetailBox(chattingNo, result);
-        })
+            setChattingDetailBox(room, result);
+        });
 }
 
 //채팅방 최초 진입시 렌더링
-function setChattingDetailBox(chattingNo, result){
-    console.log('setChattingDetailBox 도달');
+function setChattingDetailBox(chattingNo, result) {
+    // console.log('setChattingDetailBox 도달');
     const room = document.getElementById(chattingNo);
     room.querySelector('.chatting-message-body').innerHTML = '';
     const {userNickname, myProfileImage, yourProfileImage, messageList} = result;
@@ -81,43 +69,42 @@ function setChattingDetailBox(chattingNo, result){
     for (const msg of messageList) {
         const {messageFrom, messageContent, messageTime} = msg;
         const message = {
-            room : chattingNo,
-            username : messageFrom,
-            text : messageContent,
-            time : messageTime
+            room: chattingNo,
+            username: messageFrom,
+            text: messageContent,
+            time: messageTime
         }
         outputMessage(message);
-        scrollDown();
     }
+    scrollDown();
     renderUnreadMessages(chattingNo);
-
 }
 
 // 메세지 저장
-function saveMessage(message){
+function saveMessage(message) {
     const messageDTO = {
-        chattingNo : message.room,
-        messageContent : message.text,
-        messageFrom : message.username
+        chattingNo: message.room,
+        messageContent: message.text,
+        messageFrom: message.username
     }
     const requestInfo = {
-        method : 'POST',
-        headers : {
-            'content-type' : 'application/json'
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
         },
-        body : JSON.stringify(messageDTO)
+        body: JSON.stringify(messageDTO)
     };
     fetch(`/api/v1/chat/messages`, requestInfo)
         .then(res => res.json())
         .then(flag => {
-            if(flag) console.log('메세지 저장 성공');
+            if (flag) console.log('메세지 저장 성공');
             else console.log('메세지 저장 실패');
         })
 
 }
 
 // 채팅 중일때 메세지 실시간 렌더 및 DB 저장
-export function renderAndSaveMessage(message){
+export function renderAndSaveMessage(message) {
     outputMessage(message);
     saveMessage(message);
 }

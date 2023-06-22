@@ -30,7 +30,7 @@ public class MessageService {
     public boolean saveMessage(MessageRequestDTO dto){
         Message message = Message.builder()
                 .chatting(chattingRepository.findByChattingNo(dto.getChattingNo()))
-                .user(userRepository.findByUserAccount(dto.getMessageFrom()))
+                .user(userRepository.findById(dto.getMessageFrom()).orElseThrow())
                 .messageContent(dto.getMessageContent())
                 .build();
         try {
@@ -63,7 +63,7 @@ public class MessageService {
     }
 
     public void readMessage(String userId, long chattingNo) {
-        User user = userRepository.findByUserAccount(userId);
+        User user = userRepository.findById(userId).orElseThrow();
         Chatting chatting = chattingRepository.findByChattingNo(chattingNo);
         List<Message> messagesFromOther = messageRepository.findByChattingAndUserIsNot(chatting, user);
         //      상대방이 보낸 메세지 읽음 처리
