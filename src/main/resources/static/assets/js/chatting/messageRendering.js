@@ -1,12 +1,29 @@
+import {renderUnreadMessages} from "./chatting-modal.js";
+import {matchingRequestEvent} from "./matching.js";
+
+export function scrollDown() {
+    const chatMessages = document.querySelectorAll('.chatting-message-body');
+    //scroll down
+    chatMessages.forEach(cm => {
+        cm.scrollTop = cm.scrollHeight;
+    });
+}
+
+//메세지박스 렌더링
 export function outputMessage(message) {
-    const roomId = message.room;
-    const room = document.getElementById(roomId);
+    matchingRequestEvent();
+
+    const room = document.getElementById(message.room);
+    const otherProfile = room.querySelector('.chatting-profile-img').src;
 
     const div = document.createElement('div');
     div.classList.add('chatting-message-card');
 
-    if (message.username === '원영이') {
-        div.innerHTML = `<div class="chatting-message-card message-from">
+    if (message.username === 'test1') {
+        div.classList.add('chatting-message-card');
+        div.classList.add('message-from');
+        console.log(message.time);
+        div.innerHTML = `
                 <img class="chatting-profile" src="/assets/img/chattingModal/woogi.jpg" alt="프로필이미지">
                 <div class="message-content-container">
                     <div class="message-nickname">${message.username}</div>
@@ -15,9 +32,11 @@ export function outputMessage(message) {
                         <span class="send-time">${message.time}</span>
                     </div>
                 </div>
-            </div>`;
+            `;
     } else {
-        div.innerHTML = `<div class="chatting-message-card message-to">
+        div.classList.add('chatting-message-card');
+        div.classList.add('message-to');
+        div.innerHTML = `
                 <img class="chatting-profile" src="/assets/img/chattingModal/woogi.jpg" alt="프로필이미지">
                 <div class="message-content-container">
                         <div class="message-nickname">${message.username}</div>
@@ -26,8 +45,70 @@ export function outputMessage(message) {
                             <span class="send-time">${message.time}</span>
                         </div>
                     </div>
-                    </div>`;
+                    `;
     }
 
     room.querySelector('.chatting-message-body').appendChild(div);
+}
+
+//DB에서 메세지 읽어오기
+export function getMessages(room) {
+
+    const userId = 'test1';
+
+    fetch(`/api/v1/chat/messages/${userId}/${room}`)
+        .then(res => res.json())
+        .then(result => {
+            setChattingDetailBox(room, result);
+        });
+}
+
+//채팅방 최초 진입시 렌더링
+function setChattingDetailBox(chattingNo, result) {
+    // console.log('setChattingDetailBox 도달');
+    const room = document.getElementById(chattingNo);
+    room.querySelector('.chatting-message-body').innerHTML = '';
+    const {userNickname, myProfileImage, yourProfileImage, messageList} = result;
+
+    for (const msg of messageList) {
+        const {messageFrom, messageContent, messageTime} = msg;
+        const message = {
+            room: chattingNo,
+            username: messageFrom,
+            text: messageContent,
+            time: messageTime
+        }
+        outputMessage(message);
+    }
+    scrollDown();
+    renderUnreadMessages(chattingNo);
+}
+
+// 메세지 저장
+function saveMessage(message) {
+    const messageDTO = {
+        chattingNo: message.room,
+        messageContent: message.text,
+        messageFrom: message.username
+    }
+    const requestInfo = {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify(messageDTO)
+    };
+    fetch(`/api/v1/chat/messages`, requestInfo)
+        .then(res => res.json())
+        .then(flag => {
+            if (flag) console.log('메세지 저장 성공');
+            else console.log('메세지 저장 실패');
+        })
+
+}
+
+// 채팅 중일때 메세지 실시간 렌더 및 DB 저장
+export function renderAndSaveMessage(message) {
+    outputMessage(message);
+    saveMessage(message);
 }

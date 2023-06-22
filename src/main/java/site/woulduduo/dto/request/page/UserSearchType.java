@@ -26,6 +26,6 @@ public class UserSearchType extends PageDTO{
 
     public UserSearchType() {
         this.setSize(40);
-        this.sort = "avgRate";
+//        this.sort = "userAvgRate";
     }
 }

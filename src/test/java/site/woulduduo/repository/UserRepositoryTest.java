@@ -257,4 +257,12 @@ class UserRepositoryTest {
     }
 
 
+    @Test
+    @DisplayName("findById test")
+    void findByIdTest() {
+        User user1 = userRepository.findById("user1").orElseThrow();
+
+        System.out.println("user1 = " + user1);
+    }
+
 }

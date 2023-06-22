@@ -25,6 +25,8 @@ class MessageServiceTest {
     @Autowired
     private MessageRepository messageRepository;
     @Autowired
+    private MessageService messageService;
+    @Autowired
     private ChattingRepository chattingRepository;
     @Autowired
     private UserRepository userRepository;
@@ -58,7 +60,7 @@ class MessageServiceTest {
     @Test
     @DisplayName("메세지 내역을 불러올 수 있다. 메세지가 없다면 인삿말 메세지를 저장하고 불러온다")
     void getMessagesTest (){
-        Chatting chatting = chattingRepository.findByChattingNo(5L);
+        Chatting chatting = chattingRepository.findByChattingNo(9L);
 
         List<Message> messages = messageRepository.findByChatting(chatting);
         if(messages.size() == 0){
@@ -78,4 +80,13 @@ class MessageServiceTest {
         System.out.println(result);
     }
 
+//    상대방이 보낸 메세지 읽음처리 하기
+    @Test
+    @DisplayName("채팅방 진입시 상대방이 보낸 메세지를 읽음처리한다")
+    void readMessageTest(){
+//        test1이 보낸 메세지 상태가 1이 되어야 함
+        String userId = "test3";
+        long chattingNo = 3L;
+        messageService.readMessage(userId, chattingNo);
+    }
 }

@@ -5,10 +5,12 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
+import site.woulduduo.entity.QMostChamp;
 import site.woulduduo.entity.QUser;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
@@ -19,29 +21,32 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    QUser user =  QUser.user;
-
+    private final QUser user =  QUser.user;
+    private final QMostChamp mostChamp = QMostChamp.mostChamp;
 
     @Override
     public List<UserProfilesResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/) {
 
         List<User> userList = queryFactory.selectFrom(user)
+                .join(user.mostChampList, mostChamp).fetchJoin()
                 .where(keywordContains(userSearchType.getKeyword())
                         , positioneq(userSearchType.getPosition())
                         , gendereq(userSearchType.getGender())
                         , tiereq(userSearchType.getTier())
                         , user.userMatchingPoint.isNotNull()
                 )
-                .offset(userSearchType.getPage())
+                .offset(userSearchType.getPage() - 1)
                 .limit(userSearchType.getSize())
                 .orderBy(user.userAvgRate.desc())
                 .fetch();
-
+        log.info("### userList ###: {}", userList);
+    // select 로 불러온 user 리스트 UserProfilesResponseDTO로 변환해 리스트에 담아주기
         List<UserProfilesResponseDTO> userProfiles = new ArrayList<>();
         for (User user : userList) {
             UserProfilesResponseDTO dto = UserProfilesResponseDTO.builder()
@@ -53,20 +58,15 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                     .userInstagram(user.getUserInstagram())
                     .userFacebook(user.getUserFacebook())
                     .userTwitter(user.getUserTwitter())
-//                    .isFollowed(user.get)
                     .userPosition(user.getUserPosition())
                     .userNickname(user.getUserNickname())
                     .avgRate(user.getUserAvgRate())
-//                    .profileImage()
+                    .mostChampList(user.getMostChampList())
                     .build();
 
-            userProfiles.add(dto);
+                    userProfiles.add(dto);
         }
 
-        for (User user : userList) {
-        System.out.println("Repository QueryDSL user = " + user);
-
-        }
 
         return userProfiles;
     }

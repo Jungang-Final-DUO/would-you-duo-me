@@ -46,6 +46,19 @@ class ChattingServiceTest {
 //        assertEquals(3, chattingRepository.count());
     }
 
+    @Test
+    @DisplayName("채팅 데이터 많이 생성")
+    void makeBulkChattingTest() {
+        String chattingTo = "test1@example.com";
+
+        for (int i = 0; i < 100; i++) {
+            String chattingFrom = "user" + i;
+
+            chattingService.makeChatting(chattingFrom, chattingTo);
+
+        }
+    }
+
     //  대표 프로필 사진 가져오기
     //6/17 테스트 완료
     @Test

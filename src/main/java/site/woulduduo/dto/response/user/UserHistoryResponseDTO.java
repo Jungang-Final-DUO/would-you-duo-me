@@ -58,7 +58,7 @@ public class UserHistoryResponseDTO {
 
         public UserHistoryResponseDTOBuilder tier(Tier tier) {
             switch (tier) {
-                case UNR:
+                case CHA:
                     this.tier = "Challenger";
                     break;
                 case IRO:
