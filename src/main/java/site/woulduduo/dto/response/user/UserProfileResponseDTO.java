@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserProfilesResponseDTO {
+public class UserProfileResponseDTO {
 
     private String userAccount;
 

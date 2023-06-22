@@ -2,16 +2,23 @@ package site.woulduduo.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.WebUtils;
 import site.woulduduo.dto.request.login.LoginRequestDTO;
-import site.woulduduo.dto.request.page.AdminSearchType;
+import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
+import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
+import site.woulduduo.dto.response.page.PageResponseDTO;
 import site.woulduduo.dto.response.user.*;
 import site.woulduduo.dto.riot.LeagueV4DTO;
 import site.woulduduo.dto.riot.MatchV5DTO;
@@ -33,7 +40,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static site.woulduduo.enumeration.LoginResult.*;
@@ -55,7 +64,7 @@ public class UserService {
     private final FollowRepository followRepository;
     private final UserProfileRepository userProfileRepository;
     private final MostChampRepository mostChampRepository;
-    private final MatchingService matchingService;
+    private final site.woulduduo.service.MatchingService matchingService;
 
 
     final String id = "abc1234";
@@ -306,8 +315,7 @@ public class UserService {
         return userListByAdmin;
     }
 
-    public Map<String, Integer> countByAdmin() {
-        Map<String, Integer> adminCount = new HashMap<>();
+    public AdminPageResponseDTO getAdminPageInfo(){
         int userFindAllCount = userFindAllCount();
         int userFindByToday = userFindByToday();
         int accuseFindAllCount = accuseFindAllCount();
@@ -315,14 +323,16 @@ public class UserService {
         int boardFindAllCount = boardFindAllCount();
         int boardFindByToday = boardFindByToday();
 
-        adminCount.put("ua", userFindAllCount);
-        adminCount.put("ut", userFindByToday);
-        adminCount.put("aa", accuseFindAllCount);
-        adminCount.put("at", accuseFindByToday);
-        adminCount.put("ba", boardFindAllCount);
-        adminCount.put("bt", boardFindByToday);
+        AdminPageResponseDTO build = AdminPageResponseDTO.builder()
+                .todayBoardCount(boardFindByToday)
+                .todayJoinCount(userFindByToday)
+                .todayAccuseCount(accuseFindByToday)
+                .totalAccuseCount(accuseFindAllCount)
+                .totalBoardCount(boardFindAllCount)
+                .totalJoinCount(userFindAllCount)
+                .build();
 
-        return adminCount;
+        return build;
 
     }
 
@@ -365,64 +375,141 @@ public class UserService {
         return allWithJoinDate;
     }
 
+    //유저리스트 DTO변환(Admin) + 페이징
+    public ListResponseDTO<UserByAdminResponseDTO,User> getUserListByAdmin(PageDTO dto) {
 
-    //유저리스트 DTO변환(Admin)
-    public List<UserByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
-
-
-//        // Pageable객체 생성
-//        Pageable pageable = PageRequest.of(
-//                type.getPage() - 1,
-//                type.getSize(),
-//                Sort.by("createDate").descending()
-//        );
-
-        //user정보
-//        List<User> users = all.getContent();
-
+        Pageable pageable = PageRequest.of(
+                dto.getPage()-1,
+                dto.getSize(),
+                Sort.by("userJoinDate").descending()
+        );
         //전체불러오기
-        List<User> all = userRepository.findAll();
+        Page<User> all = userRepository.findAll(pageable);
 
-        //dto리스트생성 및 dto 생성
-        List<UserByAdminResponseDTO> userListByAdmin = new ArrayList<>();
-        int i = 1;
-        for (User user : all) {
-            UserByAdminResponseDTO dto = new UserByAdminResponseDTO();
 
-            //bc,rc,rc,fc 카운터 찾는 메서드
-            long accuseCount = accuseRepository.countByUser(user);
-            long boardCount = boardRepository.countByUser(user);
-            long replyCount = replyRepository.countByUser(user);
-            long followCount = followRepository.findAllWithFollowTo(user.getUserAccount());
-
-            dto.setRowNum(i);
-            dto.setUserAccount(user.getUserAccount());
-            dto.setGender(user.getUserGender().toString());
-            dto.setBoardCount(boardCount);
-            dto.setReplyCount(replyCount);
-            dto.setReportCount(accuseCount);
-            dto.setPoint(user.getUserCurrentPoint());
-            dto.setFollowCount(followCount);
+        List<UserByAdminResponseDTO> collect = all.stream()
+                .map(UserByAdminResponseDTO::new)
+                .collect(toList());
+//
+        int i=1;
+        for (UserByAdminResponseDTO user : collect) {
+            user.setRowNum(i);
             i++;
-
-            userListByAdmin.add(dto);
-            List<UserByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
         }
-        List<UserByAdminResponseDTO> userListByAdmin2 = userListByAdmin;
 
-        return userListByAdmin;
+
+        return ListResponseDTO.builder()
+                .count(all.getSize())
+                .pageInfo(new PageResponseDTO(all))
+                .list(collect)
+                .build();
+
     }
 
-//    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount){
+    //금일 가입자(Admin)
+    public ListResponseDTO<UserByAdminResponseDTO,User> todayUserByAdMin(PageDTO dto) {
+        Pageable pageable = PageRequest.of(
+                dto.getPage()-1,
+                dto.getSize(),
+                Sort.by("userJoinDate").descending()
+        );
+        //전체불러오기
+        Page<User> all = userRepository.findAll(pageable);
+        List<User> todayUserList = new ArrayList<>();
+        LocalDate currentDate = LocalDate.now();
+
+        for (User user : all) {
+            System.out.println("userByAdminResponseDTO = " + user);
+            LocalDate joinDate = user.getUserJoinDate();
+            if (joinDate!=null&&joinDate.equals(currentDate)) {
+                todayUserList.add(user);
+            }
+        }
+
+        List<UserByAdminResponseDTO> collect = todayUserList.stream()
+                .map(UserByAdminResponseDTO::new)
+                .collect(toList());
 //
-//        return null;
-//    }
-//
-//    public boolean increaseUserPoint(UserModifyRequestDTO dto){
-//
-//        return false;
-//    }
-//
+        int i=1;
+        for (UserByAdminResponseDTO user : collect) {
+            user.setRowNum(i);
+            i++;
+        }
+
+        System.out.println("collect = " + collect);
+
+        return ListResponseDTO.builder()
+                .count(collect.size())
+                .pageInfo(new PageResponseDTO(all))
+                .list(collect)
+                .build();
+    }
+
+
+
+    //userDetailByAdmin
+    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount) {
+        User oneUser = userRepository.findByUserAccount("345");
+        UserDetailByAdminResponseDTO userDetail =
+                new UserDetailByAdminResponseDTO(oneUser);
+
+
+
+        return userDetail;
+    }
+
+
+//포인트 증가
+    public boolean increaseUserPoint(UserModifyRequestDTO dto){
+        //지급포인트
+        int userAddPoint = dto.getUserAddPoint();
+        //현재포인트
+        int userCurrentPoint = dto.getUserCurrentPoint();
+        String currentPoint = String.valueOf(userCurrentPoint);
+        //더한값
+        int total = userCurrentPoint + userAddPoint;
+
+        //-99999 ~ +99999 가 맞는지 확인
+        boolean matches = currentPoint.matches("-?[0-9]{1,5}");
+
+        //현재포인트와 total이 같지 않다면 저장
+        if(userCurrentPoint!=total){
+            //
+            if(matches!=false) {
+                User userByNickName = findUserByNickName(dto);
+                userByNickName.setUserCurrentPoint(total);
+                User save = userRepository.save(userByNickName);
+                System.out.println("save = " + save);
+                return true;
+            }
+        }return false;
+
+    }
+
+    //밴 boolean
+    public boolean changeBanStatus(UserModifyRequestDTO dto){
+        int userIsBanned = dto.getUserIsBanned();
+        User userByNickName = findUserByNickName(dto);
+
+        //userIsBanned가 1이면 참
+        if(userIsBanned==1) {
+            userByNickName.setUserIsBanned(true);
+            User save = userRepository.save(userByNickName);
+            return true;
+        }userByNickName.setUserIsBanned(false);
+        User save = userRepository.save(userByNickName);
+        return false;
+
+    }
+
+    //닉네임으로 user 찾기
+    public User findUserByNickName(UserModifyRequestDTO dto){
+        String userNickname = dto.getUserNickname();
+        User userByNickName = userRepository.findByNickName(userNickname);
+
+        return userByNickName;
+    }
+
 //    public boolean changeUserPoint(UserModifyRequestDTO dto){
 //
 //        return false;
@@ -536,30 +623,17 @@ public class UserService {
                 .build();
 
     }
+    public List<UserProfileResponseDTO> getUserProfileList(/*HttpSession session, */UserSearchType userSearchType) {
+        List<UserProfileResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
 
-//    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount){
-//
-//        return null;
-//    }
-//
-//    public boolean increaseUserPoint(UserModifyRequestDTO dto){
-//
-//        return false;
-//    }
-//
-//    public boolean changeUserPoint(UserModifyRequestDTO dto){
-//
-//        return false;
-//    }
-
-    public List<UserProfilesResponseDTO> getUserProfileList(/*HttpSession session, */UserSearchType userSearchType) {
-        List<UserProfilesResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
-
-        for (UserProfilesResponseDTO userProfile : userProfileList) {
+        for (UserProfileResponseDTO userProfile : userProfileList) {
             log.info("@@@ userProfile @@@@@ : {}", userProfile.toString());
         }
         return userProfileList;
     }
+
+
+
 
 
 }

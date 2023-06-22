@@ -29,5 +29,7 @@ public class UserModifyRequestDTO {
 
     private int userCurrentPoint;
 
+    private int userAddPoint;
+
     private int userIsBanned;
 }

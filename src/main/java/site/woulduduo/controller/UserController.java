@@ -2,13 +2,14 @@ package site.woulduduo.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import site.woulduduo.dto.request.page.PageDTO;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,17 +18,15 @@ import site.woulduduo.dto.request.login.LoginRequestDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
-import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
+import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.user.*;
+import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.LoginResult;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 import site.woulduduo.service.UserService;
-import org.springframework.ui.Model;
-import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
+
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.EmailService;
 import site.woulduduo.util.upload.FileUtil;
@@ -36,8 +35,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
 import java.util.List;
-import java.util.Map;
 
 import static site.woulduduo.enumeration.LoginResult.SUCCESS;
 import static site.woulduduo.util.LoginUtil.isAutoLogin;
@@ -79,10 +78,10 @@ public class UserController {
         if (!keyword.equals("all")) {
             userSearchType.setSort(sort);
         }
-        List<UserProfilesResponseDTO> userServiceUserProfileList = userService.getUserProfileList(userSearchType);
+        List<UserProfileResponseDTO> userServiceUserProfileList = userService.getUserProfileList(userSearchType);
         System.out.println("userServiceUserProfileList = " + userServiceUserProfileList);
 
-        return ResponseEntity.ok().body(userService.getUserProfileList(userSearchType));
+        return ResponseEntity.ok().body(userServiceUserProfileList);
     }
 
     // 회원 가입 양식 요청
@@ -244,15 +243,20 @@ public class UserController {
     @GetMapping("/user/admin")
     //관리자 페이지 열기
     public String showAdminpage(/*HttpSession session, */Model model) {
-        Map<String, Integer> countByAdmin = userService.countByAdmin();
-        model.addAttribute("count", countByAdmin);
-        countByAdmin.get("ua");
+        AdminPageResponseDTO adminPageInfo = userService.getAdminPageInfo();
+        model.addAttribute("count", adminPageInfo);
         return "admin/admin";
     }
 
     //관리자 페이지 리스트 가져오기
-    public ResponseEntity<?> getUserListByAdmin(/*AdminSearchType type*/) {
-        List<UserByAdminResponseDTO> userListByAdmin = userService.getUserListByAdmin();
+    @GetMapping("/api/v1/users/admin")
+    public ResponseEntity<?> getUserListByAdmin(
+            @PathVariable PageDTO dto){
+
+        ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
+
+
+        log.info("/api/v1/users/admin/");
 
 
         return ResponseEntity
@@ -260,13 +264,17 @@ public class UserController {
                 .body(userListByAdmin);
     }
 
-//    @GetMapping("/user/detail/admin")
-//    //관리자 페이지 자세히 보기
-//    public String showDetailByAdmin(HttpSession session,Model model, String userAccount){
-//
-//        return "";
-//    }
-//
+
+    @GetMapping("/user/detail/admin")
+    //관리자 페이지 자세히 보기
+    public String showDetailByAdmin(HttpSession session,Model model, String userAccount){
+        UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userAccount);
+
+        model.addAttribute("udByAdmin",userDetailByAdmin);
+        return "admin/admin_user";
+
+    }
+
 //    @GetMapping("/user/ban")
 //    public String changeBanStatus(HttpSession session, String userAccount){
 //

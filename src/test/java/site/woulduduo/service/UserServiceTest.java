@@ -7,15 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
+import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-
 import site.woulduduo.dto.response.ListResponseDTO;
-import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
-import site.woulduduo.entity.MostChamp;
+import site.woulduduo.dto.response.user.*;
+
+import site.woulduduo.dto.response.user.UserProfileResponseDTO;
 import site.woulduduo.entity.User;
-import org.springframework.transaction.annotation.Transactional;
 
 import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
@@ -27,8 +28,6 @@ import site.woulduduo.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,7 +44,41 @@ class UserServiceTest {
 
     @Autowired
     private MostChampRepository mostChampRepository;
+    @BeforeEach
+    void userInsert() {
+        for (int i = 1; i < 42; i++) {
+            User user = User.builder()
+                    .userAccount("user" + i)
+                    .userNickname("nickname" + i)
+                    .userPassword("pwd" + i)
+                    .userBirthday(LocalDate.of(2000, 1, 1))
+                    .lolNickname("lolNickname" + i)
+                    .userGender(Gender.M)
+                    .lolTier(Tier.CHA)
+                    .userPosition(Position.MID)
+                    .userComment("안녕하세요 트롤아닙니다." + i)
+                    .userMatchingPoint(500)
+                    .build();
+            userRepository.save(user);
+        }
+        for (int i = 42; i < 100; i++) {
+            User user = User.builder()
+                    .userAccount("user" + i)
+                    .userNickname("nickname" + i)
+                    .userPassword("pwd" + i)
+                    .userBirthday(LocalDate.of(2000, 1, 1))
+                    .lolNickname("lolNickname" + i)
+                    .userGender(Gender.M)
+                    .lolTier(Tier.DIA)
+                    .userJoinDate(LocalDate.of(2023, 06, 20))
+                    .userPosition(Position.MID)
+                    .userComment("안녕하세요 트롤아닙니다." + i)
+                    .userMatchingPoint(500)
+                    .build();
+            userRepository.save(user);
+        }
 
+    }
 //    @BeforeEach
 //    void userInsert() {
 //        for (int i = 1; i < 80; i++) {
@@ -125,7 +158,7 @@ class UserServiceTest {
         userSearchType.setTier(Tier.DIA);
         userSearchType.setSort("avgRate");
 
-        List<UserProfilesResponseDTO> userProfileList = userService.getUserProfileList(userSearchType);
+        List<UserProfileResponseDTO> userProfileList = userService.getUserProfileList(userSearchType);
 
         assertEquals(16, userProfileList.size());
     }
@@ -209,6 +242,105 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("관리자페이지 정보 count 확인")
+    void getCountByAdmin() {
+        AdminPageResponseDTO adminPageInfo = userService.getAdminPageInfo();
+        System.out.println("stringIntegerMap = " + adminPageInfo);
+    }
+
+
+    @Test
+    @DisplayName("관리자 전체유저 리스트 dto 변환+페이징")
+    void userExchangeDTO(){
+
+
+        PageDTO dto = new PageDTO();
+
+        System.out.println("dto = " + dto);
+        ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
+
+        System.out.println("userListByAdmin = " + userListByAdmin);
+
+
+    }
+
+
+    @Test
+    @DisplayName("관리자 금일가입유저 리스트 dto 변환")
+    void todayUserExchangeDTO(){
+
+
+        PageDTO dto = new PageDTO();
+
+
+        ListResponseDTO<UserByAdminResponseDTO, User> userByAdminResponseDTOUserListResponseDTO = userService.todayUserByAdMin(dto);
+
+        System.out.println("userByAdminResponseDTOUserListResponseDTO = " + userByAdminResponseDTOUserListResponseDTO);
+
+
+    }
+
+    @Test
+    @DisplayName("유저 디테일 dto 변환")
+    void getUserDetailByAdmin(){
+
+
+        UserDetailByAdminResponseDTO UserByAdmin =
+                userService.getUserDetailByAdmin("345");
+
+        System.out.println("todayUserListByAdmin = " + UserByAdmin);
+
+    }
+
+    @Test
+    @DisplayName("포인트 증가")
+    void increaseUserPoint() {
+        UserModifyRequestDTO modify = UserModifyRequestDTO.builder()
+                .userNickname("123")
+                .userBirthday(LocalDate.of(2012, 01, 01))
+                .lolNickname("아무나")
+                .userPassword("123")
+                .userInstagram("123")
+                .userFacebook("123")
+                .userTwitter("123")
+                .userCurrentPoint(123123)
+                .userAddPoint(33333)
+                .userIsBanned(0)
+                .build();
+
+
+
+        System.out.println("modify1 = " + modify);
+        boolean b123 = userService.increaseUserPoint(modify);
+        System.out.println("b123 = " + b123);
+        System.out.println("modify2 = " + modify);
+
+    }
+
+    @Test
+    @DisplayName("밴 boolean")
+    void changeBanStatus() {
+        UserModifyRequestDTO modify = UserModifyRequestDTO.builder()
+                .userNickname("123")
+                .userBirthday(LocalDate.of(2012, 01, 01))
+                .lolNickname("아무나")
+                .userPassword("123")
+                .userInstagram("123")
+                .userFacebook("123")
+                .userTwitter("123")
+                .userCurrentPoint(123123)
+                .userAddPoint(33333)
+                .userIsBanned(0)
+                .build();
+
+        System.out.println("modify1 = " + modify);
+        boolean b123 = userService.changeBanStatus(modify);
+        System.out.println("b123 = " + b123);
+        System.out.println("modify2 = " + modify);
+
+    }
+
+    @Test
     @DisplayName("회원의 프로필 카드 등록에 성공해야 한다.")
     void registerDUO() {
         UserCommentRequestDTO userCommentRequestDTO = UserCommentRequestDTO.builder()
@@ -223,29 +355,12 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("관리자 유저 리스트 dto 변환")
-    void userExchangeDTO(){
-        List<UserByAdminResponseDTO> userListByAdmin =
-                userService.getUserListByAdmin();
-
-        System.out.println("userListByAdmin = " + userListByAdmin);
-
-
-    }
-
-    @Test
     @DisplayName("유저 전적페이지에 쓰이는 정보들을 보여줄 수 있어야 한다")
     void getUserDUOInfoTest() {
         UserHistoryResponseDTO userDUOInfo = userService.getUserHistoryInfo(null, "test@example.com");
         System.out.println("userDUOInfo = " + userDUOInfo);
     }
 
-    @Test
-    @DisplayName("관리자페이지 정보 count 확인")
-    void getCountByAdmin() {
-        Map<String, Integer> stringIntegerMap = userService.countByAdmin();
-        System.out.println("stringIntegerMap = " + stringIntegerMap);
-    }
 
 
 }
