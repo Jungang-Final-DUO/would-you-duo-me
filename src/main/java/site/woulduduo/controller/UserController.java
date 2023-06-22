@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
@@ -68,6 +69,9 @@ public class UserController {
         if (!keyword.equals("all")) {
             userSearchType.setSort(sort);
         }
+        List<UserProfilesResponseDTO> userServiceUserProfileList = userService.getUserProfileList(userSearchType);
+        System.out.println("userServiceUserProfileList = " + userServiceUserProfileList);
+
         return ResponseEntity.ok().body(userService.getUserProfileList(userSearchType));
     }
 

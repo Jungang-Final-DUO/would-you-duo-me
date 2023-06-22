@@ -97,7 +97,7 @@ class UserServiceTest {
 //        }
 //        List<String> mostChampList = List.of("Sett", "Vex", "Vi");
 //
-//        for (int i = 1; i <= 80; i++) {
+//        for (int i = 1; i < 80; i++) {
 //            for (int j = 0; j < 3; j++) {
 //                User user = userRepository.findById("user" + i).orElseThrow();
 //                MostChamp mostChamp = MostChamp.builder()
@@ -106,7 +106,7 @@ class UserServiceTest {
 //                        .build();
 //                user.addMostChampList(mostChamp);
 //
-////                userRepository.save(user);
+//                userRepository.save(user);
 //                mostChampRepository.save(mostChamp);
 //            }
 //
@@ -127,7 +127,7 @@ class UserServiceTest {
 
         List<UserProfilesResponseDTO> userProfileList = userService.getUserProfileList(userSearchType);
 
-        assertEquals(userProfileList.size(), 40);
+        assertEquals(16, userProfileList.size());
     }
 
     @Test

@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.response.ListResponseDTO;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom {
@@ -32,7 +34,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
     public List<UserProfilesResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/) {
 
         List<User> userList = queryFactory.selectFrom(user)
-                .join(user.mostChampList, mostChamp)
+                .join(user.mostChampList, mostChamp).fetchJoin()
                 .where(keywordContains(userSearchType.getKeyword())
                         , positioneq(userSearchType.getPosition())
                         , gendereq(userSearchType.getGender())
@@ -43,7 +45,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                 .limit(userSearchType.getSize())
                 .orderBy(user.userAvgRate.desc())
                 .fetch();
-
+        log.info("### userList ###: {}", userList);
     // select 로 불러온 user 리스트 UserProfilesResponseDTO로 변환해 리스트에 담아주기
         List<UserProfilesResponseDTO> userProfiles = new ArrayList<>();
         for (User user : userList) {
