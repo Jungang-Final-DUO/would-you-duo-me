@@ -51,9 +51,6 @@ export function outputMessage(message) {
 //DB에서 메세지 읽어오기
 export function getMessages(room) {
 
-    // console.log('getMessages 도달');
-    // const chattingNo = $card.closest('.chatting-card').id;
-    // console.log(chattingNo);
     const userId = 'test1';
 
     fetch(`/api/v1/chat/messages/${userId}/${room}`)
