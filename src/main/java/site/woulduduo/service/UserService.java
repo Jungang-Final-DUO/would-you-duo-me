@@ -105,9 +105,6 @@ public class UserService {
                 }
             }
         }
-
-
-
         log.info("회원 가입이 완료되었습니다.");
     }
 
@@ -128,7 +125,6 @@ public class UserService {
             default:
                 throw new IllegalArgumentException("잘못된 검사 타입입니다.");
         }
-
         return flagNum;
     }
 
@@ -155,6 +151,7 @@ public class UserService {
             // 1. 쿠키 생성 - 쿠키값에 세션아이디를 저장
             Cookie autoLoginCookie
                     = new Cookie(LoginUtil.AUTO_LOGIN_COOKIE, session.getId());
+
             // 2. 쿠키 셋팅 - 수명이랑 사용경로
             int limitTime = 60 * 60 * 24 * 90;
             autoLoginCookie.setMaxAge(limitTime);
@@ -164,8 +161,11 @@ public class UserService {
             response.addCookie(autoLoginCookie);
 
             // 4. DB에도 쿠키에 저장된 값과 수명을 저장
-
-
+            userRepository.saveAutoLogin(
+                    session.getId(),
+                    LocalDateTime.now().plusSeconds(limitTime),
+                    dto.getUserAccount()
+            );
 
         }
 
@@ -215,6 +215,11 @@ public class UserService {
             response.addCookie(c);
 
             // 4. 데이터베이스에도 자동로그인을 해제한다.
+            userRepository.saveAutoLogin(
+                    "none",
+                    LocalDateTime.now(),
+                    LoginUtil.getCurrentLoginMemberAccount(request.getSession())
+            );
 
         }
     }
