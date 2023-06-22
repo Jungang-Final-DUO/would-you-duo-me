@@ -50,12 +50,6 @@ public class UserController {
     private final EmailService emailService;
     private final UserRepository userRepository;
 
-//    메인페이지로 이동
-    @GetMapping("/main")
-    public String test(){
-        return "index";
-    }
-
     // 회원 가입 양식 요청
     @GetMapping("/user/sign-up")
     public String signUp() {
@@ -87,7 +81,7 @@ public class UserController {
         // UserRegisterRequestDTO를 UserService의 회원가입 메서드로 전달하여 저장
         userService.register(dto);
 
-        return "redirect:/user/sign-in";
+        return "redirect:/";
     }
 
     // 아이디(이메일), 닉네임, 소환사아이디 중복검사
@@ -138,7 +132,7 @@ public class UserController {
             userService.maintainLoginState(
                     request.getSession(), dto.getUserAccount());
 
-            return "redirect:/main";
+            return "redirect:/";
         }
 
         // 1회용으로 쓰고 버릴 데이터
@@ -167,7 +161,7 @@ public class UserController {
 
             // 세션 초기화
             session.invalidate();
-            return "redirect:/main";
+            return "redirect:/";
         }
         return "redirect:/user/sgin-in";
     }

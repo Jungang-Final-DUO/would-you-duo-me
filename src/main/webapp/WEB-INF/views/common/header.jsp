@@ -11,7 +11,7 @@
 
     <nav id="nav-bar">
         <nav id="user-nav-bar">
-            <c:if test="true">
+            <c:if test="${login == null}">
                 <div class="user-icon-wrapper">
                     <form action="/user/sign-in" method="post">
                         <button id="sign-in-btn" class="modal-btn">
@@ -22,7 +22,7 @@
                         <div id="sign-in-modal-wrapper" class="invisible">
                             <div id="sign-in-modal" class="user-modal">
                                 <div id="id-input-wrapper" class="input-wrapper">
-                                    <label for="sign-in-user-account">아이디</label>
+                                    <label for="sign-in-user-account">이메일 주소</label>
                                     <input type="text" name="userAccount" id="sign-in-user-account">
                                 </div>
                                 <div id="pw-input-wrapper" class="input-wrapper">
@@ -54,12 +54,13 @@
 
                     </form>
                 </div>
+                <div class="user-icon-wrapper">
+                    <a href="/user/sign-up">
+                        <img src="/assets/img/header/sign-up.png" alt="회원가입 아이콘" class="user-icon">
+                    </a>
+                </div>
+                <!-- end of sign-in, up page -->
             </c:if>
-            <div class="user-icon-wrapper">
-                <a href="/user/sign-up">
-                    <img src="/assets/img/header/sign-up.png" alt="회원가입 아이콘" class="user-icon">
-                </a>
-            </div> <!-- end of sign-in, up page -->
             <!--        로그인 하면 위의 두 버튼 대신 아래의 버튼이 보입니다        -->
             <c:if test="${login != null}">
                 <div id="loginUserInfo" data-user-account="${login.userAccount}" class="user-icon-wrapper">
