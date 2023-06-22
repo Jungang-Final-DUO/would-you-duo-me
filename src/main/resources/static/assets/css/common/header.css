@@ -48,6 +48,9 @@ header {
 /* my page modal style */
 #my-page-modal {
     right: -40px;
+    position: absolute;
+
+    color: #000;
 }
 
 #my-page-modal:before {
