@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 import site.woulduduo.entity.User;
 
 import javax.transaction.Transactional;
@@ -52,8 +51,5 @@ public interface UserRepository extends
     @Query(value = "SELECT COUNT(*) FROM duo_user WHERE lol_nickname = :lolNickname", nativeQuery = true)
     int countByLolNickname(@Param("lolNickname") String lolNickname);
 
-
-
-    User findByUserAccount(String userAccount);
 
 }

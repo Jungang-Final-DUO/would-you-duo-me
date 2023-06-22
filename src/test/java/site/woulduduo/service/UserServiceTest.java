@@ -15,11 +15,8 @@ import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.*;
 
-import site.woulduduo.dto.response.ListResponseDTO;
-import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
-import site.woulduduo.entity.MostChamp;
+import site.woulduduo.dto.response.user.UserProfileResponseDTO;
 import site.woulduduo.entity.User;
-import org.springframework.transaction.annotation.Transactional;
 
 import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
@@ -31,8 +28,6 @@ import site.woulduduo.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,7 +70,7 @@ class UserServiceTest {
                     .lolNickname("lolNickname" + i)
                     .userGender(Gender.M)
                     .lolTier(Tier.DIA)
-                    .userJoinDate(LocalDate.of(2023,06,20))
+                    .userJoinDate(LocalDate.of(2023, 06, 20))
                     .userPosition(Position.MID)
                     .userComment("안녕하세요 트롤아닙니다." + i)
                     .userMatchingPoint(500)
@@ -83,7 +78,7 @@ class UserServiceTest {
             userRepository.save(user);
         }
 
-
+    }
 //    @BeforeEach
 //    void userInsert() {
 //        for (int i = 1; i < 80; i++) {
@@ -163,7 +158,7 @@ class UserServiceTest {
         userSearchType.setTier(Tier.DIA);
         userSearchType.setSort("avgRate");
 
-        List<UserProfilesResponseDTO> userProfileList = userService.getUserProfileList(userSearchType);
+        List<UserProfileResponseDTO> userProfileList = userService.getUserProfileList(userSearchType);
 
         assertEquals(16, userProfileList.size());
     }

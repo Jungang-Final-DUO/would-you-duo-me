@@ -1,6 +1,5 @@
 package site.woulduduo.repository;
 
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -8,8 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import site.woulduduo.dto.request.page.UserSearchType;
-import site.woulduduo.dto.response.ListResponseDTO;
-import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
+import site.woulduduo.dto.response.user.UserProfileResponseDTO;
 import site.woulduduo.entity.QMostChamp;
 import site.woulduduo.entity.QUser;
 import site.woulduduo.entity.User;
@@ -17,7 +15,6 @@ import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +28,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
     private final QMostChamp mostChamp = QMostChamp.mostChamp;
 
     @Override
-    public List<UserProfilesResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/) {
+    public List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/) {
 
         List<User> userList = queryFactory.selectFrom(user)
                 .join(user.mostChampList, mostChamp).fetchJoin()
@@ -47,9 +44,9 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                 .fetch();
         log.info("### userList ###: {}", userList);
     // select 로 불러온 user 리스트 UserProfilesResponseDTO로 변환해 리스트에 담아주기
-        List<UserProfilesResponseDTO> userProfiles = new ArrayList<>();
+        List<UserProfileResponseDTO> userProfiles = new ArrayList<>();
         for (User user : userList) {
-            UserProfilesResponseDTO dto = UserProfilesResponseDTO.builder()
+            UserProfileResponseDTO dto = UserProfileResponseDTO.builder()
                     .userAccount(user.getUserAccount())
                     .userGender(user.getUserGender())
                     .userComment(user.getUserComment())
