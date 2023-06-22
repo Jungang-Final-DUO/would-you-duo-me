@@ -1,6 +1,7 @@
 package site.woulduduo.dto.response.user;
 
 import lombok.*;
+import site.woulduduo.entity.MostChamp;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
@@ -16,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserProfilesResponseDTO {
+public class UserProfileResponseDTO {
 
     private String userAccount;
 
@@ -45,7 +46,7 @@ public class UserProfilesResponseDTO {
 
     private double avgRate;
 
-    private List<String> mostChampList;
+    private List<MostChamp> mostChampList;
 
     private String profileImage;
 

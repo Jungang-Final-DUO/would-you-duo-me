@@ -1,4 +1,5 @@
 import {renderUnreadMessages} from "./chatting-modal.js";
+import {matchingRequestEvent} from "./matching.js";
 
 export function scrollDown() {
     const chatMessages = document.querySelectorAll('.chatting-message-body');
@@ -10,6 +11,8 @@ export function scrollDown() {
 
 //메세지박스 렌더링
 export function outputMessage(message) {
+    matchingRequestEvent();
+
     const room = document.getElementById(message.room);
     const otherProfile = room.querySelector('.chatting-profile-img').src;
 
@@ -19,6 +22,7 @@ export function outputMessage(message) {
     if (message.username === 'test1') {
         div.classList.add('chatting-message-card');
         div.classList.add('message-from');
+        console.log(message.time);
         div.innerHTML = `
                 <img class="chatting-profile" src="/assets/img/chattingModal/woogi.jpg" alt="프로필이미지">
                 <div class="message-content-container">

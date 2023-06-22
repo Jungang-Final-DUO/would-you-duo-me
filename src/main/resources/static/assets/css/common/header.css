@@ -48,6 +48,9 @@ header {
 /* my page modal style */
 #my-page-modal {
     right: -40px;
+    position: absolute;
+
+    color: #000;
 }
 
 #my-page-modal:before {
@@ -148,20 +151,16 @@ header {
     content: "";
 }
 
-#sign-in-dialog {
-    background: none;
-    left: 1056px;
-    top: -398px;
-}
-
-#sign-in-dialog::backdrop {
-    background: none;
-}
-
 /* sign in modal */
+#sign-in-modal-wrapper {
+    position: absolute;
+    top: 47px;
+    right: -64px;
+    z-index: 1;
+}
+
 #sign-in-modal {
     /*right: -65px;*/
-
     height: 300px;
 
     display: flex;
@@ -306,8 +305,8 @@ header {
 /* fixed-btn-wrapper */
 #fixed-btn-wrapper {
     position: fixed;
-    right: 280px;
-    bottom: 50px;
+    right: 10%;
+    bottom: 5%;
 
     display: flex;
     flex-flow: column;

@@ -44,7 +44,7 @@ public class MessageService {
     }
 
     //    메세지 내역 가져오기
-    public List<MessageListResponseDTO> getMessages (Chatting chatting, User user){
+    public List<MessageListResponseDTO> getMessages (Chatting chatting){
 
         List<Message> messages = messageRepository.findByChatting(chatting);
         if(messages.size() == 0){

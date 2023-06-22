@@ -14,10 +14,14 @@ import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.*;
+import site.woulduduo.dto.response.user.UserProfileResponseDTO;
 import site.woulduduo.entity.User;
+import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
+import site.woulduduo.repository.MostChampRepository;
 import site.woulduduo.repository.UserRepository;
 
 import java.time.LocalDate;
@@ -36,6 +40,8 @@ class UserServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private MostChampRepository mostChampRepository;
     @BeforeEach
     void userInsert() {
         for (int i = 1; i < 42; i++) {
@@ -62,7 +68,7 @@ class UserServiceTest {
                     .lolNickname("lolNickname" + i)
                     .userGender(Gender.M)
                     .lolTier(Tier.DIA)
-                    .userJoinDate(LocalDate.of(2023,06,20))
+                    .userJoinDate(LocalDate.of(2023, 06, 20))
                     .userPosition(Position.MID)
                     .userComment("안녕하세요 트롤아닙니다." + i)
                     .userMatchingPoint(500)
@@ -70,37 +76,91 @@ class UserServiceTest {
             userRepository.save(user);
         }
 
-        User user = User.builder()
-                .userAccount("345")
-                .userNickname("345")
-                .userPassword("345")
-                .userBirthday(LocalDate.of(2000, 1, 1))
-                .lolNickname("345")
-                .userGender(Gender.M)
-                .lolTier(Tier.DIA)
-                .userJoinDate(LocalDate.of(2023,06,20))
-                .userPosition(Position.MID)
-                .userComment("345")
-                .userMatchingPoint(500)
-                .build();
-        userRepository.save(user);
-
 
 
     }
+//    @BeforeEach
+//    void userInsert() {
+//        for (int i = 1; i < 80; i++) {
+//            if (i < 36) {
+//                User user = User.builder()
+//                        .userAccount("user" + i)
+//                        .userNickname("nickname" + i)
+//                        .userPassword("pwd" + i)
+//                        .userBirthday(LocalDate.of(2000, 1, 1))
+//                        .lolNickname("lolNickname" + i)
+//                        .userGender(Gender.M)
+//                        .lolTier(Tier.CHA)
+//                        .userPosition(Position.MID)
+//                        .userComment("안녕하세요 트롤아닙니다." + i)
+//                        .userMatchingPoint(500)
+//                        .build();
+//                userRepository.save(user);
+//
+//            } else if (i >= 36 && i < 52) {
+//            User user = User.builder()
+//                    .userAccount("user" + i)
+//                    .userNickname("nickname" + i)
+//                    .userPassword("pwd" + i)
+//                    .userBirthday(LocalDate.of(2000, 1, 1))
+//                    .lolNickname("lolNickname" + i)
+//                    .userGender(Gender.F)
+//                    .lolTier(Tier.DIA)
+//                    .userPosition(Position.MID)
+//                    .userComment("안녕하세요 트롤아닙니다." + i)
+//                    .userMatchingPoint(500)
+//                    .build();
+//                userRepository.save(user);
+//
+//            } else {
+//                User user = User.builder()
+//                        .userAccount("user" + i)
+//                        .userNickname("nickname" + i)
+//                        .userPassword("pwd" + i)
+//                        .userBirthday(LocalDate.of(2000, 1, 1))
+//                        .lolNickname("lolNickname" + i)
+//                        .userGender(Gender.M)
+//                        .lolTier(Tier.DIA)
+//                        .userPosition(Position.MID)
+//                        .userComment("안녕하세요 트롤아닙니다." + i)
+//                        .userMatchingPoint(500)
+//                        .build();
+//                    userRepository.save(user);
+//            }
+//        }
+//        List<String> mostChampList = List.of("Sett", "Vex", "Vi");
+//
+//        for (int i = 1; i < 80; i++) {
+//            for (int j = 0; j < 3; j++) {
+//                User user = userRepository.findById("user" + i).orElseThrow();
+//                MostChamp mostChamp = MostChamp.builder()
+//                        .champName(mostChampList.get(j))
+//                        .mostNo(j + 1)
+//                        .build();
+//                user.addMostChampList(mostChamp);
+//
+//                userRepository.save(user);
+//                mostChampRepository.save(mostChamp);
+//            }
+//
+//        }
+//
+//    }
 
     @Test
     @DisplayName("QueryDSL을 이용해 필터와 정렬 조건에 맞춰 userList가 출력되어야한다.")
     void testGetUserProfileList() {
         UserSearchType userSearchType = new UserSearchType();
+//        userSearchType.setKeyword("40");
         userSearchType.setPosition(Position.MID);
-        userSearchType.setGender(Gender.M);
+        userSearchType.setSize(40);
+        userSearchType.setGender(Gender.F);
         userSearchType.setTier(Tier.DIA);
         userSearchType.setSort("avgRate");
 
-        List<UserProfilesResponseDTO> userProfileList = userService.getUserProfileList(userSearchType);
+        List<UserProfileResponseDTO> userProfileList = userService.getUserProfileList(userSearchType);
 
-        assertEquals(userProfileList.size(), 40);
+        assertEquals(16, userProfileList.size());
     }
 
     @Test

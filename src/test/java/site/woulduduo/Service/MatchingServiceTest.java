@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import site.woulduduo.dto.request.chatting.MatchingFixRequestDTO;
-import site.woulduduo.dto.request.chatting.MatchingMakeRequestDTO;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
@@ -38,9 +37,9 @@ class MatchingServiceTest {
     @Test
     @DisplayName("매칭을 신청하면 매칭 번호를 리턴받는다")
     void makeMatchingTest() {
-        MatchingMakeRequestDTO dto = MatchingMakeRequestDTO.builder().chattingNo(102L).build();
+        long chattingNo = 2L;
 
-        long matchingNo = matchingService.makeMatching(dto);
+        long matchingNo = matchingService.makeMatching(chattingNo);
 
         System.out.println("matchingNo = " + matchingNo);
     }
@@ -117,11 +116,7 @@ class MatchingServiceTest {
     @DisplayName("test1@example.com이 받은 모든 채팅에 대해 매칭을 생성해야 한다.")
     void makeBulkMatchingTest() {
         for (int i = 3; i < 102; i++) {
-            MatchingMakeRequestDTO dto = MatchingMakeRequestDTO.builder()
-                    .chattingNo(i)
-                    .build();
-
-            matchingService.makeMatching(dto);
+            matchingService.makeMatching(i);
         }
 
     }

@@ -63,7 +63,9 @@ public class UserService {
     private final MatchingRepository matchingRepository;
     private final FollowRepository followRepository;
     private final UserProfileRepository userProfileRepository;
-    private final MatchingService matchingService;
+    private final MostChampRepository mostChampRepository;
+    private final site.woulduduo.service.MatchingService matchingService;
+
 
     final String id = "abc1234";
 
@@ -85,7 +87,6 @@ public class UserService {
         }
 
         // 회원 정보 저장
-
         User user = User.builder()
                 .userAccount(dto.getUserEmail())
                 .userNickname(dto.getUserNickname())
@@ -162,21 +163,24 @@ public class UserService {
 
         // 자동로그인 체크 여부 확인
         if (dto.isAutoLogin()) {
-            // 1. 쿠키 생성 - 쿠키값에 세션아이디를 저장
+            // 쿠키 생성 - 쿠키값에 세션아이디를 저장
             Cookie autoLoginCookie
                     = new Cookie(LoginUtil.AUTO_LOGIN_COOKIE, session.getId());
-            // 2. 쿠키 셋팅 - 수명이랑 사용경로
+
+            // 쿠키 셋팅 - 수명이랑 사용경로
             int limitTime = 60 * 60 * 24 * 90;
             autoLoginCookie.setMaxAge(limitTime);
             autoLoginCookie.setPath("/"); // 전체 경로
 
-            // 3. 쿠키를 클라이언트에 응답전송
+            // 쿠키를 클라이언트에 응답전송
             response.addCookie(autoLoginCookie);
 
-            // 4. DB에도 쿠키에 저장된 값과 수명을 저장
-
-
-
+            // DB에도 쿠키에 저장된 값과 수명을 저장
+            userRepository.saveAutoLogin(
+                    session.getId(),
+                    LocalDateTime.now().plusSeconds(limitTime),
+                    dto.getUserAccount()
+            );
         }
 
         log.info("{}님 로그인 성공!", foundUser.getUserNickname());
@@ -215,16 +219,21 @@ public class UserService {
 
     public void autoLoginClear(HttpServletRequest request, HttpServletResponse response) {
 
-        // 1. 자동로그인 쿠키를 가져온다
+        // 자동로그인 쿠키를 가져온다
         Cookie c = WebUtils.getCookie(request, LoginUtil.AUTO_LOGIN_COOKIE);
 
-        // 2. 쿠키를 삭제 -> 쿠키의 수명을 0초로 만들어서 다시 클라이언트에게 응답
+        // 쿠키를 삭제 -> 쿠키의 수명을 0초로 만들어서 다시 클라이언트에게 응답
         if (c != null) {
             c.setMaxAge(0);
             c.setPath("/");
             response.addCookie(c);
 
-            // 4. 데이터베이스에도 자동로그인을 해제한다.
+            // 데이터베이스에도 자동로그인을 해제한다.
+            userRepository.saveAutoLogin(
+                    "none",
+                    LocalDateTime.now(),
+                    LoginUtil.getCurrentLoginMemberAccount(request.getSession())
+            );
 
         }
     }
@@ -372,7 +381,7 @@ public class UserService {
 
     //유저리스트 DTO변환(Admin) + 페이징
     public ListResponseDTO<UserByAdminResponseDTO,User> getUserListByAdmin(PageDTO dto) {
-        System.out.println("servicedto="+dto);
+
         Pageable pageable = PageRequest.of(
                 dto.getPage()-1,
                 dto.getSize(),
@@ -381,18 +390,10 @@ public class UserService {
         //전체불러오기
         Page<User> all = userRepository.findAll(pageable);
 
-        for (User user : all) {
-            System.out.println("all123"+user);
-
-        }
 
         List<UserByAdminResponseDTO> collect = all.stream()
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
-
-        List<UserByAdminResponseDTO> userByAdminResponseDTOs =new ArrayList<>();
-
-
 //
         //rowNum 추가
 
@@ -400,15 +401,11 @@ public class UserService {
         for (UserByAdminResponseDTO user : collect) {
             user.setRowNum(i);
             i++;
-
-           userByAdminResponseDTOs.add(user);
         }
-        List<UserByAdminResponseDTO> userByAdminResponseDTOs1 = userByAdminResponseDTOs;
 
-        System.out.println("collect = " + collect);
 
         return ListResponseDTO.<UserByAdminResponseDTO, User>builder()
-                .count(userByAdminResponseDTOs1.size())
+                .count(collect.size())
                 .pageInfo(new PageResponseDTO<>(all))
                 .list(collect)
                 .build();
@@ -447,13 +444,11 @@ public class UserService {
 
         System.out.println("collect = " + collect);
 
-        return null;
-
-//                ListResponseDTO.builder()
-//                .count(collect.size())
-//                .pageInfo(new PageResponseDTO<User>(all))
-//                .list(collect)
-//                .build();
+        return ListResponseDTO.builder()
+                .count(collect.size())
+                .pageInfo(new PageResponseDTO(all))
+                .list(collect)
+                .build();
     }
 
 
@@ -488,7 +483,6 @@ public class UserService {
         System.out.println("userCurrentPoint = " + userCurrentPoint);
         //더한값
         int total = userCurrentPoint + userAddPoint;
-        System.out.println("total = " + total);
 
 
 
@@ -667,10 +661,10 @@ public class UserService {
                 .build();
 
     }
-    public List<UserProfilesResponseDTO> getUserProfileList(/*HttpSession session, */UserSearchType userSearchType) {
-        List<UserProfilesResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
+    public List<UserProfileResponseDTO> getUserProfileList(/*HttpSession session, */UserSearchType userSearchType) {
+        List<UserProfileResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
 
-        for (UserProfilesResponseDTO userProfile : userProfileList) {
+        for (UserProfileResponseDTO userProfile : userProfileList) {
             log.info("@@@ userProfile @@@@@ : {}", userProfile.toString());
         }
         return userProfileList;
