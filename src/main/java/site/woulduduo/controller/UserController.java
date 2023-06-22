@@ -246,7 +246,7 @@ public class UserController {
     public String showDetailByAdmin(HttpSession session,Model model, String userAccount){
 
         UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userAccount);
-
+        System.out.println("userDetailByAdmin = " + userDetailByAdmin);
         model.addAttribute("udByAdmin",userDetailByAdmin);
         return "admin/admin_user";
 
@@ -259,22 +259,27 @@ public class UserController {
         log.info("{}-----------------------",dto);
         boolean b = userService.increaseUserPoint(dto);
         log.info("{}---123123",b);
+        int i = userService.currentPoint(dto);
+
+
         return ResponseEntity
                 .ok()
-                .body(b);
+                .body(i);
     }
 
-    @GetMapping("/user/ban")
-    public String changeBanStatus(HttpSession session, @RequestParam("userNickname") String userNickname, @RequestParam("userIsBanned") int userIsBanned) {
-        UserModifyRequestDTO dto = new UserModifyRequestDTO();
-        dto.setUserNickname(userNickname);
-        dto.setUserIsBanned(userIsBanned);
 
-        log.info("{}-----------------------", dto);
+
+    @PostMapping("/user/ban")
+    @ResponseBody
+    public ResponseEntity<?> changeBanStatus(HttpSession session, @RequestBody UserModifyRequestDTO dto) {
+        String userNickname = dto.getUserNickname();
+        log.info("{}123123123",userNickname);
+        log.info("{}---------userIsBanneduserIsBanned---------", dto);
         boolean b = userService.changeBanStatus(dto);
         System.out.println("b111111 = " + b);
-        log.info("{}123123",b);
-        return "redirect:/admin/admin_user";
+        log.info("{}123123", b);
+
+        return ResponseEntity.ok().body(b);
     }
 //
 //    @GetMapping("/user/duo")

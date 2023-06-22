@@ -21,6 +21,7 @@ public class UserDetailByAdminResponseDTO {
     private LocalDate joinDate;
     private LocalDateTime recentLoginDate;
     private boolean isBanned;
+    private int point;
 
     public UserDetailByAdminResponseDTO(User user){
         this.userNickname= user.getUserNickname();
@@ -31,6 +32,7 @@ public class UserDetailByAdminResponseDTO {
         this.joinDate=user.getUserJoinDate();
         this.recentLoginDate=user.getUserRecentLoginDate();
         this.isBanned=isBanned();
+        this.point=user.getUserCurrentPoint();
     }
 
     public boolean isBanned(){

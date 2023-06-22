@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,7 +26,7 @@
         <div class="center_container">
             <div id="admin_page"><a href="/api/v1/users/admin">관리자페이지</a></div>
             <div id="main_controller">
-                <div id="is_ben" name="userIsBanned">BAN</div>
+                <div id="is_ben" name="userIsBanned" data-userId="false">BAN</div>
                 <div id="userinfo">
                     <div id="user_pic_container">
                         <button class="profile cursor" >
@@ -65,11 +66,11 @@
                             <ul id="right_info">
                                 <ul class="first_info_ul">
                                     <li class="first_info_li">현재 포인트</li>
-                                    <li class="second_info_li">지급 포인트</li>        
+                                    <li class="second_info_li" >지급 포인트</li>        
                                     <li class="third_info_li">경고</li>
                                 </ul>
                                 <ul class="second_info_ul">
-                                    <li class="first_info_li" id="userCurrentPoint" name="userCurrentPoint">1</li>
+                                    <li class="first_info_li" id="userCurrentPoint" name="userCurrentPoint">${udByAdmin.point}</li>
                                     <div id="div_contain">
                                     <li class="second_info_li" id="secound_info_li"><input type="text" name="userAddPoint" id="give_point" onchange='addPoint()'></li>
                                     <button class="payment" id="payment">지급</button>
@@ -102,11 +103,14 @@
     
         </div>
     </div>
+  
 
     <script>
         // 현재 포인트
         const userCurrentPoint = document.getElementById('userCurrentPoint');
       
+        //추가포인트
+        const pay = document.getElementById('give_point');
         //현재포인트 int 변환
         const point = parseInt(userCurrentPoint.innerText);
         // const add = parseInt(AddPoint.value);
@@ -126,27 +130,67 @@
         const user = document.getElementById('user_name');
 
 
+
+
+
     //Ban 클릭 변수
     const banClick = document.getElementById('is_ben');
-        
+console.log("-----------------------------------");
+
+// isBan 가져오기
+function renderBanValue(userIsBanned) {
+    console.log(userIsBanned + "aasdasdasdasdasd");
+    const $setAttribute = banClick.setAttribute('data-userIsBanned', userIsBanned);
+}
+
+const userIsBanned = banClick.getAttribute('data-userIsBanned');
+console.log(userIsBanned + "asdqwe123123123");
+
+if (userIsBanned === 'true') {
+    banClick.style.backgroundColor = 'red';
+} else {
+    banClick.style.backgroundColor = '#111E30';
+}
+
+    
+    
+
+
     banClick.onclick = e => {
     const userNickname = user.innerText;
     console.log(userNickname);
 
-    fetch(`http://localhost:8282/user/ban?userNickname=\${userNickname}&userIsBanned=1`)
-        .then(res => res.json())
-        .then(result => {
-            console.log(result);
+    fetch(`http://localhost:8282/user/ban`,{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userIsBanned : 1,
+                userNickname : user.innerText
+                })
+            })
+        .then(response => {return response.json()})
+        .then(res => {
+            console.log('res  :  -' + res);
 
-            if (result) {
+            renderBanValue(res);
+
+            if (res===true) {
                 banClick.style.backgroundColor = 'red';
             } else {
-                banClick.style.backgroundColor = 'white';
+                banClick.style.backgroundColor = '#111E30';
             }
-            console.log(result);
+            console.log(res);
         });
 
-}
+};
+
+
+
+
+
+        pay.value=0;
         // 포인트 버튼 클릭 시 현재 포인트에 추가 포인트 더하기
         payment.onclick = e => {
 
@@ -167,14 +211,12 @@
             .then(response => {return response.json()})
             .then(res =>{
                 console.log('res  :  -' + res);
-                if(res === true){
-                    document.getElementById('userCurrentPoint').innerText =total;
-                   
-                }
+                
+                document.getElementById('userCurrentPoint').innerText =res;
+                pay.value=0;
                 
             })
         };
-
 
 
 

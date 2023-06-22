@@ -11,12 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.WebUtils;
 import site.woulduduo.dto.request.login.LoginRequestDTO;
-import site.woulduduo.dto.request.page.AdminSearchType;
+import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.page.PageResponseDTO;
 import site.woulduduo.dto.response.user.*;
 import site.woulduduo.dto.riot.LeagueV4DTO;
@@ -32,7 +33,6 @@ import site.woulduduo.enumeration.Tier;
 import site.woulduduo.exception.NoRankException;
 import site.woulduduo.repository.*;
 import site.woulduduo.util.LoginUtil;
-import site.woulduduo.dto.request.page.PageDTO;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -40,11 +40,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
-import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import static java.util.stream.Collectors.toList;
 import static site.woulduduo.enumeration.LoginResult.*;
 
@@ -391,27 +390,26 @@ public class UserService {
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
 
-        for (UserByAdminResponseDTO userByAdminResponseDTO : collect) {
-            System.out.println("userByAdminResponseDTO = " + userByAdminResponseDTO);
+        List<UserByAdminResponseDTO> userByAdminResponseDTOs =new ArrayList<>();
 
-        }
+
 //
-        //1         10
-//        page - 1 * size + 1
-        // 1 -> 1
-        // 2 -> 11
-        // 3 -> 21
-        // 4 -> 31
+        //rowNum 추가
+
         int i= (dto.getPage() - 1) * dto.getSize() + 1 ;
         for (UserByAdminResponseDTO user : collect) {
             user.setRowNum(i);
             i++;
+
+           userByAdminResponseDTOs.add(user);
         }
+        List<UserByAdminResponseDTO> userByAdminResponseDTOs1 = userByAdminResponseDTOs;
 
+        System.out.println("collect = " + collect);
 
-        return ListResponseDTO.builder()
-                .count(all.getSize())
-                .pageInfo(new PageResponseDTO(all))
+        return ListResponseDTO.<UserByAdminResponseDTO, User>builder()
+                .count(userByAdminResponseDTOs1.size())
+                .pageInfo(new PageResponseDTO<>(all))
                 .list(collect)
                 .build();
 
@@ -449,11 +447,13 @@ public class UserService {
 
         System.out.println("collect = " + collect);
 
-        return ListResponseDTO.builder()
-                .count(collect.size())
-                .pageInfo(new PageResponseDTO(all))
-                .list(collect)
-                .build();
+        return null;
+
+//                ListResponseDTO.builder()
+//                .count(collect.size())
+//                .pageInfo(new PageResponseDTO<User>(all))
+//                .list(collect)
+//                .build();
     }
 
 
@@ -498,6 +498,7 @@ public class UserService {
             if (matches != false) {
                 byUserNickName.setUserCurrentPoint(total);
                 User save = userRepository.save(byUserNickName);
+                currentPoint(dto);
                 System.out.println("save = " + save);
                 return true;
             }
@@ -507,10 +508,18 @@ public class UserService {
 
     }
 
+    //현재포인트 렌더링 메서드
+    public int currentPoint(UserModifyRequestDTO dto) {
+        User byUserNickName = userRepository.findByUserNickName(dto.getUserNickname());
+        Integer userCurrentPoint = byUserNickName.getUserCurrentPoint();
+
+        return userCurrentPoint;
+    }
+
     //밴 boolean
     public boolean changeBanStatus(UserModifyRequestDTO dto){
         int userIsBanned = dto.getUserIsBanned();
-        System.out.println("userIsBanned = " + userIsBanned);
+        System.out.println("userIsBanned12 = " + userIsBanned);
         User byUserNickName = userRepository.findByUserNickName(dto.getUserNickname());
         boolean userIsBanned1 = byUserNickName.isUserIsBanned();
         System.out.println("userIsBanned1 = " + userIsBanned1);
@@ -531,6 +540,8 @@ public class UserService {
             System.out.println("userIsBanned2 = " + userIsBanned2);
             return true;
         }
+
+
         return false;
 
     }
