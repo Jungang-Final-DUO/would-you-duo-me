@@ -2,6 +2,7 @@ package site.woulduduo.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,10 +16,7 @@ import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
-import site.woulduduo.dto.response.user.AdminPageResponseDTO;
-import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserDetailByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
+import site.woulduduo.dto.response.user.*;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.LoginResult;
@@ -33,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 import static site.woulduduo.enumeration.LoginResult.SUCCESS;
 import static site.woulduduo.util.LoginUtil.isAutoLogin;
@@ -43,17 +42,41 @@ import static site.woulduduo.util.LoginUtil.isLogin;
 @RequiredArgsConstructor
 public class UserController {
 
-//    @Value("${file.upload.root-path}")
+    @Value("${file.upload.root-path}")
     private String rootPath;
 
     private final UserService userService;
     private final EmailService emailService;
     private final UserRepository userRepository;
 
-//    메인페이지로 이동
-    @GetMapping("/main")
-    public String test(){
-        return "index";
+    // 메인페이지 - 프로필 카드 불러오기(비동기)
+    @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
+    public ResponseEntity<?> getUserProfileList(@PathVariable int page, @PathVariable String keyword, @PathVariable int size
+            , @PathVariable String position, @PathVariable String gender
+            , @PathVariable String tier, @PathVariable String sort/*, HttpSession session*/) {
+
+
+//        log.info("&&&&&:{}, {}, {}, {}", );
+        System.out.println(position+ gender+ tier+ sort);
+        UserSearchType userSearchType = new UserSearchType();
+        userSearchType.setPage(page);
+        userSearchType.setSize(size);
+        if (!position.equals("all")) {
+            userSearchType.setPosition(Position.valueOf(position));
+        }
+        if (!gender.equals("all")) {
+            userSearchType.setGender(Gender.valueOf(gender));
+        }
+        if (!tier.equals("all")) {
+            userSearchType.setTier(Tier.valueOf(tier));
+        }
+        if (!keyword.equals("all")) {
+            userSearchType.setSort(sort);
+        }
+        List<UserProfileResponseDTO> userServiceUserProfileList = userService.getUserProfileList(userSearchType);
+        System.out.println("userServiceUserProfileList = " + userServiceUserProfileList);
+
+        return ResponseEntity.ok().body(userServiceUserProfileList);
     }
 
     // 회원 가입 양식 요청
@@ -87,7 +110,7 @@ public class UserController {
         // UserRegisterRequestDTO를 UserService의 회원가입 메서드로 전달하여 저장
         userService.register(dto);
 
-        return "redirect:/user/sign-in";
+        return "redirect:/";
     }
 
     // 아이디(이메일), 닉네임, 소환사아이디 중복검사
@@ -108,16 +131,7 @@ public class UserController {
             default:
                 throw new IllegalArgumentException("잘못된 검사 타입입니다.");
         }
-
         return ResponseEntity.ok(isDuplicate); // 중복되지 않은 경우에 true 반환
-    }
-
-    // 로그인 양식 요청
-    @GetMapping("/user/sign-in")
-    public String signIn(HttpServletRequest request) {
-        log.info("/user/sign-in GET");
-        String referer = request.getHeader("Referer");
-        return "index";
     }
 
     // 로그인 검증 요청
@@ -139,7 +153,7 @@ public class UserController {
             userService.maintainLoginState(
                     request.getSession(), dto.getUserAccount());
 
-            return "redirect:/main";
+            return "redirect:/";
         }
 
         // 1회용으로 쓰고 버릴 데이터
@@ -168,9 +182,9 @@ public class UserController {
 
             // 세션 초기화
             session.invalidate();
-            return "redirect:/main";
+            return "redirect:/";
         }
-        return "redirect:/user/sgin-in";
+        return "redirect:/user/sign-in";
     }
 
 
@@ -223,10 +237,8 @@ public class UserController {
 
     //관리자 페이지 리스트 가져오기
     @GetMapping("/api/v1/users/admin")
-    @ResponseBody
-    public ResponseEntity<?> getUserListByAdmin(PageDTO dto){
-        System.out.println("dto11 = " + dto);
-
+    public ResponseEntity<?> getUserListByAdmin(
+            @PathVariable PageDTO dto){
 
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
 
@@ -289,23 +301,6 @@ public class UserController {
 //        return "";
 //    }
 
-    @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
-    public ResponseEntity<?> getUserProfileList(int page, String keyword, int size, Position position, Gender gender, Tier tier, String sort/*, HttpSession session*/) {
-//        UserSearchType userSearchType = UserSearchType.builder()
-//                .position(Position.MID)
-//                .gender(Gender.M)
-//                .tier(Tier.DIA)
-//                .sort("avgRate")
-//                .build();
-
-        UserSearchType userSearchType = new UserSearchType();
-        userSearchType.setPosition(position);
-        userSearchType.setGender(gender);
-        userSearchType.setTier(tier);
-        userSearchType.setSort(sort);
-
-        return ResponseEntity.ok().body(userService.getUserProfileList(userSearchType));
-    }
 
         // 유저 전적 페이지 이동
         @GetMapping("/user/user-history")
