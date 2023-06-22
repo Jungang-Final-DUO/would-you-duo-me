@@ -14,7 +14,7 @@
             <c:if test="${login == null}">
                 <div class="user-icon-wrapper">
                     <form action="/user/sign-in" method="post">
-                        <button id="sign-in-btn" class="modal-btn">
+                        <button id="sign-in-btn">
                             <img src="/assets/img/header/sign-in.png" alt="로그인 아이콘" class="user-icon">
                         </button>
                         <!--         로그인 모달           -->

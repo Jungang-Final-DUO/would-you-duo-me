@@ -2,7 +2,8 @@ import {addModalBtnEvent, addModalCloseEvent} from "./modal-handler.js";
 import {getChattingList, makeChattingRoom, openChattingList, toBack} from "../chatting/chatting-modal.js";
 import {toTopBtnHandler} from "./to-top-btn-handler.js";
 import {connectSocket} from "../chatting/main.js";
-import {addDropdownEvent} from "./sign-in-handler.js";
+import {addDropdownEvent} from "./dropdown-handler.js";
+import {signInSubmitHandler} from "../user/sign-in-submit-handler.js";
 
 (async () => {
 
@@ -28,6 +29,9 @@ import {addDropdownEvent} from "./sign-in-handler.js";
     } else {
         // 로그인 드롭다운 이벤트
         addDropdownEvent('sign-in-btn', 'sign-in-modal-wrapper');
+
+        // 로그인 모달 인풋에서 엔터키 눌렀을 때 서브밋 보내기 이벤트
+        signInSubmitHandler();
     }
     // 모달 열고 닫는 이벤트
     addModalBtnEvent();

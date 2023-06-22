@@ -163,7 +163,7 @@ public class UserController {
             session.invalidate();
             return "redirect:/";
         }
-        return "redirect:/user/sgin-in";
+        return "redirect:/user/sign-in";
     }
 
 
