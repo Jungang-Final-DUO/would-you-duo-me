@@ -40,12 +40,15 @@ public class ChattingService {
         long chattingNo;
 
 //        추후 세션에서 꺼내온 아이디로 변경해야함
-        User me = userRepository.findByUserAccount(myName);
-        User chattingUser = userRepository.findByUserAccount(userAccount);
+        User me = userRepository.findById(myName).orElseThrow();
+        System.out.println("me : " + me);
+        User chattingUser = userRepository.findById(userAccount).orElseThrow();
 
         // 채팅 데이터를 생성하기 전에 이미 존재하는 채팅인지 검사
         Chatting chattingFrom = chattingRepository.findByChattingFromAndChattingTo(/*session.getAttribute()*/ me, chattingUser);
+        System.out.println("chattingFrom = " + chattingFrom);
         Chatting chattingTo = chattingRepository.findByChattingFromAndChattingTo(chattingUser, /*session.getAttribute()*/ me);
+        System.out.println("chattingTo = " + chattingTo);
         if (chattingFrom != null || chattingTo != null) {
             System.out.println("이미 존재하는 채팅내역임");
             chattingNo = chattingFrom != null ? chattingFrom.getChattingNo() : chattingTo.getChattingNo();
@@ -75,7 +78,7 @@ public class ChattingService {
     public ChattingDetailResponseDTO getChattingDetail(/*session.getAttribute()*/ String userAccount, long chattingNo) {
 
 //        채팅 상대방 찾기 - 테스트완
-        User user = userRepository.findByUserAccount(userAccount);
+        User user = userRepository.findById(userAccount).orElseThrow();
 //        채팅 가져오기
         Chatting chatting = chattingRepository.findByChattingNo(chattingNo);
         log.info("chattingNo = {}", chatting.getChattingNo());
@@ -104,7 +107,7 @@ public class ChattingService {
         }
 
 //        메세지 내역 가져오기
-        chattingResponseDTO.setMessageList(messageService.getMessages(chatting));
+        chattingResponseDTO.setMessageList(messageService.getMessages(chatting, user));
 
         return chattingResponseDTO;
     }
@@ -150,8 +153,17 @@ public class ChattingService {
             }
 //           최신 메세지 세팅
             dtoList.get(i).setMessageContent(messageRepository.findByChattingOrderByMessageTimeDesc(chattingList.get(i)).get(0).getMessageContent());
+            dtoList.get(i).setMessageUnreadCount(messageRepository.countByChattingAndUserIsNotAndMessageIsRead(chattingList.get(i), user, false));
         }
 
         return dtoList;
+    }
+
+    public int countUnreadMessages(Chatting chatting, User user){
+        return messageRepository.countByChattingAndUserIsNotAndMessageIsRead(chatting, user, false);
+    }
+
+    public Chatting findByChattingNo(long chattingNo) {
+        return chattingRepository.findByChattingNo(chattingNo);
     }
 }

@@ -188,6 +188,14 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("findById test")
+    void findByIdTest() {
+        User user1 = userRepository.findById("user1").orElseThrow();
+
+        System.out.println("user1 = " + user1);
+    }
+
+    @Test
     @DisplayName("nickname으로 User 객체 찾기")
     void searchUserByNickName() {
         User byNickName = userRepository.findByNickName("345");
@@ -255,6 +263,5 @@ class UserRepositoryTest {
         users.getContent().forEach(System.out::println);
         System.out.println("\n\n\n");
     }
-
 
 }

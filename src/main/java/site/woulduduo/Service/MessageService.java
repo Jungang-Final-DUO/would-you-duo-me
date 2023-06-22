@@ -8,6 +8,7 @@ import site.woulduduo.dto.request.chatting.MessageRequestDTO;
 import site.woulduduo.dto.response.chatting.MessageListResponseDTO;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Message;
+import site.woulduduo.entity.User;
 import site.woulduduo.repository.ChattingRepository;
 import site.woulduduo.repository.MessageRepository;
 import site.woulduduo.repository.UserRepository;
@@ -29,21 +30,22 @@ public class MessageService {
     public boolean saveMessage(MessageRequestDTO dto){
         Message message = Message.builder()
                 .chatting(chattingRepository.findByChattingNo(dto.getChattingNo()))
-                .user(userRepository.findByUserAccount(dto.getMessageFrom()))
+                .user(userRepository.findById(dto.getMessageFrom()).orElseThrow())
                 .messageContent(dto.getMessageContent())
                 .build();
         try {
             Message saved = messageRepository.save(message);
             return true;
         } catch (Exception e) {
-            log.info("메세지 저장에 실패함");
+            log.info("service - 메세지 저장에 실패함");
             return false;
         }
 
     }
 
     //    메세지 내역 가져오기
-    public List<MessageListResponseDTO> getMessages (Chatting chatting){
+    public List<MessageListResponseDTO> getMessages (Chatting chatting, User user){
+
         List<Message> messages = messageRepository.findByChatting(chatting);
         if(messages.size() == 0){
             Message message = Message.builder()
@@ -60,4 +62,18 @@ public class MessageService {
                 .collect(Collectors.toList());
     }
 
+    public void readMessage(String userId, long chattingNo) {
+        User user = userRepository.findById(userId).orElseThrow();
+        Chatting chatting = chattingRepository.findByChattingNo(chattingNo);
+        List<Message> messagesFromOther = messageRepository.findByChattingAndUserIsNot(chatting, user);
+        //      상대방이 보낸 메세지 읽음 처리
+        messagesFromOther.forEach(m -> {
+            m.setMessageIsRead(true);
+            messageRepository.save(m);
+        });
+    }
+
+    public Message findByChattingOrderByMessageTimeDesc(Chatting chatting) {
+        return messageRepository.findByChattingOrderByMessageTimeDesc(chatting).get(0);
+    }
 }

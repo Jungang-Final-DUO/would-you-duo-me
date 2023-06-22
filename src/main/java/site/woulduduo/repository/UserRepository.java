@@ -5,12 +5,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import site.woulduduo.entity.User;
 
 import java.time.LocalDate;
 
-public interface UserRepository extends
-        JpaRepository<User,String> {
+@Repository
+public interface UserRepository extends JpaRepository<User, String> {
+
+    @Query(value = "SELECT COUNT(*) FROM User u WHERE u.userAccount = :email")
+    int countByUserEmail(String email);
 
     //아이디로 검색한 정보보기 + 페이징
     Page<User> findByUserAccountContaining(String userAccount, Pageable pageable);
@@ -25,6 +29,8 @@ public interface UserRepository extends
     //가입수
     long countByUserAccount(String userAccount);
 
+    User findByUserAccount(String userAccount);
+
     // 닉네임 중복검사를 위한 쿼리문
     @Query(value = "SELECT COUNT(*) FROM duo_user WHERE user_nickname = :nickname", nativeQuery = true)
     int countByUserNickname(@Param("nickname") String nickname);
@@ -36,4 +42,5 @@ public interface UserRepository extends
 
 
     User findByUserAccount(String userAccount);
+//    User findByUserAccount(String userAccount);
 }

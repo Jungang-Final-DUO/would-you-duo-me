@@ -54,4 +54,15 @@ class MessageRepositoryTest {
 
         System.out.println(recentMessage);
     }
+
+//    안읽은 메세지 가져오기
+    @Test
+    @DisplayName("채팅에서 유저가 읽지 않은 메세지 숫자를 가져온다")
+    void countUnreadMessageTest(){
+        User user = userRepository.findByUserAccount("test1");
+        Chatting chatting = chattingRepository.findByChattingNo(3L);
+        int count = messageRepository.countByChattingAndUserIsNotAndMessageIsRead(chatting, user, false);
+
+        System.out.println("count = " + count);
+    }
 }

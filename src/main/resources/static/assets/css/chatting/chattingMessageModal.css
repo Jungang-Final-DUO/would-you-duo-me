@@ -12,7 +12,7 @@
     padding: 20px 15px 15px 0;
 }
 
-.chatting-message-modal-wrapper::backdrop {
+.message-dialog::backdrop {
     background: none;
 }
 
