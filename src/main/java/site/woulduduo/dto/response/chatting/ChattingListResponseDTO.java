@@ -15,6 +15,7 @@ import site.woulduduo.enumeration.MatchingStatus;
 public class ChattingListResponseDTO {
 
     private long chattingNo;
+    private String chattingFrom;
     private String profileImage;
     private String userNickname;
     private String messageContent;
@@ -24,6 +25,7 @@ public class ChattingListResponseDTO {
 
     public ChattingListResponseDTO(Chatting chatting){
         this.chattingNo = chatting.getChattingNo();
+        this.chattingFrom = chatting.getChattingFrom().getUserNickname();
 
         try {
             Matching matching = chatting.getMatchingList().get(0);

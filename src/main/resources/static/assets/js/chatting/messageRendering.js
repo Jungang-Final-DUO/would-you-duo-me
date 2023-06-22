@@ -1,4 +1,5 @@
 import {renderUnreadMessages} from "./chatting-modal.js";
+import {matchingRequestEvent} from "./matching.js";
 
 export function scrollDown() {
     const chatMessages = document.querySelectorAll('.chatting-message-body');
@@ -10,6 +11,8 @@ export function scrollDown() {
 
 //메세지박스 렌더링
 export function outputMessage(message) {
+    matchingRequestEvent();
+
     const room = document.getElementById(message.room);
     const otherProfile = room.querySelector('.chatting-profile-img').src;
 
