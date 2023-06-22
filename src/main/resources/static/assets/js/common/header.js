@@ -25,6 +25,9 @@ import {addDropdownEvent} from "./sign-in-handler.js";
 
         // 내 정보 모달 드롭다운 이벤트
         addDropdownEvent('user-info-btn', 'my-page-modal-wrapper');
+    } else {
+        // 로그인 드롭다운 이벤트
+        addDropdownEvent('sign-in-btn', 'sign-in-modal-wrapper');
     }
     // 모달 열고 닫는 이벤트
     addModalBtnEvent();
@@ -33,6 +36,4 @@ import {addDropdownEvent} from "./sign-in-handler.js";
     // 위로가기 버튼 이벤트
     toTopBtnHandler();
 
-    // 로그인 드롭다운 이벤트
-    addDropdownEvent('sign-in-btn', 'sign-in-modal-wrapper');
 })();
