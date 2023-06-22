@@ -13,7 +13,7 @@ export function addDropdownEvent(btnId, contentId) {
         }
 
         function addDropdownCloseEvent(e) {
-            if (e.target.matches('#' + btnId)) return;
+            if (e.target.closest('#' + btnId)) return;
 
             if (!e.target.closest('#' + contentId)) {
                 $contentWrapper.classList.add('invisible');
