@@ -6,22 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import site.woulduduo.dto.request.page.PageDTO;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import site.woulduduo.dto.request.login.LoginRequestDTO;
+import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
-import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.AdminPageResponseDTO;
 import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
@@ -35,20 +27,13 @@ import site.woulduduo.enumeration.Tier;
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.EmailService;
 import site.woulduduo.service.UserService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import site.woulduduo.dto.request.user.UserCommentRequestDTO;
-import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
-
 import site.woulduduo.util.upload.FileUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
 import static site.woulduduo.enumeration.LoginResult.SUCCESS;
 import static site.woulduduo.util.LoginUtil.isAutoLogin;
 import static site.woulduduo.util.LoginUtil.isLogin;
@@ -58,7 +43,7 @@ import static site.woulduduo.util.LoginUtil.isLogin;
 @RequiredArgsConstructor
 public class UserController {
 
-    @Value("${file.upload.root-path}")
+//    @Value("${file.upload.root-path}")
     private String rootPath;
 
     private final UserService userService;

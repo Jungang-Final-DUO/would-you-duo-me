@@ -29,8 +29,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     //가입수
     long countByUserAccount(String userAccount);
 
-    User findByUserAccount(String userAccount);
-
     // 닉네임 중복검사를 위한 쿼리문
     @Query(value = "SELECT COUNT(*) FROM duo_user WHERE user_nickname = :nickname", nativeQuery = true)
     int countByUserNickname(@Param("nickname") String nickname);
@@ -42,5 +40,4 @@ public interface UserRepository extends JpaRepository<User, String> {
 
 
     User findByUserAccount(String userAccount);
-//    User findByUserAccount(String userAccount);
 }
