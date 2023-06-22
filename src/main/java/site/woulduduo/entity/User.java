@@ -155,6 +155,11 @@ public class User {
     @Builder.Default
     private List<Chatting> chattingFromList = new ArrayList<>();
 
+    // 내 모스트 챔피언들
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<MostChamp> mostChampList = new ArrayList<>();
+
     // 양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
     public void addReply(Reply reply) {
         replyList.add(reply);
@@ -239,5 +244,12 @@ public class User {
                 .map(UserProfile::getProfileImage)
                 .findFirst()
                 .orElse(null);
+    }
+
+    public void addMostChampList(MostChamp mostChamp) {
+        mostChampList.add(mostChamp);
+        if (this != mostChamp.getUser()) {
+            mostChamp.setUser(this);
+        }
     }
 }

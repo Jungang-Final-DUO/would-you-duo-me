@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,15 +17,19 @@ import site.woulduduo.dto.request.login.LoginRequestDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
+import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
 import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.LoginResult;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
+import site.woulduduo.service.UserService;
+import org.springframework.ui.Model;
+import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.EmailService;
-import site.woulduduo.service.UserService;
 import site.woulduduo.util.upload.FileUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +54,36 @@ public class UserController {
     private final UserService userService;
     private final EmailService emailService;
     private final UserRepository userRepository;
+
+    // 메인페이지 - 프로필 카드 불러오기(비동기)
+    @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
+    public ResponseEntity<?> getUserProfileList(@PathVariable int page, @PathVariable String keyword, @PathVariable int size
+            , @PathVariable String position, @PathVariable String gender
+            , @PathVariable String tier, @PathVariable String sort/*, HttpSession session*/) {
+
+
+//        log.info("&&&&&:{}, {}, {}, {}", );
+        System.out.println(position+ gender+ tier+ sort);
+        UserSearchType userSearchType = new UserSearchType();
+        userSearchType.setPage(page);
+        userSearchType.setSize(size);
+        if (!position.equals("all")) {
+            userSearchType.setPosition(Position.valueOf(position));
+        }
+        if (!gender.equals("all")) {
+            userSearchType.setGender(Gender.valueOf(gender));
+        }
+        if (!tier.equals("all")) {
+            userSearchType.setTier(Tier.valueOf(tier));
+        }
+        if (!keyword.equals("all")) {
+            userSearchType.setSort(sort);
+        }
+        List<UserProfilesResponseDTO> userServiceUserProfileList = userService.getUserProfileList(userSearchType);
+        System.out.println("userServiceUserProfileList = " + userServiceUserProfileList);
+
+        return ResponseEntity.ok().body(userService.getUserProfileList(userSearchType));
+    }
 
     // 회원 가입 양식 요청
     @GetMapping("/user/sign-up")
@@ -244,23 +279,6 @@ public class UserController {
 //        return "";
 //    }
 
-    @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
-    public ResponseEntity<?> getUserProfileList(int page, String keyword, int size, Position position, Gender gender, Tier tier, String sort/*, HttpSession session*/) {
-//        UserSearchType userSearchType = UserSearchType.builder()
-//                .position(Position.MID)
-//                .gender(Gender.M)
-//                .tier(Tier.DIA)
-//                .sort("avgRate")
-//                .build();
-
-        UserSearchType userSearchType = new UserSearchType();
-        userSearchType.setPosition(position);
-        userSearchType.setGender(gender);
-        userSearchType.setTier(tier);
-        userSearchType.setSort(sort);
-
-        return ResponseEntity.ok().body(userService.getUserProfileList(userSearchType));
-    }
 
         // 유저 전적 페이지 이동
         @GetMapping("/user/user-history")
