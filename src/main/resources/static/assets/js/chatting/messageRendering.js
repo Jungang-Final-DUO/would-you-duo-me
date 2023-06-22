@@ -19,6 +19,7 @@ export function outputMessage(message) {
     if (message.username === 'test1') {
         div.classList.add('chatting-message-card');
         div.classList.add('message-from');
+        console.log(message.time);
         div.innerHTML = `
                 <img class="chatting-profile" src="/assets/img/chattingModal/woogi.jpg" alt="프로필이미지">
                 <div class="message-content-container">

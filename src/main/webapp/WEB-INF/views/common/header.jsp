@@ -18,7 +18,8 @@
                             <img src="/assets/img/header/sign-in.png" alt="로그인 아이콘" class="user-icon">
                         </button>
                         <!--         로그인 모달           -->
-                        <dialog id="sign-in-dialog">
+
+                        <div id="sign-in-modal-wrapper" class="invisible">
                             <div id="sign-in-modal" class="user-modal">
                                 <div id="id-input-wrapper" class="input-wrapper">
                                     <label for="sign-in-user-account">아이디</label>
@@ -49,7 +50,8 @@
                                     <a href="#" class="btn">비밀번호를 잊으셨나요?</a>
                                 </div>
                             </div>
-                        </dialog>
+                        </div>
+
                     </form>
                 </div>
             </c:if>
@@ -60,34 +62,36 @@
             </div> <!-- end of sign-in, up page -->
             <!--        로그인 하면 위의 두 버튼 대신 아래의 버튼이 보입니다        -->
             <c:if test="${login != null}">
-                <div class="user-icon-wrapper">
-                    <a href="#" id="user-info-btn">
+                <div id="loginUserInfo" data-user-account="${login.userAccount}" class="user-icon-wrapper">
+                    <button id="user-info-btn">
                         <img src="/assets/img/header/my-page.png" alt="마이 페이지 아이콘" class="user-icon">
-                    </a>
+                    </button>
 
-                    <div id="my-page-modal" class="user-modal">
-                        <div id="my-page-header">
-                            <div id="profile-img-wrapper">
-                                <c:if test="${login.userProfileImage == null}">
-                                    <img src="/assets/img/header/defaultProfile.jpg" alt="프로필 이미지">
-                                </c:if>
-                                <c:if test="${login.userProfileImage != null}">
-                                    <img src="${login.userProfileImage}" alt="프로필 이미지">
-                                </c:if>
+                    <div id="my-page-modal-wrapper" class="invisible">
+                        <div id="my-page-modal" class="user-modal">
+                            <div id="my-page-header">
+                                <div id="profile-img-wrapper">
+                                    <c:if test="${login.userProfileImage == null}">
+                                        <img src="/assets/img/header/defaultProfile.jpg" alt="프로필 이미지">
+                                    </c:if>
+                                    <c:if test="${login.userProfileImage != null}">
+                                        <img src="${login.userProfileImage}" alt="프로필 이미지">
+                                    </c:if>
+                                </div>
+                                <div id="nickname-wrapper">${login.userNickname}</div>
                             </div>
-                            <div id="nickname-wrapper">${login.userNickname}</div>
-                        </div>
-                        <div id="user-info-wrapper">
-                            <div>
-                                라이엇 계정 : ${login.lolNickname}
+                            <div id="user-info-wrapper">
+                                <div>
+                                    라이엇 계정 : ${login.lolNickname}
+                                </div>
+                                <div>
+                                    잔여 포인트 : ${login.userCurrentPoint} point
+                                </div>
                             </div>
-                            <div>
-                                잔여 포인트 : ${login.userCurrentPoint} point
+                            <div id="my-page-btn-wrapper">
+                                <a class="btn" href="/user/my-page">마이페이지</a>
+                                <a class="btn" href="/user/sign-out">로그아웃</a>
                             </div>
-                        </div>
-                        <div id="my-page-btn-wrapper">
-                            <a class="btn" href="/user/my-page">마이페이지</a>
-                            <a class="btn" href="/user/sign-out">로그아웃</a>
                         </div>
                     </div>
                 </div>
@@ -116,22 +120,19 @@
         <img src="/assets/img/header/to-top.png" alt="위로 버튼 아이콘">
     </button>
 
-    <div>
-        <!--   로그인 안했으면 아래 버튼은 안보입니다  -->
+    <!--   로그인 안했으면 아래 버튼은 안보입니다  -->
 
-        <c:if test="${login == null}">
-            <button class="fixed-btn btn modal-btn" id="chatting-btn">
-                <img class=".modal-btn" src="/assets/img/header/chatting.png" alt="채팅 버튼 아이콘">
-                <!--     읽지 않은 채팅 표시   -->
-                <span id="unread-chatting-count">
-                        ${false}
-                </span>
-            </button>
-            <%@ include file="../chatting/chattingModal.jsp" %>
-        </c:if>
+    <c:if test="${login != null}">
+        <button class="fixed-btn btn modal-btn" id="chatting-btn">
+            <img class=".modal-btn" src="/assets/img/header/chatting.png" alt="채팅 버튼 아이콘">
+            <!--     읽지 않은 채팅 표시   -->
+            <span id="unread-chatting-count">
+                    ${false}
+            </span>
+        </button>
+        <%@ include file="../chatting/chattingModal.jsp" %>
+    </c:if>
 
-
-    </div>
 
 </div>
 <!-- 고정 버튼 끝 -->
