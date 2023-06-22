@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.chatting.MatchingFixRequestDTO;
-import site.woulduduo.dto.request.chatting.MatchingMakeRequestDTO;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.page.PageResponseDTO;
@@ -32,8 +31,8 @@ public class MatchingService {
     private final ChattingRepository chattingRepository;
 
     //    매칭 신청하기
-    public long makeMatching(MatchingMakeRequestDTO dto) {
-        Chatting chatting = chattingRepository.findByChattingNo(dto.getChattingNo());
+    public long makeMatching(long chattingNo) {
+        Chatting chatting = chattingRepository.findByChattingNo(chattingNo);
 
         Matching matching = Matching.builder()
                 .chatting(chatting)

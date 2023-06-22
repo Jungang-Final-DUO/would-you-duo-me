@@ -1,5 +1,6 @@
 // 모든 모달 버튼에 이벤트를 등록하는 함수
 import {getMessages} from "../chatting/messageRendering.js";
+import {getChattingList} from "../chatting/chatting-modal.js";
 
 export function modalHandler($modalBtn) {
 
@@ -9,13 +10,16 @@ export function modalHandler($modalBtn) {
         const $target = e.target.closest('.modal-btn').nextElementSibling;
 
         if (!$target.hasAttribute('open')) {
-            $target.showModal();
+            // 해당 모달이 채팅목록이라면 채팅목록 출력
+            if ($target.classList.contains('chatting-modal-dialog')){
+                getChattingList();
+            }
             // 해당 모달이 메세지 다이어로그라면 내부 메세지 출력
-            // 소켓 함수 연결
             if($target.classList.contains('message-dialog')){
                 const room = e.target.closest('.chatting-card').id;
                 getMessages(room);
             }
+            $target.showModal();
         }
         else {
             $target.close();
