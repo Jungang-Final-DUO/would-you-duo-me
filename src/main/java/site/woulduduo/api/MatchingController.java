@@ -60,4 +60,10 @@ public class MatchingController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @PostMapping
+    public ResponseEntity<?> makeMatching(@RequestBody long chattingNo){
+        long matchingNo = matchingService.makeMatching(chattingNo);
+        return ResponseEntity.ok().body(matchingNo);
+    }
+
 }
