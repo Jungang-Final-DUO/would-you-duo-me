@@ -139,14 +139,6 @@ public class UserController {
         return ResponseEntity.ok(isDuplicate); // 중복되지 않은 경우에 true 반환
     }
 
-    // 로그인 양식 요청
-    @GetMapping("/user/sign-in")
-    public String signIn(HttpServletRequest request) {
-        log.info("/user/sign-in GET");
-        String referer = request.getHeader("Referer");
-        return "index";
-    }
-
     // 로그인 검증 요청
     @PostMapping("/user/sign-in")
     public String signIn(LoginRequestDTO dto
