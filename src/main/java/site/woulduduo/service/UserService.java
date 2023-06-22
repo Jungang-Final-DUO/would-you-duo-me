@@ -193,7 +193,7 @@ public class UserService {
 
     //유저리스트 DTO변환(Admin) + 페이징
     public ListResponseDTO<UserByAdminResponseDTO,User> getUserListByAdmin(PageDTO dto) {
-        System.out.println();
+        System.out.println("servicedto="+dto);
         Pageable pageable = PageRequest.of(
                 dto.getPage()-1,
                 dto.getSize(),
@@ -202,11 +202,19 @@ public class UserService {
         //전체불러오기
         Page<User> all = userRepository.findAll(pageable);
 
-        System.out.println(all);
+        for (User user : all) {
+            System.out.println("all123"+user);
+
+        }
 
         List<UserByAdminResponseDTO> collect = all.stream()
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
+
+        for (UserByAdminResponseDTO userByAdminResponseDTO : collect) {
+            System.out.println("userByAdminResponseDTO = " + userByAdminResponseDTO);
+
+        }
 //
         //1         10
 //        page - 1 * size + 1
@@ -335,7 +343,7 @@ public class UserService {
                 User save = userRepository.save(byUserNickName);
                 boolean userIsBanned2 = save.isUserIsBanned();
                 System.out.println("userIsBanned2 = " + userIsBanned2);
-                return true;
+                return false;
             }
             byUserNickName.setUserIsBanned(true);
             User save = userRepository.save(byUserNickName);
@@ -343,7 +351,6 @@ public class UserService {
             System.out.println("userIsBanned2 = " + userIsBanned2);
             return true;
         }
-        //프론트에서 ban 클릭이 되지 않은것
         return false;
 
     }

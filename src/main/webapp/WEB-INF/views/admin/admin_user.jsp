@@ -118,11 +118,35 @@
 
         }
 
+
+
         // 포인트 지급 버튼
         const payment = document.getElementById('payment');
         // 해당 유저 닉네임
         const user = document.getElementById('user_name');
 
+
+    //Ban 클릭 변수
+    const banClick = document.getElementById('is_ben');
+        
+    banClick.onclick = e => {
+    const userNickname = user.innerText;
+    console.log(userNickname);
+
+    fetch(`http://localhost:8282/user/ban?userNickname=\${userNickname}&userIsBanned=1`)
+        .then(res => res.json())
+        .then(result => {
+            console.log(result);
+
+            if (result) {
+                banClick.style.backgroundColor = 'red';
+            } else {
+                banClick.style.backgroundColor = 'white';
+            }
+            console.log(result);
+        });
+
+}
         // 포인트 버튼 클릭 시 현재 포인트에 추가 포인트 더하기
         payment.onclick = e => {
 
@@ -152,24 +176,7 @@
         };
 
 
-        //Ban 클릭 변수
-        const banClick = document.getElementById('is_ben');
-        
-        banClick.onclick = e =>{
 
-           
-
-            fetch('http://localhost:8282/user/ban?userNickname=asd10&userIsBanned=1')
-                .then(res=>res.json())
-                .then(result=>{
-                    
-                    banClick.style.backgroundColor = 'red';
-                })
-            }
-        
-        fetch
-
-      
 
     </script>
 </body>

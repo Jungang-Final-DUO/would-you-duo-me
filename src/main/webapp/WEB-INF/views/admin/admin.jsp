@@ -22,14 +22,14 @@
             </ul>
             <ul class="menu_box">
                 <ul class="two_box">
-                    <a href="${getUserListByAdmin}" class="one_box">
+                    <a href="/api/v1/users/admin" class="one_box">
                         <ul class="one_box_text">
                             <li class="pic"><img class="admin_img" id="sign" src="/assets/img/admin/금일가입자수.png" alt="today_user"></li>
                             <li class="admin_category">금일 가입자</li>
                             <li class="mem_count">${count.todayJoinCount} 명</li>
                         </ul>
                     </a>
-                    <a href="${getUserListByAdmin}" class="one_box">
+                    <a href="/api/v1/users/admin" class="one_box">
                         <ul class="one_box_text">
                             <li class="pic"><img class="admin_img" id="member"src="/assets/img/admin/회원관리.png" alt="user_management"></li>
                             <li class="admin_category">회원관리</li>

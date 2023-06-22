@@ -79,9 +79,8 @@ public class UserController {
     //관리자 페이지 리스트 가져오기
     @GetMapping("/api/v1/users/admin")
     @ResponseBody
-    public ResponseEntity<?> getUserListByAdmin(
-            @RequestBody PageDTO dto){
-        System.out.println("dto = " + dto);
+    public ResponseEntity<?> getUserListByAdmin(PageDTO dto){
+        System.out.println("dto11 = " + dto);
 
 
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);

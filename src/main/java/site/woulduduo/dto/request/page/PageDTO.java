@@ -14,7 +14,7 @@ public class PageDTO{
 
     public PageDTO(){
 
-        this.page=3;
+        this.page=1;
         this.keyword="";
         this.size=10;
     }
