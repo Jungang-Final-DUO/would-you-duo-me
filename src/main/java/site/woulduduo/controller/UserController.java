@@ -108,7 +108,6 @@ public class UserController {
             default:
                 throw new IllegalArgumentException("잘못된 검사 타입입니다.");
         }
-
         return ResponseEntity.ok(isDuplicate); // 중복되지 않은 경우에 true 반환
     }
 
