@@ -49,7 +49,7 @@ function renderChattingList(result) {
     if (result.length === 0) {
         $chattings.id = 'empty-chatting-list';
         $chattings.innerHTML = '아직 채팅 내역이 없어요.<br>다른 듀오 회원에게 말을 걸어보세요!';
-
+        document.querySelector('.chatting-modal-container').appendChild($chattings);
     } else {
         for (let i = 0; i < result.length; i++) {
 
