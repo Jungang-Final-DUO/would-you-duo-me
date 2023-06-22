@@ -103,40 +103,30 @@
                     <div class="follow">팔로우수</div>
                     <div class="sign_date">가입일자</div>
                 </div>
-                <a href="/user/duo">
+                    <% for (int i = 1; i < 11; i++) { %>
+                    <a href="#">
                     <div class="menubar">
-                        <div class="no">${rowNum}</div>
-                        <div class="nickname">${userAccount}</div>
-                        <div class="gender">${gender}</div>
-                        <div class="board_count">${boardCount} 건</div>
-                        <div class="reply_count">${replyCount} 개</div>
-                        <div class="warn_count">${reportCount} 회</div>
-                        <div class="point">${point}</div>
-                        <div class="follow">${followCount} 명</div>
-                        <div class="sign_date">${joinDate}</div>
+                        <div class="no uln"></div>
+                        <div class="nickname uli"></div>
+                        <div class="gender ulg"></div>
+                        <div class="board_count ulb"></div>
+                        <div class="reply_count ulr"></div>
+                        <div class="warn_count ulw"></div>
+                        <div class="point ulp"></div>
+                        <div class="follow ulf"></div>
+                        <div class="sign_date uls"></div>
                     </div>
                 </a>
-                <a href="/user/duo">
-                    <div class="menubar">
-                        <div class="no">${rowNum}</div>
-                        <div class="nickname">${userAccount}</div>
-                        <div class="gender">${gender}</div>
-                        <div class="board_count">${boardCount} 건</div>
-                        <div class="reply_count">${replyCount} 개</div>
-                        <div class="warn_count">${reportCount} 회</div>
-                        <div class="point">${point}</div>
-                        <div class="follow">${followCount} 명</div>
-                        <div class="sign_date">${joinDate}</div>
-                    </div>
-                </a>
+                <% } %>
 
+ 
                 <div class="preserve-space"></div>
-
-                
                 <div class="preserve-space">
 
                 </div>
+      
                 
+
                 <!-- 게시글관리 -->
                 <div class="menubar" id="menu_bar">
                     <div class="no">no</div>
@@ -145,6 +135,8 @@
                     <div class="board_write_date">작성일자</div>
                     <div class="select_count">조회수</div>
                 </div>
+                <% for (int i = 1; i < 11; i++) { %>
+
                 <a href="/board/detail">
                     <div class="menubar">
                         <div class="no">${boardNo}</div>
@@ -155,16 +147,8 @@
                         <div id="delete">삭제</div>
                     </div>
                 </a>
-                <a href="/board/detail">
-                    <div class="menubar">
-                        <div class="no">${boardNo}</div>
-                        <div class="nickname">${userNickname}</div>
-                        <div class="title">${boardTitle}</div>
-                        <div class="board_write_date">${writtenDate}</div>
-                        <div class="select_count">${boardViewCount}</div>
-                        <div id="delete">삭제</div>
-                    </div>
-                </a>
+                <% } %>
+
 
                 <div class="preserve-space">
 
@@ -178,6 +162,9 @@
                     <div class="accuse_etc">신고내역(etc)</div>
                     <div class="accuse_count">신고횟수</div>
                 </div>
+
+                <% for (int i = 1; i < 11; i++) { %>
+
                 <a href="/user/accuse">
                     <div class="menubar">
                         <div class="accuse_no">${accuseNo}</div>
@@ -187,15 +174,9 @@
                         <div class="accuse_count">15</div>
                     </div>
                 </a>
-                <a href="/user/accuse">
-                    <div class="menubar">
-                        <div class="accuse_no">${accuseNo}</div>
-                        <div class="accuse_nickname">${userAccount}</div>
-                        <div class="accuse_title">${accuseType}</div>
-                        <div class="accuse_etc">${accuseETC}</div>
-                        <div class="accuse_count">15</div>
-                    </div>
-                </a>
+                <% } %>
+
+ 
                 
 
             </div>
@@ -203,19 +184,116 @@
 </div>
 
 <script>
-    fetch('/api/v1/users/admin')
-    .then(res=>res.json())
-    .then(result =>{
-                console.log(result)
 
-        });
-    
+fetch('/api/v1/users/admin')
+  .then(response => response.json())
+  .then(res => {
+    const list = res.list;
+    // console.log('list: ', list);
 
+    for (let listOne of list) {
+      const {
+        rowNum,
+        userAccount,
+        gender,
+        boardCount,
+        replyCount,
+        reportCount,
+        point,
+        followCount,
+        joinDate
+      } = listOne;
+      
+    //   console.log('userAccount: ', userAccount);
       
 
+    }
+//유저리스트
+    uln(list);
+    uli(list);
+    ulg(list);
+    ulb(list);
+    ulr(list);
+    ulw(list);
+    ulp(list);
+    ulf(list);
+    uls(list);
+
+  });
 
 
 
+function uln(list) {
+  const ulArray = document.querySelectorAll('.uln');
+  ulArray.forEach((ulElement, index) => {
+    const asd = list[index].rowNum;
+    ulElement.innerText = asd;
+  });
+}
+
+function uli(list) {
+  const ulArray = document.querySelectorAll('.uli');
+  ulArray.forEach((ulElement, index) => {
+    const asd = list[index].userAccount;
+    ulElement.innerText = asd;
+  });
+}
+function ulg(list) {
+  const ulArray = document.querySelectorAll('.ulg');
+  ulArray.forEach((ulElement, index) => {
+    const asd = list[index].gender;
+    ulElement.innerText = asd;
+  });
+}
+function ulb(list) {
+  const ulArray = document.querySelectorAll('.ulb');
+  ulArray.forEach((ulElement, index) => {
+    const asd = list[index].boardCount;
+    ulElement.innerText = asd +"  회";
+  });
+}
+function ulr(list) {
+  const ulArray = document.querySelectorAll('.ulr');
+  ulArray.forEach((ulElement, index) => {
+    const asd = list[index].replyCount;
+    ulElement.innerText = asd +"  회";
+  });
+}
+function ulw(list) {
+  const ulArray = document.querySelectorAll('.ulw');
+  ulArray.forEach((ulElement, index) => {
+    const asd = list[index].reportCount;
+    ulElement.innerText = asd +"  회";
+  });
+}
+function ulp(list) {
+  const ulArray = document.querySelectorAll('.ulp');
+  ulArray.forEach((ulElement, index) => {
+    const asd = list[index].point;
+    ulElement.innerText = asd +"  point";
+  });
+}
+function ulf(list) {
+  const ulArray = document.querySelectorAll('.ulf');
+  ulArray.forEach((ulElement, index) => {
+    const asd = list[index].followCount;
+    ulElement.innerText = asd +"  명";
+  });
+}
+function uls(list) {
+  const ulArray = document.querySelectorAll('.uls');
+  ulArray.forEach((ulElement, index) => {
+    const asd = list[index].joinDate;
+    ulElement.innerText = asd;
+  });
+}
+
+
+
+//                         <div class="point ulp"></div>
+//                         <div class="follow ulf"></div>
+//                         <div class="sign_date uls"></div>
+//                     </div>
 
 
 </script>

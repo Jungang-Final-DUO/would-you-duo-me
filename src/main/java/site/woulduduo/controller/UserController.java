@@ -217,7 +217,7 @@ public class UserController {
     //관리자 페이지 열기
     public String showAdminpage(/*HttpSession session, */Model model) {
         AdminPageResponseDTO adminPageInfo = userService.getAdminPageInfo();
-        model.addAttribute("count", adminPageInfo);
+        model.addAttribute("countzzzzzzzza", adminPageInfo);
         return "admin/admin";
     }
 
@@ -230,7 +230,7 @@ public class UserController {
 
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
 
-        log.info("userbyadmin : {}",userListByAdmin);
+        log.info("userbyadmin11111 : {}",userListByAdmin);
 
         log.info("/api/v1/users/admin/");
 

@@ -26,7 +26,11 @@
         <div class="center_container">
             <div id="admin_page"><a href="/api/v1/users/admin">관리자페이지</a></div>
             <div id="main_controller">
-                <div id="is_ben" name="userIsBanned" >BAN</div>
+
+                <c:if test="${udByAdmin.banned}"> 
+                    <div id="is_ben" name="userIsBanned" style="background-color: red;">BAN</div>
+                </c:if> 
+                <div id="is_ben">BAN</div>
                 <div id="userinfo">
                     <div id="user_pic_container">
                         <button class="profile cursor" >
