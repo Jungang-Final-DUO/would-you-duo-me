@@ -35,6 +35,7 @@ public class Chatting implements Comparable<Chatting> {
 
     @Builder.Default
     @OneToMany(mappedBy = "chatting", fetch = FetchType.LAZY)
+    @OrderBy("matchingNo desc")
     private List<Matching> matchingList = new ArrayList<>();
 
     @Builder.Default
@@ -74,7 +75,7 @@ public class Chatting implements Comparable<Chatting> {
         return 1;
     }
 
-    private LocalDateTime getMessageListInOrder(List<Message> messages){
+    private LocalDateTime getMessageListInOrder(List<Message> messages) {
         return messages.stream().sorted(Comparator.comparing(Message::getMessageTime).reversed()).collect(Collectors.toList()).get(0).getMessageTime();
     }
 }

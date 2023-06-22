@@ -60,7 +60,7 @@ class MessageServiceTest {
     @Test
     @DisplayName("메세지 내역을 불러올 수 있다. 메세지가 없다면 인삿말 메세지를 저장하고 불러온다")
     void getMessagesTest (){
-        Chatting chatting = chattingRepository.findByChattingNo(5L);
+        Chatting chatting = chattingRepository.findByChattingNo(9L);
 
         List<Message> messages = messageRepository.findByChatting(chatting);
         if(messages.size() == 0){

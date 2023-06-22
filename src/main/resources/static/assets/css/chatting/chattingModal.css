@@ -49,8 +49,8 @@
     border-radius: 5px;
     background: #111E30;
     color: #fff;
-    margin: 0 auto 5px;
-    padding: 10px 25px;
+    margin: 5px auto;
+    padding: 10px;
 }
 
 .chatting-modal-container {

@@ -89,6 +89,7 @@ public class User {
     @Column(columnDefinition = "DOUBLE(2, 1)")
     private Double userAvgRate = 0.0;
 
+    @Column(name = "user_cookie_limit_time")
     private LocalDateTime userCookieLimitTime;
 
     @Column(length = 200)

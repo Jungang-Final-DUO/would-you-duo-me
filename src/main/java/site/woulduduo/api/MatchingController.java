@@ -30,17 +30,17 @@ public class MatchingController {
 
         try {
             matchingService.writeReview(userAccount, dto);
+            return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
                     .body(e.getMessage());
         }
 
-        return ResponseEntity.ok().build();
-
     }
 
     /**
      * 유저가 쓴 리뷰를 가져오는 메서드
+     *
      * @param userAccount - 해당 유저
      * @return - 유저가 쓴 리뷰 목록을 담은 응답
      */
@@ -48,7 +48,7 @@ public class MatchingController {
     public ResponseEntity<?> getWrittenReview(
             @PathVariable String userAccount,
             @PathVariable int pageNo
-            ) {
+    ) {
 
         ListResponseDTO<UserReviewResponseDTO, Matching> responseDTO = null;
         try {
@@ -58,6 +58,12 @@ public class MatchingController {
         }
 
         return ResponseEntity.ok(responseDTO);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> makeMatching(@RequestBody long chattingNo){
+        long matchingNo = matchingService.makeMatching(chattingNo);
+        return ResponseEntity.ok().body(matchingNo);
     }
 
 }
