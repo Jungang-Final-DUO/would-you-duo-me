@@ -1,4 +1,5 @@
 import {renderAndSaveMessage, scrollDown} from "./messageRendering.js";
+import {renderUnreadMessages} from "./chatting-modal.js";
 
 export function connectSocket() {
     const socket = io("http://localhost:3000");
@@ -9,6 +10,7 @@ export function connectSocket() {
 
         //output message to DOM
         renderAndSaveMessage(message);
+        renderUnreadMessages(message.room);
         scrollDown();
     });
 
