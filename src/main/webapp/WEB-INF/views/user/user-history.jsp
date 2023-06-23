@@ -22,7 +22,7 @@
     <!-- 헤더가 위치할 자리 -->
     <%@ include file="../common/header.jsp" %>
 
-    <div id="history-wrapper">
+    <div id="history-wrapper" data-user-account="${history.userAccount}">
         <div id="user-profile-info-wrapper">
             <div id="user-main-info-wrapper">
                 <!-- 임시 이미지를 인라인 스타일로 먹임 -->
@@ -183,21 +183,22 @@
                 <section id="review-section">
                     <h2>후기</h2>
                     <div id="review-wrapper">
-                        <c:forEach var="review" items="${history.userReviews}">
-                        <div class="each-review-wrapper">
-                            <div class="review-profile-img"
-                                 style="background-image: url('${review.profileImage}')"></div>
-                            <div class="review-user-nickname-comment-wrapper">
-                                <div class="review-user-nickname">${review.userNickname}</div>
-                                <div class="review-comment">${review.matchingReviewContent}</div>
-                            </div>
-                            <div class="review-rate-wrapper">
-                                <c:forEach var="i" begin="1" end="${review.matchingReviewRate}" step="1">
-                                    <img src="/assets/img/main/star.png" alt="별점">
-                                </c:forEach>
-                            </div>
-                        </div>
-                        </c:forEach>
+<%--                        비동기로 리뷰 호출--%>
+<%--                        <c:forEach var="review" items="${history.userReviews}">--%>
+<%--                        <div class="each-review-wrapper">--%>
+<%--                            <div class="review-profile-img"--%>
+<%--                                 style="background-image: url('${review.profileImage}')"></div>--%>
+<%--                            <div class="review-user-nickname-comment-wrapper">--%>
+<%--                                <div class="review-user-nickname">${review.userNickname}</div>--%>
+<%--                                <div class="review-comment">${review.matchingReviewContent}</div>--%>
+<%--                            </div>--%>
+<%--                            <div class="review-rate-wrapper">--%>
+<%--                                <c:forEach var="i" begin="1" end="${review.matchingReviewRate}" step="1">--%>
+<%--                                    <img src="/assets/img/main/star.png" alt="별점">--%>
+<%--                                </c:forEach>--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
+<%--                        </c:forEach>--%>
                         <!-- end of each review wrapper -->
                 </section>
                 <!-- end of review section -->

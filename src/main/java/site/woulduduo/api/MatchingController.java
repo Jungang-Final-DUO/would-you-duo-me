@@ -39,7 +39,7 @@ public class MatchingController {
     }
 
     /**
-     * 유저가 쓴 리뷰를 가져오는 메서드
+     * 유저가 받은 리뷰를 가져오는 메서드
      *
      * @param userAccount - 해당 유저
      * @return - 유저가 쓴 리뷰 목록을 담은 응답

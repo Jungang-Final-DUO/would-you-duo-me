@@ -62,7 +62,7 @@ public class UserController {
 
 
 //        log.info("&&&&&:{}, {}, {}, {}", );
-        System.out.println(position+ gender+ tier+ sort);
+        System.out.println(position + gender + tier + sort);
         UserSearchType userSearchType = new UserSearchType();
         userSearchType.setPage(page);
         userSearchType.setSize(size);
@@ -142,9 +142,9 @@ public class UserController {
     // 로그인 검증 요청
     @PostMapping("/user/sign-in")
     public String signIn(LoginRequestDTO dto
-                        , RedirectAttributes ra
-                        , HttpServletResponse response
-                        , HttpServletRequest request
+            , RedirectAttributes ra
+            , HttpServletResponse response
+            , HttpServletRequest request
     ) {
 
         log.info("/user/sign-in POST ! - {}", dto);
@@ -208,12 +208,6 @@ public class UserController {
 //    }
 
 
-
-
-
-
-
-
     // 마이페이지 - 프로필 카드 등록페이지 열기
     @GetMapping("/user/register-duo")
     public String registerDUO(/*HttpSession session, */Model model) {
@@ -243,7 +237,7 @@ public class UserController {
     //관리자 페이지 리스트 가져오기
     @GetMapping("/api/v1/users/admin")
     public ResponseEntity<?> getUserListByAdmin(
-            @PathVariable PageDTO dto){
+            @PathVariable PageDTO dto) {
 
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
 
@@ -259,10 +253,10 @@ public class UserController {
 
     @GetMapping("/user/detail/admin")
     //관리자 페이지 자세히 보기
-    public String showDetailByAdmin(HttpSession session,Model model, String userAccount){
+    public String showDetailByAdmin(HttpSession session, Model model, String userAccount) {
         UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userAccount);
 
-        model.addAttribute("udByAdmin",userDetailByAdmin);
+        model.addAttribute("udByAdmin", userDetailByAdmin);
         return "admin/admin_user";
 
     }
@@ -280,18 +274,19 @@ public class UserController {
 //    }
 
 
-        // 유저 전적 페이지 이동
-        @GetMapping("/user/user-history")
-        public String showUserHistory (HttpSession session, Model model, String userAccount){
+    // 유저 전적 페이지 이동
+    @GetMapping("/user/user-history")
+    public String showUserHistory(HttpSession session, Model model, String userAccount) {
 
-            log.info("/user/history?userAccount={} GET", userAccount);
+        log.info("/user/history?userAccount={} GET", userAccount);
 
-            UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
+        UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
 
-            model.addAttribute("history", dto);
+        model.addAttribute("history", dto);
 
-            return "user/user-history";
+        return "user/user-history";
 
-        }
     }
+
+}
 
