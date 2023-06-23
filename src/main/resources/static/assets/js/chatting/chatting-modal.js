@@ -149,7 +149,6 @@ function renderChattingList(result) {
                     case 'REQUEST':
                         matching_accept_btn.disabled = false;
                         matching_accept_btn.childNodes[1].nodeValue = `매칭 수락`;
-                        // matching_accept_btn.classList.add('matching-requested');
                         matching_accept_btn.dataset.matchingNo = matchingNo;
 
                         const gameover_container = document.createElement('div');
@@ -160,9 +159,9 @@ function renderChattingList(result) {
                         matching_reject_btn.classList.add('matching-reject-btn');
                         gameover_container.appendChild(matching_reject_btn);
                         matching_reject_btn.append(`매칭 거절`);
-                        // matching_accept_btn.classList.add('matching-requested');
                         matching_reject_btn.dataset.matchingNo = matchingNo;
                         break;
+
                     case 'CONFIRM':
                         matching_accept_btn.disabled = true;
                         matching_accept_btn.childNodes[1].nodeValue = `매칭 확정`;

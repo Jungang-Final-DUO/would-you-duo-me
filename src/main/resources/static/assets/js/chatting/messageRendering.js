@@ -19,16 +19,13 @@ export function outputMessage(message) {
     const room = document.getElementById(message.room);
     const otherProfile = room.querySelector('.chatting-profile-img').src;
     const matchingBtn = room.querySelector('.matching-accept-btn');
+    const chatting_message_option = room.querySelector('.chatting-message-option');
 
     const div = document.createElement('div');
     div.classList.add('chatting-message-card');
 
-    // 매칭 ststus가 request로 변하면 채팅받은 사람 버튼 변경
+    // 내가 보낸 메세지
     if (message.username === userNickname) {
-        if(message.matchingStatus === 'REQUEST'){
-            matchingBtn.childNodes[1].nodeValue = `매칭 수락`;
-            matchingBtn.dataset.matchingNo = message.matchingNo;
-        }
 
         div.classList.add('chatting-message-card');
         div.classList.add('message-from');
@@ -43,7 +40,25 @@ export function outputMessage(message) {
                 </div>
             `;
 
+    // 내가 받은 메세지일때
     } else {
+
+        // 매칭 ststus가 request로 변하면 채팅받은 사람 버튼 변경
+        if(message.matchingStatus === 'REQUEST'){
+            matchingBtn.childNodes[1].nodeValue = `매칭 수락`;
+            matchingBtn.disabled = false;
+            matchingBtn.dataset.matchingNo = message.matchingNo;
+            const gameover_container = document.createElement('div');
+            gameover_container.classList.add('gameover-container');
+            chatting_message_option.appendChild(gameover_container);
+
+            const matching_reject_btn = document.createElement('button');
+            matching_reject_btn.classList.add('matching-reject-btn');
+            gameover_container.appendChild(matching_reject_btn);
+            matching_reject_btn.append(`매칭 거절`);
+            matching_reject_btn.dataset.matchingNo = message.matchingNo;
+        }
+
         div.classList.add('chatting-message-card');
         div.classList.add('message-to');
         div.innerHTML = `

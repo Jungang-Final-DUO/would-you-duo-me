@@ -55,7 +55,7 @@ function matchingRequest(chattingNo){
         .then(res => res.json())
         .then(result => {
             changeMatchingStatus(chattingNo, result);
-            sendNoticeMessage(chattingNo, '매칭이 신청되었습니다.', matchingStatus);
+            sendNoticeMessage(chattingNo, '듀오 매칭을 요청합니다');
         });
 
 
