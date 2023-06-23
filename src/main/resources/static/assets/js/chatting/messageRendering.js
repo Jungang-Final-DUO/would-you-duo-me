@@ -44,7 +44,7 @@ export function outputMessage(message) {
     } else {
 
         // 매칭 ststus가 request로 변하면 채팅받은 사람 버튼 변경
-        if(message.matchingStatus === 'REQUEST'){
+        if(message.matchingStatus === 'REQUEST' && matchingBtn.childNodes[1].nodeValue !== `매칭 수락`){
             matchingBtn.childNodes[1].nodeValue = `매칭 수락`;
             matchingBtn.disabled = false;
             matchingBtn.dataset.matchingNo = message.matchingNo;
