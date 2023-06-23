@@ -1,13 +1,13 @@
 import {drawPieGraph} from "./draw-pie-graph.js";
 import {renderReviewRate} from "../../review/render-review-rate.js";
-// import {scrollPaging} from "../../common/scroll-paging.js";
+import {scrollPaging} from "../../common/scroll-paging.js";
 
 (() => {
     // 페이지 번호를 위한 클로저
     const increasePageNo = (() => {
-        let pageNo = 1;
+        let pageNo = 0;
         return () => ++pageNo;
-    });
+    })();
 
     const userAccount = document.getElementById('history-wrapper').dataset.userAccount;
 
@@ -19,13 +19,17 @@ import {renderReviewRate} from "../../review/render-review-rate.js";
     renderReviewRate({
         $wrapper: $reviewWrapper,
         userAccount: userAccount,
-        pageNo: 1
+        pageNo: increasePageNo
     }).then();
 
     // 스크롤 이벤트 등록
-    // scrollPaging($reviewWrapper, renderReviewRate, {
-    //     $wrapper: $reviewWrapper,
-    //     userAccount: userAccount,
-    //     pageNo: increasePageNo()
-    // })
+    const $reviewSection = document.getElementById('review-section');
+
+    scrollPaging($reviewSection, renderReviewRate, {
+        $wrapper: $reviewWrapper,
+        userAccount: userAccount,
+        pageNo: increasePageNo
+    });
+
+
 })();

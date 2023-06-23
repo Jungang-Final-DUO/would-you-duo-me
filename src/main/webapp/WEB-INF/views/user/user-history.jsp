@@ -49,25 +49,35 @@
                             <img src="/assets/img/main/star.png" alt="별점 아이콘">
                             <span>${history.userAvgRate}</span>
                         </div>
-                        <div id="point-wrapper">
-                            <img src="/assets/img/main/coin.png" alt="포인트 아이콘">
-                            <span>${history.userMatchingPoint}</span>
-                        </div>
+                        <c:if test="${history.userMatchingPoint ne null}">
+                            <div id="point-wrapper">
+                                <img src="/assets/img/main/coin.png" alt="포인트 아이콘">
+                                <span>${history.userMatchingPoint}</span>
+                            </div>
+                        </c:if>
                     </div>
                     <!-- end of rate point wrapper -->
                     <div id="sns-chat-btn-wrapper">
-                        <a href="https://instagram.com/${history.userInstagram}" class="btn">
-                            <img src="/assets/img/main/instagram.png" alt="인스타그램 아이콘">
-                        </a>
-                        <a href="https://facebook.com/${history.userFacebook}" class="btn">
-                            <img src="/assets/img/main/facebook.png" alt="페이스북 아이콘">
-                        </a>
-                        <a href="https://twitter.com/${history.userTwitter}" class="btn">
-                            <img src="/assets/img/main/twitter.png" alt="트위터 아이콘">
-                        </a>
-                        <button class="btn">
-                            <img src="/assets/img/main/chatting-icon.png" alt="채팅 아이콘">
-                        </button>
+                        <c:if test="${history.userInstagram ne null}">
+                            <a href="https://instagram.com/${history.userInstagram}" class="btn">
+                                <img src="/assets/img/main/instagram.png" alt="인스타그램 아이콘">
+                            </a>
+                        </c:if>
+                        <c:if test="${history.userFacebook ne null}">
+                            <a href="https://facebook.com/${history.userFacebook}" class="btn">
+                                <img src="/assets/img/main/facebook.png" alt="페이스북 아이콘">
+                            </a>
+                        </c:if>
+                        <c:if test="${history.userTwitter ne null}">
+                            <a href="https://twitter.com/${history.userTwitter}" class="btn">
+                                <img src="/assets/img/main/twitter.png" alt="트위터 아이콘">
+                            </a>
+                        </c:if>
+                        <c:if test="${history.userMatchingPoint ne null}">
+                            <button class="btn">
+                                <img src="/assets/img/main/chatting-icon.png" alt="채팅 아이콘">
+                            </button>
+                        </c:if>
                     </div>
                     <!-- end of sns chat button wrapper-->
                 </div>
@@ -183,22 +193,22 @@
                 <section id="review-section">
                     <h2>후기</h2>
                     <div id="review-wrapper">
-<%--                        비동기로 리뷰 호출--%>
-<%--                        <c:forEach var="review" items="${history.userReviews}">--%>
-<%--                        <div class="each-review-wrapper">--%>
-<%--                            <div class="review-profile-img"--%>
-<%--                                 style="background-image: url('${review.profileImage}')"></div>--%>
-<%--                            <div class="review-user-nickname-comment-wrapper">--%>
-<%--                                <div class="review-user-nickname">${review.userNickname}</div>--%>
-<%--                                <div class="review-comment">${review.matchingReviewContent}</div>--%>
-<%--                            </div>--%>
-<%--                            <div class="review-rate-wrapper">--%>
-<%--                                <c:forEach var="i" begin="1" end="${review.matchingReviewRate}" step="1">--%>
-<%--                                    <img src="/assets/img/main/star.png" alt="별점">--%>
-<%--                                </c:forEach>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
-<%--                        </c:forEach>--%>
+                        <%--                        비동기로 리뷰 호출--%>
+                        <%--                        <c:forEach var="review" items="${history.userReviews}">--%>
+                        <%--                        <div class="each-review-wrapper">--%>
+                        <%--                            <div class="review-profile-img"--%>
+                        <%--                                 style="background-image: url('${review.profileImage}')"></div>--%>
+                        <%--                            <div class="review-user-nickname-comment-wrapper">--%>
+                        <%--                                <div class="review-user-nickname">${review.userNickname}</div>--%>
+                        <%--                                <div class="review-comment">${review.matchingReviewContent}</div>--%>
+                        <%--                            </div>--%>
+                        <%--                            <div class="review-rate-wrapper">--%>
+                        <%--                                <c:forEach var="i" begin="1" end="${review.matchingReviewRate}" step="1">--%>
+                        <%--                                    <img src="/assets/img/main/star.png" alt="별점">--%>
+                        <%--                                </c:forEach>--%>
+                        <%--                            </div>--%>
+                        <%--                        </div>--%>
+                        <%--                        </c:forEach>--%>
                         <!-- end of each review wrapper -->
                 </section>
                 <!-- end of review section -->

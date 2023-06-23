@@ -1,6 +1,6 @@
 export async function renderReviewRate({$wrapper, userAccount, pageNo}) {
 
-    const res = await fetch(`/api/v1/matchings/reviews/${userAccount}/${pageNo}`);
+    const res = await fetch(`/api/v1/matchings/reviews/${userAccount}/${pageNo()}`);
 
     if (res.status === 200) {
 

@@ -382,11 +382,11 @@
 
     display: flex;
     flex-flow: column;
-    justify-content: space-between;
 }
 
 #review-section .review-rate-wrapper {
     justify-content: space-between;
+    margin-bottom: 20px;
 
     display: flex;
 }

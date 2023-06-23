@@ -14,6 +14,9 @@ export function outputMessage(message) {
     matchingRequestEvent();
 
     const room = document.getElementById(message.room);
+
+    if (room === null) return;
+
     const otherProfile = room.querySelector('.chatting-profile-img').src;
 
     const div = document.createElement('div');
