@@ -189,7 +189,7 @@ fetch('/api/v1/users/admin')
   .then(response => response.json())
   .then(res => {
     const list = res.list;
-    // console.log('list: ', list);
+    console.log('list: ', list);
 
     for (let listOne of list) {
       const {

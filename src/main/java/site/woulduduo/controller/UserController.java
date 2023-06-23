@@ -231,7 +231,7 @@ public class UserController {
     //관리자 페이지 열기
     public String showAdminpage(/*HttpSession session, */Model model) {
         AdminPageResponseDTO adminPageInfo = userService.getAdminPageInfo();
-        model.addAttribute("countzzzzzzzza", adminPageInfo);
+        model.addAttribute("count", adminPageInfo);
         return "admin/admin";
     }
 
