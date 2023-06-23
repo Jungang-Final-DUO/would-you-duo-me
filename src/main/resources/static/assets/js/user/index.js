@@ -83,7 +83,7 @@ function searchName() {
     }
 }
 
-// tier 변환 함수
+// tier 변환 함수 - 티어 이미지를 넣기 위한 함수
 function transTier(tier) {
     switch (tier) {
         case 'CHA':
@@ -118,6 +118,7 @@ function transTier(tier) {
     }
 }
 
+// 프로필 카드 비동기 요청 렌더링 함수
 function getProfileCardList() { 
     let profileCardTag = '';
     let mostOne = '';
@@ -204,6 +205,6 @@ function getProfileCardList() {
     // countPage();
 
     // 프로필 카드 불러오기 함수(비동기)
-    // getProfileCardList();
+    getProfileCardList();
 
 })();

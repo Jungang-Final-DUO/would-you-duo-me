@@ -197,6 +197,9 @@ body::-webkit-scrollbar {
     margin-left: 16px;
     margin-bottom: 20px;
 }
+.duo-profile:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
 
 #profile-cards-wrapper .duo-profile:nth-child(4n + 1){
     margin-left: 0;
