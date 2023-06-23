@@ -342,7 +342,7 @@ public class UserService {
         );
         //전체불러오기
         Page<User> all = userRepository.findAll(pageable);
-
+        System.out.println("all = " + all);
 
         List<UserByAdminResponseDTO> collect = all.stream()
                 .map(UserByAdminResponseDTO::new)

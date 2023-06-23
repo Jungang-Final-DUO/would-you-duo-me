@@ -239,7 +239,7 @@ public class UserController {
     @GetMapping("/api/v1/users/admin")
     public ResponseEntity<?> getUserListByAdmin(
             @PathVariable PageDTO dto){
-
+        log.info("{}ddttoo==",dto);
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
 
         log.info("userbyadmin11111 : {}",userListByAdmin);
