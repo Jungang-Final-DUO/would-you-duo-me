@@ -114,7 +114,7 @@ class BoardServiceTest {
 
         PageDTO dto = new PageDTO();
 
-        ListResponseDTO<BoardsByAdminResponseDTO, User> boardListByAdmin = boardService.getBoardListByAdmin(dto);
+        ListResponseDTO<BoardsByAdminResponseDTO, Board> boardListByAdmin = boardService.getBoardListByAdmin(dto);
         System.out.println("boardListByAdmin = " + boardListByAdmin);
     }
 
@@ -125,7 +125,7 @@ class BoardServiceTest {
         dto.setPage(3);
 
 
-        ListResponseDTO<BoardsByAdminResponseDTO, User> boardsByAdminResponseDTOUserListResponseDTO = boardService.todayBoardByAdmin(dto);
+        ListResponseDTO<BoardsByAdminResponseDTO, Board> boardsByAdminResponseDTOUserListResponseDTO = boardService.todayBoardByAdmin(dto);
 
         System.out.println("userByAdminResponseDTOBoardListResponseDTO = " + boardsByAdminResponseDTOUserListResponseDTO);
 
