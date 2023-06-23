@@ -26,7 +26,7 @@ public class MessageService {
     private final ChattingRepository chattingRepository;
     private final UserRepository userRepository;
 
-//    메세지 저장하기
+    //    메세지 저장하기
     public boolean saveMessage(MessageRequestDTO dto){
         Message message = Message.builder()
                 .chatting(chattingRepository.findByChattingNo(dto.getChattingNo()))

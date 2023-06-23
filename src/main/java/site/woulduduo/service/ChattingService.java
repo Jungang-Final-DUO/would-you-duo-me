@@ -112,7 +112,7 @@ public class ChattingService {
         return chattingResponseDTO;
     }
 
-//  대표 프로필 사진 가져오기
+    //  대표 프로필 사진 가져오기
     public static String getRepresentativeProfile(User user) {
         List<UserProfile> profileList = null;
         try {

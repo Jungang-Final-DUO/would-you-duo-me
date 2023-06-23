@@ -1,5 +1,5 @@
 import {renderUnreadMessages} from "./chatting-modal.js";
-import {matchingRequestEvent} from "./matching.js";
+import {matchingRequestEvent, matchingResponseEvent} from "./matching.js";
 
 export function scrollDown() {
     const chatMessages = document.querySelectorAll('.chatting-message-body');
@@ -11,7 +11,9 @@ export function scrollDown() {
 
 //메세지박스 렌더링
 export function outputMessage(message) {
+    const userNickname = document.getElementById('loginUserInfo').dataset.userNickname;
     matchingRequestEvent();
+    matchingResponseEvent();
 
     const room = document.getElementById(message.room);
     const otherProfile = room.querySelector('.chatting-profile-img').src;
@@ -19,10 +21,9 @@ export function outputMessage(message) {
     const div = document.createElement('div');
     div.classList.add('chatting-message-card');
 
-    if (message.username === 'test1') {
+    if (message.username === userNickname) {
         div.classList.add('chatting-message-card');
         div.classList.add('message-from');
-        console.log(message.time);
         div.innerHTML = `
                 <img class="chatting-profile" src="/assets/img/chattingModal/woogi.jpg" alt="프로필이미지">
                 <div class="message-content-container">
@@ -54,7 +55,7 @@ export function outputMessage(message) {
 //DB에서 메세지 읽어오기
 export function getMessages(room) {
 
-    const userId = 'test1';
+    const userId = document.getElementById('loginUserInfo').dataset.userAccount;
 
     fetch(`/api/v1/chat/messages/${userId}/${room}`)
         .then(res => res.json())

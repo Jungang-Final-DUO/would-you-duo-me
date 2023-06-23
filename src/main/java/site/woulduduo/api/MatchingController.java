@@ -60,10 +60,15 @@ public class MatchingController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    // 매칭 신청
     @PostMapping
     public ResponseEntity<?> makeMatching(@RequestBody long chattingNo){
         long matchingNo = matchingService.makeMatching(chattingNo);
         return ResponseEntity.ok().body(matchingNo);
     }
+
+    //매칭 확정
+
+    //매칭 거절
 
 }
