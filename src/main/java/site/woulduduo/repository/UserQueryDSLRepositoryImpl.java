@@ -43,7 +43,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                 .orderBy(user.userAvgRate.desc())
                 .fetch();
         log.info("### userList ###: {}", userList);
-    // select 로 불러온 user 리스트 UserProfilesResponseDTO로 변환해 리스트에 담아주기
+        // select 로 불러온 user 리스트 UserProfilesResponseDTO로 변환해 리스트에 담아주기
         List<UserProfileResponseDTO> userProfiles = new ArrayList<>();
         for (User user : userList) {
             UserProfileResponseDTO dto = UserProfileResponseDTO.builder()
@@ -61,7 +61,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                     .mostChampList(user.getMostChampList())
                     .build();
 
-                    userProfiles.add(dto);
+            userProfiles.add(dto);
         }
 
 
