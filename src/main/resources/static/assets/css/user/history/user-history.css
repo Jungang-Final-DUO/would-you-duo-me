@@ -25,8 +25,6 @@
     border-radius: 28px;
     margin-right: 100px;
 
-    /* 임시 이미지 */
-    background-image: url("https://i.namu.wiki/i/-BO7m4nlr6HAifi1A7oJrs6EFeP4z4gg7mvRy9sKhdDXnw_e0bKn7wo-0shhcAQuL3kvhs5YSeXuyxaMXDh9vjUx5qjK4ONEmonhqmyKHJ3sCLdgDBQI3SCnSlAn1ir7A37bgicvwlBFqyg-s-ouPw.webp");
     background-size: cover;
     background-position: center;
 }
@@ -351,7 +349,6 @@
 
 #review-section .each-review-wrapper {
     display: flex;
-    justify-content: space-between;
     align-items: center;
 
     background: #fff;
@@ -373,19 +370,29 @@
 }
 
 #review-section .review-user-nickname {
-    margin-bottom: 50px;
-
     font-weight: bold;
     font-size: 1.2em;
 }
 
+#review-section .review-content-wrapper {
+    margin-left: 30px;
+
+    width: 100%;
+    height: 110px;
+
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+}
+
 #review-section .review-rate-wrapper {
-    align-self: start;
+    justify-content: space-between;
 
     display: flex;
 }
 
 #review-section .review-rate-wrapper img {
-    width: 25px;
+    width: 20px;
+    height: 20px;
     margin-right: 15px;
 }

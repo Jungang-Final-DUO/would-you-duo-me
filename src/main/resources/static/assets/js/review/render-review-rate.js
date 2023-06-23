@@ -1,4 +1,4 @@
-export async function renderReviewRate($wrapper, userAccount, pageNo) {
+export async function renderReviewRate({$wrapper, userAccount, pageNo}) {
 
     const res = await fetch(`/api/v1/matchings/reviews/${userAccount}/${pageNo}`);
 
@@ -16,13 +16,18 @@ export async function renderReviewRate($wrapper, userAccount, pageNo) {
             $review.innerHTML = `
                             <div class="review-profile-img"
                                  style="background-image: url('${profileImage}')"></div>
-                            <div class="review-user-nickname-comment-wrapper">
-                                <div class="review-user-nickname">${userNickname}</div>
-                                <div class="review-comment">${matchingReviewContent}</div>
+                            <div class="review-content-wrapper">
+                                <div class="review-rate-wrapper">
+                                    <div class="review-user-nickname">${userNickname}</div>
+                                    <div class="rate-img-wrapper">
+                                        ${renderStars(matchingReviewRate)}
+                                    </div>
+                                </div>
+                                <div class="review-user-nickname-comment-wrapper">
+                                    <div class="review-comment">${matchingReviewContent}</div>
+                                </div>
                             </div>
-                            <div class="review-rate-wrapper">
-                                ${renderStars(matchingReviewRate)}
-                            </div>`;
+                            `;
 
             $wrapper.appendChild($review);
 
