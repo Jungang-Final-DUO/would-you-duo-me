@@ -33,7 +33,7 @@
     /*transform: translate(300%, 70%);*/
     z-index: 500;
 
-    padding: 20px 15px 15px 0px;
+    padding: 20px 15px 15px 0;
 }
 /*.chatting-modal-wrapper.show-chatting-modal {*/
 /*    display: block;*/

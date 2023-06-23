@@ -11,17 +11,25 @@ export function scrollDown() {
 
 //메세지박스 렌더링
 export function outputMessage(message) {
+    console.log('outputMessage 진입');
     const userNickname = document.getElementById('loginUserInfo').dataset.userNickname;
     matchingRequestEvent();
     matchingResponseEvent();
 
     const room = document.getElementById(message.room);
     const otherProfile = room.querySelector('.chatting-profile-img').src;
+    const matchingBtn = room.querySelector('.matching-accept-btn');
 
     const div = document.createElement('div');
     div.classList.add('chatting-message-card');
 
+    // 매칭 ststus가 request로 변하면 채팅받은 사람 버튼 변경
     if (message.username === userNickname) {
+        if(message.matchingStatus === 'REQUEST'){
+            matchingBtn.childNodes[1].nodeValue = `매칭 수락`;
+            matchingBtn.dataset.matchingNo = message.matchingNo;
+        }
+
         div.classList.add('chatting-message-card');
         div.classList.add('message-from');
         div.innerHTML = `
@@ -34,6 +42,7 @@ export function outputMessage(message) {
                     </div>
                 </div>
             `;
+
     } else {
         div.classList.add('chatting-message-card');
         div.classList.add('message-to');
@@ -48,7 +57,6 @@ export function outputMessage(message) {
                     </div>
                     `;
     }
-
     room.querySelector('.chatting-message-body').appendChild(div);
 }
 
@@ -86,11 +94,11 @@ function setChattingDetailBox(chattingNo, result) {
 }
 
 // 메세지 저장
-function saveMessage(message) {
+export function saveMessage({username, room, msg, matchingStatus, matchingNo}) {
     const messageDTO = {
-        chattingNo: message.room,
-        messageContent: message.text,
-        messageFrom: message.username
+        chattingNo: room,
+        messageContent: msg,
+        messageFrom: username
     }
     const requestInfo = {
         method: 'POST',

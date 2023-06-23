@@ -28,9 +28,10 @@ public class MessageService {
 
     //    메세지 저장하기
     public boolean saveMessage(MessageRequestDTO dto){
+        User user = userRepository.findByUserNickname(dto.getMessageFrom());
         Message message = Message.builder()
                 .chatting(chattingRepository.findByChattingNo(dto.getChattingNo()))
-                .user(userRepository.findById(dto.getMessageFrom()).orElseThrow())
+                .user(user)
                 .messageContent(dto.getMessageContent())
                 .build();
         try {

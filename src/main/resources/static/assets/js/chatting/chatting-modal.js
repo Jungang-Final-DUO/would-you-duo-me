@@ -129,12 +129,13 @@ function renderChattingList(result) {
             matching_accept_container.classList.add('matching-accept-container');
             chatting_message_option.appendChild(matching_accept_container);
 
-            // 로그인 한 사람이 Chatting From이 아닐 때
+            // 로그인 한 사람이 Chatting To일때
             console.log(myNickname);
             console.log(chattingFrom);
             if(chattingFrom !== myNickname) {
                 const matching_accept_btn = document.createElement('button');
                 matching_accept_btn.classList.add('matching-accept-btn');
+                matching_accept_btn.dataset.matchingStatus = matchingStatus;
                 matching_accept_container.appendChild(matching_accept_btn);
 
                 const chatting_handshake_img = document.createElement('img');
@@ -142,20 +143,25 @@ function renderChattingList(result) {
                 chatting_handshake_img.src = '/assets/img/chattingModal/handshake.png';
                 chatting_handshake_img.alt = '매칭수락이미지';
                 matching_accept_btn.appendChild(chatting_handshake_img);
-                matching_accept_btn.append('매칭요청을 기다립니다');
+                matching_accept_btn.append('매칭 대기');
 
                 switch (matchingStatus) {
                     case 'REQUEST':
+                        matching_accept_btn.disabled = false;
                         matching_accept_btn.childNodes[1].nodeValue = `매칭 수락`;
-                        matching_accept_btn.classList.add('matching-requested');
+                        // matching_accept_btn.classList.add('matching-requested');
                         matching_accept_btn.dataset.matchingNo = matchingNo;
+
+                        const gameover_container = document.createElement('div');
+                        gameover_container.classList.add('gameover-container');
+                        chatting_message_option.appendChild(gameover_container);
 
                         const matching_reject_btn = document.createElement('button');
                         matching_reject_btn.classList.add('matching-reject-btn');
-                        matching_accept_container.appendChild(matching_reject_btn);
-                        matching_accept_btn.childNodes[1].nodeValue = `매칭 거절`;
-                        matching_accept_btn.classList.add('matching-requested');
-                        matching_accept_btn.dataset.matchingNo = matchingNo;
+                        gameover_container.appendChild(matching_reject_btn);
+                        matching_reject_btn.append(`매칭 거절`);
+                        // matching_accept_btn.classList.add('matching-requested');
+                        matching_reject_btn.dataset.matchingNo = matchingNo;
                         break;
                     case 'CONFIRM':
                         matching_accept_btn.disabled = true;
@@ -164,7 +170,7 @@ function renderChattingList(result) {
                         break;
                     case 'REJECT':
                         matching_accept_btn.disabled = true;
-                        matching_accept_btn.childNodes[1].nodeValue = `매칭요청을 기다립니다`;
+                        matching_accept_btn.childNodes[1].nodeValue = `매칭 대기`;
                         matching_accept_btn.dataset.matchingNo = matchingNo;
                         break;
                     case 'DONE':
@@ -176,7 +182,7 @@ function renderChattingList(result) {
                         break;
                     default :
                         matching_accept_btn.disabled = true;
-                        matching_accept_btn.classList.add('matching-waiting');
+                        // matching_accept_btn.classList.add('matching-waiting');
                         matching_accept_btn.dataset.matchingNo = '';
                 }
 
@@ -190,6 +196,7 @@ function renderChattingList(result) {
                 let $rightBtn = document.createElement('button');
                 $rightBtn.classList.add('gameover-btn');
                 $rightBtn.classList.add('matching-accept-btn');
+                $rightBtn.dataset.matchingStatus = matchingStatus;
                 matching_accept_container.appendChild($rightBtn);
 
                 const chatting_handshake_img = document.createElement('img');
@@ -203,11 +210,11 @@ function renderChattingList(result) {
                     case 'REQUEST':
                         $rightBtn.disabled = true;
                         $rightBtn.childNodes[1].nodeValue = `수락 대기중`;
-                        $rightBtn.classList.add('matching-requested');
+                        // $rightBtn.classList.add('matching-requested');
                         $rightBtn.dataset.matchingNo = matchingNo;
                         break;
                     case 'CONFIRM':
-                        $rightBtn.classList.add('matching-confirmed');
+                        // $rightBtn.classList.add('matching-confirmed');
                         $rightBtn.childNodes[1].nodeValue = `게임 완료`;
                         $rightBtn.dataset.matchingNo = matchingNo;
                         break;
@@ -228,7 +235,7 @@ function renderChattingList(result) {
                         }
                         break;
                     default :
-                        $rightBtn.classList.add('matching-request');
+                        // $rightBtn.classList.add('matching-request');
                         $rightBtn.dataset.matchingNo = '';
                 }
             }
