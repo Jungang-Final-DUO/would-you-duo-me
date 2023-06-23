@@ -1,4 +1,4 @@
-// import {getChampionImg} from "../common/get-champion-img";
+import { getChampionImg } from "../common/get-champion-img.js";
 
 // 현재까지 렌더링된 페이지
 let page = 1;
@@ -15,7 +15,6 @@ let tier = 'all';
 const $tierOption = document.querySelectorAll(".select-tier");  // 티어 선택 라디오 버튼
 const sort = document.getElementById("order-list").value;
 
-
 // 포지션 선택시 작동 함수
 function selectPosition() {
 
@@ -28,10 +27,10 @@ function selectPosition() {
                 if ($positionOption[i].checked) {
                     position = $positionOption[i].value;
                     console.log(position);
+                    getProfileCardList();
                 }
             }
         }
-        getProfileCardList();
     }
 }
 
@@ -47,10 +46,10 @@ function selectGender() {
                     if ($genderOption[i].checked) {
                         gender = $genderOption[i].value;
                         console.log(gender);
+                        getProfileCardList();    
                     }
                 }
         }
-        getProfileCardList();    
     }
 }
 
@@ -66,10 +65,10 @@ function selectTier() {
                 if ($tierOption[i].checked) {
                     tier = $tierOption[i].value;
                     console.log(tier);
+                    getProfileCardList();
                 }
             }
         }
-        getProfileCardList();
     }
 }
 
@@ -84,8 +83,47 @@ function searchName() {
     }
 }
 
+// tier 변환 함수
+function transTier(tier) {
+    switch (tier) {
+        case 'CHA':
+            return "Challenger";
+            break;
+        case 'IRO':
+            return "Iron";
+            break;
+        case 'BRO':
+            return "Bronze";
+            break;
+        case 'SIL':
+            return "Silver";
+            break;
+        case 'GOL':
+            return "Gold";
+            break;
+        case 'PLA':
+            return "Platinum";
+            break;
+        case 'DIA':
+            return "Diamond";
+            break;
+        case 'MAS':
+            return "Master";
+            break;
+        case 'GRA':
+            return "GrandMaster";
+            break;
+        default:
+            return null;
+    }
+}
+
 function getProfileCardList() { 
     let profileCardTag = '';
+    let mostOne = '';
+    let mostTwo = '';
+    let mostThree = '';
+    let changedTier = '';
     console.log("fetch도착");
     fetch(profileCardListURL +'/' + page + '/' + keyword + '/' + size + '/' + position + '/' + gender + '/' + tier + '/' + sort)
     .then(res => res.json())
@@ -94,54 +132,53 @@ function getProfileCardList() {
         console.log(resResult);
         for (let rep of resResult) {
             const {avgRate, followed, mostChampList, profileImage, tier, userAccount, userComment, userFacebook, userGender, userInstagram, userMatchingPoint, userNickname, userPosition, userTwitter} = rep;
-            console.log("rep : "+ rep);
-            // const {mostOne, mostTwo, mostThree} = mostChampList;
-            // console.log(mostOne.champName +' '+ mostTwo.champName +' '+ mostThree.champName);
-            // profileCardTag += <div id = "test4" class="duo-profile">
-            //                         <img class="duo-tier" src="/assets/img/main/TFT_Regalia_Challenger.png" alt="tier">
+            for (let i = 0; i < mostChampList.length; i++) {
+                if (mostChampList[i].mostNo === 1) mostOne = mostChampList[i].champName;
+                else if (mostChampList[i].mostNo === 2) mostTwo = mostChampList[i].champName;
+                else mostThree = mostChampList[i].champName;
+            }
+            changedTier = transTier(tier);
+            console.log(mostOne + mostTwo + mostThree);
+            
+            profileCardTag += '<div id = "'+ userAccount +'" class="duo-profile">'
+                                   + '<img class="duo-tier" src="/assets/img/main/TFT_Regalia_'+ changedTier +'.png" alt="tier">'
                                     
-            //                         <div class="profile-left-side">
-            //                             <div class="profile-frame">
-            //                                 <img class="profile-image" src="/assets/img/main/profile-image.jpg" alt="프로필 이미지">
-            //                             </div>
-            //                             <div class="profile-sns">
-            //                                 <a href="#" class="sns-type instagram"><img class="sns-image" src="/assets/img/main/instagram.png"
-            //                                                                             alt="instagram"></a>
-            //                                 <a href="#" class="sns-type facebook"><img class="sns-image" src="/assets/img/main/facebook.png"
-            //                                                                         alt="facebook"></a>
-            //                                 <a href="#" class="sns-type twitter"><img class="sns-image" src="/assets/img/main/twitter.png"
-            //                                                                         alt="twitter"></a>
-            //                                 <div class="sns-type chatting-icon"><img class="sns-image" src="/assets/img/main/chatting-icon.png"
-            //                                                                         alt="chatting"></div>
-            //                             </div>
-            //                         </div>
+                                   + '<div class="profile-left-side">'
+                                      + '<div class="profile-frame">'
+                                           + '<img class="profile-image" src="/assets/img/main/profile-image.jpg" alt="프로필 이미지">'
+                                       + '</div>'
+                                      + '<div class="profile-sns">'
+                                           + '<a href="'+ userInstagram +'" class="sns-type instagram"><img class="sns-image" src="/assets/img/main/instagram.png" alt="instagram"></a>'
+                                           + '<a href="'+ userFacebook +'" class="sns-type facebook"><img class="sns-image" src="/assets/img/main/facebook.png" alt="facebook"></a>'
+                                           + '<a href="'+ userTwitter +'" class="sns-type twitter"><img class="sns-image" src="/assets/img/main/twitter.png" alt="twitter"></a>'
+                                           + '<div class="sns-type chatting-icon"><img class="sns-image" src="/assets/img/main/chatting-icon.png" alt="chatting"></div>'
+                                       + '</div>'
+                                   + '</div>'
                                     
-            //                         <div class="profile-right-side">
-            //                             <div class="position-nickname">
-            //                                 <img class="preferred-position" src="/assets/img/main/MID.png" alt="포지션">
-            //                                 <p class="user-nickname">jhlee0622</p>
-            //                                 <img class="follow-status" src="/assets/img/main/not-following.png" alt="following">
-            //                             </div>
-            //                             <div class="rate-matching-point">
-            //                                 <div class="rate-matching-point rate-point-box"><img class="rate-matching-point-image"
-            //                                                                                     src="/assets/img/main/star.png" alt="rate">
-            //                                     <p class="avg-rate">89.2</p></div>
-            //                                 <div class="rate-matching-point matching-point-box"><img class="rate-matching-point-image"
-            //                                                                                         src="/assets/img/main/coin.png" alt="coin">
-            //                                     <p class="matching-point">500</p></div>
-            //                             </div>
-            //                             <div class="profile-comment"><p>여기에 자기소개를 적을거에요^^ 같이 게임해용~~~</p></div>
-            //                             <div class="profile-most-champ">
-            //                                 <ul class="champ-list">
-            //                                     <li class="most-pic first-champ"><img src="/assets/img/main/Skarner_3.jpg" alt="first-champ">
-            //                                     </li>
-            //                                     <li class="most-pic second-champ"><img src="/assets/img/main/TahmKench_0.jpg"
-            //                                                                         alt="second-champ"></li>
-            //                                     <li class="most-pic third-champ"><img src="/assets/img/main/Ziggs_2.jpg" alt="third-champ"></li>
-            //                                 </ul>
-            //                             </div>
-            //                         </div>
-            //                     </div>
+                                   + '<div class="profile-right-side">'
+                                      + '<div class="position-nickname">'
+                                           + '<img class="preferred-position" src="/assets/img/main/'+ userPosition +'.png" alt="포지션">'
+                                           + '<p class="user-nickname">'+ userNickname +'</p>'
+                                           + '<img class="follow-status" src="/assets/img/main/not-following.png" alt="following">'
+                                       + '</div>'
+                                       + '<div class="rate-matching-point">'
+                                           + '<div class="rate-matching-point rate-point-box"><img class="rate-matching-point-image" src="/assets/img/main/star.png" alt="rate">'
+                                               + '<p class="avg-rate">'+ avgRate +'</p></div>'
+                                           + '<div class="rate-matching-point matching-point-box"><img class="rate-matching-point-image" src="/assets/img/main/coin.png" alt="coin">'
+                                               + '<p class="matching-point">'+ userMatchingPoint +'</p></div>'
+                                       + '</div>'
+                                       + '<div class="profile-comment"><p>'+ userComment +'</p></div>'
+                                       + '<div class="profile-most-champ">'
+                                           + '<ul class="champ-list">'
+                                               + '<li class="most-pic first-champ"><img src="'+ getChampionImg(mostOne) +'" alt="first-champ"></li>'
+                                               + '<li class="most-pic second-champ"><img src="'+ getChampionImg(mostTwo) +'" alt="second-champ"></li>'
+                                               + '<li class="most-pic third-champ"><img src="'+ getChampionImg(mostThree) +'" alt="third-champ"></li>'
+                                           + '</ul>'
+                                       + '</div>'
+                                   + '</div>'
+                               + '</div>'
+
+            document.getElementById('profile-cards-wrapper').innerHTML = profileCardTag;                   
         
         }
         // ====================================================================================

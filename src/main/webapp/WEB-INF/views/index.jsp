@@ -11,7 +11,7 @@
     <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">
 
     <%@ include file="common/static-head.jsp" %>
-    <script src="/assets/js/user/index.js" defer></script>
+    <script src="/assets/js/user/index.js" type="module" defer></script>
 </head>
 <body>
 <!--    프로필 카드 상단 검색 조건 메뉴바 -->
