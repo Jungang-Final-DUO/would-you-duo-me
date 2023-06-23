@@ -43,7 +43,7 @@ export function outputMessage(message) {
     // 내가 받은 메세지일때
     } else {
 
-        // 매칭 ststus가 request로 변하면 채팅받은 사람 버튼 변경
+        // 매칭 ststus가 request로 변하면 메세지 받은 사람 버튼 수락/거절로 변경
         if(message.matchingStatus === 'REQUEST' && matchingBtn.childNodes[1].nodeValue !== `매칭 수락`){
             matchingBtn.childNodes[1].nodeValue = `매칭 수락`;
             matchingBtn.disabled = false;
@@ -57,6 +57,13 @@ export function outputMessage(message) {
             gameover_container.appendChild(matching_reject_btn);
             matching_reject_btn.append(`매칭 거절`);
             matching_reject_btn.dataset.matchingNo = message.matchingNo;
+        }
+
+        // 매칭 ststus가 confirm으로 변하면 메세지 받은 사람 버튼 변경
+        if(message.matchingStatus === 'CONFIRM' && matchingBtn.childNodes[1].nodeValue !== `게임 완료`){
+            matchingBtn.childNodes[1].nodeValue = `게임 완료`;
+            matchingBtn.disabled = false;
+            matchingBtn.dataset.matchingNo = message.matchingNo;
         }
 
         div.classList.add('chatting-message-card');

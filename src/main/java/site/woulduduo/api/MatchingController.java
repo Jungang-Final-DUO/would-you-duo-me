@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import site.woulduduo.dto.request.chatting.MatchingFixRequestDTO;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
@@ -68,7 +69,23 @@ public class MatchingController {
     }
 
     //매칭 확정
+    @RequestMapping(value = "/fix", method = {RequestMethod.PUT, RequestMethod.PATCH})
+    public ResponseEntity<?> fixSchedule(MatchingFixRequestDTO dto){
+        boolean flag = matchingService.fixSchedule(dto);
+        return ResponseEntity.ok().body(flag);
+    }
 
     //매칭 거절
+    @RequestMapping(value = "/reject", method = {RequestMethod.PUT, RequestMethod.PATCH})
+    public ResponseEntity<?> rejectMatching(long matchingNo){
+        boolean flag = matchingService.rejectMatching(matchingNo);
+        return ResponseEntity.ok().body(flag);
+    }
 
+    //게임 완료
+    @RequestMapping(value = "/done", method = {RequestMethod.PUT, RequestMethod.PATCH})
+    public ResponseEntity<?> gameOverMatching(long matchingNo){
+        boolean flag = matchingService.gameOverMatching(matchingNo);
+        return ResponseEntity.ok().body(flag);
+    }
 }
