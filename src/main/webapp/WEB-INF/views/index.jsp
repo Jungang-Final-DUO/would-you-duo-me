@@ -22,7 +22,7 @@
 
     <div id="search-bar">
         <!--        인풋 닉네임 검색 -->
-        <label><input type="text" id="searchBy-nickname" placeholder="듀오 검색하기" name="keyword"></label>
+        <label><input type="text" id="searchBy-nickname" placeholder="듀오 검색하기" name="keyword" spellcheck="false"></label>
         <!--        포지션 검색 라디오 -->
         <div id="searchBy-position">
             <label class="position-option">
