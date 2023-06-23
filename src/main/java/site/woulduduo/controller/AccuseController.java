@@ -3,28 +3,35 @@ package site.woulduduo.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 import site.woulduduo.dto.request.accuse.UserAccuseRequestDTO;
+import site.woulduduo.dto.request.page.PageDTO;
+import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.accuse.AccuseListResponseDTO;
-import site.woulduduo.enumeration.AdminViewType;
+import site.woulduduo.entity.Accuse;
 import site.woulduduo.service.AccuseService;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/accuse") //경로
-public class AccuseController {
+
+
+    public class AccuseController {
+
     private final AccuseService accuseService;
 
-    @GetMapping("/{type}/{page}")
+    @GetMapping("/api/v1/user/accuse")
     public ResponseEntity<?> getAccuseListByAdmin(HttpSession session,
-                                                  @PathVariable AdminViewType type,
-                                                  @PathVariable int Page){
+                                                  PageDTO dto){
+        log.info("{}dtozz",dto);
+        ListResponseDTO<AccuseListResponseDTO, Accuse> accuseListByAdmin = accuseService.getAccuseListByAdmin(dto);
+        log.info("{}accuseListByAdmin",accuseListByAdmin);
 
-        List<AccuseListResponseDTO> accuseListByAdmin = accuseService.getAccuseListByAdmin();
+
         return ResponseEntity
                 .ok()
                 .body(accuseListByAdmin);

@@ -2,10 +2,17 @@ package site.woulduduo.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.woulduduo.dto.request.accuse.UserAccuseRequestDTO;
+import site.woulduduo.dto.request.page.PageDTO;
+import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.accuse.AccuseListResponseDTO;
+import site.woulduduo.dto.response.page.PageResponseDTO;
 import site.woulduduo.entity.Accuse;
 import site.woulduduo.entity.User;
 import site.woulduduo.repository.AccuseRepository;
@@ -29,22 +36,39 @@ public class AccuseService {
 
     //신고내역(ADMIN)
 
-    public List<AccuseListResponseDTO> getAccuseListByAdmin() {
-        List<AccuseListResponseDTO> accuseListDTO = accuseRepository.findAll()
-                .stream()
+    public ListResponseDTO<AccuseListResponseDTO,Accuse> getAccuseListByAdmin(PageDTO dto) {
+
+        Pageable pageable = PageRequest.of(
+                dto.getPage()-1,
+                dto.getSize(),
+                Sort.by("accuseNo").descending()
+        );
+
+        System.out.println("pageable = " + pageable);
+
+        Page<Accuse> all = accuseRepository.findAll(pageable);
+
+        System.out.println("all = " + all);
+        List<AccuseListResponseDTO> collect = all.stream()
                 .map(AccuseListResponseDTO::new)
                 .collect(toList());
 
-        return accuseListDTO;
+        System.out.println("collect = " + collect);
+        return ListResponseDTO.<AccuseListResponseDTO,Accuse>builder()
+                .count(collect.size())
+                .pageInfo(new PageResponseDTO<>(all))
+                .list(collect)
+                .build();
+
     }
 
     //금일 작성 게시물 (ADMIN)
-    public List<AccuseListResponseDTO> todayAccuseByAdmin(){
-        List<AccuseListResponseDTO> accuseListByAdmin = getAccuseListByAdmin();
+    public ListResponseDTO<AccuseListResponseDTO,Accuse> todayAccuseByAdmin(PageDTO dto){
+        ListResponseDTO<AccuseListResponseDTO,Accuse> accuseListByAdmin = getAccuseListByAdmin(dto);
         List<AccuseListResponseDTO> todayAccuseList = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
 
-        for (AccuseListResponseDTO accuseByAdminResponseDTO : accuseListByAdmin) {
+        for (AccuseListResponseDTO accuseByAdminResponseDTO : todayAccuseList) {
             System.out.println("accuseByAdminResponseDTO = " + accuseByAdminResponseDTO);
             LocalDate writtenDate = accuseByAdminResponseDTO.getAccuseWrittenDate();
             if(writtenDate!=null&&writtenDate.equals(currentDate)){
@@ -52,8 +76,8 @@ public class AccuseService {
             }
         }
         System.out.println("todayAccuseList = " + todayAccuseList);
-        return todayAccuseList;
-
+//        return todayAccuseList;
+        return null;
 
     }
 

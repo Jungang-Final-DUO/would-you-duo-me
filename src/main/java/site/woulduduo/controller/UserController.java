@@ -31,7 +31,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static site.woulduduo.enumeration.LoginResult.SUCCESS;
 import static site.woulduduo.util.LoginUtil.isAutoLogin;
@@ -238,18 +240,22 @@ public class UserController {
     //관리자 페이지 리스트 가져오기
     @GetMapping("/api/v1/users/admin")
     public ResponseEntity<?> getUserListByAdmin(
-             PageDTO dto){
+                    PageDTO dto){
         log.info("{}ddttoo==",dto);
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
-
+        ListResponseDTO<UserByAdminResponseDTO, User> userListTodayByAdmin = userService.todayUserByAdMin(dto);
         log.info("userbyadmin11111 : {}",userListByAdmin);
+        System.out.println("userListTodayByAdmin = " + userListTodayByAdmin);
 
         log.info("/api/v1/users/admin/");
 
+        Map<String,ListResponseDTO<UserByAdminResponseDTO,User>>user = new HashMap<>();
+        user.put("userListByAdmin",userListByAdmin);
+        user.put("userListTodayByAdmin",userListTodayByAdmin);
 
         return ResponseEntity
                 .ok()
-                .body(userListByAdmin);
+                .body(user);
     }
 
 

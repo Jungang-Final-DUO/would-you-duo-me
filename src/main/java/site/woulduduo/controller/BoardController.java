@@ -19,7 +19,6 @@ import javax.servlet.http.HttpSession;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-//@RequestMapping("/api/v1/board") //경로
 
 public class BoardController {
 
@@ -67,7 +66,7 @@ public class BoardController {
     }
 
     //관리자페이지 boardlist 가져오기
-    @GetMapping("api/v1/boards/admin")
+    @GetMapping("/api/v1/boards/admin")
     public ResponseEntity<?> getBoardListByAdmin(PageDTO dto){
         log.info("{}ddttoo==",dto);
 

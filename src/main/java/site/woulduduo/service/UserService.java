@@ -368,13 +368,14 @@ public class UserService {
 
     //금일 가입자(Admin)
     public ListResponseDTO<UserByAdminResponseDTO,User> todayUserByAdMin(PageDTO dto) {
+
         Pageable pageable = PageRequest.of(
                 dto.getPage()-1,
                 dto.getSize(),
                 Sort.by("userJoinDate").descending()
         );
         //전체불러오기
-        Page<User> all = userRepository.findAll(pageable);
+        Page<User> all = userRepository.findByUserAccountContaining(pageable);
         List<User> todayUserList = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
 
@@ -398,12 +399,11 @@ public class UserService {
 
         System.out.println("collect = " + collect);
 
-//        return ListResponseDTO.builder()
-//                .count(collect.size())
-//                .pageInfo(new PageResponseDTO(all))
-//                .list(collect)
-//                .build();
-        return null;
+        return ListResponseDTO.<UserByAdminResponseDTO, User>builder()
+                .count(collect.size())
+                .pageInfo(new PageResponseDTO<>(all))
+                .list(collect)
+                .build();
 
     }
 

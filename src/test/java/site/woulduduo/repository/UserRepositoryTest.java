@@ -256,7 +256,7 @@ class UserRepositoryTest {
         Pageable pageInfo = PageRequest.of(pageNo - 1, size);
         //when
         Page<User> users
-                = userRepository.findByUserAccountContaining("123", pageInfo);
+                = userRepository.findByUserAccountContaining(pageInfo);
 
         //then
         System.out.println("\n\n\n");

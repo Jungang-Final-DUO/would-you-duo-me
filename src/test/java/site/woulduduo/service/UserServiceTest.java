@@ -271,7 +271,7 @@ class UserServiceTest {
 
 
         PageDTO dto = new PageDTO();
-
+        String keyword = "123";
 
         ListResponseDTO<UserByAdminResponseDTO, User> userByAdminResponseDTOUserListResponseDTO = userService.todayUserByAdMin(dto);
 
