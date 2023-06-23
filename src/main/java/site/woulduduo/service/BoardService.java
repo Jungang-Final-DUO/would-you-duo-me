@@ -15,7 +15,6 @@ import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.board.BoardsByAdminResponseDTO;
 import site.woulduduo.dto.response.page.PageResponseDTO;
 import site.woulduduo.entity.Board;
-import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.BoardCategory;
 import site.woulduduo.repository.BoardLikeRepository;
 import site.woulduduo.repository.BoardRepository;
@@ -94,27 +93,34 @@ public class BoardService {
     }
 
     //전체 BoardList DTO 변환 (Admin)+ 페이징
-    public ListResponseDTO<BoardsByAdminResponseDTO,User> getBoardListByAdmin(PageDTO dto){
+    public ListResponseDTO<BoardsByAdminResponseDTO,Board> getBoardListByAdmin(PageDTO dto){
+        System.out.println("dtoservice = " + dto);
+
         Pageable pageable = PageRequest.of(
                 dto.getPage()-1,
                 dto.getSize(),
-                Sort.by("boardWrittenDate").descending()
+                Sort.by("boardNo").descending()
         );
+
+        System.out.println("pageable = " + pageable);
+
         Page<Board> all = boardRepository.findAll(pageable);
 
+        System.out.println("all = " + all);
         List<BoardsByAdminResponseDTO> collect = all.stream()
                 .map(BoardsByAdminResponseDTO::new)
                 .collect(toList());
 
-        return ListResponseDTO.builder()
-                .count(all.getSize())
-                .pageInfo(new PageResponseDTO(all))
+        System.out.println("collect = " + collect);
+        return ListResponseDTO.<BoardsByAdminResponseDTO,Board>builder()
+                .count(collect.size())
+                .pageInfo(new PageResponseDTO<>(all))
                 .list(collect)
                 .build();
     }
 
     //금일 작성 게시물 (ADMIN)
-    public ListResponseDTO<BoardsByAdminResponseDTO,User> todayBoardByAdmin(PageDTO dto){
+    public ListResponseDTO<BoardsByAdminResponseDTO,Board> todayBoardByAdmin(PageDTO dto){
 
         Pageable pageable = PageRequest.of(
                 dto.getPage()-1,
@@ -138,12 +144,13 @@ public class BoardService {
                 .map(BoardsByAdminResponseDTO::new)
                 .collect(toList());
 
-        return ListResponseDTO.builder()
-                .count(collect.size())
-                .pageInfo(new PageResponseDTO(all))
-                .list(collect)
-                .build();
+//        return ListResponseDTO.builder()
+//                .count(collect.size())
+//                .pageInfo(new PageResponseDTO(all))
+//                .list(collect)
+//                .build();
 
+        return null;
 
     }
 
