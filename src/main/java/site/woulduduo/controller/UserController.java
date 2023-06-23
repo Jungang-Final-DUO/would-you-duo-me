@@ -160,7 +160,7 @@ public class UserController {
         ra.addAttribute("msg", result);
 
         // 로그인 실패시
-        return "redirect:/user/sign-in";
+        return "redirect:/";
     }
 
     // 로그아웃 요청 처리
@@ -184,7 +184,7 @@ public class UserController {
             session.invalidate();
             return "redirect:/";
         }
-        return "redirect:/user/sign-in";
+        return "redirect:/";
     }
 
 
