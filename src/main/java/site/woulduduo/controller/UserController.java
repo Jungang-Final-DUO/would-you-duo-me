@@ -31,9 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static site.woulduduo.enumeration.LoginResult.SUCCESS;
 import static site.woulduduo.util.LoginUtil.isAutoLogin;
@@ -243,19 +241,19 @@ public class UserController {
                     PageDTO dto){
         log.info("{}ddttoo==",dto);
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
-        ListResponseDTO<UserByAdminResponseDTO, User> userListTodayByAdmin = userService.todayUserByAdMin(dto);
+//        ListResponseDTO<UserByAdminResponseDTO, User> userListTodayByAdmin = userService.todayUserByAdMin(dto);
         log.info("userbyadmin11111 : {}",userListByAdmin);
-        System.out.println("userListTodayByAdmin = " + userListTodayByAdmin);
+//        System.out.println("userListTodayByAdmin = " + userListTodayByAdmin);
 
         log.info("/api/v1/users/admin/");
 
-        Map<String,ListResponseDTO<UserByAdminResponseDTO,User>>user = new HashMap<>();
-        user.put("userListByAdmin",userListByAdmin);
-        user.put("userListTodayByAdmin",userListTodayByAdmin);
+//        Map<String,ListResponseDTO<UserByAdminResponseDTO,User>>user = new HashMap<>();
+//        user.put("userListByAdmin",userListByAdmin);
+//        user.put("userListTodayByAdmin",userListTodayByAdmin);
 
         return ResponseEntity
                 .ok()
-                .body(user);
+                .body(userListByAdmin);
     }
 
 

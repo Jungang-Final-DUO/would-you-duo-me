@@ -374,8 +374,11 @@ public class UserService {
                 dto.getSize(),
                 Sort.by("userJoinDate").descending()
         );
+
+        String userAccount = dto.getKeyword();
+
         //전체불러오기
-        Page<User> all = userRepository.findByUserAccountContaining(pageable);
+        Page<User> all = userRepository.findByUserAccountContaining(userAccount,pageable);
         List<User> todayUserList = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
 
@@ -390,8 +393,10 @@ public class UserService {
         List<UserByAdminResponseDTO> collect = todayUserList.stream()
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
-//
-        int i=1;
+
+        //rowNum 추가
+
+        int i= (dto.getPage() - 1) * dto.getSize() + 1 ;
         for (UserByAdminResponseDTO user : collect) {
             user.setRowNum(i);
             i++;

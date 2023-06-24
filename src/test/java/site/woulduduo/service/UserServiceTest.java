@@ -271,9 +271,11 @@ class UserServiceTest {
 
 
         PageDTO dto = new PageDTO();
-        String keyword = "123";
+        String userAccount = "123";
 
-        ListResponseDTO<UserByAdminResponseDTO, User> userByAdminResponseDTOUserListResponseDTO = userService.todayUserByAdMin(dto);
+        ListResponseDTO<UserByAdminResponseDTO, User>
+                userByAdminResponseDTOUserListResponseDTO
+                = userService.todayUserByAdMin(dto);
 
         System.out.println("userByAdminResponseDTOUserListResponseDTO = " + userByAdminResponseDTOUserListResponseDTO);
 

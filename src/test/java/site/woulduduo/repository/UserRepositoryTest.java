@@ -1,6 +1,5 @@
 package site.woulduduo.repository;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.entity.Accuse;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
@@ -89,23 +89,23 @@ class UserRepositoryTest {
     }
 
 
-    @BeforeEach
-    void bulkInsert() {
-        // 학생을 147명 저장
-        for (int i = 1; i <= 147; i++) {
-            User User1 = User.builder()
-                    .userAccount("acvd" + i)
-                    .userNickname("asd" + i)
-                    .userPassword("12345")
-                    .userCurrentPoint(123)
-                    .userBirthday(LocalDate.of(1990, 11, 07))
-                    .lolNickname("asd" + i)
-                    .userGender(Gender.F)
-                    .lolTier(Tier.DIA)
-                    .build();
-            userRepository.save(User1);
-        }
-    }
+//    @BeforeEach
+//    void bulkInsert() {
+//        // 학생을 147명 저장
+//        for (int i = 1; i <= 147; i++) {
+//            User User1 = User.builder()
+//                    .userAccount("acvd" + i)
+//                    .userNickname("asd" + i)
+//                    .userPassword("12345")
+//                    .userCurrentPoint(123)
+//                    .userBirthday(LocalDate.of(1990, 11, 07))
+//                    .lolNickname("asd" + i)
+//                    .userGender(Gender.F)
+//                    .lolTier(Tier.DIA)
+//                    .build();
+//            userRepository.save(User1);
+//        }
+//    }
 
     @Test
     @DisplayName("전제 조회")
@@ -208,21 +208,24 @@ class UserRepositoryTest {
         //given
         int pageNo = 1;
         int amount = 10;
+        String userAccount = "";
+
+        PageDTO dto = new PageDTO();
+        dto.setPage(pageNo);
+        dto.setSize(amount);
+        dto.setKeyword(userAccount);
 
         // 페이지 정보 생성
         // 페이지번호가 zero-based
-        Pageable pageInfo
-                = PageRequest.of(pageNo - 1,
-                amount,
-                //Sort.by("name").descending() // 정렬기준 필드명
-                Sort.by(
-                        Sort.Order.desc("userJoinDate")
-                )
+        Pageable pageable = PageRequest.of(
+                dto.getPage()-1,
+                dto.getSize(),
+                Sort.by("userJoinDate").descending()
         );
 
         //when
         Page<User> users
-                = userRepository.findAll(pageInfo);
+                = userRepository.findByUserAccountContaining(userAccount, pageable);
 
         // 페이징 완료된 데이터셋
         List<User> studentList = users.getContent();
@@ -237,6 +240,7 @@ class UserRepositoryTest {
         Pageable next = users.getPageable().next();
 
         //then
+        System.out.println("studentList = " + studentList);
         System.out.println("\n\n\n");
         System.out.println("totalPages = " + totalPages);
         System.out.println("totalElements = " + totalElements);
@@ -253,15 +257,18 @@ class UserRepositoryTest {
         //given
         int pageNo = 1;
         int size = 10;
-        Pageable pageInfo = PageRequest.of(pageNo - 1, size);
-        //when
-        Page<User> users
-                = userRepository.findByUserAccountContaining(pageInfo);
+        String userAccount = "345";
+
+        Pageable pageable = PageRequest.of(
+                pageNo - 1,
+                size,
+                Sort.by("userJoinDate").descending()
+        );
+
+        Page<User> users = userRepository.findByUserAccountContaining(userAccount, pageable);
 
         //then
-        System.out.println("\n\n\n");
-        users.getContent().forEach(System.out::println);
-        System.out.println("\n\n\n");
+        System.out.println("users = " + users);
     }
 
 

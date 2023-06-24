@@ -16,7 +16,7 @@ public interface UserRepository extends
         JpaRepository<User,String> {
 
     //아이디로 검색한 정보보기 + 페이징
-    Page<User> findByUserAccountContaining(Pageable pageable);
+    Page<User> findByUserAccountContaining(String userAccount, Pageable pageable);
 
     //날짜별 가입 user 보기
     @Query(value = "SELECT COUNT(*) FROM User u WHERE u.userAccount = :email")
