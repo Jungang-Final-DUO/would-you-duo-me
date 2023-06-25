@@ -29,7 +29,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
     @Override
     public List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/) {
-
+        System.out.println("IMPLPosition = " + userSearchType.getPosition());
         List<User> userList = queryFactory.selectFrom(user)
                 .join(user.mostChampList, mostChamp).fetchJoin()
                 .where(keywordContains(userSearchType.getKeyword())
@@ -51,7 +51,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                     .userGender(user.getUserGender())
                     .userComment(user.getUserComment())
                     .userMatchingPoint(user.getUserMatchingPoint())
-                    .tier(user.getLolTier())
+                    .tier(String.valueOf(user.getLolTier()))
                     .userInstagram(user.getUserInstagram())
                     .userFacebook(user.getUserFacebook())
                     .userTwitter(user.getUserTwitter())
@@ -81,9 +81,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
     // 포지션 파라미터가 null인지 체크
     private BooleanExpression positioneq(Position position) {
-        String sPosition = String.valueOf(position);
-
-        return StringUtils.isNullOrEmpty(sPosition)? user.userPosition.eq(position) : null;
+        return (position != null) ? user.userPosition.eq(position) : null;
     }
 
     // 검색 키워드가 null인지 체크
