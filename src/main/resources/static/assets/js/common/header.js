@@ -4,20 +4,15 @@ import {toTopBtnHandler} from "./to-top-btn-handler.js";
 import {connectSocket} from "../chatting/main.js";
 import {addDropdownEvent} from "./dropdown-handler.js";
 import {signInSubmitHandler} from "../user/sign-in-submit-handler.js";
-import {matchingCalendar} from "../chatting/chatting-calendar";
+import {renderMatchingCalendar} from "../chatting/chatting-calendar.js";
 
 (async () => {
 
     // 로그인 했을때만 실행되는 함수
     if (document.getElementById('chatting-btn')) {
-        //채팅 목록 최초 랜더
-        // getChattingList();
 
         // 소켓 연결
         connectSocket();
-
-        //헤더 채팅 버튼 클릭하면 채팅 목록 렌더링
-        // openChattingList();
 
         //채팅 생성하기
         makeChattingRoom();
@@ -26,7 +21,7 @@ import {matchingCalendar} from "../chatting/chatting-calendar";
         toBack();
 
         //매칭 날짜 캘린더
-        matchingCalendar();
+        renderMatchingCalendar();
 
         // 내 정보 모달 드롭다운 이벤트
         addDropdownEvent('user-info-btn', 'my-page-modal-wrapper');

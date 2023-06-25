@@ -13,12 +13,15 @@ export function scrollDown() {
 export function outputMessage(message) {
     console.log('outputMessage 진입');
     const userNickname = document.getElementById('loginUserInfo').dataset.userNickname;
-    matchingRequestEvent();
-    matchingResponseEvent();
-
     const room = document.getElementById(message.room);
-
     if (room === null) return;
+
+    if(room.dataset.chattingFrom === userNickname) {
+        matchingRequestEvent();
+    } else {
+        matchingResponseEvent();
+    }
+
 
     const otherProfile = room.querySelector('.chatting-profile-img').src;
     const matchingBtn = room.querySelector('.matching-accept-btn');

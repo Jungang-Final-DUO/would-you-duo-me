@@ -60,7 +60,7 @@ public class MatchingService {
     //    매칭 확정하기
     public boolean fixSchedule(MatchingFixRequestDTO dto) {
         Matching matching = matchingRepository.findByMatchingNo(dto.getMatchingNo());
-        matching.setMatchingDate(dto.getMatchingDate());
+        matching.setMatchingDate(dto.getLocalDateType(dto.getMatchingDate()));
         matching.setMatchingStatus(MatchingStatus.CONFIRM);
         try {
             Matching saved = matchingRepository.save(matching);

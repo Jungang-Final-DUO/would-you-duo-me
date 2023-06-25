@@ -1,4 +1,6 @@
-export function matchingCalendar() {
+import {clickSelectDate} from "./matching.js";
+
+export function renderMatchingCalendar() {
     const realNow = new Date();
     let match_now = new Date();
     let match_today = match_now.getDate();
@@ -16,8 +18,6 @@ export function matchingCalendar() {
         const prev_month = match_month === 1 ? 12 : match_month - 1;
         const prev_year = prev_month === 12 ? match_year - 1 : match_year;
         const prev_now = new Date(prev_year, prev_month - 1, prev_today);
-        // console.log(prev_now);
-        // console.log(realNow);
 
         if (prev_now <= realNow) {
             const realNow = new Date();
@@ -33,7 +33,6 @@ export function matchingCalendar() {
             match_month = prev_month;
             getMyCalendar(match_now, match_today, match_month, match_year);
         }
-
     }
 
     function nextMonth() {
@@ -42,8 +41,6 @@ export function matchingCalendar() {
         match_month = match_month === 12 ? 1 : match_month + 1;
         match_year = match_month === 1 ? match_year + 1 : match_year;
         match_now = new Date(match_year, match_month - 1, match_today);
-        // console.log(match_now);
-        // console.log(realNow);
 
         getMyCalendar(match_now, match_today, match_month, match_year);
     }
@@ -76,7 +73,42 @@ export function matchingCalendar() {
 
         const myCalendar = document.getElementById('dates');
         myCalendar.innerHTML = dates;
+
+        selectDateEvent();
     }
 
     getMyCalendar(match_now, match_today, match_month, match_year);
+
+}
+
+export function selectDateEvent(){
+    const dates = document.querySelectorAll('.available-date');
+    dates.forEach( d => d.onclick = e => {
+        const selected = e.target.closest('.available-date');
+        console.log(selected);
+        dates.forEach(d => {
+            d.style.color = 'black';
+            d.style.background = '';
+            d.style.fontWeight = '400';
+        });
+        selected.style.color = '#1EA1F7';
+        selected.style.fontWeight = '700';
+        selected.style.background = '#e1ecff';
+
+        let matchingYear = document.getElementById('now-year').innerText;
+        let matchingMonth = document.getElementById('now-month').innerText;
+        let matchingDate = e.target.closest('.available-date').innerText;
+
+        [...document.querySelectorAll('.message-dialog')].forEach(m => {
+            if(m.hasAttribute('open')){
+                const $chattingRoom = m.closest('.chatting-card');
+                const $chattingNo = m.closest('.chatting-card').id;
+                const $matchingNo = $chattingRoom.querySelector('.matching-accept-btn').dataset.matchingNo;
+                clickSelectDate($chattingNo, $matchingNo, matchingYear, matchingMonth, matchingDate);
+            }
+        })
+
+        }
+    );
+
 }

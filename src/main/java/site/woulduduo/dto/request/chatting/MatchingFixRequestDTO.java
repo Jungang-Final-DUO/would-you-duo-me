@@ -3,6 +3,7 @@ package site.woulduduo.dto.request.chatting;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.StringTokenizer;
 
 @Getter
 @NoArgsConstructor
@@ -13,6 +14,11 @@ import java.time.LocalDate;
 public class MatchingFixRequestDTO {
 
     private long matchingNo;
-    private LocalDate matchingDate;
+    private String matchingDate;
+
+    public LocalDate getLocalDateType(String matchingDate){
+        StringTokenizer st = new StringTokenizer(matchingDate, "-");
+        return LocalDate.of(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+    }
 
 }
