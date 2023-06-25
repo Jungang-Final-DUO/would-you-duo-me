@@ -63,7 +63,7 @@
             </c:if>
             <!--        로그인 하면 위의 두 버튼 대신 아래의 버튼이 보입니다        -->
             <c:if test="${login != null}">
-                <div id="loginUserInfo" data-user-account="${login.userAccount}" class="user-icon-wrapper">
+                <div id="loginUserInfo" data-user-account="${login.userAccount}" data-user-nickname = "${login.userNickname}" class="user-icon-wrapper">
                     <button id="user-info-btn">
                         <img src="/assets/img/header/my-page.png" alt="마이 페이지 아이콘" class="user-icon">
                     </button>
@@ -132,6 +132,7 @@
             </span>
         </button>
         <%@ include file="../chatting/chattingModal.jsp" %>
+        <%@ include file="../chatting/chattingCalendar.jsp" %>
     </c:if>
 
 

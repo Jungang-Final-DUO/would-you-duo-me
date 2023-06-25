@@ -264,5 +264,14 @@ class UserRepositoryTest {
 
         System.out.println("user1 = " + user1);
     }
+    
+    @Test
+    @DisplayName("닉네임으로 아이디 찾아오기")
+    void findByNicknameTest(){
+        String nickname = "멍청이";
+        User user = userRepository.findByUserNickname(nickname);
+
+        System.out.println("user = " + user);
+    }
 
 }

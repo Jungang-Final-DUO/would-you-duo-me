@@ -2,6 +2,7 @@
 @import "footer.css";
 @import "../chatting/chattingModal.css";
 @import "../chatting/chattingMessageModal.css";
+@import "../chatting/chatting-calendar.css";
 
 /* header style */
 header {
