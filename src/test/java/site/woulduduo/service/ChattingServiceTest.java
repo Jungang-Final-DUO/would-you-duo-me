@@ -49,9 +49,9 @@ class ChattingServiceTest {
     @Test
     @DisplayName("채팅 데이터 많이 생성")
     void makeBulkChattingTest() {
-        String chattingTo = "test1@example.com";
+        String chattingTo = "ahri@ahri.com";
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 1; i < 100; i++) {
             String chattingFrom = "user" + i;
 
             chattingService.makeChatting(chattingFrom, chattingTo);

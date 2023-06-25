@@ -51,8 +51,6 @@ public class UserHistoryResponseDTO {
 
     private List<MatchResponseDTO> last20Matches;
 
-    private List<UserReviewResponseDTO> userReviews;
-
     // 빌더 커스텀
     public static class UserHistoryResponseDTOBuilder {
 

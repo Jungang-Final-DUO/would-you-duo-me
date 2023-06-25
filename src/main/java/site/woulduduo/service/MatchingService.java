@@ -71,6 +71,19 @@ public class MatchingService {
 
     }
 
+    // 게임 완료
+    public boolean gameOverMatching(long matchingNo) {
+        Matching matching = matchingRepository.findByMatchingNo(matchingNo);
+        matching.setMatchingStatus(MatchingStatus.DONE);
+        try {
+            Matching saved = matchingRepository.save(matching);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
     /**
      * 리뷰 작성하기
      *
@@ -99,7 +112,7 @@ public class MatchingService {
      * @return - 리뷰 목록
      */
     public ListResponseDTO<UserReviewResponseDTO, Matching> getGottenReview(
-           final String userAccount, final int pageNo
+            final String userAccount, final int pageNo
     ) {
 
         PageRequest pageInfo = PageRequest.of(pageNo - 1,
@@ -121,5 +134,4 @@ public class MatchingService {
                 .list(hasReviewMatchingList)
                 .build();
     }
-
 }
