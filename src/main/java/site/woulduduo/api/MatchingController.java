@@ -70,8 +70,9 @@ public class MatchingController {
 
     //매칭 확정
     @RequestMapping(value = "/fix", method = {RequestMethod.PUT, RequestMethod.PATCH})
-    public ResponseEntity<?> fixSchedule(MatchingFixRequestDTO dto){
+    public ResponseEntity<?> fixSchedule(@RequestBody MatchingFixRequestDTO dto){
         boolean flag = matchingService.fixSchedule(dto);
+        log.info("확정 직전!");
         return ResponseEntity.ok().body(flag);
     }
 

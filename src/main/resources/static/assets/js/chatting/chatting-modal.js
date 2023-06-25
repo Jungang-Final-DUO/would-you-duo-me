@@ -1,4 +1,4 @@
-import {addModalBtnEvent, addModalCloseEvent, modalHandler} from "../common/modal-handler.js";
+import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 import {renderRateModal} from "../review/write-rate.js";
 
 export function getChattingList() {
@@ -68,6 +68,7 @@ function renderChattingList(result) {
             let $chattings = document.createElement('li');
             $chattings.id = chattingNo;
             $chattings.classList.add('chatting-card');
+            $chattings.dataset.chattingFrom = chattingFrom;
 
             const $chat_card = document.createElement('div');
             $chat_card.classList.add('chat-card');
@@ -238,22 +239,6 @@ function renderChattingList(result) {
                         $rightBtn.dataset.matchingNo = '';
                 }
             }
-
-            // const gameover_container = document.createElement('div');
-            // gameover_container.classList.add('gameover-container');
-            // chatting_message_option.appendChild(gameover_container);
-            //
-            // const gameover_btn = document.createElement('button');
-            // gameover_btn.classList.add('gameover-btn');
-            // gameover_container.appendChild(gameover_btn);
-            //
-            // const chatting_gameover_img = document.createElement('img');
-            // chatting_gameover_img.classList.add('chatting-gameover-img');
-            // chatting_gameover_img.src = '/assets/img/chattingModal/checkmark.png';
-            // chatting_gameover_img.alt = '게임완료이미지';
-            // gameover_btn.appendChild(chatting_gameover_img);
-            // gameover_btn.append('게임완료');
-
 
             const message_send_box = document.createElement('input');
             message_send_box.classList.add('message-send-box');

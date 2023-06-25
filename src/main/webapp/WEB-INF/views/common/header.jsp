@@ -132,6 +132,7 @@
             </span>
         </button>
         <%@ include file="../chatting/chattingModal.jsp" %>
+        <%@ include file="../chatting/chattingCalendar.jsp" %>
     </c:if>
 
 

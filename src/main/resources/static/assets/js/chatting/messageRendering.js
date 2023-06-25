@@ -13,12 +13,15 @@ export function scrollDown() {
 export function outputMessage(message) {
     console.log('outputMessage 진입');
     const userNickname = document.getElementById('loginUserInfo').dataset.userNickname;
-    matchingRequestEvent();
-    matchingResponseEvent();
-
     const room = document.getElementById(message.room);
-
     if (room === null) return;
+
+    if(room.dataset.chattingFrom === userNickname) {
+        matchingRequestEvent();
+    } else {
+        matchingResponseEvent();
+    }
+
 
     const otherProfile = room.querySelector('.chatting-profile-img').src;
     const matchingBtn = room.querySelector('.matching-accept-btn');
@@ -62,11 +65,18 @@ export function outputMessage(message) {
             matching_reject_btn.dataset.matchingNo = message.matchingNo;
         }
 
-        // 매칭 ststus가 confirm으로 변하면 메세지 받은 사람 버튼 변경
+        // 매칭 status가 confirm으로 변하면 메세지 받은 사람 버튼 변경
         if(message.matchingStatus === 'CONFIRM' && matchingBtn.childNodes[1].nodeValue !== `게임 완료`){
             matchingBtn.childNodes[1].nodeValue = `게임 완료`;
             matchingBtn.disabled = false;
             matchingBtn.dataset.matchingNo = message.matchingNo;
+        }
+
+        //매칭 status가 done으로 변하면 메세지 받은사람 버튼 변경
+        if(message.matchingStatus === 'DONE' && matchingBtn.childNodes[1].nodeValue !== `게임 완료`){
+            matchingBtn.childNodes[1].nodeValue = `매칭 대기`;
+            matchingBtn.disabled = true;
+            matchingBtn.dataset.matchingNo = '';
         }
 
         div.classList.add('chatting-message-card');
