@@ -18,6 +18,7 @@ import site.woulduduo.enumeration.MatchingStatus;
 import site.woulduduo.repository.ChattingRepository;
 import site.woulduduo.repository.MatchingRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -133,5 +134,14 @@ public class MatchingService {
                 .pageInfo(new PageResponseDTO<>(pageDTO))
                 .list(hasReviewMatchingList)
                 .build();
+    }
+
+    public List<Matching> findMatchingByChatting(long chattingNo) {
+        Chatting chatting = chattingRepository.findByChattingNo(chattingNo);
+            return matchingRepository.findByChatting(chatting).stream()
+                    .sorted(Comparator.comparing(Matching::getMatchingNo).reversed())
+                    .limit(1)
+                    .collect(Collectors.toList());
+
     }
 }

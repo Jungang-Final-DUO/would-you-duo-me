@@ -177,8 +177,8 @@ function renderChattingList(result) {
                         matching_accept_btn.dataset.matchingNo = matchingNo;
                         chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
                         chatting_handshake_img.alt = '게임완료이미지';
-                        matching_accept_btn.appendChild(chatting_handshake_img);
-                        matching_accept_btn.append('포인트 받기');
+                        // matching_accept_btn.appendChild(chatting_handshake_img);
+                        matching_accept_btn.childNodes[1].nodeValue = `포인트 받기`;
                         break;
                     default :
                         matching_accept_btn.disabled = true;
@@ -226,8 +226,8 @@ function renderChattingList(result) {
                         chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
                         chatting_handshake_img.alt = '게임완료이미지';
                         $rightBtn.dataset.matchingNo = matchingNo;
-                        $rightBtn.appendChild(chatting_handshake_img);
-                        $rightBtn.append('후기 작성');
+                        // $rightBtn.appendChild(chatting_handshake_img);
+                        $rightBtn.childNodes[1].nodeValue = `리뷰 쓰기`;
                         $rightBtn.onclick = async e => {
                             const $rateModal = await renderRateModal(matchingNo, userNickname);
                             document.body.appendChild($rateModal);

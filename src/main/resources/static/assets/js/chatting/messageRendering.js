@@ -1,5 +1,5 @@
 import {renderUnreadMessages} from "./chatting-modal.js";
-import {matchingRequestEvent, matchingResponseEvent} from "./matching.js";
+import {getRecentMatchingNo, matchingRequestEvent, matchingResponseEvent} from "./matching.js";
 
 export function scrollDown() {
     const chatMessages = document.querySelectorAll('.chatting-message-body');
@@ -32,7 +32,6 @@ export function outputMessage(message) {
 
     // 내가 보낸 메세지
     if (message.username === userNickname) {
-
         div.classList.add('chatting-message-card');
         div.classList.add('message-from');
         div.innerHTML = `
@@ -51,9 +50,10 @@ export function outputMessage(message) {
 
         // 매칭 ststus가 request로 변하면 메세지 받은 사람 버튼 수락/거절로 변경
         if(message.matchingStatus === 'REQUEST' && matchingBtn.childNodes[1].nodeValue !== `매칭 수락`){
+            getRecentMatchingNo(room.id);
+            matchingBtn.dataset.matchingStatus = message.matchingStatus;
             matchingBtn.childNodes[1].nodeValue = `매칭 수락`;
             matchingBtn.disabled = false;
-            matchingBtn.dataset.matchingNo = message.matchingNo;
             const gameover_container = document.createElement('div');
             gameover_container.classList.add('gameover-container');
             chatting_message_option.appendChild(gameover_container);
@@ -63,20 +63,27 @@ export function outputMessage(message) {
             gameover_container.appendChild(matching_reject_btn);
             matching_reject_btn.append(`매칭 거절`);
             matching_reject_btn.dataset.matchingNo = message.matchingNo;
+            // matchingResponseEvent();
         }
 
         // 매칭 status가 confirm으로 변하면 메세지 받은 사람 버튼 변경
         if(message.matchingStatus === 'CONFIRM' && matchingBtn.childNodes[1].nodeValue !== `게임 완료`){
+            getRecentMatchingNo(room.id);
+            matchingBtn.dataset.matchingStatus = message.matchingStatus;
             matchingBtn.childNodes[1].nodeValue = `게임 완료`;
             matchingBtn.disabled = false;
-            matchingBtn.dataset.matchingNo = message.matchingNo;
+            // matchingBtn.dataset.matchingNo = message.matchingNo;
+            // matchingRequestEvent();
         }
 
         //매칭 status가 done으로 변하면 메세지 받은사람 버튼 변경
         if(message.matchingStatus === 'DONE' && matchingBtn.childNodes[1].nodeValue !== `게임 완료`){
+            getRecentMatchingNo(room.id);
+            matchingBtn.dataset.matchingStatus = message.matchingStatus;
             matchingBtn.childNodes[1].nodeValue = `매칭 대기`;
             matchingBtn.disabled = true;
-            matchingBtn.dataset.matchingNo = '';
+            // matchingBtn.dataset.matchingNo = message.matchingNo;
+            // matchingResponseEvent();
         }
 
         div.classList.add('chatting-message-card');

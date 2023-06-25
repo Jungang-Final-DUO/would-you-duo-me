@@ -21,6 +21,18 @@ public class MatchingController {
 
     private final MatchingService matchingService;
 
+    @GetMapping("/{chattingNo}")
+    public ResponseEntity<?> getMatchingNo(@PathVariable long chattingNo){
+        Long matchingNo = null;
+        try {
+            matchingNo = matchingService.findMatchingByChatting(chattingNo).get(0).getMatchingNo();
+            return ResponseEntity.ok().body(matchingNo);
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @RequestMapping(value = "/reviews", method = {RequestMethod.PATCH, RequestMethod.PUT})
     public ResponseEntity<?> writeReview(HttpSession session, @RequestBody ReviewWriteRequestDTO dto) {
 
@@ -85,8 +97,10 @@ public class MatchingController {
 
     //게임 완료
     @RequestMapping(value = "/done", method = {RequestMethod.PUT, RequestMethod.PATCH})
-    public ResponseEntity<?> gameOverMatching(long matchingNo){
+    public ResponseEntity<?> gameOverMatching(@RequestBody long matchingNo){
+        log.info("done 컨트롤러 진입");
         boolean flag = matchingService.gameOverMatching(matchingNo);
+        log.info("DONE으로 변경!");
         return ResponseEntity.ok().body(flag);
     }
 }
