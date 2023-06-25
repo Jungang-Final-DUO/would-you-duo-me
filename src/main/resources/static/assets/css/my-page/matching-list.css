@@ -1,0 +1,168 @@
+.matching-box {
+    display: flex;
+
+    justify-content:  center;
+}
+
+.application-match {
+
+    box-sizing: border-box;
+    margin-left: 70px;
+    width: 563px;
+    height: 621px;
+    left: 65px;
+    top: 30px;
+
+}
+
+.application-mymatch {
+
+    box-sizing: border-box;
+    margin-left: 30px;
+    width: 563px;
+    height: 621px;
+    left: 65px;
+    top: 30px;
+
+}
+
+
+h2 {
+
+    width: 197px;
+    height: 44px;
+    left: 20px;
+    top: 14px;
+    text-align: center;
+
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+
+    color: #FFFFFF;
+}
+
+.duo-header {
+
+    display: flex;
+    width: 562px;
+    height: 29px;
+    left: 13px;
+    top: 19px;
+    justify-content: space-around;
+
+}
+
+.matching-peolpe {
+    width: 156px;
+    height: 24px;
+    left: 6px;
+    top: 3px;
+
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+
+    color: #FFFFFF;
+}
+
+.matching-day {
+    width: 116px;
+    height: 24px;
+    left: 6px;
+    top: 3px;
+
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+
+    color: #FFFFFF;
+
+}
+
+.nickname-another {
+    width: 156px;
+    height: 24px;
+    left: 6px;
+    top: 3px;
+
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+
+    color: #FFFFFF;
+
+
+}
+
+.duo-record {
+    padding: 20px;
+    text-align: center;
+    margin: 0 auto;
+    width: 571px;
+    height: 571px;
+
+
+    background: #3F4A5B;
+    border-radius: 10px;
+}
+
+.duo-detail {
+    display: flex;
+    justify-content: space-around;
+
+    width: 552px;
+    height: 34px;
+    left: 13px;
+    top: 62px;
+
+}
+
+
+
+.my-review {
+
+    width: 316px;
+    height: 24px;
+    left: 6px;
+    top: 3px;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+
+    color: #FFFFFF;
+
+}
+
+.writer-review {
+
+    box-sizing: border-box;
+
+    /* justify-content: center; */
+    width: 116px;
+    height: 24px;
+    left: 307px;
+    top: 1px;
+
+    background: #142F57;
+    border-radius: 5px;
+}
+
+span {
+    width: 88px;
+    height: 18px;
+    left: 11px;
+    top: 4px;
+
+
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.8;
+
+    color: #FFFFFF;
+
+}
+
+.writer-review:hover {
+    border: 1px solid #ffff;
+}
