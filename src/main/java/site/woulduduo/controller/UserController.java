@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import site.woulduduo.aws.S3Service;
 import site.woulduduo.dto.request.page.PageDTO;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,7 +37,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import static site.woulduduo.enumeration.LoginResult.SUCCESS;
 import static site.woulduduo.util.LoginUtil.isAutoLogin;
@@ -47,12 +50,13 @@ import static site.woulduduo.util.LoginUtil.isLogin;
 @RequiredArgsConstructor
 public class UserController {
 
-    @Value("${file.upload.root-path}")
-    private String rootPath;
+//    @Value("${file.upload.root-path}")
+//    private String rootPath;
 
     private final UserService userService;
     private final EmailService emailService;
     private final UserRepository userRepository;
+    private final S3Service s3Service;
 
     // 메인페이지 - 프로필 카드 불러오기(비동기)
     @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
@@ -104,8 +108,14 @@ public class UserController {
             MultipartFile profileImage = profileImages[i];
             if (!profileImage.isEmpty()) {
                 // 업로드된 파일을 실제 로컬 저장소에 업로드하는 로직
-                String savePath = FileUtil.uploadFile(profileImage, rootPath);
-                savePaths[i] = savePath;
+//                String savePath = FileUtil.uploadFile(profileImage, rootPath);
+//                savePaths[i] = savePath;
+                String fileName = UUID.randomUUID() + "_" + profileImage.getOriginalFilename();
+                try {
+                    savePaths[i] = s3Service.uploadToBucket(profileImage.getBytes(), fileName);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
