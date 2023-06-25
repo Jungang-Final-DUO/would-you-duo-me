@@ -29,6 +29,7 @@ import site.woulduduo.entity.User;
 import site.woulduduo.entity.UserProfile;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.LoginResult;
+import site.woulduduo.enumeration.LoginType;
 import site.woulduduo.enumeration.Tier;
 import site.woulduduo.exception.NoRankException;
 import site.woulduduo.repository.*;
@@ -99,6 +100,7 @@ public class UserService {
                 .userGender(dto.getUserGender() == Gender.M ? Gender.M : Gender.F)
                 .lolTier(riotApiService.getTier(dto.getLolNickname()))
                 .userRecentLoginDate(LocalDateTime.now())
+                .userLoginType(LoginType.NORMAL)
                 .build();
 
         userRepository.save(user);
@@ -120,24 +122,26 @@ public class UserService {
     }
 
     // 중복검사 서비스 처리
-    public int checkSignUpValue(String type, String keyword) {
-        int flagNum;
+    public boolean checkSignUpValue(String type, String keyword) {
+        boolean isDuplicate;
 
         switch (type) {
             case "email":
-                flagNum = userRepository.countByUserEmail(keyword);
+                isDuplicate = userRepository.countByUserEmail(keyword) > 0;
                 break;
             case "nickname":
-                flagNum = userRepository.countByUserNickname(keyword);
+                isDuplicate = userRepository.countByUserNickname(keyword) > 0;
                 break;
             case "lolNickname":
-                flagNum = userRepository.countByLolNickname(keyword);
+                isDuplicate = userRepository.countByLolNickname(keyword) > 0;
                 break;
             default:
                 throw new IllegalArgumentException("잘못된 검사 타입입니다.");
         }
-        return flagNum;
+
+        return isDuplicate;
     }
+
 
     // 로그인 검증
     public LoginResult authenticate(LoginRequestDTO dto,
@@ -224,7 +228,7 @@ public class UserService {
             c.setPath("/");
             response.addCookie(c);
 
-            // 데이터베이스에도 자동로그인을 해제한다.
+            // 데이터베이스에도 자동로그인을 해제
             userRepository.saveAutoLogin(
                     "none",
                     LocalDateTime.now(),

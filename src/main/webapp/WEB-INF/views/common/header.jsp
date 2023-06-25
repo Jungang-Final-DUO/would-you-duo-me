@@ -30,7 +30,7 @@
                                     <input type="password" name="userPassword" id="sign-in-user-pw">
                                 </div>
                                 <div id="sns-sign-in-wrapper">
-                                    <div id="kakao-wrapper"><a href="#"><img src="/assets/img/header/kakao.png"
+                                    <div id="kakao-wrapper"><a href="/kakao/login"><img src="/assets/img/header/kakao.png"
                                                                              alt="카카오 아이콘"></a></div>
                                     <div id="google-wrapper"><a href="#"><img src="/assets/img/header/google.png"
                                                                               alt="구글 아이콘" id="sign-in-google"></a>
