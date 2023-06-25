@@ -5,7 +5,7 @@ let page = 1;
 // 프로필카드 불러오는 URL
 const profileCardListURL = "/api/v1/users";
 
-const keyword = 'all';
+let keyword = '';
 const size = 40;
 let position = 'all';
 const $positionOption = document.querySelectorAll(".select-position"); // 포지션 선택 라디오 버튼
@@ -15,10 +15,21 @@ let tier = 'all';
 const $tierOption = document.querySelectorAll(".select-tier");  // 티어 선택 라디오 버튼
 const sort = document.getElementById("order-list").value;
 
+// 프로필 카드 내부 자식 태그들 전부 지우는 함수
+function removeTag() {
+    const $profileCardWrapper = document.getElementById('profile-cards-wrapper');
+
+    while($profileCardWrapper.firstChild) {
+        $profileCardWrapper.removeChild($profileCardWrapper.firstChild);
+    }
+}
+
 // 포지션 선택시 작동 함수
 function selectPosition() {
 
     document.getElementById('searchBy-position').onclick = e => {
+
+        removeTag();
         
         if (e.target.classList.contains('select-position')) {
             console.log("포지션 클릭성공" + e.target);
@@ -38,6 +49,8 @@ function selectPosition() {
 function selectGender() {
 
     document.getElementById('searchBy-gender').onclick = e => {
+
+        removeTag();
         e.stopPropagation();
         if (e.target.classList.contains('select-gender')) {
             console.log("성별 클릭성공" + e.target);
@@ -57,6 +70,8 @@ function selectGender() {
 function selectTier() {
 
     document.getElementById('searchByTier').onclick = e => {
+
+        removeTag();
         e.stopPropagation();
         if (e.target.classList.contains('select-tier')) {
             console.log("티어 클릭 성공" + e.target);
@@ -76,9 +91,18 @@ function selectTier() {
 function searchName() {
 
     document.getElementById('searchBy-nickname').onkeyup = e => {
+
+        removeTag();
         
         console.log("키워드 입력중" + e.target.value);
         keyword = document.getElementById('searchBy-nickname').value;
+        getProfileCardList();
+    }
+}
+
+function selectSort() {
+
+    document.getElementById('order-list').onchange = e => {
         getProfileCardList();
     }
 }
@@ -118,6 +142,11 @@ function transTier(tier) {
     }
 }
 
+// 프로필이미지가 null인지 확인 후 null일 경우 기본이미지 삽입
+function checkProfile(profileImage) {
+    return profileImage === "basic" ? "/assets/img/main/basic-profile.png" : profileImage;
+}
+
 // 프로필 카드 비동기 요청 렌더링 함수
 function getProfileCardList() { 
     let profileCardTag = '';
@@ -125,7 +154,12 @@ function getProfileCardList() {
     let mostTwo = '';
     let mostThree = '';
     let changedTier = '';
-    console.log("fetch도착");
+    // console.log("fetch도착");
+    // console.log("키워드"+keyword);
+
+    if(keyword === '') keyword = '-';
+    // console.log("강제키워드"+keyword);
+
     fetch(profileCardListURL +'/' + page + '/' + keyword + '/' + size + '/' + position + '/' + gender + '/' + tier + '/' + sort)
     .then(res => res.json())
     .then(resResult => {
@@ -146,7 +180,7 @@ function getProfileCardList() {
                                     
                                    + '<div class="profile-left-side">'
                                       + '<div class="profile-frame">'
-                                           + '<img class="profile-image" src="/assets/img/main/profile-image.jpg" alt="프로필 이미지">'
+                                           + '<img class="profile-image" src="'+ checkProfile(profileImage) +'" alt="프로필 이미지">'
                                        + '</div>'
                                       + '<div class="profile-sns">'
                                            + '<a href="'+ userInstagram +'" class="sns-type instagram"><img class="sns-image" src="/assets/img/main/instagram.png" alt="instagram"></a>'

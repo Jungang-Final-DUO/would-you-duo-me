@@ -30,6 +30,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
     @Override
     public List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/) {
         System.out.println("IMPLPosition = " + userSearchType.getPosition());
+        System.out.println("IMPLKeyword = " + userSearchType.getKeyword());
         List<User> userList = queryFactory.selectFrom(user)
                 .join(user.mostChampList, mostChamp).fetchJoin()
                 .where(keywordContains(userSearchType.getKeyword())
@@ -59,6 +60,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                     .userNickname(user.getUserNickname())
                     .avgRate(user.getUserAvgRate())
                     .mostChampList(user.getMostChampList())
+                    .profileImage((user.getUserProfileList().size() == 0)? "basic" : user.getUserProfileList().get(0).getProfileImage())
                     .build();
 
                     userProfiles.add(dto);

@@ -61,11 +61,13 @@ public class UserController {
             , @PathVariable String tier, @PathVariable String sort/*, HttpSession session*/) {
 
 
-//        log.info("&&&&&:{}, {}, {}, {}", );
-        System.out.println(position+ gender+ tier+ sort);
+        System.out.println(keyword + position + gender + tier + sort);
         UserSearchType userSearchType = new UserSearchType();
         userSearchType.setPage(page);
         userSearchType.setSize(size);
+        if (!keyword.equals("-")) {
+            userSearchType.setKeyword(keyword);
+        }
         if (!position.equals("all")) {
             userSearchType.setPosition(Position.valueOf(position));
         }
