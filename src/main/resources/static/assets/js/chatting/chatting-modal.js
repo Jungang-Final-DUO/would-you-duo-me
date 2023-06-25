@@ -1,4 +1,4 @@
-import {addModalBtnEvent, addModalCloseEvent, modalHandler} from "../common/modal-handler.js";
+import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 import {renderRateModal} from "../review/write-rate.js";
 
 export function getChattingList() {

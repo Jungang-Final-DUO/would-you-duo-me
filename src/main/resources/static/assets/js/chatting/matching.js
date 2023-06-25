@@ -8,8 +8,10 @@ export function matchingRequestEvent(){
             const matchingStatus = e.target.closest('.matching-accept-btn').dataset.matchingStatus;
             console.log(matchingStatus);
             const $chattingNo = e.target.closest('.chatting-card').id;
-            if(matchingStatus === 'null'){
-                matchingRequest($chattingNo);
+
+            switch (matchingStatus){
+                case 'null' : matchingRequest($chattingNo); break;
+                case 'CONFIRM' : gameDone($chattingNo); break;
             }
         });
 }
@@ -18,26 +20,39 @@ export function matchingRequestEvent(){
 export function matchingResponseEvent(){
     const requestedBtn = [...document.querySelectorAll('.matching-requested')];
     requestedBtn.forEach(
-        mr => mr.onclick = e => {
+        mr => mr.onclick = async e => {
             const $chattingNo = e.target.closest('.chatting-card').id;
-            matchingConfirm($chattingNo);
+            const $matchingNo = e.target.closest('.matching-accept-btn').matchingNo;
+            const matchingDate = await selectMatchingDate();
+            matchingConfirm($chattingNo, $matchingNo, matchingDate);
         });
 }
 
-function  matchingConfirm(chattingNo) {
+function selectMatchingDate(){
+
+}
+
+function  matchingConfirm(chattingNo, matchingNo, matchingDate) {
+    const matchingFixRequestDTO = {
+        matchingNo : matchingNo,
+        matchingDate : matchingDate
+    }
     const requestInfo = {
         method: 'POST',
         headers: {
             'content-type': 'application/json'
         },
-        body: chattingNo
+        body: JSON.stringify(matchingFixRequestDTO)
     }
 
     fetch(`/api/v1/matchings`, requestInfo)
         .then(res => res.json())
         .then(result => {
-            changeMatchingStatus(chattingNo, result);
-            sendNoticeMessage(chattingNo, '매칭이 신청되었습니다.');
+
+            if(result === true){
+                changeMatchingToConfirm(chattingNo);
+                sendNoticeMessage(chattingNo, '매칭이 확정되었습니다.');
+            }
         });
 }
 
@@ -57,10 +72,38 @@ function matchingRequest(chattingNo){
             changeMatchingStatus(chattingNo, result);
             sendNoticeMessage(chattingNo, '듀오 매칭을 요청합니다');
         });
-
-
 }
 
+//REQUEST -> CONFIRM으로 상태 변경
+function changeMatchingToConfirm(chattingNo){
+    const chatCard = document.getElementById(chattingNo);
+    const $target = chatCard.querySelector('.matching-accept-btn');
+    $target.dataset.matchingStatus = 'CONFIRM';
+    $target.disabled = true;
+    $target.childNodes[1].nodeValue = '매칭 확정';
+}
+
+// CONFIRM -> DONE으로 상태 변경
+function gameDone(chattingNo){
+    const requestInfo = {
+        method: 'PUT',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: chattingNo
+    }
+
+    fetch(`/api/v1/done`, requestInfo)
+        .then(res => res.json())
+        .then(result => {
+            if(result === true){
+                matchingDone(chattingNo);
+                sendNoticeMessage(chattingNo, '즐거운 게임이었어요');
+            }
+        });
+}
+
+//'' -> REQUEST로 상태 변경
 function changeMatchingStatus(chattingNo, result) {
     const chatCard = document.getElementById(chattingNo);
     const $target = chatCard.querySelector('.matching-accept-btn');
@@ -68,6 +111,15 @@ function changeMatchingStatus(chattingNo, result) {
     $target.setAttribute('disabled', 'disabled');
     $target.dataset.matchingNo = result;
     $target.childNodes[1].nodeValue = '수락대기중';
+}
+
+function matchingDone(chattingNo){
+    const chatCard = document.getElementById(chattingNo);
+    const $target = chatCard.querySelector('.matching-accept-btn');
+    $target.disabled = false;
+    $target.dataset.matchingStatus = 'DONE';
+    target.childNodes[1].nodeValue = '게임 완료';
+
 }
 
 function sendNoticeMessage(chattingNo, msg){
