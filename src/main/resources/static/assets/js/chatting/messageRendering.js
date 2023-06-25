@@ -17,6 +17,9 @@ export function outputMessage(message) {
     matchingResponseEvent();
 
     const room = document.getElementById(message.room);
+
+    if (room === null) return;
+
     const otherProfile = room.querySelector('.chatting-profile-img').src;
     const matchingBtn = room.querySelector('.matching-accept-btn');
     const chatting_message_option = room.querySelector('.chatting-message-option');

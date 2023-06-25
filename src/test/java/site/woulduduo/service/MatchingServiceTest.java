@@ -115,7 +115,7 @@ class MatchingServiceTest {
     @Test
     @DisplayName("test1@example.com이 받은 모든 채팅에 대해 매칭을 생성해야 한다.")
     void makeBulkMatchingTest() {
-        for (int i = 3; i < 102; i++) {
+        for (long i = 104; i < 200; i++) {
             matchingService.makeMatching(i);
         }
 
@@ -124,12 +124,12 @@ class MatchingServiceTest {
     @Test
     @DisplayName("test1@example.com이 받은 모든 매칭에 대해 리뷰를 생성한다")
     void writeBulkReviewTest() {
-        for (long i = 3; i < 102; i++) {
+        for (long i = 103; i < 150; i++) {
             ReviewWriteRequestDTO dto = new ReviewWriteRequestDTO();
             dto.setMatchingNo(i);
             dto.setReviewRate((int) (Math.random() * 5 + 1));
             dto.setReviewContent("리뷰내용" + i);
-            matchingService.writeReview("user" + (i - 2), dto);
+            matchingService.writeReview("user" + (i - 102L), dto);
         }
     }
 

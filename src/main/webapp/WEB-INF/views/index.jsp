@@ -11,7 +11,7 @@
     <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">
 
     <%@ include file="common/static-head.jsp" %>
-    <script src="/assets/js/user/index.js" defer></script>
+    <script src="/assets/js/user/index.js" type="module" defer></script>
 </head>
 <body>
 <!--    프로필 카드 상단 검색 조건 메뉴바 -->
@@ -22,7 +22,7 @@
 
     <div id="search-bar">
         <!--        인풋 닉네임 검색 -->
-        <label><input type="text" id="searchBy-nickname" placeholder="듀오 검색하기" name="keyword"></label>
+        <label><input type="text" id="searchBy-nickname" placeholder="듀오 검색하기" name="keyword" spellcheck="false"></label>
         <!--        포지션 검색 라디오 -->
         <div id="searchBy-position">
             <label class="position-option">

@@ -542,16 +542,6 @@ public class UserService {
             }
         }
 
-        // 사용자가 받은 모든 리뷰
-        List<UserReviewResponseDTO> reviews = foundUser.getChattingFromList().stream()
-                .map(c -> c.getMatchingList().stream()
-                        .map(UserReviewResponseDTO::new)
-                        .collect(toList())
-                ).collect(toList())
-                .stream()
-                .flatMap(List::stream)
-                .collect(toList());
-
         boolean isFollowed = false;
         try {
             isFollowed = followRepository.existsByFollowFromAndFollowTo(session.getAttribute("로그인키").toString(), userAccount);
@@ -607,7 +597,6 @@ public class UserService {
                 .lolNickname(lolNickname)
                 .userComment(foundUser.getUserComment())
                 .tier(foundUser.getLolTier())
-                .userReviews(reviews)
                 // 모스트 3 챔피언 정보
                 .mostChampInfos(mostChampInfoList)
                 // riot api 를 통해 얻어오는 솔로랭크 혹은 자유랭크 데이터
@@ -619,10 +608,10 @@ public class UserService {
                 .last20Matches(last20ParticipantDTOList.stream()
                         .map(MatchResponseDTO::new)
                         .collect(toList()))
-                .userReviews(matchingService.getGottenReview(userAccount, 1).getList())
                 .build();
 
     }
+
     public List<UserProfileResponseDTO> getUserProfileList(/*HttpSession session, */UserSearchType userSearchType) {
         List<UserProfileResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
 
@@ -631,9 +620,5 @@ public class UserService {
         }
         return userProfileList;
     }
-
-
-
-
 
 }

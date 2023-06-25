@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import site.woulduduo.aws.S3Service;
 import site.woulduduo.dto.request.page.PageDTO;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,7 +37,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import static site.woulduduo.enumeration.LoginResult.SUCCESS;
 import static site.woulduduo.util.LoginUtil.isAutoLogin;
@@ -47,12 +50,13 @@ import static site.woulduduo.util.LoginUtil.isLogin;
 @RequiredArgsConstructor
 public class UserController {
 
-    @Value("${file.upload.root-path}")
-    private String rootPath;
+//    @Value("${file.upload.root-path}")
+//    private String rootPath;
 
     private final UserService userService;
     private final EmailService emailService;
     private final UserRepository userRepository;
+    private final S3Service s3Service;
 
     // 메인페이지 - 프로필 카드 불러오기(비동기)
     @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
@@ -62,7 +66,7 @@ public class UserController {
 
 
 //        log.info("&&&&&:{}, {}, {}, {}", );
-        System.out.println(position+ gender+ tier+ sort);
+        System.out.println(position + gender + tier + sort);
         UserSearchType userSearchType = new UserSearchType();
         userSearchType.setPage(page);
         userSearchType.setSize(size);
@@ -104,8 +108,14 @@ public class UserController {
             MultipartFile profileImage = profileImages[i];
             if (!profileImage.isEmpty()) {
                 // 업로드된 파일을 실제 로컬 저장소에 업로드하는 로직
-                String savePath = FileUtil.uploadFile(profileImage, rootPath);
-                savePaths[i] = savePath;
+//                String savePath = FileUtil.uploadFile(profileImage, rootPath);
+//                savePaths[i] = savePath;
+                String fileName = UUID.randomUUID() + "_" + profileImage.getOriginalFilename();
+                try {
+                    savePaths[i] = s3Service.uploadToBucket(profileImage.getBytes(), fileName);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -142,9 +152,9 @@ public class UserController {
     // 로그인 검증 요청
     @PostMapping("/user/sign-in")
     public String signIn(LoginRequestDTO dto
-                        , RedirectAttributes ra
-                        , HttpServletResponse response
-                        , HttpServletRequest request
+            , RedirectAttributes ra
+            , HttpServletResponse response
+            , HttpServletRequest request
     ) {
 
         log.info("/user/sign-in POST ! - {}", dto);
@@ -165,7 +175,7 @@ public class UserController {
         ra.addAttribute("msg", result);
 
         // 로그인 실패시
-        return "redirect:/user/sign-in";
+        return "redirect:/";
     }
 
     // 로그아웃 요청 처리
@@ -189,7 +199,7 @@ public class UserController {
             session.invalidate();
             return "redirect:/";
         }
-        return "redirect:/user/sign-in";
+        return "redirect:/";
     }
 
 
@@ -206,12 +216,6 @@ public class UserController {
 //        log.info("profileDeleteRequestDTO : {}", dto);
 //        return ResponseEntity.ok().build();
 //    }
-
-
-
-
-
-
 
 
     // 마이페이지 - 프로필 카드 등록페이지 열기
@@ -243,7 +247,7 @@ public class UserController {
     //관리자 페이지 리스트 가져오기
     @GetMapping("/api/v1/users/admin")
     public ResponseEntity<?> getUserListByAdmin(
-            @PathVariable PageDTO dto){
+            @PathVariable PageDTO dto) {
 
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
 
@@ -259,10 +263,10 @@ public class UserController {
 
     @GetMapping("/user/detail/admin")
     //관리자 페이지 자세히 보기
-    public String showDetailByAdmin(HttpSession session,Model model, String userAccount){
+    public String showDetailByAdmin(HttpSession session, Model model, String userAccount) {
         UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userAccount);
 
-        model.addAttribute("udByAdmin",userDetailByAdmin);
+        model.addAttribute("udByAdmin", userDetailByAdmin);
         return "admin/admin_user";
 
     }
@@ -280,18 +284,19 @@ public class UserController {
 //    }
 
 
-        // 유저 전적 페이지 이동
-        @GetMapping("/user/user-history")
-        public String showUserHistory (HttpSession session, Model model, String userAccount){
+    // 유저 전적 페이지 이동
+    @GetMapping("/user/user-history")
+    public String showUserHistory(HttpSession session, Model model, String userAccount) {
 
-            log.info("/user/history?userAccount={} GET", userAccount);
+        log.info("/user/history?userAccount={} GET", userAccount);
 
-            UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
+        UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
 
-            model.addAttribute("history", dto);
+        model.addAttribute("history", dto);
 
-            return "user/user-history";
+        return "user/user-history";
 
-        }
     }
+
+}
 
