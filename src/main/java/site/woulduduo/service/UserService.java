@@ -91,7 +91,7 @@ public class UserService {
         log.info("회원 가입이 완료되었습니다.");
     }
 
-    public void register(UserRegisterRequestDTO dto, String profileImageUrl) {
+    public void snsRegister(UserRegisterRequestDTO dto, String profileImageUrl) {
 
         User user = saveUser(dto);
 
@@ -220,6 +220,7 @@ public class UserService {
                 .lolNickname(user.getLolNickname())
                 .userCurrentPoint(user.getUserCurrentPoint())
                 .userProfileImage(user.getLatestProfileImage())
+                .tier(user.getLolTier())
                 .build();
 
         // userProfileImage 값 확인

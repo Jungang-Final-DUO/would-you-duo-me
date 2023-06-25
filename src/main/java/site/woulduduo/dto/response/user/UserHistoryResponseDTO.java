@@ -55,37 +55,7 @@ public class UserHistoryResponseDTO {
     public static class UserHistoryResponseDTOBuilder {
 
         public UserHistoryResponseDTOBuilder tier(Tier tier) {
-            switch (tier) {
-                case CHA:
-                    this.tier = "Challenger";
-                    break;
-                case IRO:
-                    this.tier = "Iron";
-                    break;
-                case BRO:
-                    this.tier = "Bronze";
-                    break;
-                case SIL:
-                    this.tier = "Silver";
-                    break;
-                case GOL:
-                    this.tier = "Gold";
-                    break;
-                case PLA:
-                    this.tier = "Platinum";
-                    break;
-                case DIA:
-                    this.tier = "Diamond";
-                    break;
-                case MAS:
-                    this.tier = "Master";
-                    break;
-                case GRA:
-                    this.tier = "GrandMaster";
-                    break;
-                default:
-                    this.tier = null;
-            }
+            this.tier = tier.toString();
             return this;
         }
 

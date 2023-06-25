@@ -49,7 +49,7 @@ public class KakaoLoginService {
                     .userLoginType(LoginType.KAKAO)
                     .build();
 
-            userService.register(registerRequestDTO, kakaoAccount.getProfile().getProfileImageUrl());
+            userService.snsRegister(registerRequestDTO, kakaoAccount.getProfile().getProfileImageUrl());
         }
 
         // 서비스 로그인 처리

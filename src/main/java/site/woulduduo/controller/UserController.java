@@ -3,19 +3,14 @@ package site.woulduduo.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import site.woulduduo.aws.S3Service;
-import site.woulduduo.dto.request.page.PageDTO;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import site.woulduduo.aws.S3Service;
 import site.woulduduo.dto.request.login.LoginRequestDTO;
+import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
@@ -26,17 +21,14 @@ import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.LoginResult;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
-import site.woulduduo.service.UserService;
-
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.EmailService;
-import site.woulduduo.util.upload.FileUtil;
+import site.woulduduo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -206,10 +198,7 @@ public class UserController {
 
     // 마이페이지 - 프로필 카드 등록페이지 열기
     @GetMapping("/user/register-duo")
-    public String registerDUO(HttpSession session, Model model) {
-
-//        userService.getUser(session.getAttribute(LOGIN_KEY).)
-
+    public String registerDUO() {
         return "my-page/mypage-duoprofile";
     }
 

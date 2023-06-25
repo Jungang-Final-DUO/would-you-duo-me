@@ -29,4 +29,6 @@ public class UserCommentRequestDTO {
     @Size(min = 100, max = 999)
     private int userMatchingPoint;
 
+    private String lolNickname;
+
 }
