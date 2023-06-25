@@ -127,6 +127,9 @@ public class BoardService {
                 dto.getSize(),
                 Sort.by("boardWrittenDate").descending()
         );
+
+        String userAccount = dto.getKeyword();
+
         Page<Board> all = boardRepository.findAll(pageable);
         List<Board> todayBoardList = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
@@ -144,14 +147,21 @@ public class BoardService {
                 .map(BoardsByAdminResponseDTO::new)
                 .collect(toList());
 
-//        return ListResponseDTO.builder()
-//                .count(collect.size())
-//                .pageInfo(new PageResponseDTO(all))
-//                .list(collect)
-//                .build();
+        int i = (dto.getPage() - 1) * dto.getSize() + 1;
+        for (BoardsByAdminResponseDTO board : collect) {
+            board.setBoardNo(i);
+            i++;
+        }
+        System.out.println("collect----- = " + collect);
 
-        return null;
+
+        System.out.println("collect = " + collect);
+        return ListResponseDTO.<BoardsByAdminResponseDTO, Board>builder()
+                .count(collect.size())
+                .pageInfo(new PageResponseDTO<>(all))
+                .list(collect)
+                .build();
+
 
     }
-
 }

@@ -340,8 +340,10 @@ public class UserService {
                 dto.getSize(),
                 Sort.by("userJoinDate").descending()
         );
+        String userAccount = dto.getKeyword();
+
         //전체불러오기
-        Page<User> all = userRepository.findAll(pageable);
+        Page<User> all = userRepository.findByUserAccountContaining(userAccount,pageable);
         System.out.println("all = " + all);
 
         List<UserByAdminResponseDTO> collect = all.stream()

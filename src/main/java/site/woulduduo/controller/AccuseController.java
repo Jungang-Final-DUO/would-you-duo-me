@@ -37,6 +37,21 @@ import javax.servlet.http.HttpSession;
                 .body(accuseListByAdmin);
     }
 
+    //금일 신고 유저 목록 list
+    @GetMapping("/api/v1/user/accuse1")
+    public ResponseEntity<?> getTodayAccuseListByAdmin(HttpSession session,
+                                                  PageDTO dto){
+        log.info("{}dtozz",dto);
+        ListResponseDTO<AccuseListResponseDTO, Accuse> accuseListByAdmin = accuseService.getAccuseTodayListByAdmin(dto);
+        log.info("{}accuseListByAdmin",accuseListByAdmin);
+
+
+        return ResponseEntity
+                .ok()
+                .body(accuseListByAdmin);
+    }
+
+
     @PostMapping("/user/accuse")
     public String accuseUser(HttpSession session, UserAccuseRequestDTO dto){
         accuseService.accuseUser(dto);

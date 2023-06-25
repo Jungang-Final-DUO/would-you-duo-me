@@ -241,21 +241,27 @@ public class UserController {
                     PageDTO dto){
         log.info("{}ddttoo==",dto);
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
-//        ListResponseDTO<UserByAdminResponseDTO, User> userListTodayByAdmin = userService.todayUserByAdMin(dto);
         log.info("userbyadmin11111 : {}",userListByAdmin);
-//        System.out.println("userListTodayByAdmin = " + userListTodayByAdmin);
 
         log.info("/api/v1/users/admin/");
 
-//        Map<String,ListResponseDTO<UserByAdminResponseDTO,User>>user = new HashMap<>();
-//        user.put("userListByAdmin",userListByAdmin);
-//        user.put("userListTodayByAdmin",userListTodayByAdmin);
 
         return ResponseEntity
                 .ok()
                 .body(userListByAdmin);
     }
 
+    //관리자 페이지 금일 가입자 리스트 가져오기
+    @GetMapping("/api/v1/users/admin1")
+    public ResponseEntity<?> getTodayUserListByAdmin(
+            PageDTO dto) {
+        ListResponseDTO<UserByAdminResponseDTO, User> userListTodayByAdmin = userService.todayUserByAdMin(dto);
+        log.info("userListTodayByAdmin123 : {}",userListTodayByAdmin);
+
+   return ResponseEntity
+           .ok()
+           .body(userListTodayByAdmin);
+    }
 
     @GetMapping("/user/detail/admin")
     //관리자 페이지 자세히 보기

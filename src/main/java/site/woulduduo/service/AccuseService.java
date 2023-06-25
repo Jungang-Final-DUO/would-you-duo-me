@@ -19,6 +19,7 @@ import site.woulduduo.repository.AccuseRepository;
 import site.woulduduo.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +63,65 @@ public class AccuseService {
 
     }
 
-    //금일 작성 게시물 (ADMIN)
+    public ListResponseDTO<AccuseListResponseDTO,Accuse> getAccuseTodayListByAdmin(PageDTO dto) {
+
+        Pageable pageable = PageRequest.of(
+                dto.getPage() - 1,
+                dto.getSize(),
+                Sort.by("accuseWrittenDate").descending()
+        );
+
+        System.out.println("pageable = " + pageable);
+
+        String userAccount = dto.getKeyword();
+
+        Page<Accuse> all = accuseRepository.findAll(pageable);
+        System.out.println("all-------- = " + all);
+        List<Accuse> todayAccuseList = new ArrayList<>();
+        LocalDate currentDate = LocalDate.now();
+
+        for (Accuse accuse : all) {
+            System.out.println("accuseByAdminResponseDTO = " + accuse);
+            LocalDateTime localDateTime = accuse.getAccuseWrittenDate();
+            LocalDate localDate = localDateTime.toLocalDate();
+            if (localDate != null && localDate.equals(currentDate)) {
+                todayAccuseList.add(accuse);
+                System.out.println("accuse----- = " + accuse);
+            }
+
+        }
+
+        List<AccuseListResponseDTO> collect = todayAccuseList.stream()
+                .map(AccuseListResponseDTO::new)
+                .collect(toList());
+
+
+        //rowNum 추가
+
+        int i = (dto.getPage() - 1) * dto.getSize() + 1;
+        for (AccuseListResponseDTO accuse : collect) {
+            accuse.setAccuseNo(i);
+            i++;
+        }
+            System.out.println("collect----- = " + collect);
+
+
+            System.out.println("collect = " + collect);
+            return ListResponseDTO.<AccuseListResponseDTO, Accuse>builder()
+                    .count(collect.size())
+                    .pageInfo(new PageResponseDTO<>(all))
+                    .list(collect)
+                    .build();
+
+
+    }
+
+
+
+
+
+
+        //금일 작성 게시물 (ADMIN)
     public ListResponseDTO<AccuseListResponseDTO,Accuse> todayAccuseByAdmin(PageDTO dto){
         ListResponseDTO<AccuseListResponseDTO,Accuse> accuseListByAdmin = getAccuseListByAdmin(dto);
         List<AccuseListResponseDTO> todayAccuseList = new ArrayList<>();

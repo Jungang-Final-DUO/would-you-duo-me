@@ -80,6 +80,19 @@ public class BoardController {
                 .body(boardListByAdmin);
     }
 
+    //금일 등록된 boardlist
+    @GetMapping("/api/v1/boards/admin1")
+    public ResponseEntity<?> getTodayBoardListByAdmin(PageDTO dto){
+        log.info("{}ddttoo==",dto);
+
+        ListResponseDTO<BoardsByAdminResponseDTO, Board> boardsByAdminResponseDTOUserListResponseDTO = boardService.todayBoardByAdmin(dto);
+        log.info("boardListByAdmin : {}",boardsByAdminResponseDTOUserListResponseDTO);
+
+
+        return ResponseEntity
+                .ok()
+                .body(boardsByAdminResponseDTOUserListResponseDTO);
+    }
 
 
 
