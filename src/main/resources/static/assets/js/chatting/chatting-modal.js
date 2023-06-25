@@ -133,7 +133,7 @@ function renderChattingList(result) {
             // 로그인 한 사람이 Chatting To일때
             console.log(myNickname);
             console.log(chattingFrom);
-            if(chattingFrom !== myNickname) {
+            if (chattingFrom !== myNickname) {
                 const matching_accept_btn = document.createElement('button');
                 matching_accept_btn.classList.add('matching-accept-btn');
                 matching_accept_btn.dataset.matchingStatus = matchingStatus;
@@ -175,14 +175,22 @@ function renderChattingList(result) {
                         break;
                     case 'DONE':
                         matching_accept_btn.dataset.matchingNo = matchingNo;
-                        chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
-                        chatting_handshake_img.alt = '게임완료이미지';
-                        // matching_accept_btn.appendChild(chatting_handshake_img);
-                        matching_accept_btn.childNodes[1].nodeValue = `포인트 받기`;
-                        break;
+                        const flag = searchPointHistory(matchingNo);
+                        if(!flag) {
+                            chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
+                            chatting_handshake_img.alt = '게임완료이미지';
+                            matching_accept_btn.childNodes[1].nodeValue = `포인트 받기`;
+                            break;
+                        }else {
+                            matching_accept_btn.disabled = true;
+                            matching_accept_btn.dataset.matchingNo = '';
+                            chatting_handshake_img.src = '/assets/img/chattingModal/handshake.png';
+                            chatting_handshake_img.alt = '매칭수락이미지';
+                            matching_accept_btn.childNodes[1].nodeValue = '매칭 대기';
+                            break;
+                        }
                     default :
                         matching_accept_btn.disabled = true;
-                        // matching_accept_btn.classList.add('matching-waiting');
                         matching_accept_btn.dataset.matchingNo = '';
                 }
 
@@ -191,7 +199,7 @@ function renderChattingList(result) {
             // 로그인 한 사람이 Chatting From일 때
             console.log(myNickname);
             console.log(chattingFrom);
-            if(chattingFrom === myNickname) {
+            if (chattingFrom === myNickname) {
 
                 let $rightBtn = document.createElement('button');
                 $rightBtn.classList.add('gameover-btn');
@@ -210,11 +218,9 @@ function renderChattingList(result) {
                     case 'REQUEST':
                         $rightBtn.disabled = true;
                         $rightBtn.childNodes[1].nodeValue = `수락 대기중`;
-                        // $rightBtn.classList.add('matching-requested');
                         $rightBtn.dataset.matchingNo = matchingNo;
                         break;
                     case 'CONFIRM':
-                        // $rightBtn.classList.add('matching-confirmed');
                         $rightBtn.childNodes[1].nodeValue = `게임 완료`;
                         $rightBtn.dataset.matchingNo = matchingNo;
                         break;
@@ -226,7 +232,6 @@ function renderChattingList(result) {
                         chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
                         chatting_handshake_img.alt = '게임완료이미지';
                         $rightBtn.dataset.matchingNo = matchingNo;
-                        // $rightBtn.appendChild(chatting_handshake_img);
                         $rightBtn.childNodes[1].nodeValue = `리뷰 쓰기`;
                         $rightBtn.onclick = async e => {
                             const $rateModal = await renderRateModal(matchingNo, userNickname);
@@ -235,7 +240,6 @@ function renderChattingList(result) {
                         }
                         break;
                     default :
-                        // $rightBtn.classList.add('matching-request');
                         $rightBtn.dataset.matchingNo = '';
                 }
             }
@@ -284,4 +288,11 @@ export function renderUnreadMessages(chattingNo) {
         .then(unread => {
             $target.innerText = unread;
         })
+
+}
+
+//해당 매칭으로 포인트 지급 받았는지 확인
+function searchPointHistory(matchingNo) {
+    return fetch(`/api/v1/points/matching/${matchingNo}`)
+        .then(res => res.json())
 }

@@ -25,14 +25,51 @@ export function matchingResponseEvent(){
         mr => mr.onclick = e => {
             const matchingStatus = e.target.closest('.matching-accept-btn').dataset.matchingStatus;
             const $chattingNo = e.target.closest('.chatting-card').id;
+            const $matchingNo = e.target.closest('.matching-accept-btn').dataset.matchingNo;
             console.log('온클릭 이벤트까지 넘어옴');
             switch (matchingStatus){
                 case 'REQUEST' :
                     document.querySelector('.match-calendar').click();
                     selectDateEvent();
+                    break;
+                case 'DONE' :
+                    getMatchingPoint($chattingNo, $matchingNo);
             }
 
         });
+}
+
+//작성중 !!
+function getMatchingPoint($chattingNo, $matchingNo){
+    const payload = {
+        chattingNo : $chattingNo,
+        matchingNo : $matchingNo
+    }
+    const requestInfo = {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    }
+
+    fetch(`/api/v1/points/give`, requestInfo)
+        .then(res => res.json())
+        .then(point => receivedPoint($chattingNo, point));
+}
+
+function receivedPoint($chattingNo, point){
+    console.log(point);
+    alert(`${point} 포인트가 지급되었습니다!`);
+    const chatCard = document.getElementById($chattingNo);
+    const $target = chatCard.querySelector('.matching-accept-btn');
+    const handShakeImg = $target.querySelector('.chatting-handshake-img');
+    handShakeImg.src = '/assets/img/chattingModal/handshake.png';
+    handShakeImg.alt = '매칭수락이미지';
+    $target.dataset.matchingStatus = '';
+    $target.disabled = true;
+    $target.childNodes[1].nodeValue = '매칭 대기';
+    $target.dataset.matchingNo = '';
 }
 
 
@@ -149,7 +186,6 @@ function matchingDone(chattingNo){
     $target.disabled = false;
     $target.dataset.matchingStatus = 'DONE';
     $target.childNodes[1].nodeValue = '리뷰 쓰기';
-    //matchingRequestEvent();
 
 }
 
@@ -175,3 +211,5 @@ function setMatchingNo(chattingNo, matchingNo){
     const chatting = document.getElementById(chattingNo);
     chatting.querySelector('.matching-accept-btn').dataset.matchingNo = matchingNo;
 }
+
+
