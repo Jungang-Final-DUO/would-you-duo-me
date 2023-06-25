@@ -32,35 +32,26 @@
                 <div class="application-match">
                     <h2>내가 신청한 매칭</h2>
 
-                    <ul class="duo-record">
-                        <li class="duo-header">
-                            <p class="matching-peolpe">매칭상대</p>
-
-                            <p class="matching-day">매칭일</p>
-                            <div class="my-review">
-                                내가작성한후기
-                            </div>
-
-                        </li>
-                    </ul>
+                    <div class="matching-grid">
+                        <p class="matching-people grid-title">매칭상대</p>
+                        <p class="matching-day grid-title">매칭일</p>
+                        <div class="my-review grid-title">
+                            내가작성한후기
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 내가 수락한 매칭 -->
-                <div class="application-mymatch">
+                <div class="application-match">
                     <h2>내가 수락한 매칭</h2>
 
-                    <ul class="duo-record">
-                        <li class="duo-header">
-                            <p class="matching-peolpe">매칭상대</p>
-
-                            <p class="matching-day">매칭일</p>
-                            <div class="my-review">
-                                내가작성한후기
-                            </div>
-
-                        </li>
-
-                    </ul>
+                    <div class="matching-grid">
+                        <p class="matching-people grid-title">매칭상대</p>
+                        <p class="matching-day grid-title">매칭일</p>
+                        <div class="my-review grid-title">
+                            내가작성한후기
+                        </div>
+                    </div>
 
                 </div>
 
