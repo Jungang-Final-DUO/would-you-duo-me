@@ -20,19 +20,48 @@ export function matchingRequestEvent(){
 export function matchingResponseEvent(){
     const requestedBtn = [...document.querySelectorAll('.matching-requested')];
     requestedBtn.forEach(
-        mr => mr.onclick = async e => {
+        mr => mr.onclick = e => {
+            const matchingStatus = e.target.closest('.matching-accept-btn').dataset.matchingStatus;
             const $chattingNo = e.target.closest('.chatting-card').id;
             const $matchingNo = e.target.closest('.matching-accept-btn').matchingNo;
-            const matchingDate = await selectMatchingDate();
-            matchingConfirm($chattingNo, $matchingNo, matchingDate);
+            console.log('온클릭 이벤트까지 넘어옴');
+            switch (matchingStatus){
+                case 'REQUEST' : selectMatchingDate($chattingNo, $matchingNo);
+            }
+
         });
 }
 
-function selectMatchingDate(){
+function selectMatchingDate($chattingNo, $matchingNo){
+    document.querySelector('.match-calendar').click();
+    [...document.querySelectorAll('.available-date')].forEach(
+        date => date.onclick = e => {
+            console.log('매칭데이트 선택까지 넘어옴');
+            const matchingYear = document.getElementById('now-year').innerText;
+            const matchingMonth = document.getElementById('now-month').innerText;
+            const matchingDate = e.target.closest('.available-date').innerText;
+            clickSelectDate($chattingNo, $matchingNo, matchingYear, matchingMonth, matchingDate);
+        }
+    );
+}
+
+function clickSelectDate($chattingNo, $matchingNo, matchingYear, matchingMonth, matchingDate){
+    console.log('날짜선택 클릭까지 넘어옴');
+    const selectBtn = document.getElementById('select-date');
+    selectBtn.onclick = e => {
+        if (confirm(matchingMonth + '월 ' + matchingDate + '일자로 매칭을 확정하시겠습니까?')) {
+            const selectedDate = new Date(+matchingYear, +matchingMonth, +matchingDate);
+            console.log('확정됨');
+            console.log(selectedDate);
+            matchingConfirm($chattingNo, $matchingNo, selectedDate);
+        }
+    }
+
 
 }
 
 function  matchingConfirm(chattingNo, matchingNo, matchingDate) {
+    console.log('매칭 확정 fetch까지 넘어옴');
     const matchingFixRequestDTO = {
         matchingNo : matchingNo,
         matchingDate : matchingDate
@@ -118,7 +147,7 @@ function matchingDone(chattingNo){
     const $target = chatCard.querySelector('.matching-accept-btn');
     $target.disabled = false;
     $target.dataset.matchingStatus = 'DONE';
-    target.childNodes[1].nodeValue = '게임 완료';
+    $target.childNodes[1].nodeValue = '게임 완료';
 
 }
 

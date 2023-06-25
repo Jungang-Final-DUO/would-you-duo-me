@@ -4,6 +4,7 @@ import {toTopBtnHandler} from "./to-top-btn-handler.js";
 import {connectSocket} from "../chatting/main.js";
 import {addDropdownEvent} from "./dropdown-handler.js";
 import {signInSubmitHandler} from "../user/sign-in-submit-handler.js";
+import {matchingCalendar} from "../chatting/chatting-calendar";
 
 (async () => {
 
@@ -23,6 +24,9 @@ import {signInSubmitHandler} from "../user/sign-in-submit-handler.js";
 
         // 채팅 메세지 모달 안에서 채팅방 모달로 돌아가기
         toBack();
+
+        //매칭 날짜 캘린더
+        matchingCalendar();
 
         // 내 정보 모달 드롭다운 이벤트
         addDropdownEvent('user-info-btn', 'my-page-modal-wrapper');
