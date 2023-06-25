@@ -39,8 +39,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static site.woulduduo.enumeration.LoginResult.SUCCESS;
-import static site.woulduduo.util.LoginUtil.isAutoLogin;
-import static site.woulduduo.util.LoginUtil.isLogin;
+import static site.woulduduo.util.LoginUtil.*;
 
 @Controller
 @Slf4j
@@ -122,20 +121,7 @@ public class UserController {
     @GetMapping("/check")
     @ResponseBody
     public ResponseEntity<Boolean> check(@RequestParam String type, @RequestParam String keyword) {
-        boolean isDuplicate;
-        switch (type) {
-            case "email":
-                isDuplicate = userRepository.countByUserEmail(keyword) > 0;
-                break;
-            case "nickname":
-                isDuplicate = userRepository.countByUserNickname(keyword) > 0;
-                break;
-            case "lolNickname":
-                isDuplicate = userRepository.countByLolNickname(keyword) > 0;
-                break;
-            default:
-                throw new IllegalArgumentException("잘못된 검사 타입입니다.");
-        }
+        boolean isDuplicate = userService.checkSignUpValue(type, keyword);
         return ResponseEntity.ok(isDuplicate); // 중복되지 않은 경우에 true 반환
     }
 
@@ -216,7 +202,9 @@ public class UserController {
 
     // 마이페이지 - 프로필 카드 등록페이지 열기
     @GetMapping("/user/register-duo")
-    public String registerDUO(/*HttpSession session, */Model model) {
+    public String registerDUO(HttpSession session, Model model) {
+
+//        userService.getUser(session.getAttribute(LOGIN_KEY).)
 
         return "my-page/mypage-duoprofile";
     }

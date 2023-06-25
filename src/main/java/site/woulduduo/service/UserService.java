@@ -73,6 +73,41 @@ public class UserService {
     public void register(UserRegisterRequestDTO dto) {
 
         // 이메일 중복 검사
+        User user = saveUser(dto);
+
+        // 프로필 사진 저장
+        String[] profileImagePaths = dto.getProfileImagePaths();
+        if (profileImagePaths != null) {
+            for (String imagePath : profileImagePaths) {
+                if (imagePath != null) {
+                    UserProfile userProfile = UserProfile.builder()
+                            .user(user)
+                            .profileImage(imagePath)
+                            .build();
+                    userProfileRepository.save(userProfile);
+                }
+            }
+        }
+        log.info("회원 가입이 완료되었습니다.");
+    }
+
+    public void register(UserRegisterRequestDTO dto, String profileImageUrl) {
+
+        User user = saveUser(dto);
+
+        // 프로필 사진 저장
+        if (profileImageUrl != null) {
+            userProfileRepository.save(UserProfile.builder()
+                            .user(user)
+                            .profileImage(profileImageUrl)
+                    .build());
+        }
+
+        log.info("회원 가입이 완료되었습니다.");
+    }
+
+    private User saveUser(UserRegisterRequestDTO dto) {
+        // 이메일 중복 검사
         if (userRepository.countByUserEmail(dto.getUserEmail()) > 0) {
             throw new IllegalArgumentException("이미 등록된 이메일입니다.");
         }
@@ -104,21 +139,7 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
-
-        // 프로필 사진 저장
-        String[] profileImagePaths = dto.getProfileImagePaths();
-        if (profileImagePaths != null) {
-            for (String imagePath : profileImagePaths) {
-                if (imagePath != null) {
-                    UserProfile userProfile = UserProfile.builder()
-                            .user(user)
-                            .profileImage(imagePath)
-                            .build();
-                    userProfileRepository.save(userProfile);
-                }
-            }
-        }
-        log.info("회원 가입이 완료되었습니다.");
+        return user;
     }
 
     // 중복검사 서비스 처리

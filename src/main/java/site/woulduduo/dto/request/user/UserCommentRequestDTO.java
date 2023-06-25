@@ -28,4 +28,5 @@ public class UserCommentRequestDTO {
     @NotNull
     @Size(min = 100, max = 999)
     private int userMatchingPoint;
+
 }

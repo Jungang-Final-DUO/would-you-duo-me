@@ -28,7 +28,7 @@
             <div id="my-page-content">
                 <div id="duo-profile-box">
                     <!--        프로필 사진 -->
-                    <img id="duo-tier-image" src="/assets/img/mypage/TFT_Regalia_Challenger.png" alt="tier">
+                    <img id="duo-tier-image" src="/assets/img/mypage/TFT_Regalia_.png" alt="tier">
                     <div id="duo-image-frame">
                         <img id="duo-profile-image" src="/assets/img/mypage/user-profile.jpg" alt="profile-image">
                     </div>
@@ -58,6 +58,10 @@
                                     <input class="select-position" type="radio" name="userPosition" value="SUP">
                                     <img class="position-image" src="/assets/img/mypage/SUP.png" alt="SUP"></label>
                             </div>
+<%--                            롤 닉네임 작성 --%>
+                            <label> 롤 닉네임
+                                <input type="text" >
+                            </label>
                             <!--  자기소개 -->
                             <label><textarea id="comment" name="userComment" placeholder="자유롭게 자기소개를 입력해주세요"
                                     autofocus></textarea></label>

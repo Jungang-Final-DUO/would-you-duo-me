@@ -47,10 +47,9 @@ public class KakaoLoginService {
                     .userPassword("0000")
                     .userBirthday(LocalDate.of(1990, 1, 1))
                     .userLoginType(LoginType.KAKAO)
-                    .profileImages(null) // 프로필 이미지는 카카오에서 제공되지 않으므로 null로 설정
                     .build();
 
-            userService.register(registerRequestDTO);
+            userService.register(registerRequestDTO, kakaoAccount.getProfile().getProfileImageUrl());
         }
 
         // 서비스 로그인 처리
