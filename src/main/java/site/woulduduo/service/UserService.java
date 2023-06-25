@@ -417,10 +417,10 @@ public class UserService {
 
 
     //userDetailByAdmin
-    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount) {
-        User oneUser = userRepository.findByUserAccount("345");
+    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String nickname) {
+        User byUserNickName = userRepository.findByUserNickName("asd100");
         UserDetailByAdminResponseDTO userDetail =
-                new UserDetailByAdminResponseDTO(oneUser);
+                new UserDetailByAdminResponseDTO(byUserNickName);
 
 
 

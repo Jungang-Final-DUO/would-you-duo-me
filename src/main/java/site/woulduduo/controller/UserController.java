@@ -235,10 +235,17 @@ public class UserController {
         return "admin/admin";
     }
 
+    @GetMapping("/user/modal")
+//모달테스트
+ public String modalTest(/*HttpSession session, */Model model) {
+
+        return "admin/adminModal";
+    }
+
     //관리자 페이지 리스트 가져오기
     @GetMapping("/api/v1/users/admin")
     public ResponseEntity<?> getUserListByAdmin(
-                    PageDTO dto){
+             PageDTO dto){
         log.info("{}ddttoo==",dto);
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
         log.info("userbyadmin11111 : {}",userListByAdmin);
@@ -265,12 +272,12 @@ public class UserController {
 
     @GetMapping("/user/detail/admin")
     //관리자 페이지 자세히 보기
-    public String showDetailByAdmin(HttpSession session,Model model, String userAccount){
+    public String showDetailByAdmin(HttpSession session,Model model, String nickname){
+        log.info("{}nickname = ",nickname);
 
-        UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userAccount);
+        UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(nickname);
 
 
-        log.info("{}userDetailByAdmin99999999 = ",userDetailByAdmin);
         model.addAttribute("udByAdmin",userDetailByAdmin);
         return "admin/admin_user";
 

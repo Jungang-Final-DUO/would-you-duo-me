@@ -10,6 +10,21 @@
   <%@ include file="../common/static-head.jsp"%>
   <link rel="stylesheet" href="/assets/css/admin/admin.css">
 
+  <style>
+            /* 페이지 css */
+        /* 페이지 액티브 기능 */
+        .pagination .page-item.p-active a {
+            background: #333 !important;
+            color: #fff !important;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .pagination .page-item:hover a {
+            background: #888 !important;
+            color: #fff !important;
+        }
+  </style>
 </head>
 
 <body>
@@ -110,7 +125,7 @@
             <div class="sign_date">가입일자</div>
           </div>
           <% for (int i = 1; i < 11; i++) { %>
-          <a href="#" class="user_li" style="display: none;">
+          <a href="/user/detail/admin?nickname=${nickname}" class="user_li" style="display: none;">
             <div class="menubar">
               <div class="no uln"></div>
               <div class="nickname uli"></div>
@@ -124,6 +139,7 @@
             </div>
           </a>
           <% } %>
+
 
 
           <!-- 게시글관리 -->
@@ -170,7 +186,9 @@
             </div>
           </a>
           <% } %>
-
+          <ul class="pagination justify-content-center">
+              <li>1</li>
+          </ul>
 
 
 
@@ -212,7 +230,7 @@
         UserMenuBar.style.display = '';
 
         // 전체 유저
-        fetch('/api/v1/users/admin')
+        fetch(`/api/v1/users/admin/page\${page}/keyword\${keyword}/size=10`)
           .then(response => response.json())
           .then(res => {
             console.log('res', res);
@@ -240,17 +258,21 @@
             }
 
             // 유저리스트
-            uln(list);
-            uli(list);
-            ulg(list);
-            ulb(list);
-            ulr(list);
-            ulw(list);
-            ulp(list);
-            ulf(list);
-            uls(list);
+            totalUser(list)
           });
       };
+
+      function totalUser(list) {
+        uln(list);
+        uli(list);
+        ulg(list);
+        ulb(list);
+        ulr(list);
+        ulw(list);
+        ulp(list);
+        ulf(list);
+        uls(list);
+      }
 
 
 
@@ -466,47 +488,49 @@
       }
 
 
+
       //보드
 
 
-totalBoardButton.onclick = e => {
+      totalBoardButton.onclick = e => {
 
-      boardMenuBar.style.display = '';
-    
-      fetch('/api/v1/boards/admin')
-        .then(response => response.json())
-        .then(res => {
-          // console.log('res: ', res);
+        boardMenuBar.style.display = '';
 
-          const list = res.list;
-          // console.log('list: ', list);
+        fetch('/api/v1/boards/admin')
+          .then(response => response.json())
+          .then(res => {
+            // console.log('res: ', res);
 
-          for (let listOne of list) {
-            const {
-              boardNo,
-              userNickName,
-              boardTitle,
-              boardWrittenDate,
-              boardViewCount
-            } = listOne;
+            const list = res.list;
+            // console.log('list: ', list);
 
-            //   console.log('userAccount: ', userAccount);
+            for (let listOne of list) {
+              const {
+                boardNo,
+                userNickName,
+                boardTitle,
+                boardWrittenDate,
+                boardViewCount
+              } = listOne;
+
+              //   console.log('userAccount: ', userAccount);
 
 
-          }
+            }
 
-          for (let i = 0; i < boardList.length; i++) {
-          boardList[i].style.display = '';
-        }
-          //보드리스트
-          bln(list);
-          blm(list);
-          blt(list);
-          bld(list);
-          blc(list);
+            for (let i = 0; i < boardList.length; i++) {
+              boardList[i].style.display = '';
+            }
+            //보드리스트
+            bln(list);
+            blm(list);
+            blt(list);
+            bld(list);
+            blc(list);
 
-        });
+          });
       }
+
       function bln(list) {
         const ulArray = document.querySelectorAll('.bln');
         ulArray.forEach((ulElement, index) => {
@@ -548,47 +572,47 @@ totalBoardButton.onclick = e => {
       }
 
 
-//금일 보드
-todayBoardButton.onclick = e => {
+      //금일 보드
+      todayBoardButton.onclick = e => {
 
-boardMenuBar.style.display = '';
+        boardMenuBar.style.display = '';
 
-fetch('/api/v1/boards/admin1')
-  .then(response => response.json())
-  .then(res => {
-    // console.log('res: ', res);
+        fetch('/api/v1/boards/admin1')
+          .then(response => response.json())
+          .then(res => {
+            // console.log('res: ', res);
 
-    const list = res.list;
-    // console.log('list: ', list);
+            const list = res.list;
+            // console.log('list: ', list);
 
-    for (let listOne of list) {
-      const {
-        boardNo,
-        userNickName,
-        boardTitle,
-        boardWrittenDate,
-        boardViewCount
-      } = listOne;
+            for (let listOne of list) {
+              const {
+                boardNo,
+                userNickName,
+                boardTitle,
+                boardWrittenDate,
+                boardViewCount
+              } = listOne;
 
-      //   console.log('userAccount: ', userAccount);
+              //   console.log('userAccount: ', userAccount);
 
 
-    }
+            }
 
-    for (let i = 0; i < boardList.length; i++) {
-    boardList[i].style.display = '';
-  }
-    //보드리스트
-    bln1(list);
-    blm1(list);
-    blt1(list);
-    bld1(list);
-    blc1(list);
+            for (let i = 0; i < boardList.length; i++) {
+              boardList[i].style.display = '';
+            }
+            //보드리스트
+            bln1(list);
+            blm1(list);
+            blt1(list);
+            bld1(list);
+            blc1(list);
 
-  });
-}
+          });
+      }
 
-function bln1(list) {
+      function bln1(list) {
         const ulArray = document.querySelectorAll('.bln');
         ulArray.forEach((ulElement, index) => {
           if (index < list.length) {
@@ -645,41 +669,41 @@ function bln1(list) {
       // const page = 1;
       // const size = 10;
       //경고
-      
-totalAccuseButton.onclick = e => {
 
-accuseMenuBar.style.display = '';
-      fetch('/api/v1/user/accuse')
-        .then(response => response.json())
-        .then(res => {
-          // console.log('res: ', res);
+      totalAccuseButton.onclick = e => {
 
-          const list = res.list;
-          // console.log('list: ', list);
+        accuseMenuBar.style.display = '';
+        fetch('/api/v1/user/accuse')
+          .then(response => response.json())
+          .then(res => {
+            // console.log('res: ', res);
 
-          for (let listOne of list) {
-            const {
-              accuseNo,
-              userAccount,
-              accuseType,
-              accuseETC,
-              accuseWrittenDate
-            } = listOne;
+            const list = res.list;
+            // console.log('list: ', list);
+
+            for (let listOne of list) {
+              const {
+                accuseNo,
+                userAccount,
+                accuseType,
+                accuseETC,
+                accuseWrittenDate
+              } = listOne;
 
 
 
-          }
-          for (let i = 0; i < accuseList.length; i++) {
-    accuseList[i].style.display = '';
-  }
-          //경고리스트
-          aln(list);
-          alm(list);
-          alt(list);
-          ale(list);
-          alc(list);
+            }
+            for (let i = 0; i < accuseList.length; i++) {
+              accuseList[i].style.display = '';
+            }
+            //경고리스트
+            aln(list);
+            alm(list);
+            alt(list);
+            ale(list);
+            alc(list);
 
-        });
+          });
       }
 
       function aln(list) {
@@ -726,44 +750,44 @@ accuseMenuBar.style.display = '';
 
       //금일 신고
 
-todayAccuseButton.onclick = e => {
+      todayAccuseButton.onclick = e => {
 
-accuseMenuBar.style.display = '';
+        accuseMenuBar.style.display = '';
 
-fetch('/api/v1/user/accuse1')
-        .then(response => response.json())
-        .then(res => {
-          // console.log('res: ', res);
+        fetch('/api/v1/user/accuse1')
+          .then(response => response.json())
+          .then(res => {
+            // console.log('res: ', res);
 
-          const list = res.list;
-          // console.log('list: ', list);
+            const list = res.list;
+            // console.log('list: ', list);
 
-          for (let listOne of list) {
-            const {
-              accuseNo,
-              userAccount,
-              accuseType,
-              accuseETC,
-              accuseWrittenDate
-            } = listOne;
+            for (let listOne of list) {
+              const {
+                accuseNo,
+                userAccount,
+                accuseType,
+                accuseETC,
+                accuseWrittenDate
+              } = listOne;
 
 
 
-          }
-          for (let i = 0; i < accuseList.length; i++) {
-    accuseList[i].style.display = '';
-  }
-          //경고리스트
-          aln1(list);
-          alm1(list);
-          alt1(list);
-          ale1(list);
-          alc1(list);
+            }
+            for (let i = 0; i < accuseList.length; i++) {
+              accuseList[i].style.display = '';
+            }
+            //경고리스트
+            aln1(list);
+            alm1(list);
+            alt1(list);
+            ale1(list);
+            alc1(list);
 
-        });
+          });
       }
 
-function aln1(list) {
+      function aln1(list) {
         const ulArray = document.querySelectorAll('.aln');
         ulArray.forEach((ulElement, index) => {
           if (index < list.length) {
@@ -812,6 +836,66 @@ function aln1(list) {
           }
         });
       }
+
+
+      //페이징
+      function renderPage({
+        startPage,
+        endPage,
+        currentPage,
+        prev,
+        next
+      }) {
+        let tag = "";
+
+        //이전 버튼 만들기
+        if (prev) {
+          tag += "<li class='page-item'><a class='page-link page-active' href='" + (startPage - 1) +
+            "'>이전</a></li>";
+        }
+
+   //페이지 번호 리스트 만들기
+   for (let i = startPage; i <= endPage; i++) {
+                let active = '';
+                if (currentPage.pageNo === i) {
+                    active = 'p-active';
+                }
+
+                tag += "<li class='page-item " + active + "'><a class='page-link page-custom' href='" + i +
+                    "'>" + i + "</a></li>";
+            }
+            //다음 버튼 만들기
+            if (next) {
+                tag += "<li class='page-item'><a class='page-link page-active' href='" + (end + 1) +
+                    "'>다음</a></li>";
+            }
+
+            // 페이지태그 렌더링
+            const $pageUl = document.querySelector('.pagination');
+            $pageUl.innerHTML = tag;
+
+            // ul에 마지막페이지 번호 저장.
+            $pageUl.dataset.fp = finalPage;
+
+        }
+
+                // 페이지 클릭 이벤트 핸들러
+                function makePageButtonClickEvent() {
+            // 페이지 버튼 클릭이벤트 처리
+            const $pageUl = document.querySelector('.pagination');
+            $pageUl.onclick = e => {
+                if (!e.target.matches('.page-item a')) return;
+
+                e.preventDefault(); // 태그의 기본 동작 중단
+
+                // 누른 페이지 번호 가져오기
+                const pageNum = e.target.getAttribute('href');
+                // console.log(pageNum);
+
+                // 페이지 번호에 맞는 목록 비동기 요청
+                getReplyList(pageNum);
+            };
+        }
 
     </script>
 </body>

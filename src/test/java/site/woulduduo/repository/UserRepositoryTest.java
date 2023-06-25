@@ -198,7 +198,7 @@ class UserRepositoryTest {
     @Test
     @DisplayName("nickname으로 User 객체 찾기")
     void searchUserByNickName() {
-        User byNickName = userRepository.findByUserNickName("345");
+        User byNickName = userRepository.findByUserNickName("asd1");
         System.out.println("byNickName = " + byNickName);
     }
 
