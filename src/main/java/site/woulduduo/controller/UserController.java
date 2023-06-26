@@ -239,6 +239,12 @@ public class UserController {
         return "redirect:/user/register-duo";
     }
 
+    // 마이 페이지 - 쓴 리뷰 페이지 열기
+    @GetMapping("/user/matching-list")
+    public String showMatchingList(HttpSession session) {
+        return "my-page/matching-list";
+    }
+
     @GetMapping("/user/admin")
     //관리자 페이지 열기
     public String showAdminpage(/*HttpSession session, */Model model) {
