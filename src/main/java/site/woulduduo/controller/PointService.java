@@ -23,7 +23,8 @@ public class PointService {
     private final UserRepository userRepository;
 
     public int giveMatchingPoint(long chattingNo, long matchingNo) {
-
+        System.out.println("서비스 " +chattingNo);
+        System.out.println("서비스 확인");
         Matching matching = matchingRepository.findByMatchingNo(matchingNo);
         Chatting chatting = chattingRepository.findByChattingNo(chattingNo);
 
