@@ -245,7 +245,7 @@ public class UserController {
     //관리자 페이지 리스트 가져오기
     @GetMapping("/api/v1/users/admin")
     public ResponseEntity<?> getUserListByAdmin(
-             PageDTO dto){
+             @ModelAttribute  PageDTO dto){
         log.info("{}ddttoo==",dto);
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
         log.info("userbyadmin11111 : {}",userListByAdmin);
@@ -272,11 +272,12 @@ public class UserController {
 
     @GetMapping("/user/detail/admin")
     //관리자 페이지 자세히 보기
-    public String showDetailByAdmin(HttpSession session,Model model, String nickname){
-        log.info("{}nickname = ",nickname);
+    public String showDetailByAdmin(HttpSession session,Model model,@RequestParam String userAccount){
+        log.info("{}nickname = ",userAccount);
 
-        UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(nickname);
+        UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userAccount);
 
+        log.info("{}userDetailByAdmin = ",userDetailByAdmin);
 
         model.addAttribute("udByAdmin",userDetailByAdmin);
         return "admin/admin_user";

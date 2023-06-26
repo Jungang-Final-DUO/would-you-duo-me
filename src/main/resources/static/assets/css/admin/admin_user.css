@@ -306,10 +306,13 @@ display: flex;
 #main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info #right_info .second_info_ul div a{
     /* border: 1px solid #000; */
     width: 15px;
+    margin-left: 5%;
     
 }
 #main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info #right_info .second_info_ul div a img{
     width: 15px;
+    margin-left: 5%;
+
     /* border: 1px solid #ff0000; */
 
 }

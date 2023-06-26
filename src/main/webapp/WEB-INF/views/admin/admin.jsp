@@ -11,19 +11,16 @@
   <link rel="stylesheet" href="/assets/css/admin/admin.css">
 
   <style>
-            /* 페이지 css */
-        /* 페이지 액티브 기능 */
-        .pagination .page-item.p-active a {
-            background: #333 !important;
-            color: #fff !important;
-            cursor: default;
-            pointer-events: none;
-        }
+    /* 페이지 css */
+    /* 페이지 액티브 기능 */
+    .pagination .page-item.p-active a {
+      color: #fff !important;
+      pointer-events: none;
+    }
 
-        .pagination .page-item:hover a {
-            background: #888 !important;
-            color: #fff !important;
-        }
+    .pagination .page-item:hover a {
+      color: #fff !important;
+    }
   </style>
 </head>
 
@@ -125,7 +122,9 @@
             <div class="sign_date">가입일자</div>
           </div>
           <% for (int i = 1; i < 11; i++) { %>
-          <a href="/user/detail/admin?nickname=${nickname}" class="user_li" style="display: none;">
+          <a href="javascript:void(0);"
+            onclick="window.location.href = '/user/detail/admin?userAccount=' + userAccount;" class="user_li"
+            style="display: none;">
             <div class="menubar">
               <div class="no uln"></div>
               <div class="nickname uli"></div>
@@ -186,10 +185,10 @@
             </div>
           </a>
           <% } %>
-          <ul class="pagination justify-content-center">
-              <li>1</li>
+          <ul class="pageNo">
+            <ul class="pagination justify-content-center page_no">
+            </ul>
           </ul>
-
 
 
         </div>
@@ -213,11 +212,6 @@
       const boardList = document.getElementsByClassName('board_li');
 
 
-
-
-
-
-
       // 클릭 이벤트 핸들러 등록 - 전체 경고리스트
       const totalAccuseButton = document.getElementById('totalAccuseButton');
       const todayAccuseButton = document.getElementById('todayAccuseButton');
@@ -226,16 +220,43 @@
       const accuseList = document.getElementsByClassName('accuse_li');
 
 
+
+      function boardDisplayNone() {
+  boardMenuBar.style.display = 'none';
+  for (let i = 0; i < boardList.length; i++) {
+    boardList[i].style.display = 'none';
+  }
+}
+
+function accuseDisplayNone() {
+  accuseMenuBar.style.display = 'none';
+  for (let i = 0; i < accuseList.length; i++) {
+    accuseList[i].style.display = 'none';
+  }
+}
+
+function userDisplayNone() {
+  userMenuBar.style.display = 'none';
+  for (let i = 0; i < userList.length; i++) {
+    userList[i].style.display = 'none';
+  }
+}
+
+
       totalUserButton.onclick = e => {
+        boardDisplayNone();
+        accuseDisplayNone();
         UserMenuBar.style.display = '';
 
         // 전체 유저
-        fetch(`/api/v1/users/admin/page\${page}/keyword\${keyword}/size=10`)
+        fetch(`/api/v1/users/admin?page=3`)
           .then(response => response.json())
           .then(res => {
             console.log('res', res);
+
             const list = res.list;
             console.log('list: ', list);
+
 
             for (let listOne of list) {
               const {
@@ -250,7 +271,6 @@
                 joinDate
               } = listOne;
 
-              //   console.log('userAccount: ', userAccount);
             }
 
             for (let i = 0; i < userList.length; i++) {
@@ -258,7 +278,10 @@
             }
 
             // 유저리스트
-            totalUser(list)
+
+            totalUser(list);
+            locationToDetail(list);
+            renderUserList(res);
           });
       };
 
@@ -274,17 +297,34 @@
         uls(list);
       }
 
+      function locationToDetail(list) {
+        console.log('list: ', list);
+
+        for (let i = 0; i < list.length; i++) {
+          const userAccount = list[i].userAccount; // userAccount 값을 가져옴
+
+          userList[i].onclick = e => {
+            console.log('userAccount: ', userAccount);
+
+            window.location.href = '/user/detail/admin?userAccount=' + userAccount;
+          };
+        }
+      }
+
 
 
       function uln(list) {
         const ulArray = document.querySelectorAll('.uln');
         ulArray.forEach((ulElement, index) => {
           const asd = list[index].rowNum;
-          ulElement.innerText = asd;
+          ulElement.innerText = "asd";
+
         });
       }
 
       function uli(list) {
+        console.log('list: ', list);
+
         const ulArray = document.querySelectorAll('.uli');
         ulArray.forEach((ulElement, index) => {
           const asd = list[index].userAccount;
@@ -348,10 +388,25 @@
         });
       }
 
+      function renderUserList({
+        count,
+        pageInfo,
+        list
+      }) {
+        // console.log('count: ', count);
+        // console.log('pageInfo: ', pageInfo);
+        // console.log('list: ', list);
+
+        //페이지 렌더링
+        renderPage(pageInfo);
+      }
+
 
 
 
       todayUserButton.onclick = e => {
+        boardDisplayNone();
+        accuseDisplayNone();
         UserMenuBar.style.display = '';
 
         // 금일 유저
@@ -382,9 +437,7 @@
 
             // 유저리스트
             uln1(list);
-
             uli1(list);
-
             ulg1(list);
             ulb1(list);
             ulr1(list);
@@ -392,6 +445,10 @@
             ulp1(list);
             ulf1(list);
             uls1(list);
+            locationToDetail(list);
+
+            renderUserList(res);
+
           });
       };
 
@@ -493,7 +550,8 @@
 
 
       totalBoardButton.onclick = e => {
-
+        userDisplayNone()
+        accuseDisplayNone();
         boardMenuBar.style.display = '';
 
         fetch('/api/v1/boards/admin')
@@ -527,6 +585,7 @@
             blt(list);
             bld(list);
             blc(list);
+            renderUserList(res);
 
           });
       }
@@ -574,7 +633,8 @@
 
       //금일 보드
       todayBoardButton.onclick = e => {
-
+        userDisplayNone()
+        accuseDisplayNone();
         boardMenuBar.style.display = '';
 
         fetch('/api/v1/boards/admin1')
@@ -608,6 +668,7 @@
             blt1(list);
             bld1(list);
             blc1(list);
+            renderUserList(res);
 
           });
       }
@@ -671,7 +732,8 @@
       //경고
 
       totalAccuseButton.onclick = e => {
-
+        userDisplayNone()
+        boardDisplayNone();
         accuseMenuBar.style.display = '';
         fetch('/api/v1/user/accuse')
           .then(response => response.json())
@@ -702,6 +764,7 @@
             alt(list);
             ale(list);
             alc(list);
+            renderUserList(res);
 
           });
       }
@@ -751,7 +814,8 @@
       //금일 신고
 
       todayAccuseButton.onclick = e => {
-
+        userDisplayNone()
+        boardDisplayNone();
         accuseMenuBar.style.display = '';
 
         fetch('/api/v1/user/accuse1')
@@ -783,6 +847,7 @@
             alt1(list);
             ale1(list);
             alc1(list);
+            renderUserList(res);
 
           });
       }
@@ -844,8 +909,19 @@
         endPage,
         currentPage,
         prev,
-        next
+        next,
+        totalCount,
+        PAGE_COUNT
       }) {
+
+        // console.log('startPage: ', startPage);
+        // console.log('endPage: ', endPage);
+        //  console.log('currentPage: ', currentPage);
+        // console.log('prev: ', prev);
+        //  console.log('next: ', next);
+        //  console.log('totalCount: ', totalCount);
+        // console.log('PAGE_COUNT: ', PAGE_COUNT);
+
         let tag = "";
 
         //이전 버튼 만들기
@@ -853,50 +929,56 @@
           tag += "<li class='page-item'><a class='page-link page-active' href='" + (startPage - 1) +
             "'>이전</a></li>";
         }
+        //페이지 번호 리스트 만들기
+        for (let i = startPage; i <= endPage; i++) {
+          let active = '';
+          if (currentPage.pageNo === i) {
+            console.log(currentPage.pageNo);
+            active = 'p-active';
+          }
 
-   //페이지 번호 리스트 만들기
-   for (let i = startPage; i <= endPage; i++) {
-                let active = '';
-                if (currentPage.pageNo === i) {
-                    active = 'p-active';
-                }
-
-                tag += "<li class='page-item " + active + "'><a class='page-link page-custom' href='" + i +
-                    "'>" + i + "</a></li>";
-            }
-            //다음 버튼 만들기
-            if (next) {
-                tag += "<li class='page-item'><a class='page-link page-active' href='" + (end + 1) +
-                    "'>다음</a></li>";
-            }
-
-            // 페이지태그 렌더링
-            const $pageUl = document.querySelector('.pagination');
-            $pageUl.innerHTML = tag;
-
-            // ul에 마지막페이지 번호 저장.
-            $pageUl.dataset.fp = finalPage;
-
+          tag += "<li class='page-item " + active + "'><a class='page-link page-custom' href='" + i +
+            "'>" + i + "</a></li>";
+        }
+        //다음 버튼 만들기
+        if (next) {
+          tag += "<li class='page-item'><a class='page-link page-active' href='" + (endPage + 1) +
+            "'>다음</a></li>";
         }
 
-                // 페이지 클릭 이벤트 핸들러
-                function makePageButtonClickEvent() {
-            // 페이지 버튼 클릭이벤트 처리
-            const $pageUl = document.querySelector('.pagination');
-            $pageUl.onclick = e => {
-                if (!e.target.matches('.page-item a')) return;
+        // 페이지태그 렌더링
+        const $pageUl = document.querySelector('.pagination');
+        $pageUl.innerHTML = tag;
 
-                e.preventDefault(); // 태그의 기본 동작 중단
+        // ul에 마지막페이지 번호 저장.
+        $pageUl.dataset.fp = finalPage;
 
-                // 누른 페이지 번호 가져오기
-                const pageNum = e.target.getAttribute('href');
-                // console.log(pageNum);
+      }
 
-                // 페이지 번호에 맞는 목록 비동기 요청
-                getReplyList(pageNum);
-            };
-        }
+      // 페이지 클릭 이벤트 핸들러
+      function makePageButtonClickEvent() {
+        // 페이지 버튼 클릭이벤트 처리
+        const $pageUl = document.querySelector('.pagination');
+        $pageUl.onclick = e => {
+          if (!e.target.matches('.page-item a')) return;
 
+          e.preventDefault(); // 태그의 기본 동작 중단
+
+          // 누른 페이지 번호 가져오기
+          const pageNum = e.target.getAttribute('href');
+          // console.log(pageNum);
+
+          // 페이지 번호에 맞는 목록 비동기 요청
+          getReplyList(pageNum);
+        };
+      }
+
+      // 페이지 버튼 이벤트 등록
+      makePageButtonClickEvent();
+
+
+      fetch('/api/v1/user/detail/admin?userAccount=${userAccount}')
+        .then
     </script>
 </body>
 

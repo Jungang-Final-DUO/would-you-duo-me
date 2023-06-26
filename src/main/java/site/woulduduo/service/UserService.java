@@ -417,8 +417,8 @@ public class UserService {
 
 
     //userDetailByAdmin
-    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String nickname) {
-        User byUserNickName = userRepository.findByUserNickName("asd100");
+    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount) {
+        User byUserNickName = userRepository.findByUserAccount(userAccount);
         UserDetailByAdminResponseDTO userDetail =
                 new UserDetailByAdminResponseDTO(byUserNickName);
 
