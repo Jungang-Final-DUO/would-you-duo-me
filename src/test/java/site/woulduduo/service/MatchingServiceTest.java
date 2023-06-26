@@ -62,7 +62,7 @@ class MatchingServiceTest {
     void fixScheduleTest() {
         MatchingFixRequestDTO dto = MatchingFixRequestDTO.builder()
                 .matchingNo(3L)
-                .matchingDate(LocalDate.now())
+                .matchingDate(LocalDate.now().toString())
                 .build();
         boolean flag = matchingService.fixSchedule(dto);
         Matching rejected = matchingRepository.findByMatchingNo(dto.getMatchingNo());
