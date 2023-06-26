@@ -64,7 +64,7 @@ public class UserController {
             , @PathVariable String position, @PathVariable String gender
             , @PathVariable String tier, @PathVariable String sort/*, HttpSession session*/) {
 
-        
+
         System.out.println(keyword + position + gender + tier + sort);
 
         UserSearchType userSearchType = new UserSearchType();
