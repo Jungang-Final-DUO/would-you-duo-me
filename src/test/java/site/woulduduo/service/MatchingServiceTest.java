@@ -37,7 +37,7 @@ class MatchingServiceTest {
     @Test
     @DisplayName("매칭을 신청하면 매칭 번호를 리턴받는다")
     void makeMatchingTest() {
-        long chattingNo = 2L;
+        long chattingNo = 27L;
 
         long matchingNo = matchingService.makeMatching(chattingNo);
 
@@ -62,11 +62,19 @@ class MatchingServiceTest {
     void fixScheduleTest() {
         MatchingFixRequestDTO dto = MatchingFixRequestDTO.builder()
                 .matchingNo(3L)
-                .matchingDate(LocalDate.now().toString())
+                .matchingDate("2023-07-19")
                 .build();
         boolean flag = matchingService.fixSchedule(dto);
         Matching rejected = matchingRepository.findByMatchingNo(dto.getMatchingNo());
         assertEquals(MatchingStatus.CONFIRM, rejected.getMatchingStatus());
+    }
+
+    //매칭 완료하기
+    @Test
+    void rejectTest(){
+        long matchingNo = 4L;
+        boolean flag = matchingService.gameOverMatching(matchingNo);
+        System.out.println(flag);
     }
 
     @Test

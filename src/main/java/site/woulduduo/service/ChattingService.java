@@ -49,15 +49,12 @@ public class ChattingService {
         System.out.println("chattingFrom = " + chattingFrom);
 //        Chatting chattingTo = chattingRepository.findByChattingFromAndChattingTo(chattingUser, /*session.getAttribute()*/ me);
 //        System.out.println("chattingTo = " + chattingTo);
-        if (chattingFrom != null
-//                || chattingTo != null
-        ) {
+        if (myName.equals(userAccount)) {
+            System.out.println("나와의 채팅!?");
+            chattingNo = 0;
+        }else if (chattingFrom != null) {
             System.out.println("이미 존재하는 채팅내역임");
-            chattingNo =
-//                    chattingFrom != null ?
-                            chattingFrom.getChattingNo();
-//        : chattingTo.getChattingNo();
-
+            chattingNo = chattingFrom.getChattingNo();
         } else {
             // 존재하지 않으면 데이터 생성
             Chatting chatting = Chatting.builder()
