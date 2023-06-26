@@ -11,6 +11,7 @@ import site.woulduduo.dto.request.chatting.MatchingFixRequestDTO;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.page.PageResponseDTO;
+import site.woulduduo.dto.response.user.MyPageReviewResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Matching;
@@ -93,13 +94,15 @@ public class MatchingService {
     }
 
     /**
-     * 해당 유저가 받은 모든 리뷰를 리턴
+     * 해당 유저가 받은 모든 리뷰를 리턴 in history page
+     *
      * @param userAccount - 해당 유저의 계정 명
-     * @param pageNo - 페이지 번호
+     * @param pageNo      - 페이지 번호
      * @return - 리뷰 목록
      */
     public ListResponseDTO<UserReviewResponseDTO, Matching> getGottenReview(
-           final String userAccount, final int pageNo
+            final String userAccount,
+            final int pageNo
     ) {
 
         PageRequest pageInfo = PageRequest.of(pageNo - 1,
@@ -122,4 +125,69 @@ public class MatchingService {
                 .build();
     }
 
+    /**
+     * 해당 유저가 받은 모든 리뷰를 받아오는 메서드 in mypage
+     *
+     * @param userAccount - 해당 유저의 계정명
+     * @param pageNo      - 페이지 번호
+     * @return - 리뷰 목록
+     */
+    public ListResponseDTO<MyPageReviewResponseDTO, Matching> getGottenReviewOnMyPage(
+            final String userAccount,
+            final int pageNo
+    ) {
+
+        PageRequest pageInfo = PageRequest.of(pageNo - 1,
+                15,
+                Sort.by("matchingDate").ascending()
+        );
+
+        Page<Matching> pageDTO = matchingRepository
+                .findOneByChattingToOnMyPage(userAccount, pageInfo);
+
+        List<MyPageReviewResponseDTO> reviewList = pageDTO.getContent().stream()
+                .map(m -> {
+                    log.info("matchingInfo : {}", m);
+                    return new MyPageReviewResponseDTO(m, true);
+//                    return new MyPageReviewResponseDTO();
+                })
+                .collect(Collectors.toList());
+
+        return ListResponseDTO.<MyPageReviewResponseDTO, Matching>builder()
+                .list(reviewList)
+                .count(pageNo)
+                .pageInfo(new PageResponseDTO<>(pageDTO))
+                .build();
+    }
+
+    /**
+     * 해당 유저가 쓴 모든 리뷰를 받아오는 메서드 in mypage
+     *
+     * @param userAccount - 해당 유저의 계정명
+     * @param pageNo      - 페이지 번호
+     * @return - 리뷰 목록
+     */
+    public ListResponseDTO<MyPageReviewResponseDTO, Matching> getWrittenReviewOnMyPage(
+            final String userAccount,
+            final int pageNo
+    ) {
+
+        PageRequest pageInfo = PageRequest.of(pageNo - 1,
+                15,
+                Sort.by("matchingDate").ascending()
+        );
+
+        Page<Matching> pageDTO = matchingRepository
+                .findOneByChattingFromOnMyPage(userAccount, pageInfo);
+
+        List<MyPageReviewResponseDTO> reviewList = pageDTO.getContent().stream()
+                .map(m -> new MyPageReviewResponseDTO(m, false)
+                ).collect(Collectors.toList());
+
+        return ListResponseDTO.<MyPageReviewResponseDTO, Matching>builder()
+                .count(pageNo)
+                .pageInfo(new PageResponseDTO<>(pageDTO))
+                .list(reviewList)
+                .build();
+    }
 }

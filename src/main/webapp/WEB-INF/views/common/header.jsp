@@ -100,6 +100,11 @@
         </nav>
 
         <nav id="common-nav-bar">
+            <c:if test="${login.userAccount eq 'admin'}">
+                <div class="common-menu-wrapper">
+                    <a href="/user/admin">관리자 페이지</a>
+                </div>
+            </c:if>
             <div class="common-menu-wrapper">
                 <a href="/board/list">커뮤니티</a>
             </div>
