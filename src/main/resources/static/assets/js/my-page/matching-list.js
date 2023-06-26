@@ -7,34 +7,40 @@ import {scrollPaging} from "../common/scroll-paging.js";
 
     // 받은 리뷰 정보 페이지
     const increaseGottenReviewPage = (() => {
-        let pageNo = 1;
-        return ++pageNo;
+        let gottenPageNo = 0;
+        return () => ++gottenPageNo;
     })();
 
     const increaseWrittenReviewPage = (() => {
-        let pageNo = 1;
-        return ++pageNo;
+        let writtenPageNo = 0;
+        return () => ++writtenPageNo;
     })();
 
     // 페이지가 로드될 때 1 페이지 씩 렌더링
-    renderGottenReviewOnMyPage(userAccount, 1).then();
-    renderWrittenReviewOnMyPage(userAccount, 1).then();
+    renderGottenReviewOnMyPage({
+        userAccount: userAccount,
+        pageNo: increaseGottenReviewPage}).then();
+    renderWrittenReviewOnMyPage({
+        userAccount: userAccount,
+        pageNo: increaseWrittenReviewPage}).then();
 
     // 스크롤 이벤트 등록
     scrollPaging(document.getElementById('gotten-matching-wrapper'), renderGottenReviewOnMyPage,
         {
             userAccount: userAccount,
             pageNo: increaseGottenReviewPage
-        });
+        },
+        500);
     scrollPaging(document.getElementById('applied-matching-wrapper'), renderWrittenReviewOnMyPage,
         {
             userAccount: userAccount,
             pageNo: increaseWrittenReviewPage
-        });
+        },
+        500);
 })();
 
-async function renderGottenReviewOnMyPage(userAccount, pageNo) {
-    const res = await fetch(`/api/v1/matchings/reviews/gotten/${userAccount}/${pageNo}`);
+async function renderGottenReviewOnMyPage({userAccount, pageNo}) {
+    const res = await fetch(`/api/v1/matchings/reviews/gotten/${userAccount}/${pageNo()}`);
 
     const $wrapper = document.getElementById('gotten-matching-wrapper');
 
@@ -61,10 +67,9 @@ async function renderGottenReviewOnMyPage(userAccount, pageNo) {
     }
 }
 
-async function renderWrittenReviewOnMyPage(userAccount, pageNo) {
-    console.log(userAccount, pageNo);
+async function renderWrittenReviewOnMyPage({userAccount, pageNo}) {
 
-    const res = await fetch(`/api/v1/matchings/reviews/written/${userAccount}/${pageNo}`);
+    const res = await fetch(`/api/v1/matchings/reviews/written/${userAccount}/${pageNo()}`);
 
     const $wrapper = document.getElementById('applied-matching-wrapper');
 
@@ -86,6 +91,7 @@ async function renderWrittenReviewOnMyPage(userAccount, pageNo) {
                 $btn.textContent = '리뷰 쓰러 가기';
                 $btn.dataset.matchingNo = matching.matchingNo;
                 $btn.classList.add('modal-btn');
+                $btn.classList.add('review-write-btn');
                 $wrapper.appendChild($btn);
 
             }

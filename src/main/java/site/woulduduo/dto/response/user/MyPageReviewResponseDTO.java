@@ -28,7 +28,10 @@ public class MyPageReviewResponseDTO {
             this.opponentNickname = matching.getChatting().getChattingTo().getUserNickname();
         }
 
-        this.matchingDate = matching.getMatchingDate().format(DateTimeFormatter.ofPattern("yy-MM-dd"));
+        if (matchingDate == null) {
+            this.matchingDate = null;
+        } else
+            this.matchingDate = matching.getMatchingDate().format(DateTimeFormatter.ofPattern("yy-MM-dd"));
 
         if (matching.getMatchingReviewContent() != null && matching.getMatchingReviewContent().length() > 20) {
             this.matchingReviewContent = matching.getMatchingReviewContent().substring(0, 17) + "...";

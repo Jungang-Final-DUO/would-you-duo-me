@@ -26,10 +26,11 @@ import {scrollPaging} from "../../common/scroll-paging.js";
     const $reviewSection = document.getElementById('review-section');
 
     scrollPaging($reviewSection, renderReview, {
-        $wrapper: $reviewWrapper,
-        userAccount: userAccount,
-        pageNo: increasePageNo
-    });
+            $wrapper: $reviewWrapper,
+            userAccount: userAccount,
+            pageNo: increasePageNo
+        },
+        800);
 
 
 })();

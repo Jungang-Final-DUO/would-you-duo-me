@@ -157,3 +157,15 @@ h2 {
 .writer-review:hover {
     border: 1px solid #ffff;
 }
+
+.review-write-btn {
+    color: white;
+    background: #142F57;
+    border-radius: 5px;
+    padding: 5px 10px;
+
+    width: fit-content;
+    height: fit-content;
+    margin: 0 auto;
+
+}

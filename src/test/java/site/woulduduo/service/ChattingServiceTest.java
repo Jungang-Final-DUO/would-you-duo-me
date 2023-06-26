@@ -52,7 +52,7 @@ class ChattingServiceTest {
         String chattingTo = "ahri@ahri.com";
 
         for (int i = 1; i < 100; i++) {
-            String chattingFrom = "user" + i;
+            String chattingFrom = "acvd" + i;
 
             chattingService.makeChatting(chattingFrom, chattingTo);
 
