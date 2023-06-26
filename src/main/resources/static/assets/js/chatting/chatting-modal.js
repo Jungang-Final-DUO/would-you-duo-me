@@ -41,7 +41,7 @@ export function makeChattingRoom() {
     );
 }
 
-function renderChattingList(result) {
+async function renderChattingList(result) {
     const myNickname = document.getElementById('loginUserInfo').dataset.userNickname;
     document.querySelector('.chatting-modal-container').innerHTML = '';
 
@@ -175,8 +175,9 @@ function renderChattingList(result) {
                         break;
                     case 'DONE':
                         matching_accept_btn.dataset.matchingNo = matchingNo;
-                        const flag = searchPointHistory(matchingNo);
+                        const flag = await searchPointHistory(matchingNo);
                         if(!flag) {
+                            matching_accept_btn.disabled = false;
                             chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
                             chatting_handshake_img.alt = '게임완료이미지';
                             matching_accept_btn.childNodes[1].nodeValue = `포인트 받기`;
@@ -294,5 +295,5 @@ export function renderUnreadMessages(chattingNo) {
 //해당 매칭으로 포인트 지급 받았는지 확인
 function searchPointHistory(matchingNo) {
     return fetch(`/api/v1/points/matching/${matchingNo}`)
-        .then(res => res.json())
+        .then(res => res.json());
 }

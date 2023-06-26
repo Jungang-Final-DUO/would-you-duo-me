@@ -6,13 +6,16 @@ export function matchingRequestEvent(){
     const requestBtn = [...document.querySelectorAll('.matching-accept-btn')];
     console.log(requestBtn);
     requestBtn.forEach(
-        mr => mr.onclick = e => {
+        mr => mr.onclick = async e => {
             const matchingStatus = e.target.closest('.matching-accept-btn').dataset.matchingStatus;
             console.log(matchingStatus);
             const $chattingNo = e.target.closest('.chatting-card').id;
             const $matchingNo = e.target.closest('.matching-accept-btn').dataset.matchingNo;
             switch (matchingStatus){
-                case 'null' : matchingRequest($chattingNo); break;
+                case 'null' :
+                    await matchingRequest($chattingNo);
+                    sendNoticeMessage($chattingNo , '듀오 매칭을 요청합니다');
+                    break;
                 case 'CONFIRM' : gameDone($chattingNo, $matchingNo); break;
             }
         });
@@ -124,13 +127,14 @@ function matchingRequest(chattingNo){
         body: chattingNo
     }
 
-    fetch(`/api/v1/matchings`, requestInfo)
+    return fetch(`/api/v1/matchings`, requestInfo)
         .then(res => res.json())
         .then(result => {
             changeMatchingStatus(chattingNo, result);
-        }).then(
-            chattingNo => sendNoticeMessage(chattingNo, '듀오 매칭을 요청합니다')
-    );
+        });
+            // .then(
+        //     chattingNo => sendNoticeMessage(chattingNo, '듀오 매칭을 요청합니다')
+    // );
 }
 
 //REQUEST -> CONFIRM으로 상태 변경
@@ -176,6 +180,7 @@ function changeMatchingStatus(chattingNo, result) {
     $target.setAttribute('disabled', 'disabled');
     $target.dataset.matchingNo = result;
     $target.childNodes[1].nodeValue = '수락대기중';
+    return chattingNo;
 }
 
 function matchingDone(chattingNo){
@@ -190,8 +195,10 @@ function matchingDone(chattingNo){
 }
 
 function sendNoticeMessage(chattingNo, msg){
+    console.log(chattingNo);
     const chat = document.getElementById(chattingNo);
-    const name = chat.querySelector('div.message-to div.message-nickname').innerText;
+    console.log(chat);
+    // const name = chat.querySelector('div.message-to div.message-nickname').innerText;
 
     chat.querySelector('.msg').value = msg;
     chat.querySelector('.message-send-btn').click();
