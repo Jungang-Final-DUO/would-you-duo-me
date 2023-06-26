@@ -551,6 +551,8 @@ function userDisplayNone() {
 
 
       totalBoardButton.onclick = e => {
+  accuseDisplayNone();
+  userDisplayNone();
 
         boardMenuBar.style.display = '';
 
