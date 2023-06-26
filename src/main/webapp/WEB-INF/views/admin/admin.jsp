@@ -405,6 +405,7 @@ function userDisplayNone() {
 
 
       todayUserButton.onclick = e => {
+
         boardDisplayNone();
         accuseDisplayNone();
         UserMenuBar.style.display = '';
@@ -550,8 +551,7 @@ function userDisplayNone() {
 
 
       totalBoardButton.onclick = e => {
-        userDisplayNone()
-        accuseDisplayNone();
+
         boardMenuBar.style.display = '';
 
         fetch('/api/v1/boards/admin')
@@ -633,8 +633,7 @@ function userDisplayNone() {
 
       //금일 보드
       todayBoardButton.onclick = e => {
-        userDisplayNone()
-        accuseDisplayNone();
+
         boardMenuBar.style.display = '';
 
         fetch('/api/v1/boards/admin1')
@@ -732,8 +731,7 @@ function userDisplayNone() {
       //경고
 
       totalAccuseButton.onclick = e => {
-        userDisplayNone()
-        boardDisplayNone();
+
         accuseMenuBar.style.display = '';
         fetch('/api/v1/user/accuse')
           .then(response => response.json())
@@ -814,8 +812,7 @@ function userDisplayNone() {
       //금일 신고
 
       todayAccuseButton.onclick = e => {
-        userDisplayNone()
-        boardDisplayNone();
+
         accuseMenuBar.style.display = '';
 
         fetch('/api/v1/user/accuse1')
