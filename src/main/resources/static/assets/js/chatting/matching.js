@@ -1,6 +1,6 @@
-// 매칭요청을 하는 사람의 이벤트
 import {selectDateEvent} from "./chatting-calendar.js";
 
+// 매칭요청을 하는 사람의 이벤트
 export function matchingRequestEvent(){
     console.log('matchingRequestEvent 진입');
     const requestBtn = [...document.querySelectorAll('.matching-accept-btn')];
@@ -13,6 +13,7 @@ export function matchingRequestEvent(){
             const $matchingNo = e.target.closest('.matching-accept-btn').dataset.matchingNo;
             switch (matchingStatus){
                 case 'null' :
+                case 'REJECT' :
                     await matchingRequest($chattingNo);
                     sendNoticeMessage($chattingNo , '듀오 매칭을 요청합니다');
                     break;
@@ -23,6 +24,7 @@ export function matchingRequestEvent(){
 
 // 요청을 받은 사람의 이벤트
 export function matchingResponseEvent(){
+    //매칭 진행시 이벤트 목록
     const requestedBtn = [...document.querySelectorAll('.matching-accept-btn')];
     requestedBtn.forEach(
         mr => mr.onclick = e => {
@@ -40,9 +42,46 @@ export function matchingResponseEvent(){
             }
 
         });
+
+    //매칭 거절
+    const rejectBtn = [...document.querySelectorAll('.matching-reject-btn')];
+    rejectBtn.forEach(
+        mr => mr.onclick = e => {
+            console.log('거절 온클릭 이벤트까지 넘어옴');
+            const $chattingNo = e.target.closest('.chatting-card').id;
+            const $target = e.target.closest('.chatting-message-option');
+            const $acceptBtn = $target.querySelector('.matching-accept-btn');
+            const $matchingNo = $acceptBtn.dataset.matchingNo;
+            $acceptBtn.dataset.matchingStatus = 'REJECT';
+            $acceptBtn.disabled = true;
+            $acceptBtn.childNodes[1].nodeValue = '매칭 대기';
+
+            const btnBox = e.target.closest('.chatting-message-option');
+            btnBox.children[1].remove();
+
+            rejectMatching($chattingNo, $matchingNo);
+        });
 }
 
-//작성중 !!
+//CONFIRM -> REJECT 로 변경
+function rejectMatching(chattingNo, matchingNo){
+    const requestInfo = {
+        method: 'PUT',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: matchingNo
+    }
+    fetch(`/api/v1/matchings/reject`, requestInfo)
+        .then(res => res.json())
+        .then(result => {
+            if(result){
+               sendNoticeMessage(chattingNo, '매칭이 거절되었습니다. 다음에 다시 신청해주세요!');
+            }
+        })
+}
+
+//포인트 받기 클릭시 이벤트
 function getMatchingPoint($chattingNo, $matchingNo){
     const payload = {
         chattingNo : $chattingNo,
@@ -61,6 +100,7 @@ function getMatchingPoint($chattingNo, $matchingNo){
         .then(point => receivedPoint($chattingNo, point));
 }
 
+//포인트 적립 후 이벤트
 function receivedPoint($chattingNo, point){
     console.log(point);
     alert(`${point} 포인트가 지급되었습니다!`);
@@ -75,7 +115,7 @@ function receivedPoint($chattingNo, point){
     $target.dataset.matchingNo = '';
 }
 
-
+//매칭확정 버튼 -> 날짜 선택 클릭시 이벤트
 export function clickSelectDate($chattingNo, $matchingNo, matchingYear, matchingMonth, matchingDate){
     console.log('날짜선택 클릭까지 넘어옴');
     const selectBtn = document.getElementById('select-date');
@@ -91,6 +131,7 @@ export function clickSelectDate($chattingNo, $matchingNo, matchingYear, matching
 
 }
 
+//매칭 확정버튼 누르기
 export function  matchingConfirm(chattingNo, matchingNo, selectedDate) {
     console.log('매칭 확정 fetch까지 넘어옴');
     const matchingFixRequestDTO = {
@@ -117,6 +158,7 @@ export function  matchingConfirm(chattingNo, matchingNo, selectedDate) {
         });
 }
 
+//매칭 신청
 function matchingRequest(chattingNo){
 
     const requestInfo = {
@@ -151,7 +193,7 @@ function changeMatchingToConfirm(chattingNo){
 
 }
 
-// CONFIRM -> DONE으로 상태 변경
+// 게임완료 버튼 눌렀을때 이벤트
 function gameDone($chattingNo, $matchingNo){
     console.log($matchingNo);
     const requestInfo = {
@@ -183,6 +225,7 @@ function changeMatchingStatus(chattingNo, result) {
     return chattingNo;
 }
 
+// CONFIRM -> DONE으로 상태 변경
 function matchingDone(chattingNo){
     console.log(chattingNo);
     const chatCard = document.getElementById(chattingNo);
@@ -194,6 +237,7 @@ function matchingDone(chattingNo){
 
 }
 
+//이벤트 걸린 사람이 메세지에 상태 담아 보내기
 function sendNoticeMessage(chattingNo, msg){
     console.log(chattingNo);
     const chat = document.getElementById(chattingNo);
@@ -204,6 +248,7 @@ function sendNoticeMessage(chattingNo, msg){
     chat.querySelector('.message-send-btn').click();
 }
 
+//최근 매칭내역 가져오기(이벤트 상대방 매칭넘버 렌더링용)
 export function getRecentMatchingNo(chattingNo){
 
     fetch(`/api/v1/matchings/${chattingNo}`)
@@ -211,12 +256,14 @@ export function getRecentMatchingNo(chattingNo){
         .then(result => {
             setMatchingNo(chattingNo, result);
         });
-
 }
 
+//버튼이벤트 상배방 메세지창에 메칭넘버 렌더링해주기
 function setMatchingNo(chattingNo, matchingNo){
     const chatting = document.getElementById(chattingNo);
+
     chatting.querySelector('.matching-accept-btn').dataset.matchingNo = matchingNo;
+    if(chatting.querySelector('.matching-reject-btn') !== null){
+        chatting.querySelector('.matching-reject-btn').dataset.matchingNo = matchingNo;
+    }
 }
-
-
