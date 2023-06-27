@@ -112,9 +112,7 @@ public class MatchingService {
      * @param pageNo - 페이지 번호
      * @return - 리뷰 목록
      */
-    public ListResponseDTO<UserReviewResponseDTO, Matching> getGottenReview(
-            final String userAccount, final int pageNo
-    ) {
+    public ListResponseDTO<UserReviewResponseDTO, Matching> getGottenReview(final String userAccount, final int pageNo) {
 
         PageRequest pageInfo = PageRequest.of(pageNo - 1,
                 10,
