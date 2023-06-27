@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.controller.PointService;
 import site.woulduduo.dto.request.matching.MatchingFixRequestDTO;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
@@ -31,6 +32,7 @@ public class MatchingService {
 
     private final MatchingRepository matchingRepository;
     private final ChattingRepository chattingRepository;
+    private final PointService pointService;
 
     //    매칭 신청하기
     public long makeMatching(long chattingNo) {
@@ -59,13 +61,14 @@ public class MatchingService {
 
     }
 
-    //    매칭 확정하기
+    //    매칭 확정하기 & 매칭 신청한 사람 포인트 차감
     public boolean fixSchedule(MatchingFixRequestDTO dto) {
         Matching matching = matchingRepository.findByMatchingNo(dto.getMatchingNo());
         matching.setMatchingDate(dto.getLocalDateType(dto.getMatchingDate()));
         matching.setMatchingStatus(MatchingStatus.CONFIRM);
         try {
             Matching saved = matchingRepository.save(matching);
+            int paid = pointService.payMatchingPoint(matching.getChatting().getChattingNo(), matching.getMatchingNo());
             return true;
         } catch (Exception e) {
             return false;

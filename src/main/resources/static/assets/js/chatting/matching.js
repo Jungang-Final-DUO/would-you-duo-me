@@ -14,12 +14,31 @@ export function matchingRequestEvent(){
             switch (matchingStatus){
                 case 'null' :
                 case 'REJECT' :
-                    await matchingRequest($chattingNo);
-                    sendNoticeMessage($chattingNo , '듀오 매칭을 요청합니다');
+                case 'DONE' :
+                    const result = await checkIsPossible($chattingNo);
+                    if(result >= 0){
+                        matchingRequest($chattingNo);
+                    }
                     break;
                 case 'CONFIRM' : gameDone($chattingNo, $matchingNo); break;
             }
         });
+}
+
+//매칭 신청 가능여부 확인
+function checkIsPossible(chattingNo){
+
+    return fetch(`/api/v1/points/check/${chattingNo}`)
+        .then(res => res.json())
+        .then(result => {
+            if(result < 0) {
+                alert('포인트가 부족하여 매칭을 신청할 수 없습니다..');
+            } else {
+                alert(`포인트를 사용합니다!`);
+            }
+            return result;
+        })
+
 }
 
 // 요청을 받은 사람의 이벤트
@@ -169,14 +188,11 @@ function matchingRequest(chattingNo){
         body: chattingNo
     }
 
-    return fetch(`/api/v1/matchings`, requestInfo)
+    fetch(`/api/v1/matchings`, requestInfo)
         .then(res => res.json())
         .then(result => {
             changeMatchingStatus(chattingNo, result);
         });
-            // .then(
-        //     chattingNo => sendNoticeMessage(chattingNo, '듀오 매칭을 요청합니다')
-    // );
 }
 
 //REQUEST -> CONFIRM으로 상태 변경
@@ -222,7 +238,8 @@ function changeMatchingStatus(chattingNo, result) {
     $target.setAttribute('disabled', 'disabled');
     $target.dataset.matchingNo = result;
     $target.childNodes[1].nodeValue = '수락대기중';
-    return chattingNo;
+    sendNoticeMessage(chattingNo , '듀오 매칭을 요청합니다');
+    // return chattingNo;
 }
 
 // CONFIRM -> DONE으로 상태 변경
@@ -233,7 +250,7 @@ function matchingDone(chattingNo){
     const $target = chatCard.querySelector('.matching-accept-btn');
     $target.disabled = false;
     $target.dataset.matchingStatus = 'DONE';
-    $target.childNodes[1].nodeValue = '리뷰 쓰기';
+    $target.childNodes[1].nodeValue = '매칭 신청';
 
 }
 

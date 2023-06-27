@@ -2,11 +2,14 @@ import { getChampionImg } from "../common/get-champion-img.js";
 
 // 현재까지 렌더링된 페이지
 let page = 1;
+// 마지막 페이지 확인 변수
+let end = false;
 // 프로필카드 불러오는 URL
 const profileCardListURL = "/api/v1/users";
+const $profileCardWrapper = document.getElementById('profile-cards-wrapper'); 
 
 let keyword = '';
-const size = 40;
+const size = 20;
 let position = 'all';
 const $positionOption = document.querySelectorAll(".select-position"); // 포지션 선택 라디오 버튼
 let gender = 'all';
@@ -17,7 +20,6 @@ const sort = document.getElementById("order-list").value;
 
 // 프로필 카드 내부 자식 태그들 전부 지우는 함수
 function removeTag() {
-    const $profileCardWrapper = document.getElementById('profile-cards-wrapper');
 
     while($profileCardWrapper.firstChild) {
         $profileCardWrapper.removeChild($profileCardWrapper.firstChild);
@@ -28,7 +30,8 @@ function removeTag() {
 function selectPosition() {
 
     document.getElementById('searchBy-position').onclick = e => {
-
+        page = 1;
+        end = false;
         removeTag();
         
         if (e.target.classList.contains('select-position')) {
@@ -49,7 +52,8 @@ function selectPosition() {
 function selectGender() {
 
     document.getElementById('searchBy-gender').onclick = e => {
-
+        page = 1;
+        end = false;
         removeTag();
         e.stopPropagation();
         if (e.target.classList.contains('select-gender')) {
@@ -70,7 +74,8 @@ function selectGender() {
 function selectTier() {
 
     document.getElementById('searchByTier').onclick = e => {
-
+        page = 1;
+        end = false;
         removeTag();
         e.stopPropagation();
         if (e.target.classList.contains('select-tier')) {
@@ -91,7 +96,8 @@ function selectTier() {
 function searchName() {
 
     document.getElementById('searchBy-nickname').onkeyup = e => {
-
+        page = 1;
+        end = false;
         removeTag();
         
         console.log("키워드 입력중" + e.target.value);
@@ -100,6 +106,7 @@ function searchName() {
     }
 }
 
+// 정렬 조건 변경시 작동 함수
 function selectSort() {
 
     document.getElementById('order-list').onchange = e => {
@@ -163,10 +170,17 @@ function getProfileCardList() {
     fetch(profileCardListURL +'/' + page + '/' + keyword + '/' + size + '/' + position + '/' + gender + '/' + tier + '/' + sort)
     .then(res => res.json())
     .then(resResult => {
+        console.log("resRsult" + resResult);
+        if(Object.keys(resResult).length === 0) {
+            console.log("조건문 진입성공");
+            page--; 
+            end = true; 
+            return;}
         // ====================================================================================
-        console.log(resResult);
+        
         for (let rep of resResult) {
             const {avgRate, followed, mostChampList, profileImage, tier, userAccount, userComment, userFacebook, userGender, userInstagram, userMatchingPoint, userNickname, userPosition, userTwitter} = rep;
+
             for (let i = 0; i < mostChampList.length; i++) {
                 if (mostChampList[i].mostNo === 1) mostOne = mostChampList[i].champName;
                 else if (mostChampList[i].mostNo === 2) mostTwo = mostChampList[i].champName;
@@ -213,30 +227,50 @@ function getProfileCardList() {
                                    + '</div>'
                                + '</div>'
 
-            document.getElementById('profile-cards-wrapper').innerHTML = profileCardTag;                   
-        
-        }
+              
+                            }
+        $profileCardWrapper.innerHTML += profileCardTag;                         
         // ====================================================================================
     });
 
- } 
+ }
+ 
+ let loading = false; // 초기에는 로딩 상태가 아님을 나타내는 변수
 
-//  function countPage() {
-//     if (document.getElementById('profile-cards-wrapper').scrollTop === document.getElementById('profile-cards-wrapper').scrollHeight) {
-//         page += 1;
-//     }
-//     getProfileCardList();
-//  }
+ window.addEventListener('scroll', () => {
+    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+        if ((scrollTop + clientHeight >= scrollHeight) && !loading) {
+            loading = true; // 로딩 상태로 변경하여 중복 요청을 방지
+
+            if(end !== true) {
+                page ++;
+
+                // 스크롤이 페이지 하단에 도달하면 새로운 데이터를 로드
+                // console.log("스크롤하단도착");
+
+                // 데이터를 로드하는 비동기 요청
+                getProfileCardList();
+                loading = false;
+                
+                console.log("page"+page);
+                console.log("loading"+loading);
+                console.log("end"+end);
+            }
+        }
+  });
 
 
 //========= 메인 실행부 =========//
 (function () {
 
+    // 포지션 선택시 동작
     selectPosition();
+    // 성별 선택시 동작
     selectGender();
+    // 티어 선택시 동작
     selectTier();
+    // 검색창 입력시 동작
     searchName();   
-    // countPage();
 
     // 프로필 카드 불러오기 함수(비동기)
     getProfileCardList();
