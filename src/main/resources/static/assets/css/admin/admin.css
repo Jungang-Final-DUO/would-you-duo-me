@@ -315,11 +315,12 @@ width: 100%;
     width: 7%;
 }
 
-#main-wrapper #right_menu .bottom_menu .menubar #delete{
+#main-wrapper #right_menu .bottom_menu .menubar div:last-child{
 height: 60%;
 margin-left: 40px;
 padding-top: 7px;
 background-color: rgba(255, 255, 255, 0);
+cursor: pointer;
 /* border: 1px solid #000; */
 
 }

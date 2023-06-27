@@ -3,6 +3,7 @@ package site.woulduduo.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,7 +68,7 @@ public class BoardController {
 
     //관리자페이지 boardlist 가져오기
     @GetMapping("/api/v1/boards/admin")
-    public ResponseEntity<?> getBoardListByAdmin(PageDTO dto){
+    public ResponseEntity<?> getBoardListByAdmin(PageDTO dto ){
         log.info("{}ddttoo==",dto);
 
         ListResponseDTO<BoardsByAdminResponseDTO, Board> boardListByAdmin = boardService.getBoardListByAdmin(dto);
@@ -79,6 +80,21 @@ public class BoardController {
                 .ok()
                 .body(boardListByAdmin);
     }
+
+    //보드 삭제
+    @DeleteMapping("/api/v1/boards/admin/delete")
+    public ResponseEntity<?>  deleteBoardByAdmin(long boardNo ){
+        log.info("{}boardNo1212==",boardNo);
+
+        boolean b1 = boardService.deleteBoard(boardNo);
+        System.out.println("b1 = " + b1);
+
+        return ResponseEntity
+                .ok()
+                .body(b1);
+
+    }
+
 
     //금일 등록된 boardlist
     @GetMapping("/api/v1/boards/admin1")

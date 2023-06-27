@@ -151,14 +151,14 @@
           </div>
           <% for (int i = 1; i < 11; i++) { %>
 
-          <a href="/board/detail" class="board_li" style="display: none;">
+          <a href="#" class="board_li" style="display: none;">
             <div class="menubar">
               <div class="no bln"></div>
               <div class="nickname blm"></div>
               <div class="title blt"></div>
               <div class="board_write_date bld"></div>
               <div class="select_count blc"></div>
-              <div id="delete">삭제</div>
+              <div class="delete" onclick="getBoardNo(yourList)">삭제</div>
             </div>
           </a>
           <% } %>
@@ -170,12 +170,12 @@
             <div class="accuse_nickname">악성유저</div>
             <div class="accuse_title">신고내역</div>
             <div class="accuse_etc">신고내역(etc)</div>
-            <div class="accuse_count">신고횟수</div>
+            <div class="accuse_count">신고날짜</div>
           </div>
 
           <% for (int i = 1; i < 11; i++) { %>
 
-          <a href="/user/accuse" class=accuse_li style="display: none;">
+          <a href="#" class="accuse_li" style="display: none;">
             <div class="menubar">
               <div class="accuse_no aln"></div>
               <div class="accuse_nickname alm"></div>
@@ -207,7 +207,6 @@
       // 클릭 이벤트 핸들러 등록 - 전체 게시글
       const totalBoardButton = document.getElementById('totalBoardButton');
       const todayBoardButton = document.getElementById('todayBoardButton');
-
       const boardMenuBar = document.getElementById('board_menu_bar');
       const boardList = document.getElementsByClassName('board_li');
 
@@ -215,7 +214,6 @@
       // 클릭 이벤트 핸들러 등록 - 전체 경고리스트
       const totalAccuseButton = document.getElementById('totalAccuseButton');
       const todayAccuseButton = document.getElementById('todayAccuseButton');
-
       const accuseMenuBar = document.getElementById('accuse_menu_bar');
       const accuseList = document.getElementsByClassName('accuse_li');
 
@@ -235,14 +233,17 @@
         }
       }
 
+
       function userDisplayNone() {
-        userMenuBar.style.display = 'none';
+        UserMenuBar.style.display = 'none';
         for (let i = 0; i < userList.length; i++) {
           userList[i].style.display = 'none';
         }
       }
 
       totalUserButton.onclick = e => {
+        console.log('total userlist click 실행');
+
         boardDisplayNone();
         accuseDisplayNone();
         UserMenuBar.style.display = '';
@@ -404,6 +405,10 @@
 
 
       todayUserButton.onclick = e => {
+        console.log('today userlist click 실행');
+
+        boardDisplayNone();
+        accuseDisplayNone();
 
         UserMenuBar.style.display = '';
 
@@ -447,8 +452,7 @@
 
             renderUserList(res);
 
-            boardDisplayNone();
-            accuseDisplayNone();
+
 
           });
       };
@@ -458,7 +462,9 @@
       function uln1(list) {
         const ulArray = document.querySelectorAll('.uln');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].rowNum;
             ulElement.innerText = asd;
           }
@@ -468,7 +474,9 @@
       function uli1(list) {
         const ulArray = document.querySelectorAll('.uli');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].userAccount;
             ulElement.innerText = asd;
           }
@@ -478,7 +486,9 @@
       function ulg1(list) {
         const ulArray = document.querySelectorAll('.ulg');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].gender;
             ulElement.innerText = asd;
           }
@@ -488,7 +498,9 @@
       function ulb1(list) {
         const ulArray = document.querySelectorAll('.ulb');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].boardCount;
             ulElement.innerText = asd + "  회";
           }
@@ -498,7 +510,9 @@
       function ulr1(list) {
         const ulArray = document.querySelectorAll('.ulr');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].replyCount;
             ulElement.innerText = asd + "  회";
           }
@@ -508,7 +522,9 @@
       function ulw1(list) {
         const ulArray = document.querySelectorAll('.ulw');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].reportCount;
             ulElement.innerText = asd + "  회";
           }
@@ -518,7 +534,9 @@
       function ulp1(list) {
         const ulArray = document.querySelectorAll('.ulp');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].point;
             ulElement.innerText = asd + "  point";
           }
@@ -528,7 +546,9 @@
       function ulf1(list) {
         const ulArray = document.querySelectorAll('.ulf');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].followCount;
             ulElement.innerText = asd + "  명";
           }
@@ -538,7 +558,9 @@
       function uls1(list) {
         const ulArray = document.querySelectorAll('.uls');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].joinDate;
             ulElement.innerText = asd;
           }
@@ -551,19 +573,15 @@
 
 
       totalBoardButton.onclick = e => {
-
-        console.log('click 실행');
-
+        userDisplayNone();
+        accuseDisplayNone();
 
         boardMenuBar.style.display = '';
 
         fetch('/api/v1/boards/admin')
           .then(response => response.json())
           .then(res => {
-            // console.log('res: ', res);
-
             const list = res.list;
-            // console.log('list: ', list);
 
             for (let listOne of list) {
               const {
@@ -574,24 +592,39 @@
                 boardViewCount
               } = listOne;
 
-              //   console.log('userAccount: ', userAccount);
-
-
+              // console.log('userAccount: ', userAccount);
             }
 
             for (let i = 0; i < boardList.length; i++) {
               boardList[i].style.display = '';
             }
-            //보드리스트
+
+            // 보드리스트
             bln(list);
             blm(list);
             blt(list);
             bld(list);
             blc(list);
+
+            const yourList = list; // yourList에 list를 할당
+
+            const boardDelete = document.querySelectorAll('.delete');
+
+            for (let index = 0; index < boardDelete.length; index++) {
+              boardDelete[index].onclick = function () {
+                if (confirm('게시물을 삭제하시겠습니까?')) {
+                  alert('게시물 삭제 완료');
+                  getBoardNo(yourList, index); // yourList와 index를 전달하여 getBoardNo 호출
+
+                }
+              };
+            }
+
             renderUserList(res);
             accuseDisplayNone();
             userDisplayNone();
-          });
+          })
+
       }
 
       function bln(list) {
@@ -639,7 +672,8 @@
       todayBoardButton.onclick = e => {
 
         boardMenuBar.style.display = '';
-
+        userDisplayNone();
+        accuseDisplayNone();
         fetch('/api/v1/boards/admin1')
           .then(response => response.json())
           .then(res => {
@@ -679,7 +713,9 @@
       function bln1(list) {
         const ulArray = document.querySelectorAll('.bln');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].boardNo;
             ulElement.innerText = asd;
           }
@@ -689,7 +725,9 @@
       function blm1(list) {
         const ulArray = document.querySelectorAll('.blm');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].userNickName;
             ulElement.innerText = asd;
           }
@@ -699,7 +737,9 @@
       function blt1(list) {
         const ulArray = document.querySelectorAll('.blt');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].boardTitle;
             ulElement.innerText = asd;
           }
@@ -709,7 +749,9 @@
       function bld1(list) {
         const ulArray = document.querySelectorAll('.bld');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].boardWrittenDate;
             ulElement.innerText = asd;
           }
@@ -719,7 +761,9 @@
       function blc1(list) {
         const ulArray = document.querySelectorAll('.blc');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].boardViewCount;
             ulElement.innerText = asd;
           }
@@ -727,7 +771,20 @@
       }
 
 
+      //게시물삭제
+      function getBoardNo(list, index) {
+        const boardNo = list[index].boardNo;
+        console.log('asd123====', boardNo);
 
+        fetch(`/api/v1/boards/admin/delete?boardNo=` + boardNo, {
+            method: 'DELETE'
+          })
+          .then(response => response.json())
+          .then(res => {
+            console.log('res:', res);
+
+          });
+      }
 
       // const keyword = '';
       // const page = 1;
@@ -737,6 +794,11 @@
       totalAccuseButton.onclick = e => {
 
         accuseMenuBar.style.display = '';
+
+        userDisplayNone();
+        boardDisplayNone();
+
+
         fetch('/api/v1/user/accuse')
           .then(response => response.json())
           .then(res => {
@@ -819,14 +881,15 @@
       todayAccuseButton.onclick = e => {
 
         accuseMenuBar.style.display = '';
-
+        userDisplayNone();
+        boardDisplayNone();
         fetch('/api/v1/user/accuse1')
           .then(response => response.json())
           .then(res => {
-            // console.log('res: ', res);
+            console.log('res: ', res);
 
             const list = res.list;
-            // console.log('list: ', list);
+            console.log('list: ', list);
 
             for (let listOne of list) {
               const {
@@ -857,7 +920,9 @@
       function aln1(list) {
         const ulArray = document.querySelectorAll('.aln');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].accuseNo;
             ulElement.innerText = asd;
           }
@@ -867,8 +932,10 @@
       function alm1(list) {
         const ulArray = document.querySelectorAll('.alm');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
-            const asd = list[index].userNickName;
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
+            const asd = list[index].userAccount;
             ulElement.innerText = asd;
           }
         });
@@ -877,27 +944,33 @@
       function alt1(list) {
         const ulArray = document.querySelectorAll('.alt');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].accuseType;
             ulElement.innerText = asd;
           }
         });
       }
 
-      function ale(list) {
+      function ale1(list) {
         const ulArray = document.querySelectorAll('.ale');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].accuseETC;
             ulElement.innerText = asd;
           }
         });
       }
 
-      function blc1(alc1) {
+      function alc1(list) {
         const ulArray = document.querySelectorAll('.alc');
         ulArray.forEach((ulElement, index) => {
-          if (index < list.length) {
+          if (index >= list.length) {
+            ulElement.innerText = ''; // 공백으로 출력
+          } else {
             const asd = list[index].accuseWrittenDate;
             ulElement.innerText = asd;
           }
@@ -916,13 +989,6 @@
         PAGE_COUNT
       }) {
 
-        // console.log('startPage: ', startPage);
-        // console.log('endPage: ', endPage);
-        //  console.log('currentPage: ', currentPage);
-        // console.log('prev: ', prev);
-        //  console.log('next: ', next);
-        //  console.log('totalCount: ', totalCount);
-        // console.log('PAGE_COUNT: ', PAGE_COUNT);
 
         let tag = "";
 

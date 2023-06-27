@@ -479,16 +479,16 @@
                         console.log('res: ', res);
 
                         for (let index = 0; index < res; index++) {
-                            
+
                             const newImageSrc = '/assets/img/admin/경고R.png';
-                            accuseImages[index].setAttribute('src', newImageSrc);       
-                         
+                            accuseImages[index].setAttribute('src', newImageSrc);
+
                         }
-                
 
-                        });
 
-                
+                    });
+
+
             }
 
             userIsAccuse();
@@ -526,7 +526,8 @@
                 accuseType.push(checkbox.nextElementSibling.innerText);
             });
 
-            const accuseTypeEtc = document.querySelectorAll('.accuseTypeEtc').value;
+            const accuseTypeEtcInput = document.querySelectorAll('.accuseTypeEtc');
+            const accuseTypeEtcValue = accuseTypeEtcInput.value;
 
             fetch('http://localhost:8282/user/accuse', {
                     method: 'POST',
@@ -536,7 +537,7 @@
                     body: JSON.stringify({
                         userNickname: userNickname,
                         accuseType: accuseType,
-                        accuseEtc: accuseTypeEtc
+                        accuseEtc: accuseTypeEtcValue
                     })
                 })
                 .then(response => {
@@ -545,7 +546,6 @@
                 .then(res => {
                     //  console.log('res: ', res);
                     if (res) {
-                        accuseDialog.close();
 
                         // 모달창 닫기
                     } else {

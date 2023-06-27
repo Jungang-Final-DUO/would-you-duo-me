@@ -96,6 +96,7 @@ public class BoardService {
     public ListResponseDTO<BoardsByAdminResponseDTO,Board> getBoardListByAdmin(PageDTO dto){
         System.out.println("dtoservice = " + dto);
 
+
         Pageable pageable = PageRequest.of(
                 dto.getPage()-1,
                 dto.getSize(),
@@ -117,6 +118,20 @@ public class BoardService {
                 .pageInfo(new PageResponseDTO<>(all))
                 .list(collect)
                 .build();
+    }
+
+    //게시글 삭제
+    public boolean deleteBoard(long boardNo) {
+        System.out.println("boardNo = " + boardNo);
+        Board byBoardNo = boardRepository.findByBoardNo(boardNo);
+        System.out.println("byBoardNo = " + byBoardNo);
+
+        if (byBoardNo != null) {
+            boardRepository.deleteByBoardNo(boardNo);
+            return true;
+        }
+
+        return false;
     }
 
     //금일 작성 게시물 (ADMIN)

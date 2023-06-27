@@ -1,6 +1,5 @@
 package site.woulduduo.repository;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,33 +72,7 @@ class BoardRepositoryTest {
         System.out.println("count = " + count);
     }
 
-    @BeforeEach
-    void bulkInsert() {
-        // 학생을 147명 저장
-        for (int i = 1; i <= 30; i++) {
-            User User1 = User.builder()
-                    .userAccount("acvd" + i)
-                    .userNickname("asd" + i)
-                    .userPassword("12345")
-                    .userCurrentPoint(123)
-                    .userBirthday(LocalDate.of(1990, 11, 07))
-                    .lolNickname("asd" + i)
-                    .userGender(Gender.F)
-                    .lolTier(Tier.DIA)
-                    .build();
-            User save = userRepository.save(User1);
 
-            Board board = Board.builder()
-                    .user(save)
-                    .boardTitle("게시글제목" + i)
-                    .boardContent("게시글내용" + i)
-                    .boardCategory(BoardCategory.ACCUSE)
-                    .build();
-
-            Board asave = boardRepository.save(board);
-        }
-
-    }
 
     @Test
     @DisplayName("전체 board count 확인")
@@ -116,6 +89,19 @@ class BoardRepositoryTest {
         int allWithBoardWrittenDate = boardRepository.findAllWithBoardWrittenDate();
         System.out.println("allWithJoinDate = " + allWithBoardWrittenDate);
 
+
+    }
+
+    @Test
+    @DisplayName("boardNO 로 게시물 찾고 삭제")
+    void findDeleteBoard() {
+
+        Board byBoardNo = boardRepository.findByBoardNo(225);
+        System.out.println("byBoardNo = " + byBoardNo);
+
+       // boolean b = boardRepository.deleteByBoardNo(217);
+
+       // System.out.println("123asd = " + b);
 
     }
 }
