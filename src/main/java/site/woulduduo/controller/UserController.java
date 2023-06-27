@@ -2,11 +2,18 @@ package site.woulduduo.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import site.woulduduo.aws.S3Service;
+import site.woulduduo.dto.request.page.PageDTO;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import site.woulduduo.dto.request.login.LoginRequestDTO;
@@ -22,16 +29,22 @@ import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.LoginResult;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
+import site.woulduduo.service.UserService;
+
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.EmailService;
 import site.woulduduo.service.UserService;
 import site.woulduduo.util.upload.FileUtil;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import static site.woulduduo.enumeration.LoginResult.SUCCESS;
 import static site.woulduduo.util.LoginUtil.isAutoLogin;
@@ -42,12 +55,13 @@ import static site.woulduduo.util.LoginUtil.isLogin;
 @RequiredArgsConstructor
 public class UserController {
 
-    @Value("${file.upload.root-path}")
-    private String rootPath;
+//    @Value("${file.upload.root-path}")
+//    private String rootPath;
 
     private final UserService userService;
     private final EmailService emailService;
     private final UserRepository userRepository;
+    private final S3Service s3Service;
 
     // 메인페이지 - 프로필 카드 불러오기(비동기)
     @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
@@ -56,11 +70,14 @@ public class UserController {
             , @PathVariable String tier, @PathVariable String sort/*, HttpSession session*/) {
 
 
-//        log.info("&&&&&:{}, {}, {}, {}", );
-        System.out.println(position+ gender+ tier+ sort);
+        System.out.println(keyword + position + gender + tier + sort);
+
         UserSearchType userSearchType = new UserSearchType();
         userSearchType.setPage(page);
         userSearchType.setSize(size);
+        if (!keyword.equals("-")) {
+            userSearchType.setKeyword(keyword);
+        }
         if (!position.equals("all")) {
             userSearchType.setPosition(Position.valueOf(position));
         }
@@ -99,8 +116,14 @@ public class UserController {
             MultipartFile profileImage = profileImages[i];
             if (!profileImage.isEmpty()) {
                 // 업로드된 파일을 실제 로컬 저장소에 업로드하는 로직
-                String savePath = FileUtil.uploadFile(profileImage, rootPath);
-                savePaths[i] = savePath;
+//                String savePath = FileUtil.uploadFile(profileImage, rootPath);
+//                savePaths[i] = savePath;
+                String fileName = UUID.randomUUID() + "_" + profileImage.getOriginalFilename();
+                try {
+                    savePaths[i] = s3Service.uploadToBucket(profileImage.getBytes(), fileName);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -137,9 +160,9 @@ public class UserController {
     // 로그인 검증 요청
     @PostMapping("/user/sign-in")
     public String signIn(LoginRequestDTO dto
-                        , RedirectAttributes ra
-                        , HttpServletResponse response
-                        , HttpServletRequest request
+            , RedirectAttributes ra
+            , HttpServletResponse response
+            , HttpServletRequest request
     ) {
 
         log.info("/user/sign-in POST ! - {}", dto);
@@ -203,12 +226,6 @@ public class UserController {
 //    }
 
 
-
-
-
-
-
-
     // 마이페이지 - 프로필 카드 등록페이지 열기
     @GetMapping("/user/register-duo")
     public String registerDUO(/*HttpSession session, */Model model) {
@@ -225,6 +242,12 @@ public class UserController {
         log.info("@@@@dto@@@@ :{}", dto);
 
         return "redirect:/user/register-duo";
+    }
+
+    // 마이 페이지 - 쓴 리뷰 페이지 열기
+    @GetMapping("/user/matching-list")
+    public String showMatchingList(HttpSession session) {
+        return "my-page/matching-list";
     }
 
     @GetMapping("/user/admin")
@@ -245,6 +268,8 @@ public class UserController {
     //관리자 페이지 리스트 가져오기
     @GetMapping("/api/v1/users/admin")
     public ResponseEntity<?> getUserListByAdmin(
+            @PathVariable PageDTO dto) {
+
              @ModelAttribute  PageDTO dto){
         log.info("{}ddttoo==",dto);
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
@@ -330,18 +355,19 @@ public class UserController {
     }
 
 
-        // 유저 전적 페이지 이동
-        @GetMapping("/user/user-history")
-        public String showUserHistory (HttpSession session, Model model, String userAccount){
+    // 유저 전적 페이지 이동
+    @GetMapping("/user/user-history")
+    public String showUserHistory(HttpSession session, Model model, String userAccount) {
 
-            log.info("/user/history?userAccount={} GET", userAccount);
+        log.info("/user/history?userAccount={} GET", userAccount);
 
-            UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
+        UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
 
-            model.addAttribute("history", dto);
+        model.addAttribute("history", dto);
 
-            return "user/user-history";
+        return "user/user-history";
 
-        }
     }
+
+}
 

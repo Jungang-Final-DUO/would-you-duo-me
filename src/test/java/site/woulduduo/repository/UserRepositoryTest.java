@@ -1,5 +1,6 @@
 package site.woulduduo.repository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,23 +90,23 @@ class UserRepositoryTest {
     }
 
 
-//    @BeforeEach
-//    void bulkInsert() {
-//        // 학생을 147명 저장
-//        for (int i = 1; i <= 147; i++) {
-//            User User1 = User.builder()
-//                    .userAccount("acvd" + i)
-//                    .userNickname("asd" + i)
-//                    .userPassword("12345")
-//                    .userCurrentPoint(123)
-//                    .userBirthday(LocalDate.of(1990, 11, 07))
-//                    .lolNickname("asd" + i)
-//                    .userGender(Gender.F)
-//                    .lolTier(Tier.DIA)
-//                    .build();
-//            userRepository.save(User1);
-//        }
-//    }
+    @BeforeEach
+    void bulkInsert() {
+        // 학생을 147명 저장
+        for (int i = 1; i <= 147; i++) {
+            User User1 = User.builder()
+                    .userAccount("acvd" + i)
+                    .userNickname("asd" + i)
+                    .userPassword("12345")
+                    .userCurrentPoint(123)
+                    .userBirthday(LocalDate.of(1990, 11, 07))
+                    .lolNickname("asd" + i)
+                    .userGender(Gender.F)
+                    .lolTier(Tier.DIA)
+                    .build();
+            userRepository.save(User1);
+        }
+    }
 
     @Test
     @DisplayName("전제 조회")
@@ -271,5 +272,22 @@ class UserRepositoryTest {
         System.out.println("users = " + users);
     }
 
+
+    @Test
+    @DisplayName("findById test")
+    void findByIdTest() {
+        User user1 = userRepository.findById("user1").orElseThrow();
+
+        System.out.println("user1 = " + user1);
+    }
+
+    @Test
+    @DisplayName("닉네임으로 아이디 찾아오기")
+    void findByNicknameTest(){
+        String nickname = "멍청이";
+        User user = userRepository.findByUserNickname(nickname);
+
+        System.out.println("user = " + user);
+    }
 
 }

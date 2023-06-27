@@ -28,8 +28,8 @@ public class UserProfileResponseDTO {
 
     private int userMatchingPoint;
 
-    @Enumerated(EnumType.STRING)
-    private Tier tier;
+//    @Enumerated(EnumType.STRING)
+    private String tier;
 
     private String userInstagram;
 

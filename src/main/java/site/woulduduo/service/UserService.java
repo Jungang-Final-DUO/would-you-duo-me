@@ -239,8 +239,13 @@ public class UserService {
     }
 
 
-
-
+    /**
+     * 마이페이지 - 프로필카드 등록 메서드
+     *
+//     * @param session - 접속한 사용자
+     * @Param dto - 프로필카드 등록 dto
+     * @return 등록성공여부
+     */
     public boolean registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
 
         User exUser = User.builder()
@@ -455,7 +460,8 @@ public class UserService {
         //더한값
         int total = userCurrentPoint + userAddPoint;
 
-
+        //-99999 ~ +99999 가 맞는지 확인
+        boolean matches = currentPoint.matches("-?[0-9]{1,5}");
 
         //현재포인트와 total이 같지 않다면 저장
         if (userCurrentPoint != total) {
@@ -548,16 +554,6 @@ public class UserService {
             }
         }
 
-        // 사용자가 받은 모든 리뷰
-        List<UserReviewResponseDTO> reviews = foundUser.getChattingFromList().stream()
-                .map(c -> c.getMatchingList().stream()
-                        .map(UserReviewResponseDTO::new)
-                        .collect(toList())
-                ).collect(toList())
-                .stream()
-                .flatMap(List::stream)
-                .collect(toList());
-
         boolean isFollowed = false;
         try {
             isFollowed = followRepository.existsByFollowFromAndFollowTo(session.getAttribute("로그인키").toString(), userAccount);
@@ -613,7 +609,6 @@ public class UserService {
                 .lolNickname(lolNickname)
                 .userComment(foundUser.getUserComment())
                 .tier(foundUser.getLolTier())
-                .userReviews(reviews)
                 // 모스트 3 챔피언 정보
                 .mostChampInfos(mostChampInfoList)
                 // riot api 를 통해 얻어오는 솔로랭크 혹은 자유랭크 데이터
@@ -625,10 +620,10 @@ public class UserService {
                 .last20Matches(last20ParticipantDTOList.stream()
                         .map(MatchResponseDTO::new)
                         .collect(toList()))
-                .userReviews(matchingService.getGottenReview(userAccount, 1).getList())
                 .build();
 
     }
+
     public List<UserProfileResponseDTO> getUserProfileList(/*HttpSession session, */UserSearchType userSearchType) {
         List<UserProfileResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
 
@@ -637,8 +632,6 @@ public class UserService {
         }
         return userProfileList;
     }
-
-
 
 
 

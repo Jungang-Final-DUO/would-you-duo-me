@@ -31,6 +31,8 @@ public interface UserRepository extends
     //가입수
     long countByUserAccount(String userAccount);
 
+    User findByUserAccount(String userAccount);
+
     // 자동로그인시 사용자의 세션ID와 세션만료시간을 DB에 저장하고 업데이트
     @Modifying
     @Transactional
@@ -50,6 +52,5 @@ public interface UserRepository extends
     int countByLolNickname(@Param("lolNickname") String lolNickname);
 
 
-
-    User findByUserAccount(String userAccount);
+    User findByUserNickname(String messageFrom);
 }

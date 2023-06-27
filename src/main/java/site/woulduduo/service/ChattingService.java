@@ -44,15 +44,17 @@ public class ChattingService {
         System.out.println("me : " + me);
         User chattingUser = userRepository.findById(userAccount).orElseThrow();
 
-        // 채팅 데이터를 생성하기 전에 이미 존재하는 채팅인지 검사
+        // 채팅 데이터를 생성하기 전에 이미 존재하는 채팅인지 검사(단방향)
         Chatting chattingFrom = chattingRepository.findByChattingFromAndChattingTo(/*session.getAttribute()*/ me, chattingUser);
         System.out.println("chattingFrom = " + chattingFrom);
-        Chatting chattingTo = chattingRepository.findByChattingFromAndChattingTo(chattingUser, /*session.getAttribute()*/ me);
-        System.out.println("chattingTo = " + chattingTo);
-        if (chattingFrom != null || chattingTo != null) {
+//        Chatting chattingTo = chattingRepository.findByChattingFromAndChattingTo(chattingUser, /*session.getAttribute()*/ me);
+//        System.out.println("chattingTo = " + chattingTo);
+        if (myName.equals(userAccount)) {
+            System.out.println("나와의 채팅!?");
+            chattingNo = 0;
+        }else if (chattingFrom != null) {
             System.out.println("이미 존재하는 채팅내역임");
-            chattingNo = chattingFrom != null ? chattingFrom.getChattingNo() : chattingTo.getChattingNo();
-
+            chattingNo = chattingFrom.getChattingNo();
         } else {
             // 존재하지 않으면 데이터 생성
             Chatting chatting = Chatting.builder()
@@ -112,7 +114,7 @@ public class ChattingService {
         return chattingResponseDTO;
     }
 
-//  대표 프로필 사진 가져오기
+    //  대표 프로필 사진 가져오기
     public static String getRepresentativeProfile(User user) {
         List<UserProfile> profileList = null;
         try {

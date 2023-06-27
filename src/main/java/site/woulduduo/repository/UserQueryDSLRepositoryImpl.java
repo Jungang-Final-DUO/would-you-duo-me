@@ -29,7 +29,8 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
     @Override
     public List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/) {
-
+        System.out.println("IMPLPosition = " + userSearchType.getPosition());
+        System.out.println("IMPLKeyword = " + userSearchType.getKeyword());
         List<User> userList = queryFactory.selectFrom(user)
                 .join(user.mostChampList, mostChamp).fetchJoin()
                 .where(keywordContains(userSearchType.getKeyword())
@@ -38,9 +39,9 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                         , tiereq(userSearchType.getTier())
                         , user.userMatchingPoint.isNotNull()
                 )
-                .offset(userSearchType.getPage() - 1)
+                .offset(checkPage(userSearchType.getPage()))
                 .limit(userSearchType.getSize())
-                .orderBy(user.userAvgRate.desc())
+//                .orderBy(user.userAvgRate.desc())
                 .fetch();
         log.info("### userList ###: {}", userList);
         // select 로 불러온 user 리스트 UserProfilesResponseDTO로 변환해 리스트에 담아주기
@@ -51,7 +52,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                     .userGender(user.getUserGender())
                     .userComment(user.getUserComment())
                     .userMatchingPoint(user.getUserMatchingPoint())
-                    .tier(user.getLolTier())
+                    .tier(String.valueOf(user.getLolTier()))
                     .userInstagram(user.getUserInstagram())
                     .userFacebook(user.getUserFacebook())
                     .userTwitter(user.getUserTwitter())
@@ -59,6 +60,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                     .userNickname(user.getUserNickname())
                     .avgRate(user.getUserAvgRate())
                     .mostChampList(user.getMostChampList())
+                    .profileImage((user.getUserProfileList().size() == 0)? "basic" : user.getUserProfileList().get(0).getProfileImage())
                     .build();
 
             userProfiles.add(dto);
@@ -66,6 +68,11 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
 
         return userProfiles;
+    }
+
+    // 2페이지부터 offset 조정
+    private Long checkPage(int page) {
+        return page == 1 ? 0 : ((long)page - 1) * 20;
     }
 
     // 티어 파라미터가 null인지 체크
@@ -81,9 +88,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
     // 포지션 파라미터가 null인지 체크
     private BooleanExpression positioneq(Position position) {
-        String sPosition = String.valueOf(position);
-
-        return StringUtils.isNullOrEmpty(sPosition)? user.userPosition.eq(position) : null;
+        return (position != null) ? user.userPosition.eq(position) : null;
     }
 
     // 검색 키워드가 null인지 체크

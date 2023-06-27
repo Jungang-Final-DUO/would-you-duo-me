@@ -1,6 +1,7 @@
 package site.woulduduo.dto.request.chatting;
 
 import lombok.*;
+import site.woulduduo.enumeration.MatchingStatus;
 
 @Getter
 @NoArgsConstructor
