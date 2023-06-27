@@ -26,7 +26,7 @@
         <!--        포지션 검색 라디오 -->
         <div id="searchBy-position">
             <label class="position-option">
-                <input class="select-position" type="radio" name="position" value="">
+                <input class="select-position" type="radio" name="position" value="all">
                 <img class="position-image" src="/assets/img/main/ALL.png" alt="ALL">
             </label>
             <label class="position-option">
