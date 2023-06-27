@@ -15,7 +15,7 @@ function makeChatting(chat) {
 
     chat.onclick = (e) => {
         const userAccount = chat.closest('.duo-profile').id;
-        console.log('makeChatting 도달');
+        // console.log('makeChatting 도달');
         const requestInfo = {
             method: 'POST',
             headers: {
@@ -28,11 +28,11 @@ function makeChatting(chat) {
             .then(res => res.json())
             .then(async result => {
                 // result = 생성된 채팅번호
-                console.log(result);
+                // console.log(result);
                 await getChattingList();
                 document.querySelector('.chatting-modal-dialog').open = true;
                 const chatting = document.getElementById(result);
-                console.log(chatting);
+                // console.log(chatting);
                 chatting.querySelector('.modal-btn').click();
             });
     }
@@ -135,8 +135,8 @@ async function renderChattingList(result) {
             chatting_message_option.appendChild(matching_accept_container);
 
             // 로그인 한 사람이 Chatting To일때
-            console.log(myNickname);
-            console.log(chattingFrom);
+            // console.log(myNickname);
+            // console.log(chattingFrom);
             if (chattingFrom !== myNickname) {
                 const matching_accept_btn = document.createElement('button');
                 matching_accept_btn.classList.add('matching-accept-btn');
@@ -181,18 +181,18 @@ async function renderChattingList(result) {
 
                     case 'DONE':
                         const flag = await searchPointHistory(matchingNo);
-                        console.log('왜?');
+                        // console.log('왜?');
                         matching_accept_btn.dataset.matchingNo = matchingNo;
-                        console.log(flag);
+                        // console.log(flag);
                         if(!flag) {
-                        console.log('안받음');
+                        // console.log('안받음');
                             matching_accept_btn.disabled = false;
                             chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
                             chatting_handshake_img.alt = '게임완료이미지';
                             matching_accept_btn.childNodes[1].nodeValue = `포인트 받기`;
                             break;
                         }else {
-                        console.log('받음');
+                        // console.log('받음');
                             matching_accept_btn.disabled = true;
                             matching_accept_btn.dataset.matchingNo = '';
                             chatting_handshake_img.src = '/assets/img/chattingModal/handshake.png';
@@ -208,8 +208,8 @@ async function renderChattingList(result) {
             }
 
             // 로그인 한 사람이 Chatting From일 때
-            console.log(myNickname);
-            console.log(chattingFrom);
+            // console.log(myNickname);
+            // console.log(chattingFrom);
             if (chattingFrom === myNickname) {
 
                 let $rightBtn = document.createElement('button');

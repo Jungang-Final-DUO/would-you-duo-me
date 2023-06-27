@@ -12,7 +12,7 @@ export function modalHandler($modalBtn) {
         if (!$target.hasAttribute('open')) {
             // 해당 모달이 채팅목록이라면 채팅목록 출력
             if ($target.classList.contains('chatting-modal-dialog')){
-                console.log('채팅모달 열기 진입');
+                // console.log('채팅모달 열기 진입');
                 getChattingList();
             }
             // 해당 모달이 메세지 다이어로그라면 내부 메세지 출력
