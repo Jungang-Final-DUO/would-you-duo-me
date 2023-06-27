@@ -34,6 +34,12 @@ class PointServiceTest {
     }
 
     @Test
+    @DisplayName("포인트를 차감하면 멤버 정보에 포인트가 줄어든다?")
+    public void payPointTest(){
+
+    }
+
+    @Test
     @DisplayName("매칭넘버로 포인트 지급이력을 찾을 수 있다")
     public void searchByMatchingTest(){
         long matchingNo = 5L;

@@ -235,8 +235,13 @@ public class UserService {
     }
 
 
-
-
+    /**
+     * 마이페이지 - 프로필카드 등록 메서드
+     *
+//     * @param session - 접속한 사용자
+     * @Param dto - 프로필카드 등록 dto
+     * @return 등록성공여부
+     */
     public boolean registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
 
         User exUser = User.builder()
@@ -267,6 +272,8 @@ public class UserService {
         });
         return true;
     }
+
+
 
 //    public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
 //        userRepository.count();
@@ -620,5 +627,7 @@ public class UserService {
         }
         return userProfileList;
     }
+
+
 
 }

@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import site.woulduduo.dto.request.chatting.MatchingFixRequestDTO;
+import site.woulduduo.controller.PointService;
+import site.woulduduo.dto.request.matching.MatchingFixRequestDTO;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
@@ -139,6 +140,7 @@ public class MatchingController {
     @RequestMapping(value = "/fix", method = {RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<?> fixSchedule(@RequestBody MatchingFixRequestDTO dto){
         boolean flag = matchingService.fixSchedule(dto);
+
         log.info("확정 직전!");
         return ResponseEntity.ok().body(flag);
     }

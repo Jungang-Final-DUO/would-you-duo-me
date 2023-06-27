@@ -39,9 +39,9 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                         , tiereq(userSearchType.getTier())
                         , user.userMatchingPoint.isNotNull()
                 )
-                .offset(userSearchType.getPage() - 1)
+                .offset(checkPage(userSearchType.getPage()))
                 .limit(userSearchType.getSize())
-                .orderBy(user.userAvgRate.desc())
+//                .orderBy(user.userAvgRate.desc())
                 .fetch();
         log.info("### userList ###: {}", userList);
     // select 로 불러온 user 리스트 UserProfilesResponseDTO로 변환해 리스트에 담아주기
@@ -68,6 +68,11 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
 
         return userProfiles;
+    }
+
+    // 2페이지부터 offset 조정
+    private Long checkPage(int page) {
+        return page == 1 ? 0 : ((long)page - 1) * 20;
     }
 
     // 티어 파라미터가 null인지 체크

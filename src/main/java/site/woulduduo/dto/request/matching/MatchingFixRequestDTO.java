@@ -1,4 +1,4 @@
-package site.woulduduo.dto.request.chatting;
+package site.woulduduo.dto.request.matching;
 
 import lombok.*;
 

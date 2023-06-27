@@ -1,21 +1,21 @@
 import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 import {renderRateModal} from "../review/write-rate.js";
 
-export function getChattingList() {
+export async function getChattingList() {
     // 추후 session에 회원정보 담기면 경로 수정
     const userId = document.getElementById('loginUserInfo').dataset.userAccount;
-    fetch(`/api/v1/chat/chattings/${userId}`)
+    await fetch(`/api/v1/chat/chattings/${userId}`)
         .then(res => res.json())
-        .then(result => renderChattingList(result))
+        .then(result => renderChattingList(result));
 }
 
 // 채팅 클릭했을때 메세지창 열어줘야함
 function makeChatting(chat) {
     const userId = document.getElementById('loginUserInfo').dataset.userAccount;
 
-    chat.onclick = () => {
+    chat.onclick = (e) => {
         const userAccount = chat.closest('.duo-profile').id;
-        console.log('makeChatting 도달');
+        // console.log('makeChatting 도달');
         const requestInfo = {
             method: 'POST',
             headers: {
@@ -26,10 +26,14 @@ function makeChatting(chat) {
 
         fetch(`/api/v1/chat/chattings/${userAccount}`, requestInfo)
             .then(res => res.json())
-            .then(result => {
+            .then(async result => {
                 // result = 생성된 채팅번호
-                getChattingList();
-                document.getElementById('chatting-btn').click();
+                // console.log(result);
+                await getChattingList();
+                document.querySelector('.chatting-modal-dialog').open = true;
+                const chatting = document.getElementById(result);
+                // console.log(chatting);
+                chatting.querySelector('.modal-btn').click();
             });
     }
 }
@@ -131,8 +135,8 @@ async function renderChattingList(result) {
             chatting_message_option.appendChild(matching_accept_container);
 
             // 로그인 한 사람이 Chatting To일때
-            console.log(myNickname);
-            console.log(chattingFrom);
+            // console.log(myNickname);
+            // console.log(chattingFrom);
             if (chattingFrom !== myNickname) {
                 const matching_accept_btn = document.createElement('button');
                 matching_accept_btn.classList.add('matching-accept-btn');
@@ -168,21 +172,27 @@ async function renderChattingList(result) {
                         matching_accept_btn.childNodes[1].nodeValue = `매칭 확정`;
                         matching_accept_btn.dataset.matchingNo = matchingNo;
                         break;
+
                     case 'REJECT':
                         matching_accept_btn.disabled = true;
                         matching_accept_btn.childNodes[1].nodeValue = `매칭 대기`;
                         matching_accept_btn.dataset.matchingNo = matchingNo;
                         break;
+
                     case 'DONE':
-                        matching_accept_btn.dataset.matchingNo = matchingNo;
                         const flag = await searchPointHistory(matchingNo);
+                        // console.log('왜?');
+                        matching_accept_btn.dataset.matchingNo = matchingNo;
+                        // console.log(flag);
                         if(!flag) {
+                        // console.log('안받음');
                             matching_accept_btn.disabled = false;
                             chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
                             chatting_handshake_img.alt = '게임완료이미지';
                             matching_accept_btn.childNodes[1].nodeValue = `포인트 받기`;
                             break;
                         }else {
+                        // console.log('받음');
                             matching_accept_btn.disabled = true;
                             matching_accept_btn.dataset.matchingNo = '';
                             chatting_handshake_img.src = '/assets/img/chattingModal/handshake.png';
@@ -198,8 +208,8 @@ async function renderChattingList(result) {
             }
 
             // 로그인 한 사람이 Chatting From일 때
-            console.log(myNickname);
-            console.log(chattingFrom);
+            // console.log(myNickname);
+            // console.log(chattingFrom);
             if (chattingFrom === myNickname) {
 
                 let $rightBtn = document.createElement('button');
@@ -230,15 +240,15 @@ async function renderChattingList(result) {
                         $rightBtn.dataset.matchingNo = matchingNo;
                         break;
                     case 'DONE':
-                        chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
-                        chatting_handshake_img.alt = '게임완료이미지';
+                        chatting_handshake_img.src = '/assets/img/chattingModal/handshake.png';
+                        chatting_handshake_img.alt = '매칭수락이미지';
                         $rightBtn.dataset.matchingNo = matchingNo;
-                        $rightBtn.childNodes[1].nodeValue = `리뷰 쓰기`;
-                        $rightBtn.onclick = async e => {
-                            const $rateModal = await renderRateModal(matchingNo, userNickname);
-                            document.body.appendChild($rateModal);
-                            $rateModal.show();
-                        }
+                        $rightBtn.childNodes[1].nodeValue = `매칭 신청`;
+                        // $rightBtn.onclick = async e => {
+                        //     const $rateModal = await renderRateModal(matchingNo, userNickname);
+                        //     document.body.appendChild($rateModal);
+                        //     $rateModal.show();
+                        // }
                         break;
                     default :
                         $rightBtn.dataset.matchingNo = '';
