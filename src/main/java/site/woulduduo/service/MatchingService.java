@@ -117,7 +117,6 @@ public class MatchingService {
     public ListResponseDTO<UserReviewResponseDTO, Matching> getGottenReview(
             final String userAccount,
             final int pageNo
-            final String userAccount, final int pageNo
     ) {
 
         PageRequest pageInfo = PageRequest.of(pageNo - 1,
