@@ -461,8 +461,6 @@ public class UserService {
         int total = userCurrentPoint + userAddPoint;
 
         //-99999 ~ +99999 가 맞는지 확인
-        boolean matches = currentPoint.matches("-?[0-9]{1,5}");
-
         //현재포인트와 total이 같지 않다면 저장
         if (userCurrentPoint != total) {
 
