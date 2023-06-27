@@ -478,15 +478,17 @@
                     .then(res => {
                         console.log('res: ', res);
 
-                        accuseImages.forEach(image => {
-                            imageRed(image);
+                        for (let index = 0; index < res; index++) {
+                            
+                            const newImageSrc = '/assets/img/admin/경고R.png';
+                            accuseImages[index].setAttribute('src', newImageSrc);       
+                         
+                        }
+                
+
                         });
 
-                        function imageRed(image) {
-                            const newImageSrc = '/assets/img/admin/경고R.png';
-                            image.setAttribute('src', newImageSrc);
-                        }
-                    });
+                
             }
 
             userIsAccuse();
