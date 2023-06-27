@@ -57,7 +57,7 @@ import javax.servlet.http.HttpSession;
     public boolean accuseUser(HttpSession session, @RequestBody UserAccuseRequestDTO dto){
         log.info("{}dto123===========",dto);
         boolean b = accuseService.accuseUser(dto);
-
+        System.out.println("btruefalse = " + b);
         return b;
 
 

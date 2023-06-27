@@ -143,9 +143,9 @@ public class AccuseService {
     //경고 데이터 전달
     public boolean accuseUser(UserAccuseRequestDTO dto){
 
-        String userAccount = dto.getUserAccount();
-        User byUserAccount = userRepository.findByUserAccount(userAccount);
-
+        String userNickname = dto.getUserNickname();
+        User byUserAccount = userRepository.findByUserNickName(userNickname);
+        System.out.println("byUserAccount = " + byUserAccount);
         //정보 없으면 false;
         if(byUserAccount==null){
             return false;
