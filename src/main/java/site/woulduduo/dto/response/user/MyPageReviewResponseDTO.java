@@ -17,6 +17,7 @@ public class MyPageReviewResponseDTO {
     private String opponentNickname;
     private String matchingDate;
     private String matchingReviewContent;
+    private String profileImage;
 
     public MyPageReviewResponseDTO(Matching matching, boolean isGotten) {
 
@@ -26,6 +27,7 @@ public class MyPageReviewResponseDTO {
             this.opponentNickname = matching.getChatting().getChattingFrom().getUserNickname();
         } else {
             this.opponentNickname = matching.getChatting().getChattingTo().getUserNickname();
+            this.profileImage = matching.getChatting().getChattingTo().getLatestProfileImage();
         }
 
         if (matchingDate == null) {

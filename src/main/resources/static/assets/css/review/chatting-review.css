@@ -12,7 +12,6 @@
     width: 350px;
     background: #E3E3E3;
     border-radius: 15px;
-    margin: 0 auto;
     padding: 10px;
 }
 
@@ -26,6 +25,7 @@
     border-radius: 15px;
     overflow: hidden;
     margin-right: 20px;
+    align-self: center;
 }
 
 #profile-image {
@@ -74,7 +74,7 @@
 #send-review {
     width: 20px;
     position: absolute;
-    right: 7px;
-    bottom: 6px;
+    right: 15px;
+    bottom: 28px;
     cursor: pointer;
 }
