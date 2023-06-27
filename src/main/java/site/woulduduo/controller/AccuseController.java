@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import site.woulduduo.dto.request.accuse.UserAccuseRequestDTO;
 import site.woulduduo.dto.request.page.PageDTO;
@@ -53,10 +54,12 @@ import javax.servlet.http.HttpSession;
 
 
     @PostMapping("/user/accuse")
-    public String accuseUser(HttpSession session, UserAccuseRequestDTO dto){
-        accuseService.accuseUser(dto);
+    public boolean accuseUser(HttpSession session, @RequestBody UserAccuseRequestDTO dto){
+        log.info("{}dto123===========",dto);
+        boolean b = accuseService.accuseUser(dto);
+
+        return b;
 
 
-        return "admin/accuseModal";
     }
 }

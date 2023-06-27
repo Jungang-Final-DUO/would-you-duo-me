@@ -316,6 +316,7 @@ public class UserController {
 
 
 
+
     @PostMapping("/user/ban")
     @ResponseBody
     public ResponseEntity<?> changeBanStatus(HttpSession session, @RequestBody UserModifyRequestDTO dto) {
@@ -327,7 +328,6 @@ public class UserController {
 
         return ResponseEntity.ok().body(b);
     }
-
 
 
         // 유저 전적 페이지 이동

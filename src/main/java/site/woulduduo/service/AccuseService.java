@@ -146,6 +146,11 @@ public class AccuseService {
         String userAccount = dto.getUserAccount();
         User byUserAccount = userRepository.findByUserAccount(userAccount);
 
+        //정보 없으면 false;
+        if(byUserAccount==null){
+            return false;
+        }
+
         Accuse entity = dto.toEntity();
         entity.setUser(byUserAccount);
 

@@ -519,10 +519,7 @@ public class UserService {
         return byUserNickName;
     }
 
-//    public boolean changeUserPoint(UserModifyRequestDTO dto){
-//
-//        return false;
-//    }
+
 
     /**
      * 사용자의 듀오 정보를 구하는 메서드
