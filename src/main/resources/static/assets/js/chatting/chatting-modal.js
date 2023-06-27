@@ -139,7 +139,6 @@ async function renderChattingList(result) {
             console.log(myNickname);
             console.log(chattingFrom);
             if (chattingFrom !== myNickname) {
-                const flag = await searchPointHistory(matchingNo);
                 const matching_accept_btn = document.createElement('button');
                 matching_accept_btn.classList.add('matching-accept-btn');
                 matching_accept_btn.dataset.matchingStatus = matchingStatus;
@@ -182,6 +181,7 @@ async function renderChattingList(result) {
                         break;
 
                     case 'DONE':
+                        const flag = await searchPointHistory(matchingNo);
                         console.log('왜?');
                         matching_accept_btn.dataset.matchingNo = matchingNo;
                         console.log(flag);

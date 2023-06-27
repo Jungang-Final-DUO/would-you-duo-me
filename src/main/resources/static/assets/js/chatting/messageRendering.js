@@ -88,6 +88,8 @@ export function outputMessage(message) {
             getRecentMatchingNo(room.id);
             matchingBtn.disabled = false;
             matchingBtn.dataset.matchingStatus = message.matchingStatus;
+            document.querySelector('.chatting-handshake-img').src = '/assets/img/chattingModal/checkmark.png';
+            document.querySelector('.chatting-handshake-img').alt = '매칭수락이미지';
             matchingBtn.childNodes[1].nodeValue = `포인트 받기`;
         }
 
