@@ -13,7 +13,7 @@ export function getChattingList() {
 function makeChatting(chat) {
     const userId = document.getElementById('loginUserInfo').dataset.userAccount;
 
-    chat.onclick = () => {
+    chat.onclick = (e) => {
         const userAccount = chat.closest('.duo-profile').id;
         console.log('makeChatting 도달');
         const requestInfo = {
@@ -28,8 +28,13 @@ function makeChatting(chat) {
             .then(res => res.json())
             .then(result => {
                 // result = 생성된 채팅번호
-                getChattingList();
+                console.log(result);
                 document.getElementById('chatting-btn').click();
+                setTimeout(function (){
+                    const chatting = document.getElementById(result);
+                    chatting.querySelector('.modal-btn').click();
+                    }, 200);
+
             });
     }
 }

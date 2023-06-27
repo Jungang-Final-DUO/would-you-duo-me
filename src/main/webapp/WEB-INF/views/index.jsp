@@ -92,7 +92,7 @@
     <div id="profile-cards-wrapper">
         <!--        프로필 카드 한 장 -->
 <!--        가장 바깥 div에 유저아이디 넣기 -->
-        <div id = "test1@test.com" class="duo-profile">
+        <div id = "test5@test.com" class="duo-profile">
             <img class="duo-tier" src="/assets/img/main/TFT_Regalia_Challenger.png" alt="tier">
             <!--            프로필 카드 좌측 -->
              <div class="profile-left-side">
@@ -140,7 +140,7 @@
         <!--        아래부터는 지워도 되는 부분입니다 --------------------------------------------------------------------->
         <!--        프로필 카드 한 장 -->
         <!--        가장 바깥 div에 유저아이디 넣기 -->
-        <div id = "test2@test.com" class="duo-profile">
+        <div id = "test@test.com" class="duo-profile">
             <img class="duo-tier" src="/assets/img/main/TFT_Regalia_Challenger.png" alt="tier">
             <!--            프로필 카드 좌측 -->
             <div class="profile-left-side">
