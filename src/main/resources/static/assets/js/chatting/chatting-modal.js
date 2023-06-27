@@ -1,12 +1,12 @@
 import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 import {renderRateModal} from "../review/write-rate.js";
 
-export function getChattingList() {
+export async function getChattingList() {
     // 추후 session에 회원정보 담기면 경로 수정
     const userId = document.getElementById('loginUserInfo').dataset.userAccount;
-    fetch(`/api/v1/chat/chattings/${userId}`)
+    await fetch(`/api/v1/chat/chattings/${userId}`)
         .then(res => res.json())
-        .then(result => renderChattingList(result))
+        .then(result => renderChattingList(result));
 }
 
 // 채팅 클릭했을때 메세지창 열어줘야함
@@ -26,15 +26,14 @@ function makeChatting(chat) {
 
         fetch(`/api/v1/chat/chattings/${userAccount}`, requestInfo)
             .then(res => res.json())
-            .then(result => {
+            .then(async result => {
                 // result = 생성된 채팅번호
                 console.log(result);
-                document.getElementById('chatting-btn').click();
-                setTimeout(function (){
-                    const chatting = document.getElementById(result);
-                    chatting.querySelector('.modal-btn').click();
-                    }, 200);
-
+                await getChattingList();
+                document.querySelector('.chatting-modal-dialog').open = true;
+                const chatting = document.getElementById(result);
+                console.log(chatting);
+                chatting.querySelector('.modal-btn').click();
             });
     }
 }
