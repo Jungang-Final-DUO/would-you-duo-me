@@ -14,12 +14,48 @@ export function matchingRequestEvent(){
             switch (matchingStatus){
                 case 'null' :
                 case 'REJECT' :
-                    await matchingRequest($chattingNo);
-                    sendNoticeMessage($chattingNo , '듀오 매칭을 요청합니다');
+                    await checkIsPossible($chattingNo, $matchingNo);
                     break;
                 case 'CONFIRM' : gameDone($chattingNo, $matchingNo); break;
             }
         });
+}
+
+//매칭 신청 가능여부 확인
+function checkIsPossible(chattingNo, matchingNo){
+
+    fetch(`/api/v1/points/check/${chattingNo}`)
+        .then(res => res.json())
+        .then(result => {
+            if(result < 0) {
+                alert('포인트가 부족하여 매칭을 신청할 수 없습니다..');
+            } else {
+                payPoint(chattingNo, matchingNo);
+            }
+        })
+
+}
+
+//포인트 차감
+function payPoint(chattingNo, matchingNo){
+    const payload = {
+        chattingNo : chattingNo,
+        matchingNo : matchingNo
+    }
+    const requestInfo = {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    }
+    fetch(`/api/v1/points/pay`, requestInfo)
+        .then(res => res.json())
+        .then(point => {
+            alert(`${point}를 사용하였습니다!`);
+            matchingRequest(chattingNo);
+            sendNoticeMessage(chattingNo , '듀오 매칭을 요청합니다');
+        })
 }
 
 // 요청을 받은 사람의 이벤트
@@ -169,14 +205,11 @@ function matchingRequest(chattingNo){
         body: chattingNo
     }
 
-    return fetch(`/api/v1/matchings`, requestInfo)
+    fetch(`/api/v1/matchings`, requestInfo)
         .then(res => res.json())
         .then(result => {
             changeMatchingStatus(chattingNo, result);
         });
-            // .then(
-        //     chattingNo => sendNoticeMessage(chattingNo, '듀오 매칭을 요청합니다')
-    // );
 }
 
 //REQUEST -> CONFIRM으로 상태 변경
