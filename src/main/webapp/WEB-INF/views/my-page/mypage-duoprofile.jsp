@@ -28,9 +28,14 @@
             <div id="my-page-content">
                 <div id="duo-profile-box">
                     <!--        프로필 사진 -->
-                    <img id="duo-tier-image" src="/assets/img/mypage/TFT_Regalia_Challenger.png" alt="tier">
+                    <!-- <img id="duo-tier-image" src="/assets/img/mypage/TFT_Regalia_Challenger.png" alt="tier"> -->
                     <div id="duo-image-frame">
-                        <img id="duo-profile-image" src="/assets/img/mypage/user-profile.jpg" alt="profile-image">
+                        <c:if test="${login.userProfileImg != null}">
+                            <img id="duo-profile-image" src="${login.userProfileImg}" alt="profile-image">
+                        </c:if>
+                        <c:if test="${login.userProfileImg == null}">
+                            <img id="duo-profile-image" src="/assets/img/main/basic-profile.png" alt="profile-image">
+                        </c:if>
                     </div>
                     <!-- 포지션 선택 및 자기소개 -->
                     <div id="position-comment-box">
@@ -71,8 +76,8 @@
                 </div>
             </div>
         </div>
-        <%@ include file="../common/footer.jsp" %>
     </div>
+    <%@ include file="../common/footer.jsp" %>
 </body>
 
 </html>
