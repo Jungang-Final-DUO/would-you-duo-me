@@ -90,7 +90,7 @@ public class MatchingController {
 
     //매칭 거절
     @RequestMapping(value = "/reject", method = {RequestMethod.PUT, RequestMethod.PATCH})
-    public ResponseEntity<?> rejectMatching(long matchingNo){
+    public ResponseEntity<?> rejectMatching(@RequestBody long matchingNo){
         boolean flag = matchingService.rejectMatching(matchingNo);
         return ResponseEntity.ok().body(flag);
     }
