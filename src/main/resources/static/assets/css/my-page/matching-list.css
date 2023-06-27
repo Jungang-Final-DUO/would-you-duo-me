@@ -59,13 +59,21 @@ h2 {
     margin-bottom: 20px;
 }
 
+.matching-grid::-webkit-scrollbar {
+    display: none;
+}
+
 .matching-grid {
+    overflow: scroll;
+
     display: grid;
     grid-template-columns: 1.5fr 1fr 2.5fr;
+    grid-auto-rows: 10%;
 
     background-color: #3F4A5B;
     border-radius: 10px;
     padding: 30px;
+    height: 500px;
 
     text-align: center;
 }
@@ -148,4 +156,16 @@ h2 {
 
 .writer-review:hover {
     border: 1px solid #ffff;
+}
+
+.review-write-btn {
+    color: white;
+    background: #142F57;
+    border-radius: 5px;
+    padding: 5px 10px;
+
+    width: fit-content;
+    height: fit-content;
+    margin: 0 auto;
+
 }

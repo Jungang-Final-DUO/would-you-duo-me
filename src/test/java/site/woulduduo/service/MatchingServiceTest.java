@@ -60,6 +60,7 @@ class MatchingServiceTest {
     @Test
     @DisplayName("매칭을 확정하면 매칭일자가 입력되고 상태를 CONFIRM으로 변경한다")
     void fixScheduleTest() {
+        for (int i = 199; i <240 ; i++) {
         MatchingFixRequestDTO dto = MatchingFixRequestDTO.builder()
                 .matchingNo(3L)
                 .matchingDate("2023-07-19")
@@ -67,6 +68,8 @@ class MatchingServiceTest {
         boolean flag = matchingService.fixSchedule(dto);
         Matching rejected = matchingRepository.findByMatchingNo(dto.getMatchingNo());
         assertEquals(MatchingStatus.CONFIRM, rejected.getMatchingStatus());
+
+        }
     }
 
     //매칭 완료하기
@@ -123,7 +126,7 @@ class MatchingServiceTest {
     @Test
     @DisplayName("test1@example.com이 받은 모든 채팅에 대해 매칭을 생성해야 한다.")
     void makeBulkMatchingTest() {
-        for (long i = 104; i < 200; i++) {
+        for (long i = 204; i < 250; i++) {
             matchingService.makeMatching(i);
         }
 
@@ -132,12 +135,12 @@ class MatchingServiceTest {
     @Test
     @DisplayName("test1@example.com이 받은 모든 매칭에 대해 리뷰를 생성한다")
     void writeBulkReviewTest() {
-        for (long i = 103; i < 150; i++) {
+        for (long i = 199; i < 240; i++) {
             ReviewWriteRequestDTO dto = new ReviewWriteRequestDTO();
             dto.setMatchingNo(i);
             dto.setReviewRate((int) (Math.random() * 5 + 1));
             dto.setReviewContent("리뷰내용" + i);
-            matchingService.writeReview("user" + (i - 102L), dto);
+            matchingService.writeReview("ahri@ahri.com", dto);
         }
     }
 

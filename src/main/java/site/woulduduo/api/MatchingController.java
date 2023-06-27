@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import site.woulduduo.dto.request.chatting.MatchingFixRequestDTO;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.user.MyPageReviewResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
 import site.woulduduo.entity.Matching;
 import site.woulduduo.service.MatchingService;
@@ -52,13 +53,13 @@ public class MatchingController {
     }
 
     /**
-     * 유저가 받은 리뷰를 가져오는 메서드
+     * 유저가 받은 리뷰를 전적 페이지에 가져오는 메서드
      *
      * @param userAccount - 해당 유저
-     * @return - 유저가 쓴 리뷰 목록을 담은 응답
+     * @return - 유저가 받은 리뷰 목록을 담은 응답
      */
     @GetMapping("/reviews/{userAccount}/{pageNo}")
-    public ResponseEntity<?> getWrittenReview(
+    public ResponseEntity<?> getGottenReview(
             @PathVariable String userAccount,
             @PathVariable int pageNo
     ) {
@@ -66,16 +67,67 @@ public class MatchingController {
         ListResponseDTO<UserReviewResponseDTO, Matching> responseDTO = null;
         try {
             responseDTO = matchingService.getGottenReview(userAccount, pageNo);
+            return ResponseEntity.ok(responseDTO);
         } catch (RuntimeException e) {
-            ResponseEntity.internalServerError().body("알 수 없는 에러가 발생했습니다");
+            return ResponseEntity.internalServerError().body("알 수 없는 에러가 발생했습니다");
         }
 
-        return ResponseEntity.ok(responseDTO);
+    }
+
+    /**
+     * 유저가 받은 리뷰를 전적 페이지에 가져오는 메서드
+     *
+     * @param userAccount - 해당 유저
+     * @return - 유저가 받은 리뷰 목록을 담은 응답
+     */
+    @GetMapping("/reviews/gotten/{userAccount}/{pageNo}")
+    public ResponseEntity<?> getGottenReviewOnMyPage(
+            @PathVariable String userAccount,
+            @PathVariable int pageNo
+    ) {
+
+        log.info("/api/v1/matchings/reviews/gotten/{} {} ", userAccount, pageNo);
+
+        ListResponseDTO<MyPageReviewResponseDTO, Matching> responseDTO = null;
+        try {
+            responseDTO = matchingService.getGottenReviewOnMyPage(userAccount, pageNo);
+            log.info("gotten responseDTO : {}", responseDTO);
+            return ResponseEntity.ok(responseDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.internalServerError().body("알 수 없는 에러가 발생했습니다");
+        }
+
+    }
+
+    /**
+     * 유저가 쓴 리뷰를 마이 페이지에 가져오는 메서드
+     *
+     * @param userAccount - 해당 유저
+     * @param pageNo      - 페이지 번호
+     * @return - 유저가 쓴 리뷰를 담은 응답
+     */
+    @GetMapping("/reviews/written/{userAccount}/{pageNo}")
+    public ResponseEntity<?> getWrittenReviewOnMyPage(
+            @PathVariable String userAccount,
+            @PathVariable int pageNo
+    ) {
+
+        log.info("/api/v1/matchings/reviews/written/{} {} ", userAccount, pageNo);
+
+        ListResponseDTO<MyPageReviewResponseDTO, Matching> responseDTO = null;
+        try {
+            responseDTO = matchingService.getWrittenReviewOnMyPage(userAccount, pageNo);
+            log.info("written responseDTO : {}", responseDTO);
+            return ResponseEntity.ok(responseDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.internalServerError().body("알 수 없는 에러가 발생했습니다");
+        }
+
     }
 
     // 매칭 신청
     @PostMapping
-    public ResponseEntity<?> makeMatching(@RequestBody long chattingNo){
+    public ResponseEntity<?> makeMatching(@RequestBody long chattingNo) {
         long matchingNo = matchingService.makeMatching(chattingNo);
         return ResponseEntity.ok().body(matchingNo);
     }
