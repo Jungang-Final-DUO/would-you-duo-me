@@ -1,6 +1,6 @@
 // 모든 모달 버튼에 이벤트를 등록하는 함수
 import {getMessages} from "../chatting/messageRendering.js";
-import {getChattingList} from "../chatting/chatting-modal.js";
+import {getChattingList, renderTotalUnreadMessages, renderUnreadMessages} from "../chatting/chatting-modal.js";
 
 export function modalHandler($modalBtn) {
 

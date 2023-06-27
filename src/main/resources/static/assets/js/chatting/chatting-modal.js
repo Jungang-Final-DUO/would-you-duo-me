@@ -297,9 +297,36 @@ export function renderUnreadMessages(chattingNo) {
     fetch(`/api/v1/chat/messages/unread/${userId}/${chattingNo}`)
         .then(res => res.json())
         .then(unread => {
-            $target.innerText = unread;
+            if(unread === 0){
+                $target.style.display = 'none';
+            } else if (unread >= 0 && unread <= 200) {
+                $target.style.display = 'block';
+                $target.innerText = unread;
+            } else {
+                $target.style.display = 'block';
+                $target.innerText = '200+';
+            }
         })
 
+}
+
+export function renderTotalUnreadMessages(){
+    const userId = document.getElementById('loginUserInfo').dataset.userAccount;
+    const $target = document.getElementById('unread-chatting-count');
+    fetch(`/api/v1/chat/messages/unread/${userId}`)
+        .then(res => res.json())
+        .then(totalUnread => {
+            console.log(totalUnread);
+            if(totalUnread === 0){
+                $target.style.display = 'none';
+            } else if (totalUnread >= 0 && totalUnread <= 200) {
+                $target.style.display = 'block';
+                $target.innerText = totalUnread;
+            } else {
+                $target.style.display = 'block';
+                $target.innerText = '200+';
+            }
+        })
 }
 
 //해당 매칭으로 포인트 지급 받았는지 확인

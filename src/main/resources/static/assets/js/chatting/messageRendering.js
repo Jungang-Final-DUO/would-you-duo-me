@@ -1,4 +1,4 @@
-import {renderUnreadMessages} from "./chatting-modal.js";
+import {renderTotalUnreadMessages, renderUnreadMessages} from "./chatting-modal.js";
 import {getRecentMatchingNo, matchingRequestEvent, matchingResponseEvent} from "./matching.js";
 
 export function scrollDown() {
@@ -111,7 +111,7 @@ export function outputMessage(message) {
 
 //DB에서 메세지 읽어오기
 export function getMessages(room) {
-
+    renderTotalUnreadMessages();
     const userId = document.getElementById('loginUserInfo').dataset.userAccount;
 
     fetch(`/api/v1/chat/messages/${userId}/${room}`)

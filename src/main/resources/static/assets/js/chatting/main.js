@@ -1,5 +1,5 @@
 import {outputMessage, saveMessage, scrollDown} from "./messageRendering.js";
-import {renderUnreadMessages} from "./chatting-modal.js";
+import {renderTotalUnreadMessages, renderUnreadMessages} from "./chatting-modal.js";
 
 export function connectSocket() {
     const socket = io("http://localhost:3000");
@@ -7,7 +7,11 @@ export function connectSocket() {
     socket.on('message', message => {
 
         outputMessage(message);
-        renderUnreadMessages(message.room);
+        const chat_list = document.querySelector('.chatting-modal-dialog');
+        if(chat_list.hasAttribute('open')){
+            renderUnreadMessages(message.room);
+        }
+        renderTotalUnreadMessages();
         scrollDown();
     });
 

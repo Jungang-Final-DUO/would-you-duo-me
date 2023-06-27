@@ -170,4 +170,15 @@ public class ChattingService {
     public Chatting findByChattingNo(long chattingNo) {
         return chattingRepository.findByChattingNo(chattingNo);
     }
+
+    public int getTotalUnreadMessageCount(User user) {
+        List<Chatting> toList = chattingRepository.findByChattingTo(user);
+        List<Chatting> fromList = chattingRepository.findByChattingFrom(user);
+        List<Chatting> chattingList = Stream.concat(fromList.stream(), toList.stream()).collect(Collectors.toList());
+        int totalUnread = 0;
+        for (Chatting chat : chattingList) {
+            totalUnread += messageRepository.countByChattingAndUserIsNotAndMessageIsRead(chat, user, false);
+        }
+        return totalUnread;
+    }
 }

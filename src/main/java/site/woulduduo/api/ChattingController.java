@@ -65,7 +65,7 @@ public class ChattingController {
         return ResponseEntity.ok().body(flag);
     }
 
-    //안읽은 메세지 개수 읽어오기
+    //채팅별 안읽은 메세지 개수 읽어오기
     // 추후 session에 회원정보 담기면 경로 수정
     @GetMapping("/messages/unread/{userId}/{chattingNo}")
     public ResponseEntity<?> getUnreadMessageCount(
@@ -78,6 +78,15 @@ public class ChattingController {
         int unreadMessages = chattingService.countUnreadMessages(chatting, user);
 
         return ResponseEntity.ok().body(unreadMessages);
+    }
+
+    // 전체 안읽은 메세지 개수 읽어오기
+    @GetMapping("/messages/unread/{userId}")
+    public ResponseEntity<?> getTotalUnreadMessageCount(@PathVariable String userId){
+        User user = userRepository.findById(userId).orElseThrow();
+        int totalUnreadMessages = chattingService.getTotalUnreadMessageCount(user);
+
+        return ResponseEntity.ok().body(totalUnreadMessages);
     }
 
     // 최신 메세지 읽어오기
