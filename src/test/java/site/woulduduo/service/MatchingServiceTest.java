@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import site.woulduduo.dto.request.accuse.MatchingFixRequestDTO;
+import site.woulduduo.dto.request.matching.MatchingFixRequestDTO;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
