@@ -1,6 +1,5 @@
 package site.woulduduo.repository;
 
-import org.apache.ibatis.javassist.ByteArrayClassPath;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ import site.woulduduo.enumeration.Tier;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @Rollback(false)
@@ -68,29 +65,30 @@ class ReplyRepositoryTest {
                 .user(save2)
                 .boardTitle("게시글제목1")
                 .boardContent("게시글내용1")
-                .boardCategory(BoardCategory.ACCUSE)
+                .boardCategory(BoardCategory.NOTICE)
                 .build();
 
-        Board board = boardRepository.save(board2);
+        Board save = boardRepository.save(board2);
+
 
 
         //댓글 객체 생성
         Reply reply = Reply.builder()
                 .user(save2)
                 .replyContent("댓글1")
-                .board(board2)
+                .board(save)
                 .build();
 
         Reply reply1 = Reply.builder()
                 .user(save2)
                 .replyContent("댓글2")
-                .board(board2)
+                .board(save)
                 .build();
 
         Reply reply2 = Reply.builder()
                 .user(save2)
                 .replyContent("댓글3")
-                .board(board2)
+                .board(save)
                 .build();
 
         //댓글저장

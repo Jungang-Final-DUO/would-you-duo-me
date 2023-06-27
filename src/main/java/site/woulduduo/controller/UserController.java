@@ -2,12 +2,15 @@ package site.woulduduo.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import site.woulduduo.aws.S3Service;
+import site.woulduduo.dto.request.page.PageDTO;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,23 +19,27 @@ import site.woulduduo.dto.request.login.LoginRequestDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
-import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
+import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.user.*;
+import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.LoginResult;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
+import site.woulduduo.service.UserService;
+
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.EmailService;
-import site.woulduduo.service.UserService;
 import site.woulduduo.util.upload.FileUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 import static site.woulduduo.enumeration.LoginResult.SUCCESS;
 import static site.woulduduo.util.LoginUtil.isAutoLogin;
@@ -43,17 +50,45 @@ import static site.woulduduo.util.LoginUtil.isLogin;
 @RequiredArgsConstructor
 public class UserController {
 
-    @Value("${file.upload.root-path}")
-    private String rootPath;
+//    @Value("${file.upload.root-path}")
+//    private String rootPath;
 
     private final UserService userService;
     private final EmailService emailService;
     private final UserRepository userRepository;
+    private final S3Service s3Service;
 
-//    메인페이지로 이동
-    @GetMapping("/main")
-    public String test(){
-        return "index";
+    // 메인페이지 - 프로필 카드 불러오기(비동기)
+    @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
+    public ResponseEntity<?> getUserProfileList(@PathVariable int page, @PathVariable String keyword, @PathVariable int size
+            , @PathVariable String position, @PathVariable String gender
+            , @PathVariable String tier, @PathVariable String sort/*, HttpSession session*/) {
+
+
+        System.out.println(keyword + position + gender + tier + sort);
+
+        UserSearchType userSearchType = new UserSearchType();
+        userSearchType.setPage(page);
+        userSearchType.setSize(size);
+        if (!keyword.equals("-")) {
+            userSearchType.setKeyword(keyword);
+        }
+        if (!position.equals("all")) {
+            userSearchType.setPosition(Position.valueOf(position));
+        }
+        if (!gender.equals("all")) {
+            userSearchType.setGender(Gender.valueOf(gender));
+        }
+        if (!tier.equals("all")) {
+            userSearchType.setTier(Tier.valueOf(tier));
+        }
+        if (!keyword.equals("all")) {
+            userSearchType.setSort(sort);
+        }
+        List<UserProfileResponseDTO> userServiceUserProfileList = userService.getUserProfileList(userSearchType);
+        System.out.println("userServiceUserProfileList = " + userServiceUserProfileList);
+
+        return ResponseEntity.ok().body(userServiceUserProfileList);
     }
 
     // 회원 가입 양식 요청
@@ -76,8 +111,14 @@ public class UserController {
             MultipartFile profileImage = profileImages[i];
             if (!profileImage.isEmpty()) {
                 // 업로드된 파일을 실제 로컬 저장소에 업로드하는 로직
-                String savePath = FileUtil.uploadFile(profileImage, rootPath);
-                savePaths[i] = savePath;
+//                String savePath = FileUtil.uploadFile(profileImage, rootPath);
+//                savePaths[i] = savePath;
+                String fileName = UUID.randomUUID() + "_" + profileImage.getOriginalFilename();
+                try {
+                    savePaths[i] = s3Service.uploadToBucket(profileImage.getBytes(), fileName);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -87,7 +128,7 @@ public class UserController {
         // UserRegisterRequestDTO를 UserService의 회원가입 메서드로 전달하여 저장
         userService.register(dto);
 
-        return "redirect:/user/sign-in";
+        return "redirect:/";
     }
 
     // 아이디(이메일), 닉네임, 소환사아이디 중복검사
@@ -108,24 +149,15 @@ public class UserController {
             default:
                 throw new IllegalArgumentException("잘못된 검사 타입입니다.");
         }
-
         return ResponseEntity.ok(isDuplicate); // 중복되지 않은 경우에 true 반환
-    }
-
-    // 로그인 양식 요청
-    @GetMapping("/user/sign-in")
-    public String signIn(HttpServletRequest request) {
-        log.info("/user/sign-in GET");
-        String referer = request.getHeader("Referer");
-        return "index";
     }
 
     // 로그인 검증 요청
     @PostMapping("/user/sign-in")
     public String signIn(LoginRequestDTO dto
-                        , RedirectAttributes ra
-                        , HttpServletResponse response
-                        , HttpServletRequest request
+            , RedirectAttributes ra
+            , HttpServletResponse response
+            , HttpServletRequest request
     ) {
 
         log.info("/user/sign-in POST ! - {}", dto);
@@ -139,14 +171,14 @@ public class UserController {
             userService.maintainLoginState(
                     request.getSession(), dto.getUserAccount());
 
-            return "redirect:/main";
+            return "redirect:/";
         }
 
         // 1회용으로 쓰고 버릴 데이터
         ra.addAttribute("msg", result);
 
         // 로그인 실패시
-        return "redirect:/user/sign-in";
+        return "redirect:/";
     }
 
     // 로그아웃 요청 처리
@@ -168,9 +200,9 @@ public class UserController {
 
             // 세션 초기화
             session.invalidate();
-            return "redirect:/main";
+            return "redirect:/";
         }
-        return "redirect:/user/sgin-in";
+        return "redirect:/";
     }
 
 
@@ -187,12 +219,6 @@ public class UserController {
 //        log.info("profileDeleteRequestDTO : {}", dto);
 //        return ResponseEntity.ok().build();
 //    }
-
-
-
-
-
-
 
 
     // 마이페이지 - 프로필 카드 등록페이지 열기
@@ -213,18 +239,29 @@ public class UserController {
         return "redirect:/user/register-duo";
     }
 
+    // 마이 페이지 - 쓴 리뷰 페이지 열기
+    @GetMapping("/user/matching-list")
+    public String showMatchingList(HttpSession session) {
+        return "my-page/matching-list";
+    }
+
     @GetMapping("/user/admin")
     //관리자 페이지 열기
     public String showAdminpage(/*HttpSession session, */Model model) {
-        Map<String, Integer> countByAdmin = userService.countByAdmin();
-        model.addAttribute("count", countByAdmin);
-        countByAdmin.get("ua");
+        AdminPageResponseDTO adminPageInfo = userService.getAdminPageInfo();
+        model.addAttribute("count", adminPageInfo);
         return "admin/admin";
     }
 
     //관리자 페이지 리스트 가져오기
-    public ResponseEntity<?> getUserListByAdmin(/*AdminSearchType type*/) {
-        List<UserByAdminResponseDTO> userListByAdmin = userService.getUserListByAdmin();
+    @GetMapping("/api/v1/users/admin")
+    public ResponseEntity<?> getUserListByAdmin(
+            @PathVariable PageDTO dto) {
+
+        ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
+
+
+        log.info("/api/v1/users/admin/");
 
 
         return ResponseEntity
@@ -232,13 +269,17 @@ public class UserController {
                 .body(userListByAdmin);
     }
 
-//    @GetMapping("/user/detail/admin")
-//    //관리자 페이지 자세히 보기
-//    public String showDetailByAdmin(HttpSession session,Model model, String userAccount){
-//
-//        return "";
-//    }
-//
+
+    @GetMapping("/user/detail/admin")
+    //관리자 페이지 자세히 보기
+    public String showDetailByAdmin(HttpSession session, Model model, String userAccount) {
+        UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userAccount);
+
+        model.addAttribute("udByAdmin", userDetailByAdmin);
+        return "admin/admin_user";
+
+    }
+
 //    @GetMapping("/user/ban")
 //    public String changeBanStatus(HttpSession session, String userAccount){
 //
@@ -251,36 +292,20 @@ public class UserController {
 //        return "";
 //    }
 
-    @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
-    public ResponseEntity<?> getUserProfileList(int page, String keyword, int size, Position position, Gender gender, Tier tier, String sort/*, HttpSession session*/) {
-//        UserSearchType userSearchType = UserSearchType.builder()
-//                .position(Position.MID)
-//                .gender(Gender.M)
-//                .tier(Tier.DIA)
-//                .sort("avgRate")
-//                .build();
 
-        UserSearchType userSearchType = new UserSearchType();
-        userSearchType.setPosition(position);
-        userSearchType.setGender(gender);
-        userSearchType.setTier(tier);
-        userSearchType.setSort(sort);
+    // 유저 전적 페이지 이동
+    @GetMapping("/user/user-history")
+    public String showUserHistory(HttpSession session, Model model, String userAccount) {
 
-        return ResponseEntity.ok().body(userService.getUserProfileList(userSearchType));
+        log.info("/user/history?userAccount={} GET", userAccount);
+
+        UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
+
+        model.addAttribute("history", dto);
+
+        return "user/user-history";
+
     }
 
-        // 유저 전적 페이지 이동
-        @GetMapping("/user/user-history")
-        public String showUserHistory (HttpSession session, Model model, String userAccount){
-
-            log.info("/user/history?userAccount={} GET", userAccount);
-
-            UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
-
-            model.addAttribute("history", dto);
-
-            return "user/user-history";
-
-        }
-    }
+}
 

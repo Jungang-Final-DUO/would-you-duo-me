@@ -38,8 +38,8 @@ class ChattingServiceTest {
     @DisplayName("채팅 데이터 1개 생성")
     void makeChattingTest(){
 
-        String userAccount = "user1";
-        String me = "user3";
+        String userAccount = "test1";
+        String me = "test3";
 
         long chattingNo = chattingService.makeChatting(me, userAccount);
 
@@ -49,10 +49,10 @@ class ChattingServiceTest {
     @Test
     @DisplayName("채팅 데이터 많이 생성")
     void makeBulkChattingTest() {
-        String chattingTo = "test1@example.com";
+        String chattingTo = "ahri@ahri.com";
 
-        for (int i = 0; i < 100; i++) {
-            String chattingFrom = "user" + i;
+        for (int i = 1; i < 100; i++) {
+            String chattingFrom = "acvd" + i;
 
             chattingService.makeChatting(chattingFrom, chattingTo);
 

@@ -20,7 +20,6 @@ import java.util.List;
 @RequestMapping("/api/v1/chat")
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:3000")
 public class ChattingController {
 
     private final ChattingService chattingService;
@@ -33,7 +32,7 @@ public class ChattingController {
     public ResponseEntity<?> getChattingList(
 //            HttpSession session
             @PathVariable String userId
-            ){
+    ){
         User user = userRepository.findById(userId).orElseThrow();
         List<ChattingListResponseDTO> chattingList = chattingService.getChattingList(user);
 
@@ -91,7 +90,7 @@ public class ChattingController {
         return ResponseEntity.ok().body(recentMessage);
     }
 
-//    채팅 신청하기
+    //    채팅 신청하기
     @PostMapping("/chattings/{userAccount}")
     public ResponseEntity<?> makeChatting(
             //            HttpSession session

@@ -44,15 +44,17 @@ public class ChattingService {
         System.out.println("me : " + me);
         User chattingUser = userRepository.findById(userAccount).orElseThrow();
 
-        // 채팅 데이터를 생성하기 전에 이미 존재하는 채팅인지 검사
+        // 채팅 데이터를 생성하기 전에 이미 존재하는 채팅인지 검사(단방향)
         Chatting chattingFrom = chattingRepository.findByChattingFromAndChattingTo(/*session.getAttribute()*/ me, chattingUser);
         System.out.println("chattingFrom = " + chattingFrom);
-        Chatting chattingTo = chattingRepository.findByChattingFromAndChattingTo(chattingUser, /*session.getAttribute()*/ me);
-        System.out.println("chattingTo = " + chattingTo);
-        if (chattingFrom != null || chattingTo != null) {
+//        Chatting chattingTo = chattingRepository.findByChattingFromAndChattingTo(chattingUser, /*session.getAttribute()*/ me);
+//        System.out.println("chattingTo = " + chattingTo);
+        if (myName.equals(userAccount)) {
+            System.out.println("나와의 채팅!?");
+            chattingNo = 0;
+        }else if (chattingFrom != null) {
             System.out.println("이미 존재하는 채팅내역임");
-            chattingNo = chattingFrom != null ? chattingFrom.getChattingNo() : chattingTo.getChattingNo();
-
+            chattingNo = chattingFrom.getChattingNo();
         } else {
             // 존재하지 않으면 데이터 생성
             Chatting chatting = Chatting.builder()
@@ -107,12 +109,12 @@ public class ChattingService {
         }
 
 //        메세지 내역 가져오기
-        chattingResponseDTO.setMessageList(messageService.getMessages(chatting, user));
+        chattingResponseDTO.setMessageList(messageService.getMessages(chatting));
 
         return chattingResponseDTO;
     }
 
-//  대표 프로필 사진 가져오기
+    //  대표 프로필 사진 가져오기
     public static String getRepresentativeProfile(User user) {
         List<UserProfile> profileList = null;
         try {
@@ -133,11 +135,13 @@ public class ChattingService {
     ) {
 //       내가 보낸 채팅
         List<Chatting> fromList = chattingRepository.findByChattingFrom(user);
+        fromList.forEach(messageService::getMessages);
 //       내가 받은 채팅
         List<Chatting> toList = chattingRepository.findByChattingTo(user);
-
+        toList.forEach(messageService::getMessages);
 //       보낸 채팅 받은 채팅 합치고 최신 메세지순으로 정렬
-        List<Chatting> chattingList = Stream.concat(fromList.stream(), toList.stream()).sorted(Chatting::compareTo).collect(Collectors.toList());
+        List<Chatting> chattingList = Stream.concat(fromList.stream(), toList.stream())
+                .sorted(Chatting::compareTo).collect(Collectors.toList());
         List<ChattingListResponseDTO> dtoList = chattingList.stream()
                 .map(ChattingListResponseDTO::new)
                 .collect(Collectors.toList());

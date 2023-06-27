@@ -1,74 +1,78 @@
 package site.woulduduo.repository;
 
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import site.woulduduo.dto.request.page.UserSearchType;
-import site.woulduduo.dto.response.ListResponseDTO;
-import site.woulduduo.dto.response.user.UserProfilesResponseDTO;
+import site.woulduduo.dto.response.user.UserProfileResponseDTO;
+import site.woulduduo.entity.QMostChamp;
 import site.woulduduo.entity.QUser;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    QUser user =  QUser.user;
-
+    private final QUser user =  QUser.user;
+    private final QMostChamp mostChamp = QMostChamp.mostChamp;
 
     @Override
-    public List<UserProfilesResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/) {
-
+    public List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/) {
+        System.out.println("IMPLPosition = " + userSearchType.getPosition());
+        System.out.println("IMPLKeyword = " + userSearchType.getKeyword());
         List<User> userList = queryFactory.selectFrom(user)
+                .join(user.mostChampList, mostChamp).fetchJoin()
                 .where(keywordContains(userSearchType.getKeyword())
                         , positioneq(userSearchType.getPosition())
                         , gendereq(userSearchType.getGender())
                         , tiereq(userSearchType.getTier())
                         , user.userMatchingPoint.isNotNull()
                 )
-                .offset(userSearchType.getPage())
+                .offset(checkPage(userSearchType.getPage()))
                 .limit(userSearchType.getSize())
-                .orderBy(user.userAvgRate.desc())
+//                .orderBy(user.userAvgRate.desc())
                 .fetch();
-
-        List<UserProfilesResponseDTO> userProfiles = new ArrayList<>();
+        log.info("### userList ###: {}", userList);
+    // select 로 불러온 user 리스트 UserProfilesResponseDTO로 변환해 리스트에 담아주기
+        List<UserProfileResponseDTO> userProfiles = new ArrayList<>();
         for (User user : userList) {
-            UserProfilesResponseDTO dto = UserProfilesResponseDTO.builder()
+            UserProfileResponseDTO dto = UserProfileResponseDTO.builder()
                     .userAccount(user.getUserAccount())
                     .userGender(user.getUserGender())
                     .userComment(user.getUserComment())
                     .userMatchingPoint(user.getUserMatchingPoint())
-                    .tier(user.getLolTier())
+                    .tier(String.valueOf(user.getLolTier()))
                     .userInstagram(user.getUserInstagram())
                     .userFacebook(user.getUserFacebook())
                     .userTwitter(user.getUserTwitter())
-//                    .isFollowed(user.get)
                     .userPosition(user.getUserPosition())
                     .userNickname(user.getUserNickname())
                     .avgRate(user.getUserAvgRate())
-//                    .profileImage()
+                    .mostChampList(user.getMostChampList())
+                    .profileImage((user.getUserProfileList().size() == 0)? "basic" : user.getUserProfileList().get(0).getProfileImage())
                     .build();
 
-            userProfiles.add(dto);
+                    userProfiles.add(dto);
         }
 
-        for (User user : userList) {
-        System.out.println("Repository QueryDSL user = " + user);
-
-        }
 
         return userProfiles;
+    }
+
+    // 2페이지부터 offset 조정
+    private Long checkPage(int page) {
+        return page == 1 ? 0 : ((long)page - 1) * 20;
     }
 
     // 티어 파라미터가 null인지 체크
@@ -84,9 +88,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
     // 포지션 파라미터가 null인지 체크
     private BooleanExpression positioneq(Position position) {
-        String sPosition = String.valueOf(position);
-
-        return StringUtils.isNullOrEmpty(sPosition)? user.userPosition.eq(position) : null;
+        return (position != null) ? user.userPosition.eq(position) : null;
     }
 
     // 검색 키워드가 null인지 체크

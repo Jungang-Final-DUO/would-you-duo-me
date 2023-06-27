@@ -51,14 +51,12 @@ public class UserHistoryResponseDTO {
 
     private List<MatchResponseDTO> last20Matches;
 
-    private List<UserReviewResponseDTO> userReviews;
-
     // 빌더 커스텀
     public static class UserHistoryResponseDTOBuilder {
 
         public UserHistoryResponseDTOBuilder tier(Tier tier) {
             switch (tier) {
-                case UNR:
+                case CHA:
                     this.tier = "Challenger";
                     break;
                 case IRO:

@@ -4,17 +4,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import site.woulduduo.dto.request.board.BoardModifyRequestDTO;
 import site.woulduduo.dto.request.board.BoardWriteRequestDTO;
-import site.woulduduo.dto.response.board.BoardResponseDTO;
-import site.woulduduo.entity.Board;
+import site.woulduduo.dto.request.page.PageDTO;
+import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.board.BoardsByAdminResponseDTO;
+import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.BoardCategory;
 import site.woulduduo.service.BoardService;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 @Slf4j
@@ -36,7 +39,7 @@ public class BoardController {
     public String writeBoard(HttpSession session, BoardWriteRequestDTO dto) {
         log.info("/board/write: {} DTO", dto);
 
-        
+
 //        // 세션에 user_account 담기
 //        String userAccount = (String) session.getAttribute("user_account");
 //        dto.setUserAccount(userAccount);
@@ -121,50 +124,20 @@ public class BoardController {
         return "board/community";
     }
 
-//    @GetMapping("/board/list")
-//    public String showBoardList() {
-//        // JSP 파일의 이름을 반환합니다.
-//        return "board/board-findone";
-//    }
+    //관리자페이지 boardlist 가져오기
+    @GetMapping("api/v1/boards/admin")
+    public ResponseEntity<?> getBoardListByAdmin(PageDTO dto){
+        ListResponseDTO<BoardsByAdminResponseDTO, User> boardListByAdmin = boardService.getBoardListByAdmin(dto);
+        ListResponseDTO<BoardsByAdminResponseDTO, User> boardsByAdminResponseDTOUserListResponseDTO = boardService.todayBoardByAdmin(dto);
+
+
+        return ResponseEntity
+                .ok()
+                .body(boardListByAdmin);
+    }
+
+
+
 
 }
 
-//    게시물 수정 프론트와 연결 get
-//     제목 내용 카데고리가 들어가야하는거 아닌가
-//     modify 에는 카테고리가 없고 responsedto 에도 카데로기 없는데
-//    put 전체  모든 컬럼 다 바꿀거야 patch 일부르 바꾸는거
-//    수정창을 뛰어주는 수정도
-//    @GetMapping("/board/list/")
-//    public ResponseEntity<BoardResponseDTO> getBoardModify(BoardModifyRequestDTO dto) {
-//        //쓰고  받고
-//        Long aLong = boardService.modifyBoard(dto);
-//
-//
-//        return ResponseEntity.ok().body(aLong);
-//
-//    }
-//
-//
-//}
-
-//  if (modifyRequestDTO != null) {
-//          BoardResponseDTO boardResponseDTO = new BoardResponseDTO(modifyRequestDTO.getBoardNo(), modifyRequestDTO.getBoardTitle(), modifyRequestDTO.getBoardContent());
-//
-//          return ResponseEntity.ok(boardResponseDTO);
-//          } else {
-//          // 게시글이 존재하지 않는 경우에 대한 처리
-//          return ResponseEntity.notFound().build();
-//          }
-
-
-//관리자페이지 boardlist 가져오기
-//    @GetMapping("api/v1/boards/admin")
-//    public ResponseEntity<?> getBoardListByAdmin(/*AdminSearchType type*/){
-//        List<BoardsByAdminResponseDTO> boardListByAdmin = boardService.getBoardListByAdmin();
-//
-//
-//
-//        return ResponseEntity
-//                .ok()
-//                .body(boardListByAdmin);
-//    }
