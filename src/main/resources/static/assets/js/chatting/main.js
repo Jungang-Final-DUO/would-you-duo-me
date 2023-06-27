@@ -6,12 +6,16 @@ export function connectSocket() {
 
     socket.on('message', message => {
 
+        //output message to DOM
         outputMessage(message);
+
         const chat_list = document.querySelector('.chatting-modal-dialog');
         if(chat_list.hasAttribute('open')){
             renderUnreadMessages(message.room);
+        } else {
+            renderTotalUnreadMessages();
         }
-        renderTotalUnreadMessages();
+
         scrollDown();
     });
 
@@ -30,7 +34,7 @@ export function connectSocket() {
         //Emit message to server
         socket.emit('chatMessage', {username, room, msg, matchingStatus, matchingNo});
 
-        //output message to DOM
+        //save message
         saveMessage({username, room, msg, matchingStatus, matchingNo});
 
         //clear message
