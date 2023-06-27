@@ -11,7 +11,7 @@ export function scrollDown() {
 
 //메세지박스 렌더링
 export function outputMessage(message) {
-    console.log('outputMessage 진입');
+    // console.log('outputMessage 진입');
     const userNickname = document.getElementById('loginUserInfo').dataset.userNickname;
     const room = document.getElementById(message.room);
     if (room === null) return;
@@ -88,6 +88,8 @@ export function outputMessage(message) {
             getRecentMatchingNo(room.id);
             matchingBtn.disabled = false;
             matchingBtn.dataset.matchingStatus = message.matchingStatus;
+            document.querySelector('.chatting-handshake-img').src = '/assets/img/chattingModal/checkmark.png';
+            document.querySelector('.chatting-handshake-img').alt = '매칭수락이미지';
             matchingBtn.childNodes[1].nodeValue = `포인트 받기`;
         }
 
@@ -155,11 +157,11 @@ export function saveMessage({username, room, msg, matchingStatus, matchingNo}) {
         body: JSON.stringify(messageDTO)
     };
     fetch(`/api/v1/chat/messages`, requestInfo)
-        .then(res => res.json())
-        .then(flag => {
-            if (flag) console.log('메세지 저장 성공');
-            else console.log('메세지 저장 실패');
-        })
+        .then(res => res.json());
+        // .then(flag => {
+            // if (flag) console.log('메세지 저장 성공');
+            // else console.log('메세지 저장 실패');
+        // })
 
 }
 

@@ -1,12 +1,12 @@
 import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 import {renderRateModal} from "../review/write-rate.js";
 
-export function getChattingList() {
+export async function getChattingList() {
     // 추후 session에 회원정보 담기면 경로 수정
     const userId = document.getElementById('loginUserInfo').dataset.userAccount;
-    fetch(`/api/v1/chat/chattings/${userId}`)
+    await fetch(`/api/v1/chat/chattings/${userId}`)
         .then(res => res.json())
-        .then(result => renderChattingList(result))
+        .then(result => renderChattingList(result));
 }
 
 // 채팅 클릭했을때 메세지창 열어줘야함
@@ -15,7 +15,7 @@ function makeChatting(chat) {
 
     chat.onclick = (e) => {
         const userAccount = chat.closest('.duo-profile').id;
-        console.log('makeChatting 도달');
+        // console.log('makeChatting 도달');
         const requestInfo = {
             method: 'POST',
             headers: {
@@ -26,15 +26,14 @@ function makeChatting(chat) {
 
         fetch(`/api/v1/chat/chattings/${userAccount}`, requestInfo)
             .then(res => res.json())
-            .then(result => {
+            .then(async result => {
                 // result = 생성된 채팅번호
-                console.log(result);
-                document.getElementById('chatting-btn').click();
-                setTimeout(function (){
-                    const chatting = document.getElementById(result);
-                    chatting.querySelector('.modal-btn').click();
-                    }, 200);
-
+                // console.log(result);
+                await getChattingList();
+                document.querySelector('.chatting-modal-dialog').open = true;
+                const chatting = document.getElementById(result);
+                // console.log(chatting);
+                chatting.querySelector('.modal-btn').click();
             });
     }
 }
@@ -136,10 +135,9 @@ async function renderChattingList(result) {
             chatting_message_option.appendChild(matching_accept_container);
 
             // 로그인 한 사람이 Chatting To일때
-            console.log(myNickname);
-            console.log(chattingFrom);
+            // console.log(myNickname);
+            // console.log(chattingFrom);
             if (chattingFrom !== myNickname) {
-                const flag = await searchPointHistory(matchingNo);
                 const matching_accept_btn = document.createElement('button');
                 matching_accept_btn.classList.add('matching-accept-btn');
                 matching_accept_btn.dataset.matchingStatus = matchingStatus;
@@ -182,18 +180,19 @@ async function renderChattingList(result) {
                         break;
 
                     case 'DONE':
-                        console.log('왜?');
+                        const flag = await searchPointHistory(matchingNo);
+                        // console.log('왜?');
                         matching_accept_btn.dataset.matchingNo = matchingNo;
-                        console.log(flag);
+                        // console.log(flag);
                         if(!flag) {
-                        console.log('안받음');
+                        // console.log('안받음');
                             matching_accept_btn.disabled = false;
                             chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
                             chatting_handshake_img.alt = '게임완료이미지';
                             matching_accept_btn.childNodes[1].nodeValue = `포인트 받기`;
                             break;
                         }else {
-                        console.log('받음');
+                        // console.log('받음');
                             matching_accept_btn.disabled = true;
                             matching_accept_btn.dataset.matchingNo = '';
                             chatting_handshake_img.src = '/assets/img/chattingModal/handshake.png';
@@ -209,8 +208,8 @@ async function renderChattingList(result) {
             }
 
             // 로그인 한 사람이 Chatting From일 때
-            console.log(myNickname);
-            console.log(chattingFrom);
+            // console.log(myNickname);
+            // console.log(chattingFrom);
             if (chattingFrom === myNickname) {
 
                 let $rightBtn = document.createElement('button');
