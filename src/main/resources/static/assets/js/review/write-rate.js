@@ -31,7 +31,7 @@ export async function renderRateModal(matchingNo, userNickname) {
         </div>
     </div>`;
 
-    document.getElementById('send-review').onclick = async e => {
+    $rateModal.querySelector('#send-review').onclick = async e => {
         const res = await fetch("/api/v1/matchings/reviews",
             {
                 method: 'PUT',
