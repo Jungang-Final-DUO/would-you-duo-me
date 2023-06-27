@@ -1,6 +1,7 @@
 import {scrollPaging} from "../common/scroll-paging.js";
 import {renderRateModal} from "../review/write-rate.js";
 import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
+import {fillRateStars} from "../review/review-rate.js";
 
 (() => {
 
@@ -97,7 +98,12 @@ async function renderWrittenReviewOnMyPage({userAccount, pageNo}) {
                 $btn.classList.add('review-write-btn');
                 $wrapper.appendChild($btn);
 
-                $wrapper.appendChild(await renderRateModal(matching.matchingNo, matching.opponentNickname));
+                await $wrapper.appendChild(await renderRateModal(
+                    matching.matchingNo,
+                    matching.opponentNickname,
+                    matching.profileImage));
+
+                fillRateStars();
 
                 addModalBtnEvent();
                 addModalCloseEvent();

@@ -97,7 +97,10 @@ public class MatchingService {
         Matching foundMatching = matchingRepository.findById(dto.getMatchingNo())
                 .orElseThrow(() -> new RuntimeException("해당하는 매칭 정보가 없습니다."));
 
-        if (!foundMatching.getChatting().getChattingFrom().getUserAccount().equals(userAccount)) {
+        String chattingFrom = foundMatching.getChatting().getChattingFrom().getUserAccount();
+        log.info("chattingFrom : {}, login : {}", chattingFrom, userAccount);
+
+        if (!chattingFrom.equals(userAccount)) {
             throw new RuntimeException("유효한 사용자가 아닙니다.");
         }
 
