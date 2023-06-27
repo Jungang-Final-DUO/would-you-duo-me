@@ -134,6 +134,7 @@ async function renderChattingList(result) {
             console.log(myNickname);
             console.log(chattingFrom);
             if (chattingFrom !== myNickname) {
+                const flag = await searchPointHistory(matchingNo);
                 const matching_accept_btn = document.createElement('button');
                 matching_accept_btn.classList.add('matching-accept-btn');
                 matching_accept_btn.dataset.matchingStatus = matchingStatus;
@@ -168,21 +169,26 @@ async function renderChattingList(result) {
                         matching_accept_btn.childNodes[1].nodeValue = `매칭 확정`;
                         matching_accept_btn.dataset.matchingNo = matchingNo;
                         break;
+
                     case 'REJECT':
                         matching_accept_btn.disabled = true;
                         matching_accept_btn.childNodes[1].nodeValue = `매칭 대기`;
                         matching_accept_btn.dataset.matchingNo = matchingNo;
                         break;
+
                     case 'DONE':
+                        console.log('왜?');
                         matching_accept_btn.dataset.matchingNo = matchingNo;
-                        const flag = await searchPointHistory(matchingNo);
+                        console.log(flag);
                         if(!flag) {
+                        console.log('안받음');
                             matching_accept_btn.disabled = false;
                             chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
                             chatting_handshake_img.alt = '게임완료이미지';
                             matching_accept_btn.childNodes[1].nodeValue = `포인트 받기`;
                             break;
                         }else {
+                        console.log('받음');
                             matching_accept_btn.disabled = true;
                             matching_accept_btn.dataset.matchingNo = '';
                             chatting_handshake_img.src = '/assets/img/chattingModal/handshake.png';
@@ -230,15 +236,15 @@ async function renderChattingList(result) {
                         $rightBtn.dataset.matchingNo = matchingNo;
                         break;
                     case 'DONE':
-                        chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
-                        chatting_handshake_img.alt = '게임완료이미지';
+                        chatting_handshake_img.src = '/assets/img/chattingModal/handshake.png';
+                        chatting_handshake_img.alt = '매칭수락이미지';
                         $rightBtn.dataset.matchingNo = matchingNo;
-                        $rightBtn.childNodes[1].nodeValue = `리뷰 쓰기`;
-                        $rightBtn.onclick = async e => {
-                            const $rateModal = await renderRateModal(matchingNo, userNickname);
-                            document.body.appendChild($rateModal);
-                            $rateModal.show();
-                        }
+                        $rightBtn.childNodes[1].nodeValue = `매칭 신청`;
+                        // $rightBtn.onclick = async e => {
+                        //     const $rateModal = await renderRateModal(matchingNo, userNickname);
+                        //     document.body.appendChild($rateModal);
+                        //     $rateModal.show();
+                        // }
                         break;
                     default :
                         $rightBtn.dataset.matchingNo = '';

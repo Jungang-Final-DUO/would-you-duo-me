@@ -32,7 +32,7 @@ public class PointService {
         int currentPoint = from.getUserCurrentPoint();
         int needed = to.getUserMatchingPoint();
 
-        return (needed - currentPoint);
+        return (currentPoint - needed);
     }
 
     //매칭 신청시 포인트 차감
@@ -43,7 +43,7 @@ public class PointService {
         Chatting chatting = chattingRepository.findByChattingNo(chattingNo);
 
         Point givingPoint = Point.builder()
-                .user(chatting.getChattingTo())
+                .user(chatting.getChattingFrom())
                 .pointAmount(-matching.getMatchingPoint())
                 .chatting(chatting)
                 .matching(matching)
@@ -54,6 +54,7 @@ public class PointService {
         User user = userRepository.findByUserAccount(chatting.getChattingFrom().getUserAccount());
         user.setUserCurrentPoint(user.getUserCurrentPoint() + givingPoint.getPointAmount());
         user.addPoint(pointHistory);
+        userRepository.save(user);
 
         return Math.abs(pointHistory.getPointAmount());
     }
@@ -77,12 +78,14 @@ public class PointService {
         User user = userRepository.findByUserAccount(chatting.getChattingTo().getUserAccount());
         user.setUserCurrentPoint(user.getUserCurrentPoint() + givingPoint.getPointAmount());
         user.addPoint(pointHistory);
+        userRepository.save(user);
 
         return pointHistory.getPointAmount();
     }
 
     public boolean searchPointHistory(long matchingNo) {
         Matching matching = matchingRepository.findByMatchingNo(matchingNo);
-        return pointRepository.existsByMatching(matching);
+        User user = matching.getChatting().getChattingTo();
+        return pointRepository.existsByMatchingAndUser(matching, user);
     }
 }

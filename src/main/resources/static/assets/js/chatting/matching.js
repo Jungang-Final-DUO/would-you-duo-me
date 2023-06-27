@@ -14,7 +14,11 @@ export function matchingRequestEvent(){
             switch (matchingStatus){
                 case 'null' :
                 case 'REJECT' :
-                    await checkIsPossible($chattingNo, $matchingNo);
+                case 'DONE' :
+                    const result = await checkIsPossible($chattingNo);
+                    if(result >= 0){
+                        matchingRequest($chattingNo);
+                    }
                     break;
                 case 'CONFIRM' : gameDone($chattingNo, $matchingNo); break;
             }
@@ -22,40 +26,19 @@ export function matchingRequestEvent(){
 }
 
 //매칭 신청 가능여부 확인
-function checkIsPossible(chattingNo, matchingNo){
+function checkIsPossible(chattingNo){
 
-    fetch(`/api/v1/points/check/${chattingNo}`)
+    return fetch(`/api/v1/points/check/${chattingNo}`)
         .then(res => res.json())
         .then(result => {
             if(result < 0) {
                 alert('포인트가 부족하여 매칭을 신청할 수 없습니다..');
             } else {
-                payPoint(chattingNo, matchingNo);
+                alert(`포인트를 사용합니다!`);
             }
+            return result;
         })
 
-}
-
-//포인트 차감
-function payPoint(chattingNo, matchingNo){
-    const payload = {
-        chattingNo : chattingNo,
-        matchingNo : matchingNo
-    }
-    const requestInfo = {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-    }
-    fetch(`/api/v1/points/pay`, requestInfo)
-        .then(res => res.json())
-        .then(point => {
-            alert(`${point}를 사용하였습니다!`);
-            matchingRequest(chattingNo);
-            sendNoticeMessage(chattingNo , '듀오 매칭을 요청합니다');
-        })
 }
 
 // 요청을 받은 사람의 이벤트
@@ -255,7 +238,8 @@ function changeMatchingStatus(chattingNo, result) {
     $target.setAttribute('disabled', 'disabled');
     $target.dataset.matchingNo = result;
     $target.childNodes[1].nodeValue = '수락대기중';
-    return chattingNo;
+    sendNoticeMessage(chattingNo , '듀오 매칭을 요청합니다');
+    // return chattingNo;
 }
 
 // CONFIRM -> DONE으로 상태 변경
@@ -266,7 +250,7 @@ function matchingDone(chattingNo){
     const $target = chatCard.querySelector('.matching-accept-btn');
     $target.disabled = false;
     $target.dataset.matchingStatus = 'DONE';
-    $target.childNodes[1].nodeValue = '리뷰 쓰기';
+    $target.childNodes[1].nodeValue = '매칭 신청';
 
 }
 
