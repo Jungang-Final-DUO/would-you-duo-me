@@ -8,12 +8,15 @@ import site.woulduduo.controller.PointService;
 import site.woulduduo.dto.request.matching.MatchingFixRequestDTO;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.user.MyPageReviewResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
 import site.woulduduo.entity.Matching;
 import site.woulduduo.service.MatchingService;
 
 import javax.servlet.http.HttpSession;
+
+import static site.woulduduo.util.LoginUtil.LOGIN_KEY;
 
 @RestController
 @RequestMapping("/api/v1/matchings")
@@ -39,9 +42,9 @@ public class MatchingController {
     public ResponseEntity<?> writeReview(HttpSession session, @RequestBody ReviewWriteRequestDTO dto) {
 
 //       세션에 로그인처리가 완료된 이후에 사용
-//       String userAccount = session.getAttribute(LOGIN_KEY);
+       String userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
 
-        String userAccount = "user1";
+//        String userAccount = "user1";
 
         try {
             matchingService.writeReview(userAccount, dto);

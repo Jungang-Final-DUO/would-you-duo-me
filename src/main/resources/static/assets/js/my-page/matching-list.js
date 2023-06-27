@@ -1,4 +1,7 @@
 import {scrollPaging} from "../common/scroll-paging.js";
+import {renderRateModal} from "../review/write-rate.js";
+import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
+import {fillRateStars} from "../review/review-rate.js";
 
 (() => {
 
@@ -37,6 +40,7 @@ import {scrollPaging} from "../common/scroll-paging.js";
             pageNo: increaseWrittenReviewPage
         },
         500);
+
 })();
 
 async function renderGottenReviewOnMyPage({userAccount, pageNo}) {
@@ -94,6 +98,15 @@ async function renderWrittenReviewOnMyPage({userAccount, pageNo}) {
                 $btn.classList.add('review-write-btn');
                 $wrapper.appendChild($btn);
 
+                await $wrapper.appendChild(await renderRateModal(
+                    matching.matchingNo,
+                    matching.opponentNickname,
+                    matching.profileImage));
+
+                fillRateStars();
+
+                addModalBtnEvent();
+                addModalCloseEvent();
             }
 
         }

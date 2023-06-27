@@ -100,7 +100,10 @@ public class MatchingService {
         Matching foundMatching = matchingRepository.findById(dto.getMatchingNo())
                 .orElseThrow(() -> new RuntimeException("해당하는 매칭 정보가 없습니다."));
 
-        if (!foundMatching.getChatting().getChattingFrom().getUserAccount().equals(userAccount)) {
+        String chattingFrom = foundMatching.getChatting().getChattingFrom().getUserAccount();
+        log.info("chattingFrom : {}, login : {}", chattingFrom, userAccount);
+
+        if (!chattingFrom.equals(userAccount)) {
             throw new RuntimeException("유효한 사용자가 아닙니다.");
         }
 
@@ -118,8 +121,8 @@ public class MatchingService {
      * @return - 리뷰 목록
      */
     public ListResponseDTO<UserReviewResponseDTO, Matching> getGottenReview(
-            final String userAccount,
-            final int pageNo
+            String userAccount,
+            int pageNo
     ) {
 
         PageRequest pageInfo = PageRequest.of(pageNo - 1,
@@ -181,7 +184,11 @@ public class MatchingService {
      * @param pageNo      - 페이지 번호
      * @return - 리뷰 목록
      */
-    public ListResponseDTO<MyPageReviewResponseDTO, Matching> getWrittenReviewOnMyPage(String userAccount, int pageNo) {
+
+    public ListResponseDTO<MyPageReviewResponseDTO, Matching> getWrittenReviewOnMyPage(
+            String userAccount,
+            int pageNo
+    ) {
 
         PageRequest pageInfo = PageRequest.of(pageNo - 1,
                 15,

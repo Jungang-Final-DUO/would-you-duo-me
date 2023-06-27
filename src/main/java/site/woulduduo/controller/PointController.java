@@ -18,9 +18,9 @@ public class PointController {
     @ResponseBody
     @GetMapping("/api/v1/points/check/{chattingNo}")
     public ResponseEntity<?> checkCurrentPoint(@PathVariable long chattingNo){
-        System.out.println("checkCurrentPoint 컨트롤러 확인");
+//        System.out.println("checkCurrentPoint 컨트롤러 확인");
         int result = pointService.checkCurrentPoint(chattingNo);
-        System.out.println("포인트 계산 결과 : " + result );
+//        System.out.println("포인트 계산 결과 : " + result );
         return ResponseEntity.ok().body(result);
     }
 
@@ -28,8 +28,8 @@ public class PointController {
     @ResponseBody
     @PostMapping("/api/v1/points/pay")
     public ResponseEntity<?> payMatchingPoint(@RequestBody GivePointRequestDTO dto){
-        System.out.println("payMatchingPoint 컨트롤러 확인");
-        System.out.println("payMatchingPoint 컨트롤러" +dto.getChattingNo());
+//        System.out.println("payMatchingPoint 컨트롤러 확인");
+//        System.out.println("payMatchingPoint 컨트롤러" +dto.getChattingNo());
         int paidPoints = pointService.payMatchingPoint(dto.getChattingNo(), dto.getMatchingNo());
         return ResponseEntity.ok().body(paidPoints);
     }
