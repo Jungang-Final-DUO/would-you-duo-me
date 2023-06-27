@@ -115,9 +115,8 @@ public class MatchingService {
      * @return - 리뷰 목록
      */
     public ListResponseDTO<UserReviewResponseDTO, Matching> getGottenReview(
-            final String userAccount,
-            final int pageNo
-            final String userAccount, final int pageNo
+            String userAccount,
+            int pageNo
     ) {
 
         PageRequest pageInfo = PageRequest.of(pageNo - 1,
@@ -183,8 +182,8 @@ public class MatchingService {
      * @return - 리뷰 목록
      */
     public ListResponseDTO<MyPageReviewResponseDTO, Matching> getWrittenReviewOnMyPage(
-            final String userAccount,
-            final int pageNo
+            String userAccount,
+            int pageNo
     ) {
 
         PageRequest pageInfo = PageRequest.of(pageNo - 1,
