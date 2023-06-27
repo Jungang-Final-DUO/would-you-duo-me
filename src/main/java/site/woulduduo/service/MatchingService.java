@@ -19,6 +19,7 @@ import site.woulduduo.enumeration.MatchingStatus;
 import site.woulduduo.repository.ChattingRepository;
 import site.woulduduo.repository.MatchingRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,7 +62,7 @@ public class MatchingService {
     //    매칭 확정하기
     public boolean fixSchedule(MatchingFixRequestDTO dto) {
         Matching matching = matchingRepository.findByMatchingNo(dto.getMatchingNo());
-        matching.setMatchingDate(dto.getMatchingDate());
+        matching.setMatchingDate(dto.getLocalDateType(dto.getMatchingDate()));
         matching.setMatchingStatus(MatchingStatus.CONFIRM);
         try {
             Matching saved = matchingRepository.save(matching);
@@ -71,6 +72,19 @@ public class MatchingService {
         }
 
     }
+
+    // 게임 완료
+    public boolean gameOverMatching(long matchingNo) {
+        Matching matching = matchingRepository.findByMatchingNo(matchingNo);
+        matching.setMatchingStatus(MatchingStatus.DONE);
+        try {
+            Matching saved = matchingRepository.save(matching);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     /**
      * 리뷰 작성하기
@@ -103,6 +117,7 @@ public class MatchingService {
     public ListResponseDTO<UserReviewResponseDTO, Matching> getGottenReview(
             final String userAccount,
             final int pageNo
+            final String userAccount, final int pageNo
     ) {
 
         PageRequest pageInfo = PageRequest.of(pageNo - 1,
@@ -189,5 +204,13 @@ public class MatchingService {
                 .pageInfo(new PageResponseDTO<>(pageDTO))
                 .list(reviewList)
                 .build();
+    }
+    public List<Matching> findMatchingByChatting(long chattingNo) {
+        Chatting chatting = chattingRepository.findByChattingNo(chattingNo);
+            return matchingRepository.findByChatting(chatting).stream()
+                    .sorted(Comparator.comparing(Matching::getMatchingNo).reversed())
+                    .limit(1)
+                    .collect(Collectors.toList());
+
     }
 }

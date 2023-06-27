@@ -4,7 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Matching;
+
+import java.util.List;
 
 public interface MatchingRepository extends JpaRepository<Matching, Long> {
     Matching findByMatchingNo(long matchingNo);
@@ -17,4 +20,6 @@ public interface MatchingRepository extends JpaRepository<Matching, Long> {
 
     @Query("SELECT m FROM Matching m WHERE m.chatting.chattingFrom.userAccount = :userAccount")
     Page<Matching> findOneByChattingFromOnMyPage(String userAccount, Pageable pageable);
+
+    List<Matching> findByChatting(Chatting chatting);
 }

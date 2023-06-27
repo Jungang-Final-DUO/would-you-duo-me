@@ -52,4 +52,5 @@ public interface UserRepository extends
     int countByLolNickname(@Param("lolNickname") String lolNickname);
 
 
+    User findByUserNickname(String messageFrom);
 }
