@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import site.woulduduo.dto.request.chatting.MatchingFixRequestDTO;
+import site.woulduduo.dto.request.matching.MatchingFixRequestDTO;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.page.PageResponseDTO;
