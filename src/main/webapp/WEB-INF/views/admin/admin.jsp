@@ -551,8 +551,7 @@ function userDisplayNone() {
 
 
       totalBoardButton.onclick = e => {
-  accuseDisplayNone();
-  userDisplayNone();
+
 
         boardMenuBar.style.display = '';
 
@@ -975,9 +974,6 @@ function userDisplayNone() {
       // 페이지 버튼 이벤트 등록
       makePageButtonClickEvent();
 
-
-      fetch('/api/v1/user/detail/admin?userAccount=${userAccount}')
-        .then
     </script>
 </body>
 
