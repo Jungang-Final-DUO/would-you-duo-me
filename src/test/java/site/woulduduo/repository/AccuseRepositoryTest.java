@@ -60,6 +60,17 @@ class AccuseRepositoryTest {
         System.out.println("size = " + size);
     }
 
+    @Test
+    @DisplayName("해당 별명 accuse개수 확인")
+    void countbyUser(){
+        User byUserNickName = userRepository.findByUserNickName("asd13");
+        System.out.println("byUserNickName = " + byUserNickName);
+        List<Accuse> accuseList = byUserNickName.getAccuseList();
+        int size = accuseList.size();
+        System.out.println("size = " + size);
+
+    }
+
 
     @Test
     @DisplayName("사용자 저장")

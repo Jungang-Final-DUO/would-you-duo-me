@@ -86,212 +86,17 @@
                                     <div id="img_li">
                                         <!-- 모달 -->
                                         <div>
-                                            <a class="accuse_click modal-btn"><img class="accuse_img" src="/assets/img/admin/경고W.png" alt="warn"></a>
-                                            <dialog class="container">
-                                                <div id="main-wrapper">
-                                                    <form action="/user/accuse" method="POST" class="container">
-                                                        <div class="inbox">
-                                                            <ul class="inbox_text">
-                                                                <li>플레이어 신고하기</li>
-                                                            </ul>
-                                                            <div class="inbox_img"><img class="sendAccuse" src="/assets/img/admin/비행기.png" alt="send"></div>
-                                                        </div>
-                                        
-                                                        <ul class="checkbox_table">
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType" class="check_input" id="check_accuse_1">
-                                                                <label for="check_accuse_1">타인을 비방 / 모방하는 글 또는 댓글</label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType" class="check_input" id="check_accuse_2">
-                                                                <label for="check_accuse_2">부적절한 사진 및 게시물 게시</label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType" class="check_input" id="check_accuse_3">
-                                                                <label for="check_accuse_3">타 유저 경고 확인 결과 관리자 판단하의 추가 경고</label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType" class="check_input" id="check_accuse_4">
-                                                                <label for="check_accuse_4">부적절한 프로필 사진 업로드</label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType" class="check_input" id="check_accuse_5">
-                                                                <label for="check_accuse_5">기타:</label>
-                                                                <input type="text" id="accuseTypeEtc">
-                                                            </div>
-                                                        </ul>
-                                                    </form>
-                                                </div>
-                                            </dialog>
-                                        </div>
-                                        <div>
-                                            <a class="accuse_click modal-btn"><img class="accuse_img"
+                                            <a class="accuse_click modal-btn"><img class="accuse_img" id="a_1"
                                                     src="/assets/img/admin/경고W.png" alt="warn"></a>
                                             <dialog class="container">
-                                                <div id="main-wrapper">
+                                                <div id="main-wrapper_1">
                                                     <form action="/user/accuse" method="POST" class="container">
                                                         <div class="inbox">
                                                             <ul class="inbox_text">
                                                                 <li>플레이어 신고하기</li>
                                                             </ul>
-                                                            <div class="inbox_img"><img src="/assets/img/admin/비행기.png"
-                                                                    alt="send"></div>
-                                                        </div>
-
-                                                        <ul class="checkbox_table">
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 타인을 비방 / 모방하는 글 또는 댓글
-                                                                </label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 부적절한 사진 및 게시물 게시</label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 타 유저 경고 확인 결과 관리자 판단하의 추가 경고
-                                                                </label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 부적절한 프로필 사진 업로드 </label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 기타 : </label>
-                                                                <input type="text" id="acc">
-                                                            </div>
-                                                        </ul>
-
-
-                                                    </form>
-
-
-                                                </div>
-                                            </dialog>
-                                        </div>
-                                        <div>
-                                            <a class="accuse_click modal-btn"><img class="accuse_img"
-                                                    src="/assets/img/admin/경고W.png" alt="warn"></a>
-                                            <dialog class="container">
-                                                <div id="main-wrapper">
-                                                    <form action="/user/accuse" method="POST" class="container">
-                                                        <div class="inbox">
-                                                            <ul class="inbox_text">
-                                                                <li>플레이어 신고하기</li>
-                                                            </ul>
-                                                            <div class="inbox_img"><img src="/assets/img/admin/비행기.png"
-                                                                    alt="send"></div>
-                                                        </div>
-
-                                                        <ul class="checkbox_table">
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 타인을 비방 / 모방하는 글 또는 댓글
-                                                                </label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 부적절한 사진 및 게시물 게시</label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 타 유저 경고 확인 결과 관리자 판단하의 추가 경고
-                                                                </label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 부적절한 프로필 사진 업로드 </label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 기타 : </label>
-                                                                <input type="text" id="acc">
-                                                            </div>
-                                                        </ul>
-
-
-                                                    </form>
-
-
-                                                </div>
-                                            </dialog>
-                                        </div>
-                                        <div>
-                                            <a class="accuse_click modal-btn"><img class="accuse_img"
-                                                    src="/assets/img/admin/경고W.png" alt="warn"></a>
-                                            <dialog class="container">
-                                                <div id="main-wrapper">
-                                                    <form action="/user/accuse" method="POST" class="container">
-                                                        <div class="inbox">
-                                                            <ul class="inbox_text">
-                                                                <li>플레이어 신고하기</li>
-                                                            </ul>
-                                                            <div class="inbox_img"><img src="/assets/img/admin/비행기.png"
-                                                                    alt="send"></div>
-                                                        </div>
-
-                                                        <ul class="checkbox_table">
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 타인을 비방 / 모방하는 글 또는 댓글
-                                                                </label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 부적절한 사진 및 게시물 게시</label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 타 유저 경고 확인 결과 관리자 판단하의 추가 경고
-                                                                </label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 부적절한 프로필 사진 업로드 </label>
-                                                            </div>
-                                                            <div class="checkbox_content">
-                                                                <input type="checkbox" name="accuseType"
-                                                                    class="check_input" id="check_accuse">
-                                                                <label for="check_accuse"> 기타 : </label>
-                                                                <input type="text" id="acc">
-                                                            </div>
-                                                        </ul>
-
-
-                                                    </form>
-
-
-                                                </div>
-                                            </dialog>
-                                        </div>
-                                        <div>
-                                            <a class="accuse_click modal-btn"><img class="accuse_img"
-                                                    src="/assets/img/admin/경고W.png" alt="warn"></a>
-                                            <dialog class="container">
-                                                <div id="main-wrapper">
-                                                    <form action="/user/accuse" method="POST" class="container">
-                                                        <div class="inbox">
-                                                            <ul class="inbox_text">
-                                                                <li>플레이어 신고하기</li>
-                                                            </ul>
-                                                            <div class="inbox_img"><img src="/assets/img/admin/비행기.png"
-                                                                    alt="send"></div>
+                                                            <div class="inbox_img"><img class="sendAccuse"
+                                                                    src="/assets/img/admin/비행기.png" alt="send"></div>
                                                         </div>
 
                                                         <ul class="checkbox_table">
@@ -321,13 +126,209 @@
                                                                 <input type="checkbox" name="accuseType"
                                                                     class="check_input" id="check_accuse_5">
                                                                 <label for="check_accuse_5">기타:</label>
-                                                                <input type="text" id="accuseTypeEtc">
+                                                                <input type="text" class="accuseTypeEtc">
                                                             </div>
                                                         </ul>
                                                     </form>
                                                 </div>
                                             </dialog>
                                         </div>
+                                        <div>
+                                            <a class="accuse_click modal-btn"><img class="accuse_img" id="a_2"
+                                                    src="/assets/img/admin/경고W.png" alt="warn"></a>
+                                            <dialog class="container">
+                                                <div id="main-wrapper_2">
+                                                    <form action="/user/accuse" method="POST" class="container">
+                                                        <div class="inbox">
+                                                            <ul class="inbox_text">
+                                                                <li>플레이어 신고하기</li>
+                                                            </ul>
+                                                            <div class="inbox_img"><img class="sendAccuse"
+                                                                    src="/assets/img/admin/비행기.png" alt="send"></div>
+                                                        </div>
+
+                                                        <ul class="checkbox_table">
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_6">
+                                                                <label for="check_accuse_6">타인을 비방 / 모방하는 글 또는
+                                                                    댓글</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_7">
+                                                                <label for="check_accuse_7">부적절한 사진 및 게시물 게시</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_8">
+                                                                <label for="check_accuse_8">타 유저 경고 확인 결과 관리자 판단하의 추가
+                                                                    경고</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_9">
+                                                                <label for="check_accuse_9">부적절한 프로필 사진 업로드</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_10">
+                                                                <label for="check_accuse_10">기타:</label>
+                                                                <input type="text" class="accuseTypeEtc">
+                                                            </div>
+                                                        </ul>
+                                                    </form>
+                                                </div>
+                                            </dialog>
+                                        </div>
+                                        <div>
+                                            <a class="accuse_click modal-btn"><img class="accuse_img" id="a_3"
+                                                    src="/assets/img/admin/경고W.png" alt="warn"></a>
+                                            <dialog class="container">
+                                                <div id="main-wrapper_3">
+                                                    <form action="/user/accuse" method="POST" class="container">
+                                                        <div class="inbox">
+                                                            <ul class="inbox_text">
+                                                                <li>플레이어 신고하기</li>
+                                                            </ul>
+                                                            <div class="inbox_img"><img class="sendAccuse"
+                                                                    src="/assets/img/admin/비행기.png" alt="send"></div>
+                                                        </div>
+
+                                                        <ul class="checkbox_table">
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_7">
+                                                                <label for="check_accuse_7">타인을 비방 / 모방하는 글 또는
+                                                                    댓글</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_8">
+                                                                <label for="check_accuse_8">부적절한 사진 및 게시물 게시</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_9">
+                                                                <label for="check_accuse_9">타 유저 경고 확인 결과 관리자 판단하의 추가
+                                                                    경고</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_10">
+                                                                <label for="check_accuse_10">부적절한 프로필 사진 업로드</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_10">
+                                                                <label for="check_accuse_10">기타:</label>
+                                                                <input type="text" class="accuseTypeEtc">
+                                                            </div>
+                                                        </ul>
+                                                    </form>
+                                                </div>
+                                            </dialog>
+                                        </div>
+
+                                        <div>
+                                            <a class="accuse_click modal-btn"><img class="accuse_img" id="a_4"
+                                                    src="/assets/img/admin/경고W.png" alt="warn"></a>
+                                            <dialog class="container">
+                                                <div id="main-wrapper_4">
+                                                    <form action="/user/accuse" method="POST" class="container">
+                                                        <div class="inbox">
+                                                            <ul class="inbox_text">
+                                                                <li>플레이어 신고하기</li>
+                                                            </ul>
+                                                            <div class="inbox_img"><img class="sendAccuse"
+                                                                    src="/assets/img/admin/비행기.png" alt="send"></div>
+                                                        </div>
+
+                                                        <ul class="checkbox_table">
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_11">
+                                                                <label for="check_accuse_11">타인을 비방 / 모방하는 글 또는
+                                                                    댓글</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_12">
+                                                                <label for="check_accuse_12">부적절한 사진 및 게시물 게시</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_13">
+                                                                <label for="check_accuse_13">타 유저 경고 확인 결과 관리자 판단하의 추가
+                                                                    경고</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_14">
+                                                                <label for="check_accuse_14">부적절한 프로필 사진 업로드</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_15">
+                                                                <label for="check_accuse_15">기타:</label>
+                                                                <input type="text" class="accuseTypeEtc">
+                                                            </div>
+                                                        </ul>
+                                                    </form>
+                                                </div>
+                                            </dialog>
+                                        </div>
+
+                                        <div>
+                                            <a class="accuse_click modal-btn"><img class="accuse_img" id="a_5"
+                                                    src="/assets/img/admin/경고W.png" alt="warn"></a>
+                                            <dialog class="container">
+                                                <div id="main-wrapper_5">
+                                                    <form action="/user/accuse" method="POST" class="container">
+                                                        <div class="inbox">
+                                                            <ul class="inbox_text">
+                                                                <li>플레이어 신고하기</li>
+                                                            </ul>
+                                                            <div class="inbox_img"><img class="sendAccuse"
+                                                                    src="/assets/img/admin/비행기.png" alt="send"></div>
+                                                        </div>
+
+                                                        <ul class="checkbox_table">
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_16">
+                                                                <label for="check_accuse_16">타인을 비방 / 모방하는 글 또는
+                                                                    댓글</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_17">
+                                                                <label for="check_accuse_17">부적절한 사진 및 게시물 게시</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_18">
+                                                                <label for="check_accuse_18">타 유저 경고 확인 결과 관리자 판단하의 추가
+                                                                    경고</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_19">
+                                                                <label for="check_accuse_19">부적절한 프로필 사진 업로드</label>
+                                                            </div>
+                                                            <div class="checkbox_content">
+                                                                <input type="checkbox" name="accuseType"
+                                                                    class="check_input" id="check_accuse_20">
+                                                                <label for="check_accuse_20">기타:</label>
+                                                                <input type="text" class="accuseTypeEtc">
+                                                            </div>
+                                                        </ul>
+                                                    </form>
+                                                </div>
+                                            </dialog>
+                                        </div>
+
+
                                     </div>
                                 </ul>
                             </ul>
@@ -398,14 +399,17 @@
 
         function userIsBan() {
             const userNickname = user.innerText;
-            console.log(userNickname);
+            //console.log(userNickname);
 
             fetch(`http://localhost:8282/user/detail/banBoolean?nickname=` + userNickname)
                 .then(response => {
                     return response.json()
                 })
                 .then(res => {
-                    console.log('res21231231  :  -' + res);
+
+
+
+                    //   console.log('res21231231  :  -' + res);
 
 
                     if (res === true) {
@@ -413,7 +417,7 @@
                     } else {
                         banClick.style.backgroundColor = '#111E30';
                     }
-                    console.log(res);
+                    //     console.log(res);
                 });
         }
 
@@ -450,17 +454,68 @@
 
         };
 
-        //모달 데이터 보내기
-        const sendAccuseModal = document.querySelector('.sendAccuse');
+        //모달 count red 색칠
+        function banCheck() {
+            const accuseImages = document.querySelectorAll('.accuse_img');
 
-        sendAccuseModal.addEventListener('click', e => {
-            e.preventDefault();
-            accuseModalData();
+            function userIsAccuse() {
+                const userNickname = user.innerText;
+                console.log(userNickname);
+
+                fetch('http://localhost:8282/user/accuse/count', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            userNickname: userNickname,
+                        })
+                    })
+                    .then(response => {
+                        console.log('response: ', response);
+                        return response.json();
+                    })
+                    .then(res => {
+                        console.log('res: ', res);
+
+                        accuseImages.forEach(image => {
+                            imageRed(image);
+                        });
+
+                        function imageRed(image) {
+                            const newImageSrc = '/assets/img/admin/경고R.png';
+                            image.setAttribute('src', newImageSrc);
+                        }
+                    });
+            }
+
+            userIsAccuse();
+        }
+
+        banCheck();
+
+
+
+
+
+
+
+
+        //모달 데이터 보내기
+        const sendAccuseModal = document.querySelectorAll('.sendAccuse');
+        sendAccuseModal.forEach(modal => {
+            modal.addEventListener('click', e => {
+                const userNickname = user.innerText;
+                // console.log(userNickname);
+
+                e.preventDefault();
+                accuseModalData();
+            });
         });
 
         function accuseModalData() {
             const userNickname = user.innerText;
-            console.log(userNickname);
+            //   console.log(userNickname);
 
             const checkboxes = document.querySelectorAll('input[name="accuseType"]:checked');
             const accuseType = [];
@@ -469,7 +524,7 @@
                 accuseType.push(checkbox.nextElementSibling.innerText);
             });
 
-            const accuseTypeEtc = document.getElementById('accuseTypeEtc').value;
+            const accuseTypeEtc = document.querySelectorAll('.accuseTypeEtc').value;
 
             fetch('http://localhost:8282/user/accuse', {
                     method: 'POST',
@@ -486,15 +541,16 @@
                     return response.json();
                 })
                 .then(res => {
-                    console.log('res: ', res);
+                    //  console.log('res: ', res);
                     if (res) {
+                        accuseDialog.close();
+
                         // 모달창 닫기
                     } else {
                         // 에러 메시지
                     }
                 });
         };
-
 
 
 
@@ -528,7 +584,7 @@
                     return response.json()
                 })
                 .then(res => {
-                    console.log('res  :  -' + res);
+                    // console.log('res  :  -' + res);
 
                     document.getElementById('userCurrentPoint').innerText = res;
                     pay.value = 0;

@@ -3,10 +3,7 @@ package site.woulduduo.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import site.woulduduo.dto.request.accuse.UserAccuseRequestDTO;
 import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
@@ -52,14 +49,23 @@ import javax.servlet.http.HttpSession;
                 .body(accuseListByAdmin);
     }
 
-
+//모달 데이터 저장
     @PostMapping("/user/accuse")
     public boolean accuseUser(HttpSession session, @RequestBody UserAccuseRequestDTO dto){
         log.info("{}dto123===========",dto);
         boolean b = accuseService.accuseUser(dto);
         System.out.println("btruefalse = " + b);
         return b;
+    }
 
-
+    @PostMapping("/user/accuse/count")
+    @ResponseBody
+    public ResponseEntity<?> accuseUserCount(HttpSession session, @RequestBody UserAccuseRequestDTO dto){
+        log.info("{}123asd123===========",dto);
+       int size = accuseService.accuseUserCount(dto);
+        System.out.println("size = " + size);
+        return ResponseEntity
+                .ok()
+                .body(size);
     }
 }

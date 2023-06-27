@@ -50,7 +50,7 @@ class AccuseServiceTest {
 
 
         UserAccuseRequestDTO accuse = UserAccuseRequestDTO.builder()
-                .userAccount("123")
+                .userNickname( "123")
                 .accuseType(accuseType)
                 .accuseEtc("기타")
                 .build();

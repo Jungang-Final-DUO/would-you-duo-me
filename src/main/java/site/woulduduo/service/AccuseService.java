@@ -167,4 +167,15 @@ public class AccuseService {
         }
         return false;
     }
+
+    public int accuseUserCount(UserAccuseRequestDTO dto) {
+        System.out.println("dto = " + dto);
+        String userNickname = dto.getUserNickname();
+        User byUserNickName = userRepository.findByUserNickName(userNickname);
+        System.out.println("byUserNickName = " + byUserNickName);
+        List<Accuse> accuseList = byUserNickName.getAccuseList();
+        int size = accuseList.size();
+        System.out.println("size = " + size);
+        return size;
+    }
 }
