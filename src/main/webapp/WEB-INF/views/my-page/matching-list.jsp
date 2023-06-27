@@ -11,6 +11,7 @@
     <title>Document</title>
     <%@ include file="../common/static-head.jsp" %>
     <link rel="stylesheet" href="/assets/css/my-page/matching-list.css">
+    <script src="/assets/js/my-page/matching-list.js" defer type="module"></script>
     <!--    <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">-->
 </head>
 <body>
@@ -32,24 +33,24 @@
                 <div class="application-match">
                     <h2>내가 신청한 매칭</h2>
 
-                    <div class="matching-grid">
+                    <div id="applied-matching-wrapper" class="matching-grid">
                         <p class="matching-people grid-title">매칭상대</p>
                         <p class="matching-day grid-title">매칭일</p>
                         <div class="my-review grid-title">
-                            내가작성한후기
+                            후기
                         </div>
                     </div>
                 </div>
 
                 <!-- 내가 수락한 매칭 -->
                 <div class="application-match">
-                    <h2>내가 수락한 매칭</h2>
+                    <h2>내가 받은 매칭</h2>
 
-                    <div class="matching-grid">
+                    <div id="gotten-matching-wrapper" class="matching-grid">
                         <p class="matching-people grid-title">매칭상대</p>
                         <p class="matching-day grid-title">매칭일</p>
                         <div class="my-review grid-title">
-                            내가작성한후기
+                            후기
                         </div>
                     </div>
 

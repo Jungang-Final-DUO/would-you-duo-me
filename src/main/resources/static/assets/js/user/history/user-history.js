@@ -1,5 +1,5 @@
 import {drawPieGraph} from "./draw-pie-graph.js";
-import {renderReviewRate} from "../../review/render-review-rate.js";
+import {renderReview} from "../../review/render-review.js";
 import {scrollPaging} from "../../common/scroll-paging.js";
 
 (() => {
@@ -16,7 +16,7 @@ import {scrollPaging} from "../../common/scroll-paging.js";
 
     // 리뷰 1페이지 불러오기
     const $reviewWrapper = document.getElementById('review-wrapper');
-    renderReviewRate({
+    renderReview({
         $wrapper: $reviewWrapper,
         userAccount: userAccount,
         pageNo: increasePageNo
@@ -25,11 +25,12 @@ import {scrollPaging} from "../../common/scroll-paging.js";
     // 스크롤 이벤트 등록
     const $reviewSection = document.getElementById('review-section');
 
-    scrollPaging($reviewSection, renderReviewRate, {
-        $wrapper: $reviewWrapper,
-        userAccount: userAccount,
-        pageNo: increasePageNo
-    });
+    scrollPaging($reviewSection, renderReview, {
+            $wrapper: $reviewWrapper,
+            userAccount: userAccount,
+            pageNo: increasePageNo
+        },
+        800);
 
 
 })();
