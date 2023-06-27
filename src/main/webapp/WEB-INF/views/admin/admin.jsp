@@ -222,26 +222,25 @@
 
 
       function boardDisplayNone() {
-  boardMenuBar.style.display = 'none';
-  for (let i = 0; i < boardList.length; i++) {
-    boardList[i].style.display = 'none';
-  }
-}
+        boardMenuBar.style.display = 'none';
+        for (let i = 0; i < boardList.length; i++) {
+          boardList[i].style.display = 'none';
+        }
+      }
 
-function accuseDisplayNone() {
-  accuseMenuBar.style.display = 'none';
-  for (let i = 0; i < accuseList.length; i++) {
-    accuseList[i].style.display = 'none';
-  }
-}
+      function accuseDisplayNone() {
+        accuseMenuBar.style.display = 'none';
+        for (let i = 0; i < accuseList.length; i++) {
+          accuseList[i].style.display = 'none';
+        }
+      }
 
-function userDisplayNone() {
-  userMenuBar.style.display = 'none';
-  for (let i = 0; i < userList.length; i++) {
-    userList[i].style.display = 'none';
-  }
-}
-
+      function userDisplayNone() {
+        userMenuBar.style.display = 'none';
+        for (let i = 0; i < userList.length; i++) {
+          userList[i].style.display = 'none';
+        }
+      }
 
       totalUserButton.onclick = e => {
         boardDisplayNone();
@@ -317,7 +316,7 @@ function userDisplayNone() {
         const ulArray = document.querySelectorAll('.uln');
         ulArray.forEach((ulElement, index) => {
           const asd = list[index].rowNum;
-          ulElement.innerText = "asd";
+          ulElement.innerText = asd;
 
         });
       }
@@ -406,8 +405,6 @@ function userDisplayNone() {
 
       todayUserButton.onclick = e => {
 
-        boardDisplayNone();
-        accuseDisplayNone();
         UserMenuBar.style.display = '';
 
         // 금일 유저
@@ -449,6 +446,9 @@ function userDisplayNone() {
             locationToDetail(list);
 
             renderUserList(res);
+
+            boardDisplayNone();
+            accuseDisplayNone();
 
           });
       };
@@ -552,6 +552,8 @@ function userDisplayNone() {
 
       totalBoardButton.onclick = e => {
 
+        console.log('click 실행');
+
 
         boardMenuBar.style.display = '';
 
@@ -587,7 +589,8 @@ function userDisplayNone() {
             bld(list);
             blc(list);
             renderUserList(res);
-
+            accuseDisplayNone();
+            userDisplayNone();
           });
       }
 
@@ -764,7 +767,8 @@ function userDisplayNone() {
             ale(list);
             alc(list);
             renderUserList(res);
-
+            boardDisplayNone();
+            userDisplayNone();
           });
       }
 
@@ -973,7 +977,6 @@ function userDisplayNone() {
 
       // 페이지 버튼 이벤트 등록
       makePageButtonClickEvent();
-
     </script>
 </body>
 

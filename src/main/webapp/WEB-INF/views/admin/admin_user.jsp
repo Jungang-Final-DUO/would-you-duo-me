@@ -31,9 +31,6 @@
             <div id="admin_page"><a href="/api/v1/users/admin">관리자페이지</a></div>
             <div id="main_controller">
 
-                <c:if test="${udByAdmin.banned}">
-                    <div id="is_ben" name="userIsBanned" style="background-color: red;">BAN</div>
-                </c:if>
                 <div id="is_ben">BAN</div>
                 <div id="userinfo">
                     <div id="user_pic_container">
@@ -376,9 +373,32 @@
         //Ban 클릭 변수
         const banClick = document.getElementById('is_ben');
 
-        banClick.onclick = e => {
+        function userIsBan() {
             const userNickname = user.innerText;
             console.log(userNickname);
+
+            fetch(`http://localhost:8282/user/detail/banBoolean?nickname=`+userNickname)                  
+                .then(response => {
+                    return response.json()
+                })
+                .then(res => {
+                    console.log('res21231231  :  -' + res);
+
+
+                    if (res === true) {
+                        banClick.style.backgroundColor = 'red';
+                    } else {
+                        banClick.style.backgroundColor = '#111E30';
+                    }
+                    console.log(res);
+                });
+        }
+
+        userIsBan();
+
+        banClick.onclick = e => {
+            const userNickname = user.innerText;
+            // console.log(userNickname);
 
             fetch(`http://localhost:8282/user/ban`, {
                     method: 'POST',
@@ -394,7 +414,7 @@
                     return response.json()
                 })
                 .then(res => {
-                    console.log('res  :  -' + res);
+                    // console.log('res  :  -' + res);
 
 
                     if (res === true) {
@@ -402,11 +422,10 @@
                     } else {
                         banClick.style.backgroundColor = '#111E30';
                     }
-                    console.log(res);
+                    // console.log(res);
                 });
 
         };
-
 
         
 

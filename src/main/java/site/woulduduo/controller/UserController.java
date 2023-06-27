@@ -284,6 +284,21 @@ public class UserController {
 
     }
 
+    @GetMapping("/user/detail/banBoolean")
+//    //관리자 페이지 자세히 보기
+    public ResponseEntity<?> showBanIsBoolean(HttpSession session, @RequestParam String nickname){
+        log.info("{}nickname = ",nickname);
+
+        boolean userDetailByAdmin = userService.getUserBanBooleanByAdmin(nickname);
+
+        log.info("{}userDetailByAdmin = ",userDetailByAdmin);
+
+        return ResponseEntity
+                .ok()
+                .body(userDetailByAdmin);
+
+    }
+
     @PostMapping("/user/point")
     @ResponseBody
     public ResponseEntity<?> changePointStatus(
@@ -312,12 +327,7 @@ public class UserController {
 
         return ResponseEntity.ok().body(b);
     }
-//
-//    @GetMapping("/user/duo")
-//    public String showDetailUser(HttpSession session, String userAccount){
-//
-//        return "";
-//    }
+
 
 
         // 유저 전적 페이지 이동

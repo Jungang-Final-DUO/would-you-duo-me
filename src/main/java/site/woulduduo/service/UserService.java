@@ -426,6 +426,14 @@ public class UserService {
 
         return userDetail;
     }
+    public boolean getUserBanBooleanByAdmin(String userNickname) {
+        User byUserNickName = userRepository.findByUserNickName(userNickname);
+
+        boolean userIsBanned = byUserNickName.isUserIsBanned();
+
+
+        return userIsBanned;
+    }
 
 
     //포인트 증가
