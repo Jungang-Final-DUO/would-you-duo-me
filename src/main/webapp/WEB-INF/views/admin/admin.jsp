@@ -252,7 +252,7 @@
 };
 
 function getUserList(pageNum) {
-  console.log('pageNum=================', pageNum);
+  console.log('totalpageNum=================', pageNum);
 
   fetch(`/api/v1/users/admin?page=` + pageNum)
     .then(response => response.json())
@@ -286,29 +286,16 @@ function getUserList(pageNum) {
     });
 }
 
-function totalUser(list) {
-  uln(list);
-  uli(list);
-  ulg(list);
-  ulb(list);
-  ulr(list);
-  ulw(list);
-  ulp(list);
-  ulf(list);
-  uls(list);
-}
-
-function renderUserList({
-  count,
-  pageInfo,
-  list
-}) {
+function renderUserList({ count, pageInfo, list }) {
   console.log('count: ', count);
   console.log('pageInfo: ', pageInfo);
   console.log('list: ', list);
 
-  //페이지 렌더링
+  // 페이지 렌더링
   renderPage(pageInfo);
+
+  // 유저 페이지 클릭 이벤트 등록
+  locationToDetail(list);
 }
 
 //페이징
@@ -352,11 +339,32 @@ function renderPage({
   // ul에 마지막페이지 번호 저장.
   $pageUl.dataset.fp = endPage;
 
-  // 유저페이지 클릭 이벤트 등록
-  makePageButtonUserClickEvent();
-}
+ 
+} 
+
+
 
 // 유저페이지 클릭 이벤트 핸들러
+function makePageButtonUserClickEvent() {
+        // 페이지 버튼 클릭이벤트 처리
+        const $pageUl = document.querySelector('.pagination');
+        $pageUl.onclick = e => {
+          if (!e.target.matches('.page-item a')) return;
+
+          e.preventDefault(); // 태그의 기본 동작 중단
+
+          // 누른 페이지 번호 가져오기
+          const pageNum = e.target.getAttribute('href');
+          // console.log(pageNum);
+          console.log("======",pageNum)
+
+          // 페이지 번호에 맞는 목록 비동기 요청
+          getUserTodayList(pageNum);
+        };
+      }
+
+// 유저페이지 클릭 이벤트 등록
+makePageButtonUserClickEvent();
 
 
 
@@ -456,20 +464,21 @@ function renderPage({
 
 
       todayUserButton.onclick = e => {
-        console.log('today userlist click 실행');
+  console.log('today userlist click 실행');
 
-        boardDisplayNone();
-        accuseDisplayNone();
+  boardDisplayNone();
+  accuseDisplayNone();
 
-        UserMenuBar.style.display = '';
+  UserMenuBar.style.display = '';
 
-        const pageNum = 1; // 초기 페이지 설정
+  const pageNum = 1; // 초기 페이지 설정
 
-        getUserTodayList(pageNum);
-      };
-      // 금일 유저
-      function getUserTodayList(pageNum) {
-  fetch('/api/v1/users/admin1=' + pageNum)
+  getUserTodayList(pageNum);
+};
+
+// 금일 유저
+function getUserTodayList(pageNum) {
+  fetch('/api/v1/users/admin1?page=' + pageNum)
     .then(response => response.json())
     .then(res => {
       console.log('res', res);
@@ -487,10 +496,7 @@ function renderPage({
           followCount,
           joinDate,
         } = listOne;
-
-        // 유저리스트 정보 사용
-        // ...
-
+       
       }
 
       for (let i = 0; i < userList.length; i++) {
