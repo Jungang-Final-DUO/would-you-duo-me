@@ -152,13 +152,8 @@ public class UserController {
             , HttpServletRequest request
     ) {
 
+        System.out.println("dto.getRequestURI() = " + dto.getRequestURI());
         log.info("/user/sign-in POST ! - {}", dto);
-
-        String originUri = dto.getRequestURI();
-        String sub1 = originUri.substring(15);
-        String returnURL = sub1.substring(0, sub1.length()-4);
-        System.out.println("returnURL = " + returnURL);
-
 
         LoginResult result = userService.authenticate(dto, request.getSession(), response);
 
@@ -169,7 +164,7 @@ public class UserController {
             userService.maintainLoginState(
                     request.getSession(), dto.getUserAccount());
 
-            return returnURL;
+            return dto.getRequestURI();
         }
 
         // 1회용으로 쓰고 버릴 데이터
