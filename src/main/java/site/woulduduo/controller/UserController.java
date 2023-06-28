@@ -162,6 +162,12 @@ public class UserController {
 
         log.info("/user/sign-in POST ! - {}", dto);
 
+        String originUri = dto.getRequestURI();
+        String sub1 = originUri.substring(15);
+        String returnURL = sub1.substring(0, sub1.length()-4);
+        System.out.println("returnURL = " + returnURL);
+
+
         LoginResult result = userService.authenticate(dto, request.getSession(), response);
 
         // 로그인 성공시
@@ -171,7 +177,7 @@ public class UserController {
             userService.maintainLoginState(
                     request.getSession(), dto.getUserAccount());
 
-            return "redirect:/";
+            return returnURL;
         }
 
         // 1회용으로 쓰고 버릴 데이터
