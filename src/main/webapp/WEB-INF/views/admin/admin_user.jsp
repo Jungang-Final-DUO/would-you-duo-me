@@ -89,8 +89,8 @@
                                             <a class="accuse_click modal-btn"><img class="accuse_img" id="a_1"
                                                     src="/assets/img/admin/경고W.png" alt="warn"></a>
                                             <dialog class="container">
-                                                <div id="main-wrapper">
-                                                    <form action="/user/accuse" method="POST" class="container">
+                                                <div id="main-wrapper1" class="main-wrapper">
+                                                    <form action="/user/accuse" method="POST" class="container2">
                                                         <div class="inbox">
                                                             <ul class="inbox_text">
                                                                 <li>플레이어 신고하기</li>
@@ -137,8 +137,8 @@
                                             <a class="accuse_click modal-btn"><img class="accuse_img" id="a_2"
                                                     src="/assets/img/admin/경고W.png" alt="warn"></a>
                                             <dialog class="container">
-                                                <div id="main-wrapper_2">
-                                                    <form action="/user/accuse" method="POST" class="container">
+                                                <div id="main-wrapper_2" class="main-wrapper">
+                                                    <form action="/user/accuse" method="POST" class="container2">
                                                         <div class="inbox">
                                                             <ul class="inbox_text">
                                                                 <li>플레이어 신고하기</li>
@@ -185,8 +185,8 @@
                                             <a class="accuse_click modal-btn"><img class="accuse_img" id="a_3"
                                                     src="/assets/img/admin/경고W.png" alt="warn"></a>
                                             <dialog class="container">
-                                                <div id="main-wrapper_3">
-                                                    <form action="/user/accuse" method="POST" class="container">
+                                                <div id="main-wrapper_3" class="main-wrapper">
+                                                    <form action="/user/accuse" method="POST" class="container2">
                                                         <div class="inbox">
                                                             <ul class="inbox_text">
                                                                 <li>플레이어 신고하기</li>
@@ -234,8 +234,8 @@
                                             <a class="accuse_click modal-btn"><img class="accuse_img" id="a_4"
                                                     src="/assets/img/admin/경고W.png" alt="warn"></a>
                                             <dialog class="container">
-                                                <div id="main-wrapper_4">
-                                                    <form action="/user/accuse" method="POST" class="container">
+                                                <div id="main-wrapper_4" class="main-wrapper">
+                                                    <form action="/user/accuse" method="POST" class="container2">
                                                         <div class="inbox">
                                                             <ul class="inbox_text">
                                                                 <li>플레이어 신고하기</li>
@@ -283,8 +283,8 @@
                                             <a class="accuse_click modal-btn"><img class="accuse_img" id="a_5"
                                                     src="/assets/img/admin/경고W.png" alt="warn"></a>
                                             <dialog class="container">
-                                                <div id="main-wrapper_5">
-                                                    <form action="/user/accuse" method="POST" class="container">
+                                                <div id="main-wrapper_5" class="main-wrapper">
+                                                    <form action="/user/accuse" method="POST" class="container2">
                                                         <div class="inbox">
                                                             <ul class="inbox_text">
                                                                 <li>플레이어 신고하기</li>

@@ -1,37 +1,52 @@
-
-#main-wrapper{
+.main-wrapper {
     /* border: 1px solid #000000; */
     height: 800px;
     margin-top: 30px;
 }
 
-.container{
+.container {
+    border-radius: 3%;
+    width: 80%;
+    height: 85%;
+    margin-top: 4%;
+    margin-left: 10%;
+    background-color: #111E30;
+
+}
+
+.container .main-wrapper {
     border: 1px solid #ffffff;
     border-radius: 3%;
     width: 80%;
     height: 85%;
     margin-top: 4%;
     margin-left: 10%;
-    background-color: #123123;
+    background-color: #111E30;
 
 }
 
-.container .inbox{
+.container .main-wrapper .container2 {
+    width: 100%;
+    width: 100%;
+}
+
+
+.container div .inbox {
     /* border: 1px solid #f70000; */
     width: 100%;
     height: 15%;
     display: flex;
 }
 
-.container .inbox .inbox_text{
+.container .inbox .inbox_text {
     border-bottom: 1px solid #ffffff;
     width: 80%;
     height: 100%;
     margin-left: 10%;
-    
+
 }
 
-.container .inbox .inbox_text li{
+.container .inbox .inbox_text li {
     width: 100%;
     height: 100%;
     /* border: 1px solid #000; */
@@ -43,16 +58,16 @@
 
 }
 
-.container .inbox .inbox_img img{
+.container .inbox .inbox_img img {
     width: 50px;
     height: 50px;
     /* border: 1px solid #000; */
     margin-left: 20px;
     margin-top: 30px;
     cursor: pointer;
-} 
+}
 
-.container .checkbox_table{
+.container .checkbox_table {
     /* border: 1px solid #000; */
     width: 90%;
     height: 70%;
@@ -60,41 +75,41 @@
 
 }
 
-.container .checkbox_table .checkbox_content{
+.container .checkbox_table .checkbox_content {
     /* border: 1px solid #000; */
     height: 15%;
     margin-top: 2%;
     font-size: 20px;
 }
 
-.container .checkbox_table .checkbox_content label{
-color: white;
-margin-left: 3%;
+.container .checkbox_table .checkbox_content label {
+    color: white;
+    margin-left: 3%;
 
 }
 
 
-.container .checkbox_table .checkbox_content input{
-width: 20px;
-height: 20px;
-margin-left: 3%;
-background-color: transparent;
+.container .checkbox_table .checkbox_content input {
+    width: 20px;
+    height: 20px;
+    margin-left: 3%;
+    background-color: transparent;
 }
 
-.container .checkbox_table .checkbox_content .check_input{
+.container .checkbox_table .checkbox_content .check_input {
     border: 1px solid #ffffff;
 
 }
 
-.container .checkbox_table .checkbox_content #acc{
+.container .checkbox_table .checkbox_content .accuseTypeEtc {
     width: 400px;
     height: 30px;
     background-color: transparent;
     border: none;
     border-bottom: 1px solid #ffffff;
-    color:white;
+    color: white;
 }
 
-.container .checkbox_table .checkbox_content #acc:focus{
-outline: none;
+.container .checkbox_table .checkbox_content #accuseTypeEtc:focus {
+    outline: none;
 }
