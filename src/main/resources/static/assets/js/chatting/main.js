@@ -36,6 +36,11 @@ export function connectSocket() {
         const matchingStatus = chatBox.querySelector('.matching-accept-btn').dataset.matchingStatus;
         const matchingNo = chatBox.querySelector('.matching-accept-btn').dataset.matchingNo;
 
+        // if(msg.length > 100){
+        //     alert('메세지는 100자 이내로 작성해주세요');
+        //     return;
+        // }
+
         //Emit message to server
         socket.emit('chatMessage', {username, room, msg, matchingStatus, matchingNo});
 

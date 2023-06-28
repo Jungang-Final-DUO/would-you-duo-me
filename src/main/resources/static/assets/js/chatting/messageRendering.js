@@ -49,7 +49,7 @@ export function outputMessage(message) {
     } else {
 
         // 매칭 ststus가 request로 변하면 메세지 받은 사람 버튼 수락/거절로 변경
-        if(room.dataset.chattingTo === userNickname && message.matchingStatus === 'REQUEST'){
+        if(room.dataset.chattingFrom !== userNickname && message.matchingStatus === 'REQUEST' && matchingBtn.childNodes[1].nodeValue !== `매칭 수락`){
             getRecentMatchingNo(room.id);
             matchingBtn.dataset.matchingStatus = message.matchingStatus;
             matchingBtn.childNodes[1].nodeValue = `매칭 수락`;
@@ -84,7 +84,7 @@ export function outputMessage(message) {
         }
 
         //매칭 status가 done으로 변하면 메세지 받은사람 버튼 변경
-        if(room.dataset.chattingTo === userNickname && message.matchingStatus === 'DONE' && matchingBtn.childNodes[1].nodeValue !== `매칭 대기`){
+        if(room.dataset.chattingFrom !== userNickname && message.matchingStatus === 'DONE' && matchingBtn.childNodes[1].nodeValue !== `매칭 대기`){
             // getRecentMatchingNo(room.id);
             // const matchingNo = room.querySelector('.matching-accept-btn').dataset.matchingNo;
             // const flag = searchPointHistory(matchingNo);
