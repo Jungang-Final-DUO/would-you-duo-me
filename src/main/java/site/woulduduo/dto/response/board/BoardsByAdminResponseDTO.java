@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 public class BoardsByAdminResponseDTO {
 
     private long boardNo;
-    private String userNickName;
+    private String userNickname;
     private String boardTitle;
     private String boardWrittenDate;
     private int boardViewCount;
@@ -25,7 +25,7 @@ public class BoardsByAdminResponseDTO {
 
     public BoardsByAdminResponseDTO(Board board) {
         this.boardNo = board.getBoardNo();
-        this.userNickName = board.getUser().getUserNickname();
+        this.userNickname = board.getUser().getUserNickname();
         this.boardTitle = boardTitle(board,20);
         this.boardWrittenDate = localDateTime(board);
         this.boardViewCount = board.getBoardViewCount();

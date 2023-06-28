@@ -283,10 +283,10 @@ public class UserController {
 
     @GetMapping("/user/detail/admin")
     //관리자 페이지 자세히 보기
-    public String showDetailByAdmin(HttpSession session,Model model,@RequestParam String userAccount){
-        log.info("{}nickname = ",userAccount);
+    public String showDetailByAdmin(HttpSession session,Model model,@RequestParam String userNickname){
+        log.info("{}nickname = ",userNickname);
 
-        UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userAccount);
+        UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userNickname);
 
         log.info("{}userDetailByAdmin = ",userDetailByAdmin);
 

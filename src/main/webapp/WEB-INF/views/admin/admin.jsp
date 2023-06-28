@@ -123,7 +123,7 @@
           </div>
           <% for (int i = 1; i < 11; i++) { %>
           <a href="javascript:void(0);"
-            onclick="window.location.href = '/user/detail/admin?userAccount=' + userAccount;" class="user_li"
+            onclick="window.location.href = '/user/detail/admin?userNickname=' + userNickname;" class="user_li"
             style="display: none;">
             <div class="menubar">
               <div class="no uln"></div>
@@ -144,7 +144,7 @@
           <!-- 게시글관리 -->
           <div class="menubar" id="board_menu_bar" style="display: none;">
             <div class="no">no</div>
-            <div class="nickname">ID</div>
+            <div class="nickname">닉네임</div>
             <div class="title">제목</div>
             <div class="board_write_date">작성일자</div>
             <div class="select_count">조회수</div>
@@ -265,7 +265,7 @@ function getUserList(pageNum) {
       for (let listOne of list) {
         const {
           rowNum,
-          userAccount,
+          userNickname,
           gender,
           boardCount,
           replyCount,
@@ -283,108 +283,34 @@ function getUserList(pageNum) {
       totalUser(list);
       locationToDetail(list);
       renderUserList(res);
+
     });
 }
 
-function renderUserList({ count, pageInfo, list }) {
-  console.log('count: ', count);
-  console.log('pageInfo: ', pageInfo);
-  console.log('list: ', list);
+// 페이징된 사용자 목록 가져오기
+function getUserTodayList(pageNum) {
+  fetch(`/api/v1/users/admin?page=${pageNum}`)
+    .then(response => response.json())
+    .then(res => {
+      console.log('res', res);
+      renderUserList(res);
 
-  // 페이지 렌더링
-  renderPage(pageInfo);
-
-  // 유저 페이지 클릭 이벤트 등록
-  locationToDetail(list);
+    });
 }
 
-//페이징
-function renderPage({
-  startPage,
-  endPage,
-  currentPage,
-  prev,
-  next,
-  totalCount,
-  PAGE_COUNT
-}) {
-  let tag = "";
+function totalUser(list){
+  uln(list);
+  uli(list);
+  ulg(list);
+  ulb(list);
+  ulr(list);
+  ulw(list);
+  ulp(list);
+  ulf(list);
+  uls(list);
+}
 
-  //이전 버튼 만들기
-  if (prev) {
-    tag += "<li class='page-item'><a class='page-link page-active' href='" + (startPage - 1) +
-      "'>이전</a></li>";
-  }
-  //페이지 번호 리스트 만들기
-  for (let i = startPage; i <= endPage; i++) {
-    let active = '';
-    if (currentPage.pageNo === i) {
-      console.log(currentPage.pageNo);
-      active = 'p-active';
-    }
-
-    tag += "<li class='page-item " + active + "'><a class='page-link page-custom' href='" + i +
-      "'>" + i + "</a></li>";
-  }
-  //다음 버튼 만들기
-  if (next) {
-    tag += "<li class='page-item'><a class='page-link page-active' href='" + (endPage + 1) +
-      "'>다음</a></li>";
-  }
-
-  // 페이지태그 렌더링
-  const $pageUl = document.querySelector('.pagination');
-  $pageUl.innerHTML = tag;
-
-  // ul에 마지막페이지 번호 저장.
-  $pageUl.dataset.fp = endPage;
-
- 
-} 
-
-
-
-// 유저페이지 클릭 이벤트 핸들러
-function makePageButtonUserClickEvent() {
-        // 페이지 버튼 클릭이벤트 처리
-        const $pageUl = document.querySelector('.pagination');
-        $pageUl.onclick = e => {
-          if (!e.target.matches('.page-item a')) return;
-
-          e.preventDefault(); // 태그의 기본 동작 중단
-
-          // 누른 페이지 번호 가져오기
-          const pageNum = e.target.getAttribute('href');
-          // console.log(pageNum);
-          console.log("======",pageNum)
-
-          // 페이지 번호에 맞는 목록 비동기 요청
-          getUserTodayList(pageNum);
-        };
-      }
-
-// 유저페이지 클릭 이벤트 등록
-makePageButtonUserClickEvent();
-
-
-
-      function locationToDetail(list) {
-        console.log('list: ', list);
-
-        for (let i = 0; i < list.length; i++) {
-          const userAccount = list[i].userAccount; // userAccount 값을 가져옴
-
-          userList[i].onclick = e => {
-            console.log('userAccount: ', userAccount);
-
-            window.location.href = '/user/detail/admin?userAccount=' + userAccount;
-          };
-        }
-      }
-
-
-
-      function uln(list) {
+function uln(list) {
         const ulArray = document.querySelectorAll('.uln');
         ulArray.forEach((ulElement, index) => {
           const asd = list[index].rowNum;
@@ -394,11 +320,9 @@ makePageButtonUserClickEvent();
       }
 
       function uli(list) {
-        console.log('list: ', list);
-
         const ulArray = document.querySelectorAll('.uli');
         ulArray.forEach((ulElement, index) => {
-          const asd = list[index].userAccount;
+          const asd = list[index].userNickname;
           ulElement.innerText = asd;
         });
       }
@@ -458,6 +382,105 @@ makePageButtonUserClickEvent();
           ulElement.innerText = asd;
         });
       }
+  
+  
+      function renderUserList({ count, pageInfo, list }) {
+  console.log('count: ', count);
+  console.log('pageInfo: ', pageInfo);
+  console.log('list: ', list);
+
+  // 페이지 렌더링
+  renderPage(pageInfo);
+
+  // 유저 페이지 클릭 이벤트 등록
+  locationToDetail(list);
+}
+
+
+//페이징
+function renderPage({
+  startPage,
+  endPage,
+  currentPage,
+  prev,
+  next,
+  totalCount,
+  PAGE_COUNT
+}) {
+  let tag = "";
+
+  //이전 버튼 만들기
+  if (prev) {
+    tag += "<li class='page-item'><a class='page-link page-active' href='" + (startPage - 1) +
+      "'>이전</a></li>";
+  }
+  //페이지 번호 리스트 만들기
+  for (let i = startPage; i <= endPage; i++) {
+    let active = '';
+    if (currentPage.pageNo === i) {
+      console.log(currentPage.pageNo);
+      active = 'p-active';
+    }
+
+    tag += "<li class='page-item " + active + "'><a class='page-link page-custom' href='" + i +
+      "'>" + i + "</a></li>";
+  }
+  //다음 버튼 만들기
+  if (next) {
+    tag += "<li class='page-item'><a class='page-link page-active' href='" + (endPage + 1) +
+      "'>다음</a></li>";
+  }
+
+  // 페이지태그 렌더링
+  const $pageUl = document.querySelector('.pagination');
+  $pageUl.innerHTML = tag;
+
+  // ul에 마지막페이지 번호 저장.
+  $pageUl.dataset.fp = endPage;
+
+ 
+} 
+
+
+
+// 유저페이지 클릭 이벤트 핸들러
+function makePageButtonUserClickEvent() {
+  // 페이지 버튼 클릭이벤트 처리
+  const $pageUl = document.querySelector('.pagination');
+  $pageUl.onclick = e => {
+    if (!e.target.matches('.page-item a')) return;
+
+    e.preventDefault(); // 태그의 기본 동작 중단
+
+    // 누른 페이지 번호 가져오기
+    const pageNum = e.target.getAttribute('href');
+    console.log("======", pageNum);
+
+    // 페이지 번호에 맞는 목록 비동기 요청
+    getUserTodayList(pageNum);
+  };
+}
+
+makePageButtonUserClickEvent();
+
+
+      function locationToDetail(list) {
+        console.log('list: ', list);
+
+        for (let i = 0; i < list.length; i++) {
+          const userNickname = list[i].userNickname; // userAccount 값을 가져옴
+
+          userList[i].onclick = e => {
+            console.log('userNickname: ', userNickname);
+
+            window.location.href = '/user/detail/admin?userNickname=' + userNickname;
+          };
+        }
+      }
+
+
+
+      
 
 
 
@@ -487,7 +510,7 @@ function getUserTodayList(pageNum) {
       for (let listOne of list) {
         const {
           rowNum,
-          userAccount,
+          userNickname,
           gender,
           boardCount,
           replyCount,
@@ -538,7 +561,7 @@ function getUserTodayList(pageNum) {
           if (index >= list.length) {
             ulElement.innerText = ''; // 공백으로 출력
           } else {
-            const asd = list[index].userAccount;
+            const asd = list[index].userNickname;
             ulElement.innerText = asd;
           }
         });
@@ -725,7 +748,7 @@ function getUserTodayList(pageNum) {
             for (let listOne of list) {
               const {
                 boardNo,
-                userNickName,
+                userNickname,
                 boardTitle,
                 boardWrittenDate,
                 boardViewCount
@@ -771,7 +794,7 @@ function getUserTodayList(pageNum) {
       function blm(list) {
         const ulArray = document.querySelectorAll('.blm');
         ulArray.forEach((ulElement, index) => {
-          const asd = list[index].userNickName;
+          const asd = list[index].userNickname;
           ulElement.innerText = asd;
         });
       }
@@ -849,7 +872,7 @@ function getUserTodayList(pageNum) {
             for (let listOne of list) {
               const {
                 boardNo,
-                userNickName,
+                userNickname,
                 boardTitle,
                 boardWrittenDate,
                 boardViewCount
@@ -904,7 +927,7 @@ function getUserTodayList(pageNum) {
           if (index >= list.length) {
             ulElement.innerText = ''; // 공백으로 출력
           } else {
-            const asd = list[index].userNickName;
+            const asd = list[index].userNickname;
             ulElement.innerText = asd;
           }
         });
@@ -1002,7 +1025,7 @@ function getUserTodayList(pageNum) {
             for (let listOne of list) {
               const {
                 accuseNo,
-                userAccount,
+                userNickname,
                 accuseType,
                 accuseETC,
                 accuseWrittenDate
@@ -1036,7 +1059,7 @@ function getUserTodayList(pageNum) {
       function alm(list) {
         const ulArray = document.querySelectorAll('.alm');
         ulArray.forEach((ulElement, index) => {
-          const asd = list[index].userAccount;
+          const asd = list[index].userNickname;
           ulElement.innerText = asd;
         });
       }
@@ -1085,7 +1108,7 @@ function getUserTodayList(pageNum) {
             for (let listOne of list) {
               const {
                 accuseNo,
-                userAccount,
+                userNickname,
                 accuseType,
                 accuseETC,
                 accuseWrittenDate
@@ -1126,7 +1149,7 @@ function getUserTodayList(pageNum) {
           if (index >= list.length) {
             ulElement.innerText = ''; // 공백으로 출력
           } else {
-            const asd = list[index].userAccount;
+            const asd = list[index].userNickname;
             ulElement.innerText = asd;
           }
         });

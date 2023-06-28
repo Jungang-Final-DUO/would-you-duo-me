@@ -422,8 +422,8 @@ public class UserService {
 
 
     //userDetailByAdmin
-    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount) {
-        User byUserNickName = userRepository.findByUserAccount(userAccount);
+    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userNickName) {
+        User byUserNickName = userRepository.findByUserNickname(userNickName);
         UserDetailByAdminResponseDTO userDetail =
                 new UserDetailByAdminResponseDTO(byUserNickName);
 
@@ -432,7 +432,7 @@ public class UserService {
         return userDetail;
     }
     public boolean getUserBanBooleanByAdmin(String userNickname) {
-        User byUserNickName = userRepository.findByUserNickName(userNickname);
+        User byUserNickName = userRepository.findByUserNickname(userNickname);
 
         boolean userIsBanned = byUserNickName.isUserIsBanned();
 
@@ -443,7 +443,7 @@ public class UserService {
 
     //포인트 증가
     public boolean increaseUserPoint(UserModifyRequestDTO dto) {
-        User byUserNickName = userRepository.findByUserNickName(dto.getUserNickname());
+        User byUserNickName = userRepository.findByUserNickname(dto.getUserNickname());
 
         System.out.println("userByNickName123 = " + byUserNickName);
         //지급포인트
@@ -479,7 +479,7 @@ public class UserService {
 
     //현재포인트 렌더링 메서드
     public int currentPoint(UserModifyRequestDTO dto) {
-        User byUserNickName = userRepository.findByUserNickName(dto.getUserNickname());
+        User byUserNickName = userRepository.findByUserNickname(dto.getUserNickname());
         Integer userCurrentPoint = byUserNickName.getUserCurrentPoint();
 
         return userCurrentPoint;
@@ -489,7 +489,7 @@ public class UserService {
     public boolean changeBanStatus(UserModifyRequestDTO dto){
         int userIsBanned = dto.getUserIsBanned();
         System.out.println("userIsBanned12 = " + userIsBanned);
-        User byUserNickName = userRepository.findByUserNickName(dto.getUserNickname());
+        User byUserNickName = userRepository.findByUserNickname(dto.getUserNickname());
         boolean userIsBanned1 = byUserNickName.isUserIsBanned();
         System.out.println("userIsBanned1 = " + userIsBanned1);
 
@@ -517,7 +517,7 @@ public class UserService {
 
     //닉네임으로 user 찾기
     public User findUserByNickName(UserModifyRequestDTO dto){
-        User byUserNickName = userRepository.findByUserNickName(dto.getUserNickname());
+        User byUserNickName = userRepository.findByUserNickname(dto.getUserNickname());
 
 
         return byUserNickName;

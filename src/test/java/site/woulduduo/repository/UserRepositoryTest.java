@@ -192,7 +192,7 @@ class UserRepositoryTest {
     @Test
     @DisplayName("nickname으로 User 객체 찾기")
     void searchUserByNickName() {
-        User byNickName = userRepository.findByUserNickName("asd1");
+        User byNickName = userRepository.findByUserNickname("asd100");
         System.out.println("byNickName = " + byNickName);
     }
 
@@ -259,10 +259,16 @@ class UserRepositoryTest {
                 Sort.by("userJoinDate").descending()
         );
 
-        Page<User> users = userRepository.findByUserAccountContaining(userAccount, pageable);
+        Page<User> users = userRepository.findByUserAccountContaining("34", PageRequest.of(0,5));
 
         //then
         System.out.println("users = " + users);
+        List<User> content = users.getContent();
+        System.out.println("content = " + content);
+        int size1 = users.getSize();
+        System.out.println("size1 = " + size1);
+        int size2 = content.size();
+        System.out.println("size2 = " + size2);
     }
 
 

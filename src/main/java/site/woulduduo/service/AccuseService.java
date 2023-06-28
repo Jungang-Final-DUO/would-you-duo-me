@@ -136,7 +136,7 @@ public class AccuseService {
     public boolean accuseUser(UserAccuseRequestDTO dto){
 
         String userNickname = dto.getUserNickname();
-        User byUserAccount = userRepository.findByUserNickName(userNickname);
+        User byUserAccount = userRepository.findByUserNickname(userNickname);
         System.out.println("byUserAccount = " + byUserAccount);
         //정보 없으면 false;
         if(byUserAccount==null){
@@ -163,7 +163,7 @@ public class AccuseService {
     public int accuseUserCount(UserAccuseRequestDTO dto) {
         System.out.println("dto = " + dto);
         String userNickname = dto.getUserNickname();
-        User byUserNickName = userRepository.findByUserNickName(userNickname);
+        User byUserNickName = userRepository.findByUserNickname(userNickname);
         System.out.println("byUserNickName = " + byUserNickName);
         List<Accuse> accuseList = byUserNickName.getAccuseList();
         int size = accuseList.size();

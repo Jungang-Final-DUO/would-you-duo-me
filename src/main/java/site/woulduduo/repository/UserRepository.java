@@ -26,8 +26,7 @@ public interface UserRepository extends
     int findAllWithJoinDate(LocalDate userJoinDate);
 
     //nickname으로 User 객체 찾기
-    @Query(value = "SELECT * FROM duo_user WHERE user_nickname = :userNickName",nativeQuery = true)
-    User findByUserNickName(String userNickName);
+
     //가입수
     long countByUserAccount(String userAccount);
 
@@ -52,5 +51,5 @@ public interface UserRepository extends
     int countByLolNickname(@Param("lolNickname") String lolNickname);
 
 
-    User findByUserNickname(String messageFrom);
+    User findByUserNickname(String userNickname);
 }
