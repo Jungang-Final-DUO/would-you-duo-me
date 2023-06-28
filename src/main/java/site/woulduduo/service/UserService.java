@@ -616,6 +616,7 @@ public class UserService {
                 .totalWinCount(rankInfo.getWins())
                 .totalLoseCount(rankInfo.getLosses())
                 .winRate(Math.round(rankInfo.getWinRate() * 100))
+                .rank(rankInfo.getRank())
                 // 최근 20 매치의 정보 데이터
                 .last20Matches(last20ParticipantDTOList.stream()
                         .map(MatchResponseDTO::new)

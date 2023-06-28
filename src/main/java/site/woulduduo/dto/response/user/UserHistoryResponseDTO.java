@@ -31,6 +31,7 @@ public class UserHistoryResponseDTO {
     private String lolNickname;
     private String userComment;
     private String tier;
+    private String rank;
 
     // riot api 를 통해 얻어오는 데이터
     private int leaguePoints;

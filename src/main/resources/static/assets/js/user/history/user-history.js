@@ -2,6 +2,7 @@ import {drawPieGraph} from "./draw-pie-graph.js";
 import {renderReview} from "../../review/render-review.js";
 import {scrollPaging} from "../../common/scroll-paging.js";
 import {followEventHandler} from "./follow-event-handler.js";
+import {makeChattingRoom} from "../../chatting/chatting-modal";
 
 (() => {
     // 페이지 번호를 위한 클로저
@@ -35,5 +36,8 @@ import {followEventHandler} from "./follow-event-handler.js";
 
     // 팔로우 이벤트 등록
     followEventHandler(userAccount, document.getElementById('user-follow-heart'));
+
+    // 채팅 버튼 이벤트 등록
+    makeChattingRoom();
 
 })();
