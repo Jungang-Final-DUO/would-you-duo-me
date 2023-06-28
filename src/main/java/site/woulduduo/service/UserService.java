@@ -26,6 +26,7 @@ import site.woulduduo.dto.riot.MostChampInfo;
 import site.woulduduo.entity.*;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.LoginResult;
+import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 import site.woulduduo.exception.NotFollowedException;
 import site.woulduduo.exception.NoRankException;
@@ -193,6 +194,9 @@ public class UserService {
                 .userNickname(user.getUserNickname())
                 .lolNickname(user.getLolNickname())
                 .userCurrentPoint(user.getUserCurrentPoint())
+                .userComment(user.getUserComment() != null ? user.getUserComment() : "")
+                .userPosition(user.getUserPosition() != null ? user.getUserPosition() : Position.NONE)
+                .userMatchingPoint(user.getUserMatchingPoint() != null ? user.getUserMatchingPoint() : 0)
                 .userProfileImage(user.getLatestProfileImage())
                 .build();
 
@@ -242,7 +246,7 @@ public class UserService {
      * @return 등록성공여부
      * @Param dto - 프로필카드 등록 dto
      */
-    public boolean registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
+    public boolean registerDUO(HttpSession session, UserCommentRequestDTO dto) {
 
         User exUser = User.builder()
                 .userSessionId("abc1234@ddd.com")
@@ -256,8 +260,8 @@ public class UserService {
                 .build();
 
         userRepository.save(exUser);
-
-        Optional<User> user = userRepository.findById(exUser.getUserSessionId());
+        LoginUserResponseDTO loginUser = (LoginUserResponseDTO) session.getAttribute("login");
+        Optional<User> user = userRepository.findById(loginUser.getUserAccount());
 
         System.out.println("user = " + user);
         if (user.isEmpty()) {
