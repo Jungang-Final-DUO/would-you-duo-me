@@ -347,7 +347,7 @@ header {
     top: 1px;
     right: 1px;
 
-    display: none;
+    /*display: none;*/
     /* 값이 있을때 block으로 바꾸기 */
     /* display: block */
     background: #FF0000;
@@ -356,4 +356,7 @@ header {
 
     color: #fff;
     font-weight: bold;
+
+    width: fit-content;
+    min-width: 20px;
 }

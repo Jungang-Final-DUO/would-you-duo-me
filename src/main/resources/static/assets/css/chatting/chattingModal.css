@@ -69,7 +69,7 @@
 
 .chatting-card-inner {
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     align-items: center;
     cursor: pointer;
 }
@@ -103,12 +103,13 @@
 .chatting-card-inner .chatting-unread {
     background: red;
     border-radius: 5px;
-    width: 30px;
-    height: 23px;
+    width: fit-content;
+    /*height: 23px;*/
     text-align: center;
 
     margin-top: 30px;
-    padding-top: 3px;
+    padding: 3px;
+    min-width: 20px;
 }
 
 #empty-chatting-list {

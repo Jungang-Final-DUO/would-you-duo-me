@@ -1,9 +1,9 @@
-package site.woulduduo.controller;
+package site.woulduduo.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+import site.woulduduo.repository.PointRepository;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Matching;
 import site.woulduduo.entity.Point;

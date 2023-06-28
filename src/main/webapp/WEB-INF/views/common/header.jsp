@@ -133,7 +133,7 @@
             <img class=".modal-btn" src="/assets/img/header/chatting.png" alt="채팅 버튼 아이콘">
             <!--     읽지 않은 채팅 표시   -->
             <span id="unread-chatting-count">
-                    ${false}
+<%--                    ${false}--%>
             </span>
         </button>
         <%@ include file="../chatting/chattingModal.jsp" %>

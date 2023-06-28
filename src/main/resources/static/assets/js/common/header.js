@@ -1,5 +1,5 @@
 import {addModalBtnEvent, addModalCloseEvent} from "./modal-handler.js";
-import {makeChattingRoom, toBack} from "../chatting/chatting-modal.js";
+import {makeChattingRoom, renderTotalUnreadMessages, toBack} from "../chatting/chatting-modal.js";
 import {toTopBtnHandler} from "./to-top-btn-handler.js";
 import {connectSocket} from "../chatting/main.js";
 import {addDropdownEvent} from "./dropdown-handler.js";
@@ -16,6 +16,9 @@ import {renderMatchingCalendar} from "../chatting/chatting-calendar.js";
 
         //채팅 생성하기
         makeChattingRoom();
+
+        //안읽은 메세지 출력
+        renderTotalUnreadMessages();
 
         // 채팅 메세지 모달 안에서 채팅방 모달로 돌아가기
         toBack();

@@ -8,6 +8,7 @@ import org.springframework.test.annotation.Rollback;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.User;
 import site.woulduduo.repository.ChattingRepository;
+import site.woulduduo.service.PointService;
 
 import javax.transaction.Transactional;
 
