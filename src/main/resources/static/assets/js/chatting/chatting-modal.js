@@ -1,5 +1,4 @@
 import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
-import {renderRateModal} from "../review/write-rate.js";
 
 export async function getChattingList() {
     // 추후 session에 회원정보 담기면 경로 수정

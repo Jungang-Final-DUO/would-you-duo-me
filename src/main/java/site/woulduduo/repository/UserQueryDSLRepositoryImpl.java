@@ -3,7 +3,6 @@ package site.woulduduo.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.querydsl.jpa.impl.JPAUpdateClause;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -17,7 +16,6 @@ import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +27,6 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
     private final JPAQueryFactory queryFactory;
     private final QUser user =  QUser.user;
     private final QMostChamp mostChamp = QMostChamp.mostChamp;
-
-    JPAUpdateClause updateClause = new JPAUpdateClause();
 
     @Override
     public List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/) {

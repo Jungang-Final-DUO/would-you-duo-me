@@ -1,7 +1,7 @@
 import {drawPieGraph} from "./draw-pie-graph.js";
 import {renderReview} from "../../review/render-review.js";
 import {scrollPaging} from "../../common/scroll-paging.js";
-import {followEventHandler} from "./followEventHandler.js";
+import {followEventHandler} from "./follow-event-handler.js";
 
 (() => {
     // 페이지 번호를 위한 클로저
