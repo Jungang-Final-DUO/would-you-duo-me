@@ -27,6 +27,7 @@ import site.woulduduo.entity.*;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.LoginResult;
 import site.woulduduo.enumeration.Tier;
+import site.woulduduo.exception.NotFollowedException;
 import site.woulduduo.exception.NoRankException;
 import site.woulduduo.repository.*;
 import site.woulduduo.util.LoginUtil;
@@ -549,7 +550,9 @@ public class UserService {
 
         boolean isFollowed = false;
         try {
-            isFollowed = followRepository.existsByFollowFromAndFollowTo(((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount(), userAccount);
+            isFollowed = followRepository.existsByFollowFromAndFollowTo(
+                    ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount()
+                    , userAccount) == 1;
         } catch (NullPointerException ignored) {
         }
 
@@ -627,22 +630,38 @@ public class UserService {
     }
 
 
-    public void follow(String followTo, HttpSession session) throws RuntimeException {
+    public boolean follow(String followTo, HttpSession session) throws RuntimeException {
 
         String followFrom = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
 
         if (followTo.equals(followFrom)) throw new RuntimeException("해당하는 유저가 없습니다.");
 
-        followRepository.save(
-                Follow.builder()
-                        .followTo(userRepository.findById(followTo).orElseThrow(
-                                () -> new RuntimeException("해당하는 유저가 없습니다.")
-                        ))
-                        .followFrom(userRepository.findById(followFrom).orElseThrow(
-                                () -> new RuntimeException("해당하는 유저가 없습니다.")
-                        ))
-                        .build()
-        );
+        Follow followState;
 
+        try {
+            followState = followRepository.findById(FollowCompositeKey.builder()
+                    .followFrom(followFrom)
+                    .followTo(followTo)
+                    .build()).orElseThrow(
+                    () -> new NotFollowedException("팔로우 합니다")
+            );
+        } catch (NotFollowedException e) {
+            followRepository.save(
+                    Follow.builder()
+                            .followTo(userRepository.findById(followTo).orElseThrow(
+                                    () -> new RuntimeException("해당하는 유저가 없습니다.")
+                            ))
+                            .followFrom(userRepository.findById(followFrom).orElseThrow(
+                                    () -> new RuntimeException("해당하는 유저가 없습니다.")
+                            ))
+                            .build()
+            );
+
+            return true;
+        }
+
+        followRepository.delete(followState);
+
+        return false;
     }
 }
