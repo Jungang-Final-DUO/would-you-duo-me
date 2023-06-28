@@ -253,11 +253,9 @@
 
 function getUserList(pageNum) {
   console.log('totalpageNum=================', pageNum);
-
-  fetch(`/api/v1/users/admin?page=` + pageNum)
+  fetch("/api/v1/users/admin?page="+pageNum+"&keyword=34")
     .then(response => response.json())
     .then(res => {
-      console.log('res', res);
 
       const list = res.list;
       console.log('list: ', list);
@@ -279,24 +277,17 @@ function getUserList(pageNum) {
       for (let i = 0; i < userList.length; i++) {
         userList[i].style.display = '';
       }
+      console.log('res', res);
 
       totalUser(list);
+      renderUserList(res);
+
       locationToDetail(list);
-      renderUserList(res);
 
     });
 }
 
-// 페이징된 사용자 목록 가져오기
-function getUserTodayList(pageNum) {
-  fetch(`/api/v1/users/admin?page=${pageNum}`)
-    .then(response => response.json())
-    .then(res => {
-      console.log('res', res);
-      renderUserList(res);
 
-    });
-}
 
 function totalUser(list){
   uln(list);
@@ -384,7 +375,11 @@ function uln(list) {
       }
   
   
-      function renderUserList({ count, pageInfo, list }) {
+      function renderUserList({ 
+        count, 
+        pageInfo, 
+        list 
+      }) {
   console.log('count: ', count);
   console.log('pageInfo: ', pageInfo);
   console.log('list: ', list);
@@ -392,9 +387,8 @@ function uln(list) {
   // 페이지 렌더링
   renderPage(pageInfo);
 
-  // 유저 페이지 클릭 이벤트 등록
-  locationToDetail(list);
 }
+
 
 
 //페이징
@@ -457,7 +451,7 @@ function makePageButtonUserClickEvent() {
     console.log("======", pageNum);
 
     // 페이지 번호에 맞는 목록 비동기 요청
-    getUserTodayList(pageNum);
+    getUserList(pageNum);
   };
 }
 
@@ -479,8 +473,6 @@ makePageButtonUserClickEvent();
       }
 
 
-
-      
 
 
 

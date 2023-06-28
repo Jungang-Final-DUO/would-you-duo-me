@@ -223,6 +223,10 @@ width: 100%;
 
 }
 
+#main-wrapper #right_menu .bottom_menu .menubar .blc{
+    margin-left: 10%;
+}
+
 #main-wrapper #right_menu .bottom_menu .menubar .no{
     margin-left: 5px;
     width: 5%;
@@ -230,7 +234,7 @@ width: 100%;
 
 #main-wrapper #right_menu .bottom_menu .menubar .nickname{
     margin-left: 5px;
-    width: 20%;
+    width: 15%;
 }
 
 #main-wrapper #right_menu .bottom_menu .menubar .gender{
@@ -264,7 +268,7 @@ width: 100%;
 }
 
 #main-wrapper #right_menu .bottom_menu .menubar .sign_date{
-    margin-left:40px;
+    margin-left:60px;
     width: 10%;
 }
 
@@ -310,17 +314,17 @@ width: 100%;
     width: 10%;
 }
 
-#main-wrapper #right_menu .bottom_menu .menubar .select_count{
+#main-wrapper #right_menu .bottsom_menu .menubar .select_count{
     margin-left:20px;
-    width: 7%;
+    width: 5%;
 }
 
 #main-wrapper #right_menu .bottom_menu .menubar div:last-child{
 height: 60%;
-margin-left: 40px;
 padding-top: 7px;
 background-color: rgba(255, 255, 255, 0);
 cursor: pointer;
+width: 15%;
 /* border: 1px solid #000; */
 
 }
@@ -344,16 +348,16 @@ cursor: pointer;
 }
 #main-wrapper #right_menu .bottom_menu .menubar .accuse_title{
     margin-left:20px;
-    width: 40%;
+    width: 38%;
 }
 #main-wrapper #right_menu .bottom_menu .menubar .accuse_etc{
     margin-left:20px;
-    width: 40%;
+    width: 38%;
 }
 
 #main-wrapper #right_menu .bottom_menu .menubar .accuse_count{
-    margin-left:20px;
-    width: 13%;
+    margin-left:40px;
+    width: 10%;
 }
 
 
