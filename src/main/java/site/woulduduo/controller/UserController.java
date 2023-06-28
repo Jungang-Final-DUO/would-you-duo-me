@@ -299,5 +299,20 @@ public class UserController {
 
     }
 
+    // 유저 팔로우
+    @PatchMapping("/api/v1/users/{userAccount}")
+    public ResponseEntity<?> follow(
+            @PathVariable String userAccount,
+            HttpSession session
+    ) {
+        try {
+            userService.follow(userAccount, session);
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
 
