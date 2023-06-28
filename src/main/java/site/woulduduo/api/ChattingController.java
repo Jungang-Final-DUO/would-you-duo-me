@@ -7,13 +7,16 @@ import org.springframework.web.bind.annotation.*;
 import site.woulduduo.dto.request.chatting.MessageRequestDTO;
 import site.woulduduo.dto.response.chatting.ChattingDetailResponseDTO;
 import site.woulduduo.dto.response.chatting.ChattingListResponseDTO;
+import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Message;
 import site.woulduduo.entity.User;
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.ChattingService;
 import site.woulduduo.service.MessageService;
+import site.woulduduo.util.LoginUtil;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -65,7 +68,7 @@ public class ChattingController {
         return ResponseEntity.ok().body(flag);
     }
 
-    //안읽은 메세지 개수 읽어오기
+    //채팅별 안읽은 메세지 개수 읽어오기
     // 추후 session에 회원정보 담기면 경로 수정
     @GetMapping("/messages/unread/{userId}/{chattingNo}")
     public ResponseEntity<?> getUnreadMessageCount(
@@ -78,6 +81,15 @@ public class ChattingController {
         int unreadMessages = chattingService.countUnreadMessages(chatting, user);
 
         return ResponseEntity.ok().body(unreadMessages);
+    }
+
+    // 전체 안읽은 메세지 개수 읽어오기
+    @GetMapping("/messages/unread/{userId}")
+    public ResponseEntity<?> getTotalUnreadMessageCount(@PathVariable String userId){
+        User user = userRepository.findById(userId).orElseThrow();
+        int totalUnreadMessages = chattingService.getTotalUnreadMessageCount(user);
+
+        return ResponseEntity.ok().body(totalUnreadMessages);
     }
 
     // 최신 메세지 읽어오기
@@ -103,4 +115,12 @@ public class ChattingController {
         return ResponseEntity.ok().body(chattingNo);
     }
 
+    //메세지 읽기
+    @RequestMapping(value = "/messages/read", method = {RequestMethod.PATCH, RequestMethod.PUT})
+    public void readMessages(@RequestBody long chattingNo, HttpSession session){
+        LoginUserResponseDTO loginUserInfo
+                = (LoginUserResponseDTO) session.getAttribute(LoginUtil.LOGIN_KEY);
+        String userAccount = loginUserInfo.getUserAccount();
+        messageService.readMessage(userAccount, chattingNo);
+    }
 }

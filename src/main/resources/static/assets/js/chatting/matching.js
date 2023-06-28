@@ -190,9 +190,9 @@ function matchingRequest(chattingNo){
 
     fetch(`/api/v1/matchings`, requestInfo)
         .then(res => res.json())
-        .then(result => {
-            changeMatchingStatus(chattingNo, result);
-        });
+        .then(result =>
+            changeMatchingStatus(chattingNo, result))
+        .then(result => sendNoticeMessage(result , '듀오 매칭을 요청합니다'));
 }
 
 //REQUEST -> CONFIRM으로 상태 변경
@@ -231,15 +231,14 @@ function gameDone($chattingNo, $matchingNo){
 }
 
 //'' -> REQUEST로 상태 변경
-function changeMatchingStatus(chattingNo, result) {
+async function changeMatchingStatus(chattingNo, result) {
     const chatCard = document.getElementById(chattingNo);
     const $target = chatCard.querySelector('.matching-accept-btn');
     $target.dataset.matchingStatus = 'REQUEST';
     $target.setAttribute('disabled', 'disabled');
     $target.dataset.matchingNo = result;
     $target.childNodes[1].nodeValue = '수락대기중';
-    sendNoticeMessage(chattingNo , '듀오 매칭을 요청합니다');
-    // return chattingNo;
+    return chattingNo;
 }
 
 // CONFIRM -> DONE으로 상태 변경

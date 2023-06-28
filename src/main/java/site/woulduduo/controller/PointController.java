@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import site.woulduduo.dto.request.chatting.GivePointRequestDTO;
+import site.woulduduo.service.PointService;
 
 @Controller
 @Slf4j
