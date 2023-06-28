@@ -454,6 +454,10 @@
 
         };
 
+
+
+
+
         //모달 count red 색칠
         function banCheck() {
             const accuseImages = document.querySelectorAll('.accuse_img');
@@ -546,7 +550,11 @@
                 .then(res => {
                     //  console.log('res: ', res);
                     if (res) {
+                        const dialog = document.querySelectorAll('dialog');
+                        dialog.forEach(element => {
+                            element.close();
 
+                        });
                         // 모달창 닫기
                     } else {
                         // 에러 메시지

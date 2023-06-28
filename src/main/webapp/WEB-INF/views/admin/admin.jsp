@@ -242,49 +242,51 @@
       }
 
       totalUserButton.onclick = e => {
-        console.log('total userlist click 실행');
+  boardDisplayNone();
+  accuseDisplayNone();
+  UserMenuBar.style.display = '';
 
-        boardDisplayNone();
-        accuseDisplayNone();
-        UserMenuBar.style.display = '';
+  const pageNum = 1; // 초기 페이지 설정
 
-        // 전체 유저
-        fetch(`/api/v1/users/admin?page=3`)
-          .then(response => response.json())
-          .then(res => {
-            console.log('res', res);
-
-            const list = res.list;
-            console.log('list: ', list);
+  getUserList(pageNum);
 
 
-            for (let listOne of list) {
-              const {
-                rowNum,
-                userAccount,
-                gender,
-                boardCount,
-                replyCount,
-                reportCount,
-                point,
-                followCount,
-                joinDate
-              } = listOne;
+};
 
-            }
+  function getUserList(pageNum) {
+    console.log('pageNum=================', pageNum);
 
-            for (let i = 0; i < userList.length; i++) {
-              userList[i].style.display = '';
-            }
+    fetch(`/api/v1/users/admin?page=`+pageNum)
+      .then(response => response.json())
+      .then(res => {
+        console.log('res', res);
 
-            // 유저리스트
+        const list = res.list;
+        console.log('list: ', list);
 
-            totalUser(list);
-            locationToDetail(list);
-            renderUserList(res);
-          });
-      };
+        for (let listOne of list) {
+          const {
+            rowNum,
+            userAccount,
+            gender,
+            boardCount,
+            replyCount,
+            reportCount,
+            point,
+            followCount,
+            joinDate
+          } = listOne;
+        }
 
+        for (let i = 0; i < userList.length; i++) {
+          userList[i].style.display = '';
+        }
+
+        totalUser(list);
+        locationToDetail(list);
+        renderUserList(res);
+      });
+  }
       function totalUser(list) {
         uln(list);
         uli(list);
@@ -1023,8 +1025,8 @@
 
       }
 
-      // 페이지 클릭 이벤트 핸들러
-      function makePageButtonClickEvent() {
+      // 유저페이지 클릭 이벤트 핸들러
+      function makePageButtonUserClickEvent() {
         // 페이지 버튼 클릭이벤트 처리
         const $pageUl = document.querySelector('.pagination');
         $pageUl.onclick = e => {
@@ -1035,14 +1037,15 @@
           // 누른 페이지 번호 가져오기
           const pageNum = e.target.getAttribute('href');
           // console.log(pageNum);
+          console.log("======",pageNum)
 
           // 페이지 번호에 맞는 목록 비동기 요청
-          getReplyList(pageNum);
+          getUserList(pageNum);
         };
       }
 
       // 페이지 버튼 이벤트 등록
-      makePageButtonClickEvent();
+      makePageButtonUserClickEvent();
     </script>
 </body>
 
