@@ -68,7 +68,7 @@ public class AccuseService {
         Pageable pageable = PageRequest.of(
                 dto.getPage() - 1,
                 dto.getSize(),
-                Sort.by("accuseWrittenDate").descending()
+                Sort.by("accuseNo").descending()
         );
 
         System.out.println("pageable = " + pageable);
@@ -95,14 +95,6 @@ public class AccuseService {
                 .map(AccuseListResponseDTO::new)
                 .collect(toList());
 
-
-        //rowNum 추가
-
-        int i = (dto.getPage() - 1) * dto.getSize() + 1;
-        for (AccuseListResponseDTO accuse : collect) {
-            accuse.setAccuseNo(i);
-            i++;
-        }
             System.out.println("collect----- = " + collect);
 
 

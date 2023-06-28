@@ -509,58 +509,48 @@
 
         //모달 데이터 보내기
         const sendAccuseModal = document.querySelectorAll('.sendAccuse');
-        sendAccuseModal.forEach(modal => {
-            modal.addEventListener('click', e => {
-                const userNickname = user.innerText;
-                // console.log(userNickname);
+const accuseTypeEtcInput = document.querySelectorAll('.accuseTypeEtc');
 
-                e.preventDefault();
-                accuseModalData();
+sendAccuseModal.forEach((modal, index) => {
+    modal.addEventListener('click', e => {
+        const userNickname = user.innerText;
+        e.preventDefault();
+        accuseModalData(userNickname, index);
+    });
+});
+
+function accuseModalData(userNickname, index) {
+    const checkboxes = document.querySelectorAll('input[name="accuseType"]:checked');
+    const accuseType = Array.from(checkboxes).map(checkbox => checkbox.nextElementSibling.innerText);
+
+    const accuseTypeEtcValue = accuseTypeEtcInput[index].value;
+
+    fetch('http://localhost:8282/user/accuse', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userNickname: userNickname,
+            accuseType: accuseType,
+            accuseEtc: accuseTypeEtcValue
+        })
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(res => {
+        if (res) {
+            const dialog = document.querySelectorAll('dialog');
+            dialog.forEach(element => {
+                element.close();
             });
-        });
-
-        function accuseModalData() {
-            const userNickname = user.innerText;
-            //   console.log(userNickname);
-
-            const checkboxes = document.querySelectorAll('input[name="accuseType"]:checked');
-            const accuseType = [];
-
-            checkboxes.forEach(checkbox => {
-                accuseType.push(checkbox.nextElementSibling.innerText);
-            });
-
-            const accuseTypeEtcInput = document.querySelector('.accuseTypeEtc');
-            const accuseTypeEtcValue = accuseTypeEtcInput.value;
-
-            fetch('http://localhost:8282/user/accuse', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        userNickname: userNickname,
-                        accuseType: accuseType,
-                        accuseEtc: accuseTypeEtcValue
-                    })
-                })
-                .then(response => {
-                    return response.json();
-                })
-                .then(res => {
-                    //  console.log('res: ', res);
-                    if (res) {
-                        const dialog = document.querySelectorAll('dialog');
-                        dialog.forEach(element => {
-                            element.close();
-
-                        });
-                        // 모달창 닫기
-                    } else {
-                        // 에러 메시지
-                    }
-                });
-        };
+            // 모달창 닫기
+        } else {
+            // 에러 메시지
+        }
+    });
+}
 
 
 

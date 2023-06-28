@@ -42,37 +42,31 @@ class BoardRepositoryTest {
                 .build();
         User save2 = userRepository.save(user4);
 
-        Board board = Board.builder()
-                .user(save2)
-                .boardTitle("게시글제목")
-                .boardContent("게시글내용")
-                .boardCategory(BoardCategory.ACCUSE)
-                .build();
+        for (int i = 0; i < 200; i++) {
+            Board board = Board.builder()
+                    .user(save2)
+                    .boardTitle("게시글제목1"+i)
+                    .boardContent("게시글내용1"+i)
+                    .boardCategory(BoardCategory.ACCUSE)
+                    .build();
 
-        Board board2 = Board.builder()
-                .user(save2)
-                .boardTitle("게시글제목1")
-                .boardContent("게시글내용1")
-                .boardCategory(BoardCategory.ACCUSE)
-                .build();
 
-        Board board3 = Board.builder()
-                .user(save2)
-                .boardTitle("게시글제목2")
-                .boardContent("게시글내2")
-                .boardCategory(BoardCategory.ACCUSE)
-                .build();
+            Board asave = boardRepository.save(board);
+        }
 
-        Board asave = boardRepository.save(board);
-        Board asave1 = boardRepository.save(board2);
-        Board asave2 = boardRepository.save(board3);
 
 
         long count = boardRepository.countByUser((save2));
         System.out.println("count = " + count);
     }
 
-
+    @Test
+    @DisplayName("전체 board count 확인")
+    void save() {
+        List<Board> all = boardRepository.findAll();
+        int size = all.size();
+        System.out.println("size = " + size);
+    }
 
     @Test
     @DisplayName("전체 board count 확인")

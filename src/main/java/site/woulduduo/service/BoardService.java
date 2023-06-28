@@ -112,6 +112,8 @@ public class BoardService {
                 .map(BoardsByAdminResponseDTO::new)
                 .collect(toList());
 
+
+
         System.out.println("collect = " + collect);
         return ListResponseDTO.<BoardsByAdminResponseDTO,Board>builder()
                 .count(collect.size())
@@ -140,7 +142,7 @@ public class BoardService {
         Pageable pageable = PageRequest.of(
                 dto.getPage()-1,
                 dto.getSize(),
-                Sort.by("boardWrittenDate").descending()
+                Sort.by("boardNo").descending()
         );
 
         String userAccount = dto.getKeyword();
@@ -162,11 +164,7 @@ public class BoardService {
                 .map(BoardsByAdminResponseDTO::new)
                 .collect(toList());
 
-        int i = (dto.getPage() - 1) * dto.getSize() + 1;
-        for (BoardsByAdminResponseDTO board : collect) {
-            board.setBoardNo(i);
-            i++;
-        }
+
         System.out.println("collect----- = " + collect);
 
 
