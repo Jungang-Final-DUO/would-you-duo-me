@@ -215,4 +215,8 @@ public class MatchingService {
                     .collect(Collectors.toList());
 
     }
+
+    public Matching findByMatchingNo(long matchingNo) {
+        return matchingRepository.findByMatchingNo(matchingNo);
+    }
 }

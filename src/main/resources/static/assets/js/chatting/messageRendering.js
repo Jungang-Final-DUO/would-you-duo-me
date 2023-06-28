@@ -116,9 +116,8 @@ export function outputMessage(message) {
 
 //DB에서 메세지 읽어오기
 export function getMessages(room) {
-    const userId = document.getElementById('loginUserInfo').dataset.userAccount;
 
-    fetch(`/api/v1/chat/messages/${userId}/${room}`)
+    fetch(`/api/v1/chat/messages/${room}`)
         .then(res => res.json())
         .then(result => {
             setChattingDetailBox(room, result);
