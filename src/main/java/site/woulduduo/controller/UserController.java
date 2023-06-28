@@ -20,6 +20,7 @@ import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.user.*;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
@@ -57,6 +58,29 @@ public class UserController {
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final S3Service s3Service;
+
+    // 마이페이지
+    @GetMapping("/user/my-page")
+    public String showMyPage(HttpSession session, Model model) {
+//        log.info("/user/my-page GET");
+//
+//        // 사용자 정보 가져오기
+//        User user = null;
+//        if (session != null && session.getId() != null) {
+//            user = userService.getUser(session.getId());
+//        }
+//
+//        // 모델에 사용자 정보 추가
+//        if (user != null) {
+//            // 사용자 정보 속성 추가
+//            model.addAttribute("login", user); // 사용자 정보를 "login" 속성으로 추가
+//
+//            log.info("userBirthday: {}", user.getUserBirthday());
+//
+//        }
+
+        return "my-page/mypage-myinfo";
+    }
 
     // 메인페이지 - 프로필 카드 불러오기(비동기)
     @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
@@ -223,16 +247,16 @@ public class UserController {
 
     // 마이페이지 - 프로필 카드 등록페이지 열기
     @GetMapping("/user/register-duo")
-    public String registerDUO(/*HttpSession session, */Model model) {
+    public String registerDUO(HttpSession session) {
 
         return "my-page/mypage-duoprofile";
     }
 
     // 마이페이지 - 프로필카드 등록 처리
     @PostMapping("/user/register-duo")
-    public String registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
+    public String registerDUO(HttpSession session, UserCommentRequestDTO dto, Model model) {
 
-        boolean b = userService.registerDUO(/*session, */dto);
+        boolean b = userService.registerDUO(session, dto);
         log.info("프로필카드등록 성공여부 : {}", b);
         log.info("@@@@dto@@@@ :{}", dto);
 

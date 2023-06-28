@@ -3,10 +3,12 @@ package site.woulduduo.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import site.woulduduo.dto.request.page.UserSearchType;
+import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.response.user.UserProfileResponseDTO;
 import site.woulduduo.entity.QMostChamp;
 import site.woulduduo.entity.QUser;
@@ -15,6 +17,7 @@ import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,8 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
     private final JPAQueryFactory queryFactory;
     private final QUser user =  QUser.user;
     private final QMostChamp mostChamp = QMostChamp.mostChamp;
+
+    JPAUpdateClause updateClause = new JPAUpdateClause();
 
     @Override
     public List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/) {
@@ -69,6 +74,14 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
         return userProfiles;
     }
+
+    @Override
+    public int modifyProfileCard(UserCommentRequestDTO dto/*, HttpSession session*/) {
+
+
+        return 0;
+    }
+
 
     // 2페이지부터 offset 조정
     private Long checkPage(int page) {
