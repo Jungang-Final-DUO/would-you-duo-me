@@ -634,6 +634,13 @@ public class UserService {
     }
 
 
+    /**
+     * 해당 유저가 현재 팔로우를 했다면 언팔로우, 언팔 상태면 팔로우를 하는 메서드
+     * @param followTo - 누구에게
+     * @param session - 로그인 한 사람
+     * @return - 팔로우 했다면 true, 언팔로우 했다면 false
+     * @throws RuntimeException - 잘못된 유저 정보일 때 예외 던짐
+     */
     public boolean follow(String followTo, HttpSession session) throws RuntimeException {
 
         String followFrom = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
