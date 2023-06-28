@@ -2,6 +2,7 @@ package site.woulduduo.util;
 
 import org.springframework.web.util.WebUtils;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
+import site.woulduduo.entity.Chatting;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -43,5 +44,10 @@ public class LoginUtil {
 //        return targetAccount.equals(getCurrentLoginMemberAccount(session));
 //    }
 
+    //내가 참여한 채팅인지 확인
+    public static boolean isMyChatting(LoginUserResponseDTO loginUserInfo, Chatting chatting){
+        return chatting.getChattingFrom().getUserNickname().equals(loginUserInfo.getUserNickname())
+                || chatting.getChattingTo().getUserNickname().equals(loginUserInfo.getUserNickname());
+    }
 
 }
