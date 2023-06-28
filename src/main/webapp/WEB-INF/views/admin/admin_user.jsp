@@ -89,7 +89,7 @@
                                             <a class="accuse_click modal-btn"><img class="accuse_img" id="a_1"
                                                     src="/assets/img/admin/경고W.png" alt="warn"></a>
                                             <dialog class="container">
-                                                <div id="main-wrapper_1">
+                                                <div id="main-wrapper">
                                                     <form action="/user/accuse" method="POST" class="container">
                                                         <div class="inbox">
                                                             <ul class="inbox_text">
@@ -530,7 +530,7 @@
                 accuseType.push(checkbox.nextElementSibling.innerText);
             });
 
-            const accuseTypeEtcInput = document.querySelectorAll('.accuseTypeEtc');
+            const accuseTypeEtcInput = document.querySelector('.accuseTypeEtc');
             const accuseTypeEtcValue = accuseTypeEtcInput.value;
 
             fetch('http://localhost:8282/user/accuse', {

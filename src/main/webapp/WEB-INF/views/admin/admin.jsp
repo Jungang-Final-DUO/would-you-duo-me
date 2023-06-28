@@ -274,7 +274,7 @@
             reportCount,
             point,
             followCount,
-            joinDate
+            joinDate,
           } = listOne;
         }
 
@@ -395,9 +395,9 @@
         pageInfo,
         list
       }) {
-        // console.log('count: ', count);
-        // console.log('pageInfo: ', pageInfo);
-        // console.log('list: ', list);
+        console.log('count: ', count);
+         console.log('pageInfo: ', pageInfo);
+         console.log('list: ', list);
 
         //페이지 렌더링
         renderPage(pageInfo);
@@ -431,7 +431,7 @@
                 reportCount,
                 point,
                 followCount,
-                joinDate
+                joinDate,
               } = listOne;
 
             }
@@ -831,8 +831,7 @@
             ale(list);
             alc(list);
             renderUserList(res);
-            boardDisplayNone();
-            userDisplayNone();
+         
           });
       }
 
@@ -847,7 +846,7 @@
       function alm(list) {
         const ulArray = document.querySelectorAll('.alm');
         ulArray.forEach((ulElement, index) => {
-          const asd = list[index].userNickName;
+          const asd = list[index].userAccount;
           ulElement.innerText = asd;
         });
       }
