@@ -49,11 +49,11 @@
                     </div>
                     <!-- end of user-nickname-etc-wrapper -->
                     <div id="rate-point-wrapper">
-                        <div id="rate-wrapper">
-                            <img src="/assets/img/main/star.png" alt="별점 아이콘">
-                            <span>${history.userAvgRate}</span>
-                        </div>
                         <c:if test="${history.userMatchingPoint ne null}">
+                            <div id="rate-wrapper">
+                                <img src="/assets/img/main/star.png" alt="별점 아이콘">
+                                <span>${history.userAvgRate}</span>
+                            </div>
                             <div id="point-wrapper">
                                 <img src="/assets/img/main/coin.png" alt="포인트 아이콘">
                                 <span>${history.userMatchingPoint}</span>
@@ -78,7 +78,7 @@
                             </a>
                         </c:if>
                         <c:if test="${history.userMatchingPoint ne null}">
-                            <button class="btn">
+                            <button class="btn chatting-icon">
                                 <img src="/assets/img/main/chatting-icon.png" alt="채팅 아이콘">
                             </button>
                         </c:if>
@@ -109,7 +109,7 @@
                 </div>
                 <div id="rank-etc-wrapper">
                     <div id="rank-point-info-wrapper">
-                        <span>${history.tier}</span>
+                        <span>${history.tier} ${history.rank}</span>
                         <span>${history.leaguePoints}LP</span>
                     </div>
                     <div id="simple-win-rate-wrapper">
