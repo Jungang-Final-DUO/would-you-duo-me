@@ -36,10 +36,14 @@
                         </div>
                         <div id="user-follow-heart">
                             <button class="btn">
-                                <!-- 팔로우 했을 경우 -->
-                                <img src="/assets/img/main/following.png" alt="팔로우 시 하트">
+                                <c:if test="${history.followed}">
+                                    <!-- 팔로우 했을 경우 -->
+                                    <img src="/assets/img/main/following.png" alt="팔로우 시 하트">
+                                </c:if>
                                 <!-- 팔로우 하지 않았을 경우 -->
-                                <!-- <img src="/assets/img/main/not-following.png" alt="언팔로우 시 하트">-->
+                                <c:if test="${!history.followed}">
+                                    <img src="/assets/img/main/not-following.png" alt="언팔로우 시 하트">
+                                </c:if>
                             </button>
                         </div>
                     </div>

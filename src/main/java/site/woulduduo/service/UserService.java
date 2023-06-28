@@ -23,13 +23,11 @@ import site.woulduduo.dto.response.user.*;
 import site.woulduduo.dto.riot.LeagueV4DTO;
 import site.woulduduo.dto.riot.MatchV5DTO;
 import site.woulduduo.dto.riot.MostChampInfo;
-import site.woulduduo.entity.Accuse;
-import site.woulduduo.entity.Board;
-import site.woulduduo.entity.User;
-import site.woulduduo.entity.UserProfile;
+import site.woulduduo.entity.*;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.LoginResult;
 import site.woulduduo.enumeration.Tier;
+import site.woulduduo.exception.NotFollowedException;
 import site.woulduduo.exception.NoRankException;
 import site.woulduduo.repository.*;
 import site.woulduduo.util.LoginUtil;
@@ -46,6 +44,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static site.woulduduo.enumeration.LoginResult.*;
+import static site.woulduduo.util.LoginUtil.LOGIN_KEY;
 
 @Service
 @Slf4j
@@ -202,7 +201,7 @@ public class UserService {
         System.out.println("UserProfileImage: " + userProfileImage);
 
         // 이 정보를 세션에 저장
-        session.setAttribute(LoginUtil.LOGIN_KEY, dto);
+        session.setAttribute(LOGIN_KEY, dto);
 
         // 세션의 수명을 설정
         session.setMaxInactiveInterval(60 * 60); // 1시간
@@ -237,10 +236,11 @@ public class UserService {
 
     /**
      * 마이페이지 - 프로필카드 등록 메서드
+     * <p>
+     * //     * @param session - 접속한 사용자
      *
-//     * @param session - 접속한 사용자
-     * @Param dto - 프로필카드 등록 dto
      * @return 등록성공여부
+     * @Param dto - 프로필카드 등록 dto
      */
     public boolean registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
 
@@ -272,7 +272,6 @@ public class UserService {
         });
         return true;
     }
-
 
 
 //    public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
@@ -322,7 +321,7 @@ public class UserService {
         return userListByAdmin;
     }
 
-    public AdminPageResponseDTO getAdminPageInfo(){
+    public AdminPageResponseDTO getAdminPageInfo() {
         int userFindAllCount = userFindAllCount();
         int userFindByToday = userFindByToday();
         int accuseFindAllCount = accuseFindAllCount();
@@ -383,10 +382,10 @@ public class UserService {
     }
 
     //유저리스트 DTO변환(Admin) + 페이징
-    public ListResponseDTO<UserByAdminResponseDTO,User> getUserListByAdmin(PageDTO dto) {
+    public ListResponseDTO<UserByAdminResponseDTO, User> getUserListByAdmin(PageDTO dto) {
 
         Pageable pageable = PageRequest.of(
-                dto.getPage()-1,
+                dto.getPage() - 1,
                 dto.getSize(),
                 Sort.by("userJoinDate").descending()
         );
@@ -398,7 +397,7 @@ public class UserService {
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
 //
-        int i=1;
+        int i = 1;
         for (UserByAdminResponseDTO user : collect) {
             user.setRowNum(i);
             i++;
@@ -414,9 +413,9 @@ public class UserService {
     }
 
     //금일 가입자(Admin)
-    public ListResponseDTO<UserByAdminResponseDTO,User> todayUserByAdMin(PageDTO dto) {
+    public ListResponseDTO<UserByAdminResponseDTO, User> todayUserByAdMin(PageDTO dto) {
         Pageable pageable = PageRequest.of(
-                dto.getPage()-1,
+                dto.getPage() - 1,
                 dto.getSize(),
                 Sort.by("userJoinDate").descending()
         );
@@ -428,7 +427,7 @@ public class UserService {
         for (User user : all) {
             System.out.println("userByAdminResponseDTO = " + user);
             LocalDate joinDate = user.getUserJoinDate();
-            if (joinDate!=null&&joinDate.equals(currentDate)) {
+            if (joinDate != null && joinDate.equals(currentDate)) {
                 todayUserList.add(user);
             }
         }
@@ -437,7 +436,7 @@ public class UserService {
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
 //
-        int i=1;
+        int i = 1;
         for (UserByAdminResponseDTO user : collect) {
             user.setRowNum(i);
             i++;
@@ -453,7 +452,6 @@ public class UserService {
     }
 
 
-
     //userDetailByAdmin
     public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount) {
         User oneUser = userRepository.findByUserAccount("345");
@@ -461,13 +459,12 @@ public class UserService {
                 new UserDetailByAdminResponseDTO(oneUser);
 
 
-
         return userDetail;
     }
 
 
-//포인트 증가
-    public boolean increaseUserPoint(UserModifyRequestDTO dto){
+    //포인트 증가
+    public boolean increaseUserPoint(UserModifyRequestDTO dto) {
         //지급포인트
         int userAddPoint = dto.getUserAddPoint();
         //현재포인트
@@ -480,37 +477,39 @@ public class UserService {
         boolean matches = currentPoint.matches("-?[0-9]{1,5}");
 
         //현재포인트와 total이 같지 않다면 저장
-        if(userCurrentPoint!=total){
+        if (userCurrentPoint != total) {
             //
-            if(matches!=false) {
+            if (matches != false) {
                 User userByNickName = findUserByNickName(dto);
                 userByNickName.setUserCurrentPoint(total);
                 User save = userRepository.save(userByNickName);
                 System.out.println("save = " + save);
                 return true;
             }
-        }return false;
+        }
+        return false;
 
     }
 
     //밴 boolean
-    public boolean changeBanStatus(UserModifyRequestDTO dto){
+    public boolean changeBanStatus(UserModifyRequestDTO dto) {
         int userIsBanned = dto.getUserIsBanned();
         User userByNickName = findUserByNickName(dto);
 
         //userIsBanned가 1이면 참
-        if(userIsBanned==1) {
+        if (userIsBanned == 1) {
             userByNickName.setUserIsBanned(true);
             User save = userRepository.save(userByNickName);
             return true;
-        }userByNickName.setUserIsBanned(false);
+        }
+        userByNickName.setUserIsBanned(false);
         User save = userRepository.save(userByNickName);
         return false;
 
     }
 
     //닉네임으로 user 찾기
-    public User findUserByNickName(UserModifyRequestDTO dto){
+    public User findUserByNickName(UserModifyRequestDTO dto) {
         String userNickname = dto.getUserNickname();
         User userByNickName = userRepository.findByNickName(userNickname);
 
@@ -551,7 +550,9 @@ public class UserService {
 
         boolean isFollowed = false;
         try {
-            isFollowed = followRepository.existsByFollowFromAndFollowTo(session.getAttribute("로그인키").toString(), userAccount);
+            isFollowed = followRepository.existsByFollowFromAndFollowTo(
+                    ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount()
+                    , userAccount) == 1;
         } catch (NullPointerException ignored) {
         }
 
@@ -629,5 +630,38 @@ public class UserService {
     }
 
 
+    public boolean follow(String followTo, HttpSession session) throws RuntimeException {
 
+        String followFrom = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+
+        if (followTo.equals(followFrom)) throw new RuntimeException("해당하는 유저가 없습니다.");
+
+        Follow followState;
+
+        try {
+            followState = followRepository.findById(FollowCompositeKey.builder()
+                    .followFrom(followFrom)
+                    .followTo(followTo)
+                    .build()).orElseThrow(
+                    () -> new NotFollowedException("팔로우 합니다")
+            );
+        } catch (NotFollowedException e) {
+            followRepository.save(
+                    Follow.builder()
+                            .followTo(userRepository.findById(followTo).orElseThrow(
+                                    () -> new RuntimeException("해당하는 유저가 없습니다.")
+                            ))
+                            .followFrom(userRepository.findById(followFrom).orElseThrow(
+                                    () -> new RuntimeException("해당하는 유저가 없습니다.")
+                            ))
+                            .build()
+            );
+
+            return true;
+        }
+
+        followRepository.delete(followState);
+
+        return false;
+    }
 }

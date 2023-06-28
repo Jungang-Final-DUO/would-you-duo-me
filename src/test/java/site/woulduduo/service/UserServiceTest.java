@@ -361,6 +361,4 @@ class UserServiceTest {
         System.out.println("userDUOInfo = " + userDUOInfo);
     }
 
-
-
 }
