@@ -123,6 +123,7 @@
 
         // 변경할 정보를 담을 객체 생성
         const requestBody = {
+            userAccount: document.getElementById('loginUserInfo').dataset.userAccount,
             userNickname: userNickname,
             userBirthday: userBirthday,
             lolNickname: lolNickname,
@@ -131,25 +132,25 @@
             userTwitter: userTwitter,
         };
 
-        // 입력된 값만 객체에 추가
-        if (userNickname) {
-            requestBody.userNickname = userNickname;
-        }
-        if (userBirthday) {
-            requestBody.userBirthday = userBirthday;
-        }
-        if (lolNickname) {
-            requestBody.lolNickname = lolNickname;
-        }
-        if (userInstagram) {
-            requestBody.userInstagram = userInstagram;
-        }
-        if (userFacebook) {
-            requestBody.userFacebook = userFacebook;
-        }
-        if (userTwitter) {
-            requestBody.userTwitter = userTwitter;
-        }
+        // // 입력된 값만 객체에 추가
+        // if (userNickname) {
+        //     requestBody.userNickname = userNickname;
+        // }
+        // if (userBirthday) {
+        //     requestBody.userBirthday = userBirthday;
+        // }
+        // if (lolNickname) {
+        //     requestBody.lolNickname = lolNickname;
+        // }
+        // if (userInstagram) {
+        //     requestBody.userInstagram = userInstagram;
+        // }
+        // if (userFacebook) {
+        //     requestBody.userFacebook = userFacebook;
+        // }
+        // if (userTwitter) {
+        //     requestBody.userTwitter = userTwitter;
+        // }
 
         // 로그 출력
         console.log('정보변경 요청 발생');
