@@ -117,31 +117,22 @@ function transTier(tier) {
     switch (tier) {
         case 'CHA':
             return "Challenger";
-            break;
         case 'IRO':
             return "Iron";
-            break;
         case 'BRO':
             return "Bronze";
-            break;
         case 'SIL':
             return "Silver";
-            break;
         case 'GOL':
             return "Gold";
-            break;
         case 'PLA':
             return "Platinum";
-            break;
         case 'DIA':
             return "Diamond";
-            break;
         case 'MAS':
             return "Master";
-            break;
         case 'GRA':
             return "GrandMaster";
-            break;
         default:
             return null;
     }
