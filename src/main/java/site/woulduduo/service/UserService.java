@@ -46,6 +46,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static site.woulduduo.enumeration.LoginResult.*;
+import static site.woulduduo.util.LoginUtil.LOGIN_KEY;
 
 @Service
 @Slf4j
@@ -202,7 +203,7 @@ public class UserService {
         System.out.println("UserProfileImage: " + userProfileImage);
 
         // 이 정보를 세션에 저장
-        session.setAttribute(LoginUtil.LOGIN_KEY, dto);
+        session.setAttribute(LOGIN_KEY, dto);
 
         // 세션의 수명을 설정
         session.setMaxInactiveInterval(60 * 60); // 1시간
@@ -551,7 +552,7 @@ public class UserService {
 
         boolean isFollowed = false;
         try {
-            isFollowed = followRepository.existsByFollowFromAndFollowTo(session.getAttribute("로그인키").toString(), userAccount);
+            isFollowed = followRepository.existsByFollowFromAndFollowTo(((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount(), userAccount);
         } catch (NullPointerException ignored) {
         }
 
