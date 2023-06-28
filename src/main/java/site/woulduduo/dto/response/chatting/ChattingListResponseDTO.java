@@ -37,4 +37,10 @@ public class ChattingListResponseDTO {
         }
 
     }
+
+    public void makeShortenMessage(String messageContent){
+        if(messageContent.length() > 20){
+            this.messageContent = messageContent.substring(0, 21) + "...";
+        }
+    }
 }

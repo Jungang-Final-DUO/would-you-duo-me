@@ -49,7 +49,7 @@ export function outputMessage(message) {
     } else {
 
         // 매칭 ststus가 request로 변하면 메세지 받은 사람 버튼 수락/거절로 변경
-        if(room.dataset.chattingTo === userNickname && message.matchingStatus === 'REQUEST' && matchingBtn.childNodes[1].nodeValue === `매칭 대기`){
+        if(room.dataset.chattingTo === userNickname && message.matchingStatus === 'REQUEST'){
             getRecentMatchingNo(room.id);
             matchingBtn.dataset.matchingStatus = message.matchingStatus;
             matchingBtn.childNodes[1].nodeValue = `매칭 수락`;
@@ -173,4 +173,16 @@ export function saveMessage({username, room, msg, matchingStatus, matchingNo}) {
 export function renderAndSaveMessage(message) {
     outputMessage(message);
     saveMessage(message);
+}
+
+// 채팅중일때 메세지 읽음 처리
+export function readMessages(chattingNo){
+    const requestInfo = {
+        method: 'PUT',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: chattingNo
+    };
+    fetch(`/api/v1/chat/messages/read`, requestInfo);
 }

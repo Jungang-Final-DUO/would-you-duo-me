@@ -1,4 +1,4 @@
-import {outputMessage, saveMessage, scrollDown} from "./messageRendering.js";
+import {outputMessage, readMessages, saveMessage, scrollDown} from "./messageRendering.js";
 import {renderTotalUnreadMessages, renderUnreadMessages} from "./chatting-modal.js";
 
 export function connectSocket() {
@@ -12,9 +12,14 @@ export function connectSocket() {
         const chat_list = document.querySelector('.chatting-modal-dialog');
         if(chat_list.hasAttribute('open')){
             renderUnreadMessages(message.room);
+            const chatroom = document.getElementById(message.room);
+            if(chatroom.querySelector('.message-dialog').hasAttribute('open')){
+                readMessages(message.room);
+            }
         } else {
             renderTotalUnreadMessages();
         }
+
 
         scrollDown();
     });

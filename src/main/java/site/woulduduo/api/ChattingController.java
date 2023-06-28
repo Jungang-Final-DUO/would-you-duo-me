@@ -7,13 +7,16 @@ import org.springframework.web.bind.annotation.*;
 import site.woulduduo.dto.request.chatting.MessageRequestDTO;
 import site.woulduduo.dto.response.chatting.ChattingDetailResponseDTO;
 import site.woulduduo.dto.response.chatting.ChattingListResponseDTO;
+import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Message;
 import site.woulduduo.entity.User;
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.ChattingService;
 import site.woulduduo.service.MessageService;
+import site.woulduduo.util.LoginUtil;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -112,4 +115,12 @@ public class ChattingController {
         return ResponseEntity.ok().body(chattingNo);
     }
 
+    //메세지 읽기
+    @RequestMapping(value = "/messages/read", method = {RequestMethod.PATCH, RequestMethod.PUT})
+    public void readMessages(@RequestBody long chattingNo, HttpSession session){
+        LoginUserResponseDTO loginUserInfo
+                = (LoginUserResponseDTO) session.getAttribute(LoginUtil.LOGIN_KEY);
+        String userAccount = loginUserInfo.getUserAccount();
+        messageService.readMessage(userAccount, chattingNo);
+    }
 }

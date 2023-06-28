@@ -91,6 +91,18 @@ async function renderChattingList(result) {
             $chattings.appendChild($chat_card);
             $chat_card.appendChild($modal_btn);
 
+            const chattingUnread = $modal_btn.querySelector('.chatting-unread');
+
+            if(messageUnreadCount === 0){
+                chattingUnread.style.display = 'none';
+            } else if (messageUnreadCount >= 0 && messageUnreadCount <= 200) {
+                chattingUnread.style.display = 'block';
+                chattingUnread.innerText = messageUnreadCount;
+            } else {
+                chattingUnread.style.display = 'block';
+                chattingUnread.innerText = '200+';
+            }
+
             const $dialog = document.createElement('dialog');
             $dialog.classList.add('message-dialog');
             $chat_card.appendChild($dialog);
@@ -258,7 +270,8 @@ async function renderChattingList(result) {
             const message_send_box = document.createElement('input');
             message_send_box.classList.add('message-send-box');
             message_send_box.classList.add('msg');
-            message_send_box.placeholder = '메시지를 입력해주세요';
+            message_send_box.placeholder = '메시지를 100자 이내로 입력해주세요';
+            message_send_box.setAttribute('maxlength', '100');
             message_send_box.setAttribute('required', 'required');
             message_send_box.setAttribute('autofocus', 'autofocus');
             chatForm.appendChild(message_send_box);
@@ -335,3 +348,4 @@ export function searchPointHistory(matchingNo) {
     return fetch(`/api/v1/points/matching/${matchingNo}`)
         .then(res => res.json());
 }
+
