@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import site.woulduduo.dto.request.page.UserSearchType;
+import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.response.user.UserProfileResponseDTO;
 import site.woulduduo.entity.QMostChamp;
 import site.woulduduo.entity.QUser;
@@ -24,7 +25,7 @@ import java.util.List;
 public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    private final QUser user =  QUser.user;
+    private final QUser user = QUser.user;
     private final QMostChamp mostChamp = QMostChamp.mostChamp;
 
     @Override
@@ -44,7 +45,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 //                .orderBy(user.userAvgRate.desc())
                 .fetch();
         log.info("### userList ###: {}", userList);
-    // select 로 불러온 user 리스트 UserProfilesResponseDTO로 변환해 리스트에 담아주기
+        // select 로 불러온 user 리스트 UserProfilesResponseDTO로 변환해 리스트에 담아주기
         List<UserProfileResponseDTO> userProfiles = new ArrayList<>();
         for (User user : userList) {
             UserProfileResponseDTO dto = UserProfileResponseDTO.builder()
@@ -60,19 +61,27 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                     .userNickname(user.getUserNickname())
                     .avgRate(user.getUserAvgRate())
                     .mostChampList(user.getMostChampList())
-                    .profileImage((user.getUserProfileList().size() == 0)? "basic" : user.getUserProfileList().get(0).getProfileImage())
+                    .profileImage((user.getUserProfileList().size() == 0) ? "basic" : user.getUserProfileList().get(0).getProfileImage())
                     .build();
 
-                    userProfiles.add(dto);
+            userProfiles.add(dto);
         }
 
 
         return userProfiles;
     }
 
+    @Override
+    public int modifyProfileCard(UserCommentRequestDTO dto/*, HttpSession session*/) {
+
+
+        return 0;
+    }
+
+
     // 2페이지부터 offset 조정
     private Long checkPage(int page) {
-        return page == 1 ? 0 : ((long)page - 1) * 20;
+        return page == 1 ? 0 : ((long) page - 1) * 20;
     }
 
     // 티어 파라미터가 null인지 체크
@@ -93,7 +102,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
     // 검색 키워드가 null인지 체크
     private BooleanExpression keywordContains(String keyword) {
-        return StringUtils.isNullOrEmpty(keyword)? null : user.userNickname.contains(keyword);
+        return StringUtils.isNullOrEmpty(keyword) ? null : user.userNickname.contains(keyword);
     }
 
 

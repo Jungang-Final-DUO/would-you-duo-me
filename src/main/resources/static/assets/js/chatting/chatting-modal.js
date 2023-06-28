@@ -1,17 +1,14 @@
 import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
-import {renderRateModal} from "../review/write-rate.js";
 
 export async function getChattingList() {
     // 추후 session에 회원정보 담기면 경로 수정
-    const userId = document.getElementById('loginUserInfo').dataset.userAccount;
-    await fetch(`/api/v1/chat/chattings/${userId}`)
+    await fetch(`/api/v1/chat/chattings`)
         .then(res => res.json())
         .then(result => renderChattingList(result));
 }
 
 // 채팅 클릭했을때 메세지창 열어줘야함
 function makeChatting(chat) {
-    const userId = document.getElementById('loginUserInfo').dataset.userAccount;
 
     chat.onclick = (e) => {
         const userAccount = chat.closest('.duo-profile').id;
@@ -21,10 +18,10 @@ function makeChatting(chat) {
             headers: {
                 'content-type': 'application/json'
             },
-            body: userId
+            body: userAccount
         }
 
-        fetch(`/api/v1/chat/chattings/${userAccount}`, requestInfo)
+        fetch(`/api/v1/chat/chattings/new`, requestInfo)
             .then(res => res.json())
             .then(async result => {
                 // result = 생성된 채팅번호
@@ -306,8 +303,7 @@ export function renderUnreadMessages(chattingNo) {
     const $target = $chatting.querySelector('.chatting-unread');
     // console.log($target);
 
-    const userId = document.getElementById('loginUserInfo').dataset.userAccount;
-    fetch(`/api/v1/chat/messages/unread/${userId}/${chattingNo}`)
+    fetch(`/api/v1/chat/messages/unread/${chattingNo}`)
         .then(res => res.json())
         .then(unread => {
             if(unread === 0){
@@ -325,9 +321,9 @@ export function renderUnreadMessages(chattingNo) {
 
 export function renderTotalUnreadMessages(){
     console.log('모달 꺼집니당 메세지 갯수 세어야함..');
-    const userId = document.getElementById('loginUserInfo').dataset.userAccount;
+
     const $target = document.getElementById('unread-chatting-count');
-    fetch(`/api/v1/chat/messages/unread/${userId}`)
+    fetch(`/api/v1/chat/messages/unread`)
         .then(res => res.json())
         .then(totalUnread => {
             console.log(totalUnread);

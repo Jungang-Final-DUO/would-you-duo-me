@@ -3,40 +3,33 @@ package site.woulduduo.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import site.woulduduo.aws.S3Service;
-import site.woulduduo.dto.request.page.PageDTO;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import site.woulduduo.aws.S3Service;
 import site.woulduduo.dto.request.login.LoginRequestDTO;
+import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.user.*;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.LoginResult;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
-import site.woulduduo.service.UserService;
-
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.EmailService;
-import site.woulduduo.util.upload.FileUtil;
+import site.woulduduo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -57,6 +50,29 @@ public class UserController {
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final S3Service s3Service;
+
+    // 마이페이지
+    @GetMapping("/user/my-page")
+    public String showMyPage(HttpSession session, Model model) {
+//        log.info("/user/my-page GET");
+//
+//        // 사용자 정보 가져오기
+//        User user = null;
+//        if (session != null && session.getId() != null) {
+//            user = userService.getUser(session.getId());
+//        }
+//
+//        // 모델에 사용자 정보 추가
+//        if (user != null) {
+//            // 사용자 정보 속성 추가
+//            model.addAttribute("login", user); // 사용자 정보를 "login" 속성으로 추가
+//
+//            log.info("userBirthday: {}", user.getUserBirthday());
+//
+//        }
+
+        return "my-page/mypage-myinfo";
+    }
 
     // 메인페이지 - 프로필 카드 불러오기(비동기)
     @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
@@ -160,6 +176,7 @@ public class UserController {
             , HttpServletRequest request
     ) {
 
+        System.out.println("dto.getRequestURI() = " + dto.getRequestURI());
         log.info("/user/sign-in POST ! - {}", dto);
 
         LoginResult result = userService.authenticate(dto, request.getSession(), response);
@@ -171,7 +188,7 @@ public class UserController {
             userService.maintainLoginState(
                     request.getSession(), dto.getUserAccount());
 
-            return "redirect:/";
+            return dto.getRequestURI();
         }
 
         // 1회용으로 쓰고 버릴 데이터
@@ -223,16 +240,16 @@ public class UserController {
 
     // 마이페이지 - 프로필 카드 등록페이지 열기
     @GetMapping("/user/register-duo")
-    public String registerDUO(/*HttpSession session, */Model model) {
+    public String registerDUO(HttpSession session) {
 
         return "my-page/mypage-duoprofile";
     }
 
     // 마이페이지 - 프로필카드 등록 처리
     @PostMapping("/user/register-duo")
-    public String registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
+    public String registerDUO(HttpSession session, UserCommentRequestDTO dto, Model model) {
 
-        boolean b = userService.registerDUO(/*session, */dto);
+        boolean b = userService.registerDUO(session, dto);
         log.info("프로필카드등록 성공여부 : {}", b);
         log.info("@@@@dto@@@@ :{}", dto);
 
@@ -305,6 +322,22 @@ public class UserController {
 
         return "user/user-history";
 
+    }
+
+    // 유저 팔로우
+    // 이미 팔로우되어 있다면 언팔로우
+    @PatchMapping("/api/v1/users/{userAccount}")
+    public ResponseEntity<?> follow(
+            @PathVariable String userAccount,
+            HttpSession session
+    ) {
+        try {
+            boolean isFollowed = userService.follow(userAccount, session);
+
+            return ResponseEntity.ok(isFollowed);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

@@ -2,7 +2,13 @@ package site.woulduduo.dto.response.login;
 
 import lombok.*;
 import site.woulduduo.entity.UserProfile;
+import site.woulduduo.enumeration.Position;
 
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Setter @Getter
@@ -19,6 +25,12 @@ public class LoginUserResponseDTO {
     private String lolNickname;
 
     private Integer userCurrentPoint;
+
+    private Position userPosition;
+
+    private String userComment;
+
+    private int userMatchingPoint;
 
     private String userProfileImage;
 

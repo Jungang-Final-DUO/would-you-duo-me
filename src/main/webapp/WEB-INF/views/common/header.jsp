@@ -20,6 +20,8 @@
                         <!--         로그인 모달           -->
 
                         <div id="sign-in-modal-wrapper" class="invisible">
+                            <% String returnURI = request.getRequestURI().substring(15); %>
+                            <input type="hidden" name = "requestURI" value = "<%=returnURI.substring(0, returnURI.length()-4)%>">
                             <div id="sign-in-modal" class="user-modal">
                                 <div id="id-input-wrapper" class="input-wrapper">
                                     <label for="sign-in-user-account">이메일 주소</label>
