@@ -150,7 +150,7 @@ public class AccuseService {
         System.out.println("accuseType = " + accuseType);
 
         String accuseEtc = entity.getAccuseEtc();
-        System.out.println("accuseEtc = " + accuseEtc);
+        System.out.println("accuseEtc123123  = " + accuseEtc);
 
         if(accuseEtc!=null||accuseType!=null) {
             Accuse save = accuseRepository.save(entity);

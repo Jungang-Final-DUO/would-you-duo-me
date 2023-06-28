@@ -395,33 +395,33 @@
 
 
         //Ban 클릭 변수
-        const banClick = document.getElementById('is_ben');
+     // Ban 클릭 변수
+const banClick = document.getElementById('is_ben');
 
-        function userIsBan() {
-            const userNickname = user.innerText;
-            //console.log(userNickname);
+function userIsBan() {
+    const userNickname = user.innerText;
 
-            fetch(`http://localhost:8282/user/detail/banBoolean?nickname=` + userNickname)
-                .then(response => {
-                    return response.json()
-                })
-                .then(res => {
+    fetch(`http://localhost:8282/user/detail/banBoolean?nickname=` + userNickname)
+        .then(response => {
+            return response.json();
+        })
+        .then(res => {
+            if (res >= 5) {
+                banClick.style.backgroundColor = 'red';
+            }
+
+            if (res === true) {
+                banClick.style.backgroundColor = 'red';
+            } else {
+                banClick.style.backgroundColor = '#111E30';
+            }
+        });
+}
+
+userIsBan(); 
 
 
-
-                    //   console.log('res21231231  :  -' + res);
-
-
-                    if (res === true) {
-                        banClick.style.backgroundColor = 'red';
-                    } else {
-                        banClick.style.backgroundColor = '#111E30';
-                    }
-                    //     console.log(res);
-                });
-        }
-
-        userIsBan();
+// 모달 count red 색칠
 
         banClick.onclick = e => {
             const userNickname = user.innerText;
@@ -457,49 +457,51 @@
 
 
 
-
-        //모달 count red 색칠
         function banCheck() {
-            const accuseImages = document.querySelectorAll('.accuse_img');
+    const accuseImages = document.querySelectorAll('.accuse_img');
 
-            function userIsAccuse() {
-                const userNickname = user.innerText;
-                console.log(userNickname);
+    function userIsAccuse() {
+        const userNickname = user.innerText;
+        console.log(userNickname);
 
-                fetch('http://localhost:8282/user/accuse/count', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            userNickname: userNickname,
-                        })
-                    })
-                    .then(response => {
-                        console.log('response: ', response);
-                        return response.json();
-                    })
-                    .then(res => {
-                        console.log('res: ', res);
+        fetch('http://localhost:8282/user/accuse/count', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userNickname: userNickname,
+            })
+        })
+        .then(response => {
+            console.log('response: ', response);
+            return response.json();
+        })
+        .then(res => {
+            console.log('res: ', res);
+            fifthAccuseBan(res);
 
-                        for (let index = 0; index < res; index++) {
-
-                            const newImageSrc = '/assets/img/admin/경고R.png';
-                            accuseImages[index].setAttribute('src', newImageSrc);
-
-                        }
-
-
-                    });
-
-
+            for (let index = 0; index < res; index++) {
+                const newImageSrc = '/assets/img/admin/경고R.png';
+                accuseImages[index].setAttribute('src', newImageSrc);
             }
 
-            userIsAccuse();
-        }
+            if (res >= 5) {
+                banClick.style.backgroundColor = 'red';
+            }
+        });
+    }
 
-        banCheck();
+    userIsAccuse();
+}
 
+function fifthAccuseBan(res) {
+    if (res >= 5) {
+        banClick.style.backgroundColor = 'red';
+    }
+}
+
+banCheck();
 
 
 

@@ -26,7 +26,7 @@ public class AccuseListResponseDTO {
         this.accuseNo=accuse.getAccuseNo();
         this.userAccount=accuse.getUser().getUserAccount();
         this.accuseType=accuseType(accuse,20);
-        this.accuseETC=accuseEtc(accuse,20);
+        this.accuseETC=accuse.getAccuseEtc();
         this.accuseWrittenDate=accuseDate(accuse.getAccuseWrittenDate());
     }
 

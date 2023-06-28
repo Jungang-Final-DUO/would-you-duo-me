@@ -249,55 +249,116 @@
   const pageNum = 1; // 초기 페이지 설정
 
   getUserList(pageNum);
-
-
 };
 
-  function getUserList(pageNum) {
-    console.log('pageNum=================', pageNum);
+function getUserList(pageNum) {
+  console.log('pageNum=================', pageNum);
 
-    fetch(`/api/v1/users/admin?page=`+pageNum)
-      .then(response => response.json())
-      .then(res => {
-        console.log('res', res);
+  fetch(`/api/v1/users/admin?page=` + pageNum)
+    .then(response => response.json())
+    .then(res => {
+      console.log('res', res);
 
-        const list = res.list;
-        console.log('list: ', list);
+      const list = res.list;
+      console.log('list: ', list);
 
-        for (let listOne of list) {
-          const {
-            rowNum,
-            userAccount,
-            gender,
-            boardCount,
-            replyCount,
-            reportCount,
-            point,
-            followCount,
-            joinDate,
-          } = listOne;
-        }
-
-        for (let i = 0; i < userList.length; i++) {
-          userList[i].style.display = '';
-        }
-
-        totalUser(list);
-        locationToDetail(list);
-        renderUserList(res);
-      });
-  }
-      function totalUser(list) {
-        uln(list);
-        uli(list);
-        ulg(list);
-        ulb(list);
-        ulr(list);
-        ulw(list);
-        ulp(list);
-        ulf(list);
-        uls(list);
+      for (let listOne of list) {
+        const {
+          rowNum,
+          userAccount,
+          gender,
+          boardCount,
+          replyCount,
+          reportCount,
+          point,
+          followCount,
+          joinDate,
+        } = listOne;
       }
+
+      for (let i = 0; i < userList.length; i++) {
+        userList[i].style.display = '';
+      }
+
+      totalUser(list);
+      locationToDetail(list);
+      renderUserList(res);
+    });
+}
+
+function totalUser(list) {
+  uln(list);
+  uli(list);
+  ulg(list);
+  ulb(list);
+  ulr(list);
+  ulw(list);
+  ulp(list);
+  ulf(list);
+  uls(list);
+}
+
+function renderUserList({
+  count,
+  pageInfo,
+  list
+}) {
+  console.log('count: ', count);
+  console.log('pageInfo: ', pageInfo);
+  console.log('list: ', list);
+
+  //페이지 렌더링
+  renderPage(pageInfo);
+}
+
+//페이징
+function renderPage({
+  startPage,
+  endPage,
+  currentPage,
+  prev,
+  next,
+  totalCount,
+  PAGE_COUNT
+}) {
+  let tag = "";
+
+  //이전 버튼 만들기
+  if (prev) {
+    tag += "<li class='page-item'><a class='page-link page-active' href='" + (startPage - 1) +
+      "'>이전</a></li>";
+  }
+  //페이지 번호 리스트 만들기
+  for (let i = startPage; i <= endPage; i++) {
+    let active = '';
+    if (currentPage.pageNo === i) {
+      console.log(currentPage.pageNo);
+      active = 'p-active';
+    }
+
+    tag += "<li class='page-item " + active + "'><a class='page-link page-custom' href='" + i +
+      "'>" + i + "</a></li>";
+  }
+  //다음 버튼 만들기
+  if (next) {
+    tag += "<li class='page-item'><a class='page-link page-active' href='" + (endPage + 1) +
+      "'>다음</a></li>";
+  }
+
+  // 페이지태그 렌더링
+  const $pageUl = document.querySelector('.pagination');
+  $pageUl.innerHTML = tag;
+
+  // ul에 마지막페이지 번호 저장.
+  $pageUl.dataset.fp = endPage;
+
+  // 유저페이지 클릭 이벤트 등록
+  makePageButtonUserClickEvent();
+}
+
+// 유저페이지 클릭 이벤트 핸들러
+
+
 
       function locationToDetail(list) {
         console.log('list: ', list);
@@ -390,18 +451,6 @@
         });
       }
 
-      function renderUserList({
-        count,
-        pageInfo,
-        list
-      }) {
-        console.log('count: ', count);
-         console.log('pageInfo: ', pageInfo);
-         console.log('list: ', list);
-
-        //페이지 렌더링
-        renderPage(pageInfo);
-      }
 
 
 
@@ -414,51 +463,55 @@
 
         UserMenuBar.style.display = '';
 
-        // 금일 유저
-        fetch('/api/v1/users/admin1')
-          .then(response => response.json())
-          .then(res => {
-            console.log('res', res);
-            const list = res.list;
+        const pageNum = 1; // 초기 페이지 설정
 
-            for (let listOne of list) {
-              const {
-                rowNum,
-                userAccount,
-                gender,
-                boardCount,
-                replyCount,
-                reportCount,
-                point,
-                followCount,
-                joinDate,
-              } = listOne;
-
-            }
-
-            for (let i = 0; i < userList.length; i++) {
-              userList[i].style.display = '';
-            }
-
-            // 유저리스트
-            uln1(list);
-            uli1(list);
-            ulg1(list);
-            ulb1(list);
-            ulr1(list);
-            ulw1(list);
-            ulp1(list);
-            ulf1(list);
-            uls1(list);
-            locationToDetail(list);
-
-            renderUserList(res);
-
-
-
-          });
+        getUserTodayList(pageNum);
       };
+      // 금일 유저
+      function getUserTodayList(pageNum) {
+  fetch('/api/v1/users/admin1=' + pageNum)
+    .then(response => response.json())
+    .then(res => {
+      console.log('res', res);
+      const list = res.list;
 
+      for (let listOne of list) {
+        const {
+          rowNum,
+          userAccount,
+          gender,
+          boardCount,
+          replyCount,
+          reportCount,
+          point,
+          followCount,
+          joinDate,
+        } = listOne;
+
+        // 유저리스트 정보 사용
+        // ...
+
+      }
+
+      for (let i = 0; i < userList.length; i++) {
+        userList[i].style.display = '';
+      }
+
+      // 유저리스트 관련 동작
+      uln1(list);
+      uli1(list);
+      ulg1(list);
+      ulb1(list);
+      ulr1(list);
+      ulw1(list);
+      ulp1(list);
+      ulf1(list);
+      uls1(list);
+      locationToDetail(list);
+
+      renderUserTodayList(res);
+    });
+}
 
 
       function uln1(list) {
@@ -569,130 +622,209 @@
         });
       }
 
+      function renderUserTodayList({
+        count,
+        pageInfo,
+        list
+      }) {
+        console.log('count: ', count);
+         console.log('pageInfo: ', pageInfo);
+         console.log('list: ', list);
+
+        //페이지 렌더링
+        renderUserTodayPage(pageInfo);
+      }
+
+       //페이징
+       function renderUserTodayPage({
+        startPage,
+        endPage,
+        currentPage,
+        prev,
+        next,
+        totalCount,
+        PAGE_COUNT
+      }) {
+
+
+        let tag = "";
+
+        //이전 버튼 만들기
+        if (prev) {
+          tag += "<li class='page-item'><a class='page-link page-active' href='" + (startPage - 1) +
+            "'>이전</a></li>";
+        }
+        //페이지 번호 리스트 만들기
+        for (let i = startPage; i <= endPage; i++) {
+          let active = '';
+          if (currentPage.pageNo === i) {
+            console.log(currentPage.pageNo);
+            active = 'p-active';
+          }
+
+          tag += "<li class='page-item " + active + "'><a class='page-link page-custom' href='" + i +
+            "'>" + i + "</a></li>";
+        }
+        //다음 버튼 만들기
+        if (next) {
+          tag += "<li class='page-item'><a class='page-link page-active' href='" + (endPage + 1) +
+            "'>다음</a></li>";
+        }
+
+        // 페이지태그 렌더링
+        const $pageUl = document.querySelector('.pagination');
+        $pageUl.innerHTML = tag;
+
+        // ul에 마지막페이지 번호 저장.
+        $pageUl.dataset.fp = finalPage;
+
+      }
+
+      // 유저페이지 클릭 이벤트 핸들러
+      function makePageButtonUserTodayClickEvent() {
+        // 페이지 버튼 클릭이벤트 처리
+        const $pageUl = document.querySelector('.pagination');
+        $pageUl.onclick = e => {
+          if (!e.target.matches('.page-item a')) return;
+
+          e.preventDefault(); // 태그의 기본 동작 중단
+
+          // 누른 페이지 번호 가져오기
+          const pageNum = e.target.getAttribute('href');
+          // console.log(pageNum);
+          console.log("======",pageNum)
+
+          // 페이지 번호에 맞는 목록 비동기 요청
+          getUserTodayList(pageNum);
+        };
+      }
+
+      // 페이지 버튼 이벤트 등록
+      makePageButtonUserTodayClickEvent();
 
 
       //보드
 
 
       totalBoardButton.onclick = e => {
-  userDisplayNone();
-  accuseDisplayNone();
-  boardMenuBar.style.display = '';
+        userDisplayNone();
+        accuseDisplayNone();
+        boardMenuBar.style.display = '';
 
-  fetch('/api/v1/boards/admin')
-    .then(response => response.json())
-    .then(res => {
-      const list = res.list;
+        fetch('/api/v1/boards/admin')
+          .then(response => response.json())
+          .then(res => {
+            const list = res.list;
 
-      for (let listOne of list) {
-        const {
-          boardNo,
-          userNickName,
-          boardTitle,
-          boardWrittenDate,
-          boardViewCount
-        } = listOne;
-      }
+            for (let listOne of list) {
+              const {
+                boardNo,
+                userNickName,
+                boardTitle,
+                boardWrittenDate,
+                boardViewCount
+              } = listOne;
+            }
 
-      for (let i = 0; i < boardList.length; i++) {
-        boardList[i].style.display = '';
-      }
+            for (let i = 0; i < boardList.length; i++) {
+              boardList[i].style.display = '';
+            }
 
-      // 보드리스트
-      bln(list);
-      blm(list);
-      blt(list);
-      bld(list);
-      blc(list);
+            // 보드리스트
+            bln(list);
+            blm(list);
+            blt(list);
+            bld(list);
+            blc(list);
 
-      const yourList = list; // yourList에 list를 할당
+            const yourList = list; // yourList에 list를 할당
 
-      const boardDelete = document.querySelectorAll('.delete');
-      for (let index = 0; index < boardDelete.length; index++) {
-        boardDelete[index].onclick = function () {
-          if (confirm('게시물을 삭제하시겠습니까?')) {
-            alert('게시물 삭제 완료');
-            deleteBoard(yourList, index);
-          }
-        };
-      }
+            const boardDelete = document.querySelectorAll('.delete');
+            for (let index = 0; index < boardDelete.length; index++) {
+              boardDelete[index].onclick = function () {
+                if (confirm('게시물을 삭제하시겠습니까?')) {
+                  alert('게시물 삭제 완료');
+                  deleteBoard(yourList, index);
+                }
+              };
+            }
 
-      renderUserList(res);
-     
-    });
-};
+            renderUserList(res);
 
-function bln(list) {
-  const ulArray = document.querySelectorAll('.bln');
-  ulArray.forEach((ulElement, index) => {
-    const asd = list[index].boardNo;
-    ulElement.innerText = asd;
-  });
-}
+          });
+      };
 
-function blm(list) {
-  const ulArray = document.querySelectorAll('.blm');
-  ulArray.forEach((ulElement, index) => {
-    const asd = list[index].userNickName;
-    ulElement.innerText = asd;
-  });
-}
-
-function blt(list) {
-  const ulArray = document.querySelectorAll('.blt');
-  ulArray.forEach((ulElement, index) => {
-    const asd = list[index].boardTitle;
-    ulElement.innerText = asd;
-  });
-}
-
-function bld(list) {
-  const ulArray = document.querySelectorAll('.bld');
-  ulArray.forEach((ulElement, index) => {
-    const asd = list[index].boardWrittenDate;
-    ulElement.innerText = asd;
-  });
-}
-
-function blc(list) {
-  const ulArray = document.querySelectorAll('.blc');
-  ulArray.forEach((ulElement, index) => {
-    const asd = list[index].boardViewCount;
-    ulElement.innerText = asd;
-  });
-}
-
-//게시물삭제
-function deleteBoard(list, index) {
-  const boardNo = list[index].boardNo;
-  console.log('asd123====', boardNo);
-
-  fetch(`/api/v1/boards/admin/delete?boardNo=` + boardNo, {
-      method: 'DELETE'
-    })
-    .then(response => response.json())
-    .then(res => {
-      console.log('res:', res);
-
-      // 게시물 삭제 후 새로운 데이터 가져오기
-      fetch('/api/v1/boards/admin') // 새로운 데이터 가져오기 API 엔드포인트로 변경해야 함
-        .then(response => response.json())
-        .then(res => {
-          const newList = res.list;
-          // 새로운 데이터를 이용하여 화면 업데이트
-          updateBoardList(newList);
+      function bln(list) {
+        const ulArray = document.querySelectorAll('.bln');
+        ulArray.forEach((ulElement, index) => {
+          const asd = list[index].boardNo;
+          ulElement.innerText = asd;
         });
-    });
-}
+      }
 
-function updateBoardList(newList) {
-  // 게시물 리스트 업데이트
-  bln(newList);
-  blm(newList);
-  blt(newList);
-  bld(newList);
-  blc(newList);
-}
+      function blm(list) {
+        const ulArray = document.querySelectorAll('.blm');
+        ulArray.forEach((ulElement, index) => {
+          const asd = list[index].userNickName;
+          ulElement.innerText = asd;
+        });
+      }
+
+      function blt(list) {
+        const ulArray = document.querySelectorAll('.blt');
+        ulArray.forEach((ulElement, index) => {
+          const asd = list[index].boardTitle;
+          ulElement.innerText = asd;
+        });
+      }
+
+      function bld(list) {
+        const ulArray = document.querySelectorAll('.bld');
+        ulArray.forEach((ulElement, index) => {
+          const asd = list[index].boardWrittenDate;
+          ulElement.innerText = asd;
+        });
+      }
+
+      function blc(list) {
+        const ulArray = document.querySelectorAll('.blc');
+        ulArray.forEach((ulElement, index) => {
+          const asd = list[index].boardViewCount;
+          ulElement.innerText = asd;
+        });
+      }
+
+      //게시물삭제
+      function deleteBoard(list, index) {
+        const boardNo = list[index].boardNo;
+        console.log('asd123====', boardNo);
+
+        fetch(`/api/v1/boards/admin/delete?boardNo=` + boardNo, {
+            method: 'DELETE'
+          })
+          .then(response => response.json())
+          .then(res => {
+            console.log('res:', res);
+
+            // 게시물 삭제 후 새로운 데이터 가져오기
+            fetch('/api/v1/boards/admin') // 새로운 데이터 가져오기 API 엔드포인트로 변경해야 함
+              .then(response => response.json())
+              .then(res => {
+                const newList = res.list;
+                // 새로운 데이터를 이용하여 화면 업데이트
+                updateBoardList(newList);
+              });
+          });
+      }
+
+      function updateBoardList(newList) {
+        // 게시물 리스트 업데이트
+        bln(newList);
+        blm(newList);
+        blt(newList);
+        bld(newList);
+        blc(newList);
+      }
 
       //금일 보드
       todayBoardButton.onclick = e => {
@@ -734,15 +866,15 @@ function updateBoardList(newList) {
 
             const yourList = list; // yourList에 list를 할당
 
-const boardDelete = document.querySelectorAll('.delete');
-for (let index = 0; index < boardDelete.length; index++) {
-  boardDelete[index].onclick = function () {
-    if (confirm('게시물을 삭제하시겠습니까?')) {
-      alert('게시물 삭제 완료');
-      deleteTodayBoard(yourList, index);
-    }
-  };
-}
+            const boardDelete = document.querySelectorAll('.delete');
+            for (let index = 0; index < boardDelete.length; index++) {
+              boardDelete[index].onclick = function () {
+                if (confirm('게시물을 삭제하시겠습니까?')) {
+                  alert('게시물 삭제 완료');
+                  deleteTodayBoard(yourList, index);
+                }
+              };
+            }
             renderUserList(res);
 
           });
@@ -809,35 +941,35 @@ for (let index = 0; index < boardDelete.length; index++) {
       }
 
       function deleteTodayBoard(list, index) {
-  const boardNo = list[index].boardNo;
-  console.log('asd123====', boardNo);
+        const boardNo = list[index].boardNo;
+        console.log('asd123====', boardNo);
 
-  fetch(`/api/v1/boards/admin/delete?boardNo=` + boardNo, {
-      method: 'DELETE'
-    })
-    .then(response => response.json())
-    .then(res => {
-      console.log('res:', res);
+        fetch(`/api/v1/boards/admin/delete?boardNo=` + boardNo, {
+            method: 'DELETE'
+          })
+          .then(response => response.json())
+          .then(res => {
+            console.log('res:', res);
 
-      // 게시물 삭제 후 새로운 데이터 가져오기
-      fetch('/api/v1/boards/admin1') // 새로운 데이터 가져오기 API 엔드포인트로 변경해야 함
-        .then(response => response.json())
-        .then(res => {
-          const newList = res.list;
-          // 새로운 데이터를 이용하여 화면 업데이트
-          updateBoardList(newList);
-        });
-    });
-}
+            // 게시물 삭제 후 새로운 데이터 가져오기
+            fetch('/api/v1/boards/admin1') // 새로운 데이터 가져오기 API 엔드포인트로 변경해야 함
+              .then(response => response.json())
+              .then(res => {
+                const newList = res.list;
+                // 새로운 데이터를 이용하여 화면 업데이트
+                updateBoardList(newList);
+              });
+          });
+      }
 
-function updateBoardList(newList) {
-  // 게시물 리스트 업데이트
-  bln1(newList);
-  blm1(newList);
-  blt1(newList);
-  bld1(newList);
-  blc1(newList);
-}
+      function updateBoardList(newList) {
+        // 게시물 리스트 업데이트
+        bln1(newList);
+        blm1(newList);
+        blt1(newList);
+        bld1(newList);
+        blc1(newList);
+      }
 
 
       // const keyword = '';
@@ -883,7 +1015,7 @@ function updateBoardList(newList) {
             ale(list);
             alc(list);
             renderUserList(res);
-         
+
           });
       }
 
@@ -1031,72 +1163,6 @@ function updateBoardList(newList) {
       }
 
 
-      //페이징
-      function renderPage({
-        startPage,
-        endPage,
-        currentPage,
-        prev,
-        next,
-        totalCount,
-        PAGE_COUNT
-      }) {
-
-
-        let tag = "";
-
-        //이전 버튼 만들기
-        if (prev) {
-          tag += "<li class='page-item'><a class='page-link page-active' href='" + (startPage - 1) +
-            "'>이전</a></li>";
-        }
-        //페이지 번호 리스트 만들기
-        for (let i = startPage; i <= endPage; i++) {
-          let active = '';
-          if (currentPage.pageNo === i) {
-            console.log(currentPage.pageNo);
-            active = 'p-active';
-          }
-
-          tag += "<li class='page-item " + active + "'><a class='page-link page-custom' href='" + i +
-            "'>" + i + "</a></li>";
-        }
-        //다음 버튼 만들기
-        if (next) {
-          tag += "<li class='page-item'><a class='page-link page-active' href='" + (endPage + 1) +
-            "'>다음</a></li>";
-        }
-
-        // 페이지태그 렌더링
-        const $pageUl = document.querySelector('.pagination');
-        $pageUl.innerHTML = tag;
-
-        // ul에 마지막페이지 번호 저장.
-        $pageUl.dataset.fp = finalPage;
-
-      }
-
-      // 유저페이지 클릭 이벤트 핸들러
-      function makePageButtonUserClickEvent() {
-        // 페이지 버튼 클릭이벤트 처리
-        const $pageUl = document.querySelector('.pagination');
-        $pageUl.onclick = e => {
-          if (!e.target.matches('.page-item a')) return;
-
-          e.preventDefault(); // 태그의 기본 동작 중단
-
-          // 누른 페이지 번호 가져오기
-          const pageNum = e.target.getAttribute('href');
-          // console.log(pageNum);
-          console.log("======",pageNum)
-
-          // 페이지 번호에 맞는 목록 비동기 요청
-          getUserList(pageNum);
-        };
-      }
-
-      // 페이지 버튼 이벤트 등록
-      makePageButtonUserClickEvent();
     </script>
 </body>
 
