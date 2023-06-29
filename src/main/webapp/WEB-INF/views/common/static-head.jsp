@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="/assets/css/review/chatting-review.css">
 
 <c:if test="${login ne null}">
-    <script src="http://3.35.212.146:3000/socket.io/socket.io.js" defer></script>
+    <script src="http://13.124.86.121:3000/socket.io/socket.io.js" defer></script>
 </c:if>
 <script src="/assets/js/common/header.js" type="module" defer></script>
 <script src="/assets/js/review/review-rate.js" defer type="module"></script>
