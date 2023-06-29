@@ -54,7 +54,7 @@ public class RiotApiService {
                     break;
                 }
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
             // 솔로랭크 정보가 없을 때
             return Tier.UNR;
         }
