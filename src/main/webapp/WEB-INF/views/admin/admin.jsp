@@ -99,8 +99,8 @@
       <div class="menu" id="right_menu">
         <div class="top_menu">
           <div class="search">
-            <input name="keyword" type="text">
-            <button><img src="/assets/img/admin/검색.png" alt="search"></button>
+            <input id="search_input" name="keyword" type="text">
+            <button id="search_button"><img src="/assets/img/admin/검색.png" alt="search"></button>
           </div>
           <ul class="admin_board">
             <li><a href="/board/write">글쓰기</a></li>
@@ -147,7 +147,7 @@
             <div class="nickname">닉네임</div>
             <div class="title">제목</div>
             <div class="board_write_date">작성일자</div>
-            <div class="select_count">조회수</div>
+            <div class="select_count" id="board_select_count">조회수</div>
           </div>
           <% for (int i = 1; i < 11; i++) { %>
 
@@ -253,7 +253,8 @@
 
 function getUserList(pageNum) {
   console.log('totalpageNum=================', pageNum);
-  fetch("/api/v1/users/admin?page="+pageNum+"&keyword=34")
+
+  fetch(`/api/v1/users/admin/\${pageNum}`)
     .then(response => response.json())
     .then(res => {
 
@@ -493,7 +494,17 @@ makePageButtonUserClickEvent();
 
 // 금일 유저
 function getUserTodayList(pageNum) {
-  fetch('/api/v1/users/admin1?page=' + pageNum)
+
+  var searchData = ""; // 초기값 설정
+
+const searchInput = document.getElementById('search_input');
+const button = document.getElementById('search_button');
+
+button.onclick = e => {
+  var keyword = searchInput.value; // 입력된 텍스트 값 업데이트
+  console.log(keyword);
+};
+  fetch(`/api/v1/users/admin1/\${pageNum}`)
     .then(response => response.json())
     .then(res => {
       console.log('res', res);
@@ -528,7 +539,7 @@ function getUserTodayList(pageNum) {
       ulp1(list);
       ulf1(list);
       uls1(list);
-      locationToDetail(list);
+      locationToTodayDetail(list);
 
       renderUserTodayList(res);
     });
@@ -722,6 +733,22 @@ function getUserTodayList(pageNum) {
 
       // 페이지 버튼 이벤트 등록
       makePageButtonUserTodayClickEvent();
+
+
+      
+      function locationToTodayDetail(list) {
+        console.log('list: ', list);
+
+        for (let i = 0; i < list.length; i++) {
+          const userNickname = list[i].userNickname; // userAccount 값을 가져옴
+
+          userList[i].onclick = e => {
+            console.log('userNickname: ', userNickname);
+
+            window.location.href = '/user/detail/admin?userNickname=' + userNickname;
+          };
+        }
+      }
 
 
       //보드

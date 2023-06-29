@@ -254,9 +254,16 @@ public class UserController {
     }
 
     //관리자 페이지 리스트 가져오기
-    @GetMapping("/api/v1/users/admin")
+    @GetMapping("/api/v1/users/admin/{pageNum}")
     public ResponseEntity<?> getUserListByAdmin(
-             @ModelAttribute  PageDTO dto){
+            @PathVariable int pageNum){
+
+        PageDTO dto = PageDTO.builder()
+                .page(pageNum)
+                .keyword("")
+                .size(10)
+                .build();
+
         log.info("{}ddttoo==",dto);
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
         log.info("userbyadmin11111 : {}",userListByAdmin);
@@ -270,9 +277,16 @@ public class UserController {
     }
 
     //관리자 페이지 금일 가입자 리스트 가져오기
-    @GetMapping("/api/v1/users/admin1")
+    @GetMapping("/api/v1/users/admin1/{pageNum}")
     public ResponseEntity<?> getTodayUserListByAdmin(
-            PageDTO dto) {
+            @PathVariable int pageNum){
+
+        PageDTO dto = PageDTO.builder()
+                .page(pageNum)
+                .keyword("")
+                .size(10)
+                .build();
+
         ListResponseDTO<UserByAdminResponseDTO, User> userListTodayByAdmin = userService.todayUserByAdMin(dto);
         log.info("userListTodayByAdmin123 : {}",userListTodayByAdmin);
 

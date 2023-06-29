@@ -315,7 +315,7 @@ width: 100%;
 }
 
 #main-wrapper #right_menu .bottsom_menu .menubar .select_count{
-    margin-left:20px;
+    padding-left:60px;
     width: 5%;
 }
 
@@ -326,8 +326,12 @@ background-color: rgba(255, 255, 255, 0);
 cursor: pointer;
 width: 15%;
 /* border: 1px solid #000; */
-
 }
+
+#main-wrapper #right_menu .bottom_menu .menubar #board_select_count{
+    padding-left: 60px;
+}
+
 
 #main-wrapper #right_menu .bottom_menu .menubar button{
     cursor: pointer;
@@ -357,6 +361,11 @@ width: 15%;
 
 #main-wrapper #right_menu .bottom_menu .menubar .accuse_count{
     margin-left:40px;
+    width: 10%;
+}
+
+#main-wrapper #right_menu .bottom_menu .menubar .delete{
+    padding-left :50px;
     width: 10%;
 }
 
