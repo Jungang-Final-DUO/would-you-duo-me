@@ -54,7 +54,7 @@ public class RiotApiService {
                     break;
                 }
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
             // 솔로랭크 정보가 없을 때
             return Tier.UNR;
         }
@@ -190,7 +190,7 @@ public class RiotApiService {
 
         return getTop3PopularityItems(last20ParticipantDTOList.stream()
                 .map(MatchV5DTO.MatchInfo.ParticipantDTO::getChampionName)
-                .collect(Collectors.toList()), 3);
+                .collect(Collectors.toList()));
     }
 
     /**
@@ -243,10 +243,9 @@ public class RiotApiService {
      * 리스트에서 가장 많이 들어있는 n 개를 구하는 메서드
      *
      * @param items - 리스트
-     * @param n     - 갯수
      * @return - n 개의 리스트
      */
-    private static <T> List<T> getTop3PopularityItems(List<T> items, int n) {
+    private static <T> List<T> getTop3PopularityItems(List<T> items) {
         // Step 1: Create a HashMap to store the frequency of each item
         Map<T, Integer> frequencyMap = new HashMap<>();
 
@@ -260,7 +259,7 @@ public class RiotApiService {
         sortedEntries.sort((a, b) -> b.getValue().compareTo(a.getValue()));
 
         // Step 4: Extract the top 3 entries from the sorted HashMap
-        List<Map.Entry<T, Integer>> top3Entries = sortedEntries.subList(0, Math.min(n, sortedEntries.size()));
+        List<Map.Entry<T, Integer>> top3Entries = sortedEntries.subList(0, Math.min(3, sortedEntries.size()));
 
         // Step 5: Store the keys (popularity items) of the top 3 entries in a separate list
         List<T> top3PopularityItems = new ArrayList<>();

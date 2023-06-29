@@ -101,6 +101,16 @@ public class UserService {
                 .userRecentLoginDate(LocalDateTime.now())
                 .build();
 
+        // 모스트 챔피언 3개 또는 그 이하 저장
+        List<String> most3Champions = riotApiService.getMost3Champions(dto.getLolNickname());
+        for (int i = 0; i < most3Champions.size(); i++) {
+            mostChampRepository.save(MostChamp.builder()
+                    .user(user)
+                    .mostNo(i + 1)
+                    .champName(most3Champions.get(i))
+                    .build());
+        }
+
         userRepository.save(user);
 
         // 프로필 사진 저장
