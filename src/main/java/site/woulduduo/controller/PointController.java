@@ -41,9 +41,7 @@ public class PointController {
             return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
         }
 
-//        System.out.println("checkCurrentPoint 컨트롤러 확인");
         int result = pointService.checkCurrentPoint(chattingNo);
-//        System.out.println("포인트 계산 결과 : " + result );
         return ResponseEntity.ok().body(result);
     }
 
@@ -60,8 +58,6 @@ public class PointController {
             return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
         }
 
-//        System.out.println("payMatchingPoint 컨트롤러 확인");
-//        System.out.println("payMatchingPoint 컨트롤러" +dto.getChattingNo());
         int paidPoints = pointService.payMatchingPoint(dto.getChattingNo(), dto.getMatchingNo());
         return ResponseEntity.ok().body(paidPoints);
     }
@@ -94,7 +90,7 @@ public class PointController {
 
         LoginUserResponseDTO loginUserInfo = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
         Matching matching = matchingService.findByMatchingNo(matchingNo);
-        Chatting chatting = chattingService.findByChattingNo(matching.getMatchingNo());
+        Chatting chatting = chattingService.findByChattingNo(matching.getChatting().getChattingNo());
         boolean accessFlag = isMyChatting(loginUserInfo, chatting);
         if(!accessFlag){
             return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
