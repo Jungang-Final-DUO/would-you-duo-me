@@ -170,7 +170,7 @@ public class MatchingController {
 
         LoginUserResponseDTO loginUserInfo = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
         Matching matching = matchingService.findByMatchingNo(dto.getMatchingNo());
-        Chatting chatting = chattingService.findByChattingNo(matching.getMatchingNo());
+        Chatting chatting = chattingService.findByChattingNo(matching.getChatting().getChattingNo());
         boolean accessFlag = isMyChatting(loginUserInfo, chatting);
         if(!accessFlag){
             return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
@@ -190,7 +190,7 @@ public class MatchingController {
 
         LoginUserResponseDTO loginUserInfo = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
         Matching matching = matchingService.findByMatchingNo(matchingNo);
-        Chatting chatting = chattingService.findByChattingNo(matching.getMatchingNo());
+        Chatting chatting = chattingService.findByChattingNo(matching.getChatting().getChattingNo());
         boolean accessFlag = isMyChatting(loginUserInfo, chatting);
         if(!accessFlag){
             return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
@@ -208,7 +208,7 @@ public class MatchingController {
 
         LoginUserResponseDTO loginUserInfo = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
         Matching matching = matchingService.findByMatchingNo(matchingNo);
-        Chatting chatting = chattingService.findByChattingNo(matching.getMatchingNo());
+        Chatting chatting = chattingService.findByChattingNo(matching.getChatting().getChattingNo());
         boolean accessFlag = isMyChatting(loginUserInfo, chatting);
         if(!accessFlag){
             return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
