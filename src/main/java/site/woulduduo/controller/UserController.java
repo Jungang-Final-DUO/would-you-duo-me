@@ -254,14 +254,10 @@ public class UserController {
     }
 
     //관리자 페이지 리스트 가져오기
-    @GetMapping("/api/v1/users/admin/{pageNum}/{keyword}")
+    @GetMapping("/api/v1/users/admin")
     public ResponseEntity<?> getUserListByAdmin(
-            @PathVariable int pageNum,
-            @PathVariable String keyword){
-
-        if (keyword.isEmpty()) {
-            keyword = " "; // 빈 문자열인 경우 공백으로 설정합니다.
-        }
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "1") int pageNum) {
 
         PageDTO dto = PageDTO.builder()
                 .page(pageNum)

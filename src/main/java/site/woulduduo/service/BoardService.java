@@ -103,12 +103,23 @@ public class BoardService {
                 Sort.by("boardNo").descending()
         );
 
-        System.out.println("pageable = " + pageable);
+        String keyword = dto.getKeyword();
+        if ("".equals(keyword)){
+            keyword=null;
+        }
 
-        Page<Board> all = boardRepository.findAll(pageable);
+        String userAccount = dto.getKeyword();
+        Page<Board> boards;
 
-        System.out.println("all = " + all);
-        List<BoardsByAdminResponseDTO> collect = all.stream()
+        if (userAccount==null) {
+            boards = boardRepository.findAll(pageable);
+        }else{
+            boards = boardRepository.findbyUserAccountContaining( userAccount, pageable);
+        }
+
+
+        System.out.println("all = " + boards);
+        List<BoardsByAdminResponseDTO> collect = boards.stream()
                 .map(BoardsByAdminResponseDTO::new)
                 .collect(toList());
 
@@ -117,7 +128,7 @@ public class BoardService {
         System.out.println("collect = " + collect);
         return ListResponseDTO.<BoardsByAdminResponseDTO,Board>builder()
                 .count(collect.size())
-                .pageInfo(new PageResponseDTO<>(all))
+                .pageInfo(new PageResponseDTO<>(boards))
                 .list(collect)
                 .build();
     }

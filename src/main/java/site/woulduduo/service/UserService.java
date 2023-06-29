@@ -341,59 +341,46 @@ public class UserService {
     public ListResponseDTO<UserByAdminResponseDTO,User> getUserListByAdmin(PageDTO dto) {
 
         Pageable pageable = PageRequest.of(
-                dto.getPage()-1,
+                dto.getPage() - 1,
                 dto.getSize(),
                 Sort.by("userJoinDate").descending()
         );
-        String userAccount = dto.getKeyword();
-
-        if(userAccount.equals("")) {
-            //전체불러오기
-            Page<User> all = userRepository.findAll(pageable);
-            System.out.println("all = " + all);
-            List<UserByAdminResponseDTO> collect = all.stream()
-                    .map(UserByAdminResponseDTO::new)
-                    .collect(toList());
-//
-            //rowNum 추가
-
-            int i = (dto.getPage() - 1) * dto.getSize() + 1;
-            for (UserByAdminResponseDTO user : collect) {
-                user.setRowNum(i);
-                i++;
-            }
-            System.out.println("collect = " + collect);
-
-            return ListResponseDTO.<UserByAdminResponseDTO, User>builder()
-                    .count(collect.size())
-                    .pageInfo(new PageResponseDTO<>(all))
-                    .list(collect)
-                    .build();
+        String keyword = dto.getKeyword();
+        if ("".equals(keyword)){
+            keyword=null;
         }
 
-        Page<User> all1 = userRepository.findByUserAccountContaining(userAccount, pageable);
-        System.out.println("all = " + all1);
-        List<UserByAdminResponseDTO> collect1 = all1.stream()
+        String userAccount = dto.getKeyword();
+        Page<User> users;
+
+        if (userAccount==null) {
+            // 전체 불러오기
+            users = userRepository.findAll(pageable);
+        } else {
+            // 특정 키워드를 포함하는 계정 불러오기
+            users = userRepository.findByUserAccountContaining(userAccount, pageable);
+        }
+
+
+        List<UserByAdminResponseDTO> collect = users.stream()
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
-//
-        //rowNum 추가
 
-        int i1= (dto.getPage() - 1) * dto.getSize() + 1 ;
-        for (UserByAdminResponseDTO user : collect1) {
-            user.setRowNum(i1);
-            i1++;
+        int i = (dto.getPage() - 1) * dto.getSize() + 1;
+        for (UserByAdminResponseDTO user : collect) {
+            user.setRowNum(i);
+            i++;
         }
 
-        System.out.println("collect = " + collect1);
-
         return ListResponseDTO.<UserByAdminResponseDTO, User>builder()
-                .count(collect1.size())
-                .pageInfo(new PageResponseDTO<>(all1))
-                .list(collect1)
+                .count(collect.size())
+                .pageInfo(new PageResponseDTO<>(users))
+                .list(collect)
                 .build();
-
     }
+
+
+
 
     //금일 가입자(Admin)
     public ListResponseDTO<UserByAdminResponseDTO, User> todayUserByAdMin(PageDTO dto) {

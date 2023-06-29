@@ -248,15 +248,36 @@
   UserMenuBar.style.display = '';
 
   const pageNum = 1; // 초기 페이지 설정
+const searchInput = document.getElementById('search_input');
+  const button = document.getElementById('search_button');
 
-  getUserList(pageNum);
+  let  keyword = ""; // 초기에는 빈 문자열로 설정합니다.
+  console.log('클릭전 키워드',keyword);
+
+  button.onclick = e => {
+    keyword = searchInput.value; // 입력된 텍스트 값으로 keyword를 업데이트합니다.
+    console.log(keyword);
+
+    
+    if(keyword==""){
+      keyword="";
+    }
+
+    // 사용자 목록을 가져오는 함수 호출
+    getUserList(pageNum, keyword);
+  };
+
+  // 사용자 목록을 가져오는 함수 호출 (초기에는 keyword가 빈 문자열로 호출됩니다.)
+  getUserList(pageNum, keyword);
+  console.log('함수전달할 때  키워드',keyword);
+
 };
 
-function getUserList(pageNum) {
+function getUserList(pageNum,keyword) {
   
   console.log('totalpageNum=================', pageNum);
   console.log('회원관리 비동기 호출');
-  fetch(`/api/v1/users/admin/\${pageNum}`)
+  fetch(`/api/v1/users/admin?pageNum=\${pageNum}&keyword=\${keyword}`)
     .then(response => response.json())
     .then(res => {
 
