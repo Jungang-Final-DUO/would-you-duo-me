@@ -15,18 +15,18 @@ import site.woulduduo.entity.User;
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.ChattingService;
 import site.woulduduo.service.MessageService;
-import site.woulduduo.util.LoginUtil;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
-import static site.woulduduo.util.LoginUtil.*;
+import static site.woulduduo.util.LoginUtil.LOGIN_KEY;
+import static site.woulduduo.util.LoginUtil.isMyChatting;
 
 @RestController
 @RequestMapping("/api/v1/chat")
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin("http://3.35.212.146:3000")
+@CrossOrigin("http://duo-duo.site:3000")
 public class ChattingController {
 
     private final ChattingService chattingService;
