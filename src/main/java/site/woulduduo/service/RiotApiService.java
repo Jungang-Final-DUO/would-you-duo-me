@@ -54,12 +54,18 @@ public class RiotApiService {
                     break;
                 }
             }
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             // 솔로랭크 정보가 없을 때
             return Tier.UNR;
         }
 
-        return Objects.requireNonNull(soloRankInfo).getTierEnum();
+        Tier tier = null;
+        try {
+            tier = Objects.requireNonNull(soloRankInfo).getTierEnum();
+        } catch (NullPointerException e) {
+            tier = Tier.UNR;
+        }
+        return tier;
     }
 
     /**
