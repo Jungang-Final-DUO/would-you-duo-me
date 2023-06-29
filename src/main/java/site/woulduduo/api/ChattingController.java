@@ -26,7 +26,6 @@ import static site.woulduduo.util.LoginUtil.isMyChatting;
 @RequestMapping("/api/v1/chat")
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:3000")
 public class ChattingController {
 
     private final ChattingService chattingService;
