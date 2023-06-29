@@ -254,13 +254,18 @@ public class UserController {
     }
 
     //관리자 페이지 리스트 가져오기
-    @GetMapping("/api/v1/users/admin/{pageNum}")
+    @GetMapping("/api/v1/users/admin/{pageNum}/{keyword}")
     public ResponseEntity<?> getUserListByAdmin(
-            @PathVariable int pageNum){
+            @PathVariable int pageNum,
+            @PathVariable String keyword){
+
+        if (keyword.isEmpty()) {
+            keyword = " "; // 빈 문자열인 경우 공백으로 설정합니다.
+        }
 
         PageDTO dto = PageDTO.builder()
                 .page(pageNum)
-                .keyword("")
+                .keyword(keyword)
                 .size(10)
                 .build();
 
@@ -277,15 +282,19 @@ public class UserController {
     }
 
     //관리자 페이지 금일 가입자 리스트 가져오기
-    @GetMapping("/api/v1/users/admin1/{pageNum}")
+    @GetMapping("/api/v1/users/admin1")
     public ResponseEntity<?> getTodayUserListByAdmin(
-            @PathVariable int pageNum){
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "1") int pageNum) {
+
 
         PageDTO dto = PageDTO.builder()
                 .page(pageNum)
-                .keyword("")
+                .keyword(keyword)
                 .size(10)
                 .build();
+
+        log.info("dtodto={}",dto);
 
         ListResponseDTO<UserByAdminResponseDTO, User> userListTodayByAdmin = userService.todayUserByAdMin(dto);
         log.info("userListTodayByAdmin123 : {}",userListTodayByAdmin);

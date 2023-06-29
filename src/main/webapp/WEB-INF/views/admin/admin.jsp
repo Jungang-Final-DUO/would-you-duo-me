@@ -137,6 +137,7 @@
               <div class="sign_date uls"></div>
             </div>
           </a>
+          
           <% } %>
 
 
@@ -241,7 +242,7 @@
         }
       }
 
-      totalUserButton.onclick = e => {
+  totalUserButton.onclick = e => {
   boardDisplayNone();
   accuseDisplayNone();
   UserMenuBar.style.display = '';
@@ -252,8 +253,9 @@
 };
 
 function getUserList(pageNum) {
+  
   console.log('totalpageNum=================', pageNum);
-
+  console.log('회원관리 비동기 호출');
   fetch(`/api/v1/users/admin/\${pageNum}`)
     .then(response => response.json())
     .then(res => {
@@ -381,9 +383,9 @@ function uln(list) {
         pageInfo, 
         list 
       }) {
-  console.log('count: ', count);
-  console.log('pageInfo: ', pageInfo);
-  console.log('list: ', list);
+  console.log('userList count: ', count);
+  console.log('userList pageInfo: ', pageInfo);
+  console.log('userList list: ', list);
 
   // 페이지 렌더링
   renderPage(pageInfo);
@@ -402,6 +404,8 @@ function renderPage({
   totalCount,
   PAGE_COUNT
 }) {
+console.log(`userList 페이지 렌더링 함수`);
+
   let tag = "";
 
   //이전 버튼 만들기
@@ -449,7 +453,7 @@ function makePageButtonUserClickEvent() {
 
     // 누른 페이지 번호 가져오기
     const pageNum = e.target.getAttribute('href');
-    console.log("======", pageNum);
+    console.log("======total", pageNum);
 
     // 페이지 번호에 맞는 목록 비동기 요청
     getUserList(pageNum);
@@ -489,22 +493,34 @@ makePageButtonUserClickEvent();
 
   const pageNum = 1; // 초기 페이지 설정
 
-  getUserTodayList(pageNum);
+  const searchInput = document.getElementById('search_input');
+  const button = document.getElementById('search_button');
+
+  let  keyword = ""; // 초기에는 빈 문자열로 설정합니다.
+  console.log('클릭전 키워드',keyword);
+
+  button.onclick = e => {
+    keyword = searchInput.value; // 입력된 텍스트 값으로 keyword를 업데이트합니다.
+    console.log(keyword);
+
+    if(keyword==""){
+      keyword="";
+    }
+
+    // 사용자 목록을 가져오는 함수 호출
+    getUserTodayList(pageNum, keyword);
+  };
+
+  // 사용자 목록을 가져오는 함수 호출 (초기에는 keyword가 빈 문자열로 호출됩니다.)
+  getUserTodayList(pageNum, keyword);
+  console.log('함수전달할 때  키워드',keyword);
+
 };
+
 
 // 금일 유저
-function getUserTodayList(pageNum) {
-
-  var searchData = ""; // 초기값 설정
-
-const searchInput = document.getElementById('search_input');
-const button = document.getElementById('search_button');
-
-button.onclick = e => {
-  var keyword = searchInput.value; // 입력된 텍스트 값 업데이트
-  console.log(keyword);
-};
-  fetch(`/api/v1/users/admin1/\${pageNum}`)
+function getUserTodayList(pageNum, keyword) {
+  fetch(`/api/v1/users/admin1?pageNum=\${pageNum}&keyword=\${keyword}`)
     .then(response => response.json())
     .then(res => {
       console.log('res', res);
@@ -724,12 +740,14 @@ button.onclick = e => {
           // 누른 페이지 번호 가져오기
           const pageNum = e.target.getAttribute('href');
           // console.log(pageNum);
-          console.log("======",pageNum)
+          console.log("======today",pageNum)
 
           // 페이지 번호에 맞는 목록 비동기 요청
           getUserTodayList(pageNum);
         };
       }
+
+
 
       // 페이지 버튼 이벤트 등록
       makePageButtonUserTodayClickEvent();

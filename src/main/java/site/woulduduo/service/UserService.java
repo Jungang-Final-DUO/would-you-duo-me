@@ -347,52 +347,83 @@ public class UserService {
         );
         String userAccount = dto.getKeyword();
 
-        //전체불러오기
-        Page<User> all = userRepository.findByUserAccountContaining(userAccount,pageable);
-        System.out.println("all = " + all);
+        if(userAccount.equals("")) {
+            //전체불러오기
+            Page<User> all = userRepository.findAll(pageable);
+            System.out.println("all = " + all);
+            List<UserByAdminResponseDTO> collect = all.stream()
+                    .map(UserByAdminResponseDTO::new)
+                    .collect(toList());
+//
+            //rowNum 추가
 
-        List<UserByAdminResponseDTO> collect = all.stream()
+            int i = (dto.getPage() - 1) * dto.getSize() + 1;
+            for (UserByAdminResponseDTO user : collect) {
+                user.setRowNum(i);
+                i++;
+            }
+            System.out.println("collect = " + collect);
+
+            return ListResponseDTO.<UserByAdminResponseDTO, User>builder()
+                    .count(collect.size())
+                    .pageInfo(new PageResponseDTO<>(all))
+                    .list(collect)
+                    .build();
+        }
+
+        Page<User> all1 = userRepository.findByUserAccountContaining(userAccount, pageable);
+        System.out.println("all = " + all1);
+        List<UserByAdminResponseDTO> collect1 = all1.stream()
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
 //
         //rowNum 추가
 
-        int i= (dto.getPage() - 1) * dto.getSize() + 1 ;
-        for (UserByAdminResponseDTO user : collect) {
-            user.setRowNum(i);
-            i++;
+        int i1= (dto.getPage() - 1) * dto.getSize() + 1 ;
+        for (UserByAdminResponseDTO user : collect1) {
+            user.setRowNum(i1);
+            i1++;
         }
 
-        System.out.println("collect = " + collect);
+        System.out.println("collect = " + collect1);
 
         return ListResponseDTO.<UserByAdminResponseDTO, User>builder()
-                .count(collect.size())
-                .pageInfo(new PageResponseDTO<>(all))
-                .list(collect)
+                .count(collect1.size())
+                .pageInfo(new PageResponseDTO<>(all1))
+                .list(collect1)
                 .build();
 
     }
 
     //금일 가입자(Admin)
-    public ListResponseDTO<UserByAdminResponseDTO,User> todayUserByAdMin(PageDTO dto) {
-
+    public ListResponseDTO<UserByAdminResponseDTO, User> todayUserByAdMin(PageDTO dto) {
         Pageable pageable = PageRequest.of(
-                dto.getPage()-1,
+                dto.getPage() - 1,
                 dto.getSize(),
                 Sort.by("userJoinDate").descending()
         );
+        String keyword = dto.getKeyword();
+        if ("".equals(keyword)){
+            keyword=null;
+        }
 
         String userAccount = dto.getKeyword();
+        Page<User> users;
 
-        //전체불러오기
-        Page<User> all = userRepository.findByUserAccountContaining(userAccount,pageable);
+        if (userAccount==null) {
+            // 전체 불러오기
+            users = userRepository.findAll(pageable);
+        } else {
+            // 특정 키워드를 포함하는 계정 불러오기
+            users = userRepository.findByUserAccountContaining(userAccount, pageable);
+        }
+
         List<User> todayUserList = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
 
-        for (User user : all) {
-            System.out.println("userByAdminResponseDTO = " + user);
+        for (User user : users) {
             LocalDate joinDate = user.getUserJoinDate();
-            if (joinDate!=null&&joinDate.equals(currentDate)) {
+            if (joinDate != null && joinDate.equals(currentDate)) {
                 todayUserList.add(user);
             }
         }
@@ -401,24 +432,18 @@ public class UserService {
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
 
-        //rowNum 추가
-
-        int i= (dto.getPage() - 1) * dto.getSize() + 1 ;
+        int i = (dto.getPage() - 1) * dto.getSize() + 1;
         for (UserByAdminResponseDTO user : collect) {
             user.setRowNum(i);
             i++;
         }
 
-        System.out.println("collect = " + collect);
-
         return ListResponseDTO.<UserByAdminResponseDTO, User>builder()
                 .count(collect.size())
-                .pageInfo(new PageResponseDTO<>(all))
+                .pageInfo(new PageResponseDTO<>(users))
                 .list(collect)
                 .build();
-
     }
-
 
 
     //userDetailByAdmin
