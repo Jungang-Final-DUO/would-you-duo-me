@@ -50,6 +50,7 @@ public class UserRegisterRequestDTO {
     @NotNull(message = "성별은 필수 입력값입니다.")
     private Gender userGender;
 
+    @Builder.Default
     private MultipartFile[] profileImages = new MultipartFile[0];
 
     private String[] profileImagePaths;

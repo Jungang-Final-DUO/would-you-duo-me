@@ -1,28 +1,27 @@
 import {addModalBtnEvent, addModalCloseEvent} from "./modal-handler.js";
-import {makeChattingRoom, toBack} from "../chatting/chatting-modal.js";
+import {makeChattingRoom, renderTotalUnreadMessages, toBack} from "../chatting/chatting-modal.js";
 import {toTopBtnHandler} from "./to-top-btn-handler.js";
 import {connectSocket} from "../chatting/main.js";
 import {addDropdownEvent} from "./dropdown-handler.js";
 import {signInSubmitHandler} from "../user/sign-in-submit-handler.js";
+import {renderMatchingCalendar} from "../chatting/chatting-calendar.js";
 
 (async () => {
 
     // 로그인 했을때만 실행되는 함수
     if (document.getElementById('chatting-btn')) {
-        //채팅 목록 최초 랜더
-        // getChattingList();
 
         // 소켓 연결
         connectSocket();
 
-        //헤더 채팅 버튼 클릭하면 채팅 목록 렌더링
-        // openChattingList();
-
-        //채팅 생성하기
-        makeChattingRoom();
+        //안읽은 메세지 출력
+        renderTotalUnreadMessages();
 
         // 채팅 메세지 모달 안에서 채팅방 모달로 돌아가기
         toBack();
+
+        //매칭 날짜 캘린더
+        renderMatchingCalendar();
 
         // 내 정보 모달 드롭다운 이벤트
         addDropdownEvent('user-info-btn', 'my-page-modal-wrapper');

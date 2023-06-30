@@ -2,6 +2,7 @@
 @import "footer.css";
 @import "../chatting/chattingModal.css";
 @import "../chatting/chattingMessageModal.css";
+@import "../chatting/chatting-calendar.css";
 
 /* header style */
 header {
@@ -16,7 +17,7 @@ header {
 
 /* navigation bar style */
 #nav-bar {
-    width: 23%;
+    width: fit-content;
     height: 120px;
 
     display: flex;
@@ -28,6 +29,7 @@ header {
 /* user navigation bar style */
 #user-nav-bar {
     width: 40%;
+    margin-right: 50px;
 
     display: flex;
     justify-content: space-evenly;
@@ -51,6 +53,8 @@ header {
     position: absolute;
 
     color: #000;
+
+    z-index: 1;
 }
 
 #my-page-modal:before {
@@ -281,6 +285,10 @@ header {
     justify-content: space-between;
 }
 
+.common-menu-wrapper {
+    margin-right: 30px;
+}
+
 .common-menu-wrapper > a {
     font-size: 25px;
     color: #fff;
@@ -346,7 +354,7 @@ header {
     top: 1px;
     right: 1px;
 
-    display: none;
+    /*display: none;*/
     /* 값이 있을때 block으로 바꾸기 */
     /* display: block */
     background: #FF0000;
@@ -355,4 +363,7 @@ header {
 
     color: #fff;
     font-weight: bold;
+
+    width: fit-content;
+    min-width: 20px;
 }

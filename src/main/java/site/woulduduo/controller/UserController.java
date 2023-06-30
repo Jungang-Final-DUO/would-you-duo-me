@@ -22,10 +22,7 @@ import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.user.*;
 import site.woulduduo.entity.User;
-import site.woulduduo.enumeration.Gender;
-import site.woulduduo.enumeration.LoginResult;
-import site.woulduduo.enumeration.Position;
-import site.woulduduo.enumeration.Tier;
+import site.woulduduo.enumeration.*;
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.EmailService;
 import site.woulduduo.service.UserService;
@@ -40,8 +37,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static site.woulduduo.enumeration.LoginResult.SUCCESS;
-import static site.woulduduo.util.LoginUtil.isAutoLogin;
-import static site.woulduduo.util.LoginUtil.isLogin;
+import static site.woulduduo.util.LoginUtil.*;
 
 @Controller
 @Slf4j
@@ -64,11 +60,14 @@ public class UserController {
             , @PathVariable String tier, @PathVariable String sort/*, HttpSession session*/) {
 
 
-//        log.info("&&&&&:{}, {}, {}, {}", );
-        System.out.println(position + gender + tier + sort);
+        System.out.println(keyword + position + gender + tier + sort);
+
         UserSearchType userSearchType = new UserSearchType();
         userSearchType.setPage(page);
         userSearchType.setSize(size);
+        if (!keyword.equals("-")) {
+            userSearchType.setKeyword(keyword);
+        }
         if (!position.equals("all")) {
             userSearchType.setPosition(Position.valueOf(position));
         }
@@ -150,7 +149,13 @@ public class UserController {
 
     // 로그인 검증 요청
     @PostMapping("/user/sign-in")
-    public String signIn(LoginRequestDTO dto, RedirectAttributes ra, HttpServletResponse response, HttpServletRequest request) {
+    public String signIn(LoginRequestDTO dto
+            , RedirectAttributes ra
+            , HttpServletResponse response
+            , HttpServletRequest request
+    ) {
+
+        System.out.println("dto.getRequestURI() = " + dto.getRequestURI());
         log.info("/user/sign-in POST ! - {}", dto);
 
         LoginResult result = userService.authenticate(dto, request.getSession(), response);
@@ -160,7 +165,7 @@ public class UserController {
             // 서버에서 세션에 로그인 정보를 저장
             userService.maintainLoginState(request.getSession(), dto.getUserAccount());
 
-            return "redirect:/";
+            return dto.getRequestURI();
         }
 
         // 1회용으로 쓰고 버릴 데이터
@@ -200,11 +205,18 @@ public class UserController {
     public String showMyPage(HttpSession session, Model model) {
         log.info("/user/my-page GET");
 
+        String userAccount;
+
+        try {
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        } catch (NullPointerException e) {
+            return "/?msg=NEED_LOGIN";
+        }
+
         // 사용자 정보 가져오기
         User user = null;
-        if (session != null && session.getId() != null) {
-            user = userService.getUser(session.getId());
-        }
+        user = userService.getUser(userAccount);
+
 
         // 모델에 사용자 정보 추가
         if (user != null) {
@@ -274,30 +286,6 @@ public class UserController {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //    // 프로필 사진 등록
 //    @PostMapping("/api/v1/users/profile")
 //    public ResponseEntity<?> addProfile(ProfileAddRequestDTO dto, HttpSession session) {
@@ -315,7 +303,15 @@ public class UserController {
 
     // 마이페이지 - 프로필 카드 등록페이지 열기
     @GetMapping("/user/register-duo")
-    public String registerDUO(/*HttpSession session, */Model model) {
+    public String registerDUO(HttpSession session) {
+
+        String userAccount;
+
+        try {
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        } catch (NullPointerException e) {
+            return "/?msg=NEED_LOGIN";
+        }
 
         return "my-page/mypage-duoprofile";
     }
@@ -323,27 +319,70 @@ public class UserController {
 
     // 마이페이지 - 프로필카드 등록 처리
     @PostMapping("/user/register-duo")
-    public String registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
+    public String registerDUO(HttpSession session, UserCommentRequestDTO dto, Model model) {
 
-        boolean b = userService.registerDUO(/*session, */dto);
+        String userAccount;
+
+        try {
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        } catch (NullPointerException e) {
+            return "/?msg=NEED_LOGIN";
+        }
+
+        boolean b = userService.registerDUO(session, dto);
         log.info("프로필카드등록 성공여부 : {}", b);
         log.info("@@@@dto@@@@ :{}", dto);
 
         return "redirect:/user/register-duo";
     }
 
+    // 마이 페이지 - 쓴 리뷰 페이지 열기
+    @GetMapping("/user/matching-list")
+    public String showMatchingList(HttpSession session) {
+
+        String userAccount;
+
+        try {
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        } catch (NullPointerException e) {
+            return "/?msg=NEED_LOGIN";
+        }
+
+        return "my-page/matching-list";
+    }
+
     @GetMapping("/user/admin")
     //관리자 페이지 열기
-    public String showAdminpage(/*HttpSession session, */Model model) {
+    public String showAdminpage(HttpSession session, Model model) {
+
+        String x = isAdmin(session);
+        if (x != null) return x;
+
         AdminPageResponseDTO adminPageInfo = userService.getAdminPageInfo();
         model.addAttribute("count", adminPageInfo);
         return "admin/admin";
     }
 
+    private static String isAdmin(HttpSession session) {
+        try {
+            if (!((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getRole().equals(Role.ADMIN)) {
+                return "redirect:/?msg=NOT_ADMIN";
+            }
+        } catch (NullPointerException e) {
+            return "redirect:/?msg=NEED_LOGIN";
+        }
+        return null;
+    }
+
     //관리자 페이지 리스트 가져오기
     @GetMapping("/api/v1/users/admin")
     public ResponseEntity<?> getUserListByAdmin(
-            @PathVariable PageDTO dto) {
+            HttpSession session,
+            @RequestBody PageDTO dto) {
+
+        if (!((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getRole().equals(Role.ADMIN)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
 
@@ -360,6 +399,10 @@ public class UserController {
     @GetMapping("/user/detail/admin")
     //관리자 페이지 자세히 보기
     public String showDetailByAdmin(HttpSession session, Model model, String userAccount) {
+
+        String x = isAdmin(session);
+        if (x != null) return x;
+
         UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userAccount);
 
         model.addAttribute("udByAdmin", userDetailByAdmin);
@@ -392,6 +435,23 @@ public class UserController {
 
         return "user/user-history";
 
+    }
+
+    // 유저 팔로우
+    // 이미 팔로우되어 있다면 언팔로우
+    @PatchMapping("/api/v1/users/{userAccount}")
+    public ResponseEntity<?> follow(
+            @PathVariable String userAccount,
+            HttpSession session
+    ) {
+
+        try {
+            boolean isFollowed = userService.follow(userAccount, session);
+
+            return ResponseEntity.ok(isFollowed);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

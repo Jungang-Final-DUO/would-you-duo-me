@@ -49,15 +49,13 @@ public class ChattingService {
         System.out.println("chattingFrom = " + chattingFrom);
 //        Chatting chattingTo = chattingRepository.findByChattingFromAndChattingTo(chattingUser, /*session.getAttribute()*/ me);
 //        System.out.println("chattingTo = " + chattingTo);
-        if (chattingFrom != null
-//                || chattingTo != null
-        ) {
+//        if (myName.equals(userAccount)) {
+//            System.out.println("나와의 채팅!?");
+//            chattingNo = 0;
+//        }else
+        if (chattingFrom != null) {
             System.out.println("이미 존재하는 채팅내역임");
-            chattingNo =
-//                    chattingFrom != null ?
-                            chattingFrom.getChattingNo();
-//        : chattingTo.getChattingNo();
-
+            chattingNo = chattingFrom.getChattingNo();
         } else {
             // 존재하지 않으면 데이터 생성
             Chatting chatting = Chatting.builder()
@@ -72,6 +70,9 @@ public class ChattingService {
                     .messageContent("안녕하세요, 대화를 신청해주셔서 감사합니다!")
                     .chatting(saved)
                     .build();
+            if (myName.equals(userAccount)){
+                message.setMessageContent("나와의 채팅");
+            }
             Message firstMessage = messageRepository.save(message);
         }
 
@@ -127,7 +128,7 @@ public class ChattingService {
                     .collect(Collectors.toList());
             return profileList.get(0).getProfileImage();
         } catch (IndexOutOfBoundsException e) {
-            return "프로필 사진이 존재하지 않습니다."; // default 이미지 경로로 변경예정
+            return "noProfile"; // default 이미지 경로로 변경예정
         }
     }
 
@@ -160,6 +161,7 @@ public class ChattingService {
             }
 //           최신 메세지 세팅
             dtoList.get(i).setMessageContent(messageRepository.findByChattingOrderByMessageTimeDesc(chattingList.get(i)).get(0).getMessageContent());
+            dtoList.get(i).makeShortenMessage(dtoList.get(i).getMessageContent());
             dtoList.get(i).setMessageUnreadCount(messageRepository.countByChattingAndUserIsNotAndMessageIsRead(chattingList.get(i), user, false));
         }
 
@@ -172,5 +174,16 @@ public class ChattingService {
 
     public Chatting findByChattingNo(long chattingNo) {
         return chattingRepository.findByChattingNo(chattingNo);
+    }
+
+    public int getTotalUnreadMessageCount(User user) {
+        List<Chatting> toList = chattingRepository.findByChattingTo(user);
+        List<Chatting> fromList = chattingRepository.findByChattingFrom(user);
+        List<Chatting> chattingList = Stream.concat(fromList.stream(), toList.stream()).collect(Collectors.toList());
+        int totalUnread = 0;
+        for (Chatting chat : chattingList) {
+            totalUnread += messageRepository.countByChattingAndUserIsNotAndMessageIsRead(chat, user, false);
+        }
+        return totalUnread;
     }
 }
