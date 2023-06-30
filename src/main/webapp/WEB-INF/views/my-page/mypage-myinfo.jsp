@@ -57,8 +57,6 @@
                                                                                     name="userNickname"
                                                                                     value="${login.userNickname}"></label>
                             </div>
-                            <div id="nicknameChk"></div>
-
                             <div class="my-info-data"><span>생년월일</span><label><input type="date"
                                                                                      class="my-registered-info"
                                                                                      id="userBirthday"
@@ -69,7 +67,6 @@
                                                                                     id="lolNickname" name="lolNickname"
                                                                                     value="${login.lolNickname}"></label>
                             </div>
-                            <div id="lolNicknameChk"></div>
                         </div>
                         <div class="my-info">
                             <div class="my-info-data"><img class="sns-image" src="/assets/img/mypage/instagram.png"
