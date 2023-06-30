@@ -55,7 +55,7 @@ async function renderChattingList(result) {
     } else {
         for (let i = 0; i < result.length; i++) {
 
-            const {
+            let {
                 chattingNo,
                 chattingFrom, //채팅을 먼저 요청한 사람 닉네임
                 profileImage,
@@ -65,6 +65,10 @@ async function renderChattingList(result) {
                 matchingStatus,
                 matchingNo,
             } = result[i];
+
+            if(profileImage === 'noProfile'){
+                profileImage = '/assets/img/chattingModal/user.png';
+            }
 
             let $chattings = document.createElement('li');
             $chattings.id = chattingNo;
@@ -78,7 +82,7 @@ async function renderChattingList(result) {
             $modal_btn.classList.add('chatting-card-inner');
             $modal_btn.classList.add('modal-btn');
 
-            $modal_btn.innerHTML = `<img src="/assets/img/chattingModal/woogi.jpg" alt="프로필 이미지" class="chatting-profile-img">
+            $modal_btn.innerHTML = `<img src="${profileImage}" alt="프로필 이미지" class="chatting-profile-img">
                 <div class="chatting-info">
                     <div class="chatting-nickname">${userNickname}</div>
                     <div class="chatting-current-message">${messageContent}</div>
@@ -324,13 +328,12 @@ export function renderUnreadMessages(chattingNo) {
 }
 
 export function renderTotalUnreadMessages(){
-    console.log('모달 꺼집니당 메세지 갯수 세어야함..');
+    // console.log('모달 꺼집니당 메세지 갯수 세어야함..');
 
     const $target = document.getElementById('unread-chatting-count');
     fetch(`/api/v1/chat/messages/unread`)
         .then(res => res.json())
         .then(totalUnread => {
-            console.log(totalUnread);
             if(totalUnread === 0){
                 $target.style.display = 'none';
             } else if (totalUnread >= 0 && totalUnread <= 200) {

@@ -124,7 +124,7 @@ public class ChattingService {
                     .collect(Collectors.toList());
             return profileList.get(0).getProfileImage();
         } catch (IndexOutOfBoundsException e) {
-            return "프로필 사진이 존재하지 않습니다."; // default 이미지 경로로 변경예정
+            return "noProfile"; // default 이미지 경로로 변경예정
         }
     }
 
