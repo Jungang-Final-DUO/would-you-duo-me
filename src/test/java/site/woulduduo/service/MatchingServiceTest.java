@@ -143,4 +143,14 @@ class MatchingServiceTest {
         }
     }
 
+
+//    @Test
+//    @DisplayName("남자에게 신청온 매칭건수 카운트")
+//    void matchingFromMaleTest(){
+//        String userID = "test@test.com";
+//        int countFromMale = matchingRepository.getMyMatchingInfo(userID);
+//        System.out.println("countFromMale = " + countFromMale);
+//
+//    }
+
 }

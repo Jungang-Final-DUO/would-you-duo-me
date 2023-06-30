@@ -1,4 +1,5 @@
 import { getChampionImg } from "../common/get-champion-img.js";
+import {makeChattingRoom} from "../chatting/chatting-modal.js";
 
 // 현재까지 렌더링된 페이지
 let page = 1;
@@ -29,26 +30,21 @@ function removeTag() {
 // 포지션 선택시 작동 함수
 function selectPosition() {
 
-    document.getElementById('searchBy-position').onclick = e => {
-        
-            page = 1;
-            end = false;
-            removeTag();
-            
-            if (e.target.classList.contains('select-position')) {
-                console.log("포지션 클릭성공" + e.target);
-                // 체크된 버튼 있는지 확인
-                for (let i = 0; i < $positionOption.length; i++) {
-                    if ($positionOption[i].checked) {
-                        position = $positionOption[i].value;
-                        console.log(position);
-                        
-                        getProfileCardList();
-                    }
+    document.getElementById('searchBy-position').onclick = e => {       
+        page = 1;
+        end = false;
+        removeTag(); 
+        if (e.target.classList.contains('select-position')) {
+            console.log("포지션 클릭성공" + e.target);
+            // 체크된 버튼 있는지 확인
+            for (let i = 0; i < $positionOption.length; i++) {
+                if ($positionOption[i].checked) {
+                    position = $positionOption[i].value;
+                    console.log(position);
+                    getProfileCardList();
                 }
             }
-
-
+        }
     }
 }
 
@@ -63,13 +59,13 @@ function selectGender() {
         if (e.target.classList.contains('select-gender')) {
             console.log("성별 클릭성공" + e.target);
             // 체크된 성별 있는지 확인
-                for (let i = 0; i < $genderOption.length; i++) {
-                    if ($genderOption[i].checked) {
-                        gender = $genderOption[i].value;
-                        console.log(gender);
-                        getProfileCardList();    
-                    }
+            for (let i = 0; i < $genderOption.length; i++) {
+                if ($genderOption[i].checked) {
+                    gender = $genderOption[i].value;
+                    console.log(gender);
+                    getProfileCardList();    
                 }
+            }
         }
     }
 }
@@ -102,8 +98,7 @@ function searchName() {
     document.getElementById('searchBy-nickname').onkeyup = e => {
         page = 1;
         end = false;
-        removeTag();
-        
+        removeTag();  
         console.log("키워드 입력중" + e.target.value);
         keyword = document.getElementById('searchBy-nickname').value;
         getProfileCardList();
@@ -123,31 +118,22 @@ function transTier(tier) {
     switch (tier) {
         case 'CHA':
             return "Challenger";
-            break;
         case 'IRO':
             return "Iron";
-            break;
         case 'BRO':
             return "Bronze";
-            break;
         case 'SIL':
             return "Silver";
-            break;
         case 'GOL':
             return "Gold";
-            break;
         case 'PLA':
             return "Platinum";
-            break;
         case 'DIA':
             return "Diamond";
-            break;
         case 'MAS':
             return "Master";
-            break;
         case 'GRA':
             return "GrandMaster";
-            break;
         default:
             return null;
     }
@@ -186,19 +172,14 @@ function getProfileCardList() {
     let mostOne = '';
     let mostTwo = '';
     let mostThree = '';
-    let changedTier = '';
-    // console.log("fetch도착");
-    // console.log("키워드"+keyword);
 
     if(keyword === '') keyword = '-';
-    // console.log("강제키워드"+keyword);
 
     fetch(profileCardListURL +'/' + page + '/' + keyword + '/' + size + '/' + position + '/' + gender + '/' + tier + '/' + sort)
     .then(res => res.json())
     .then(resResult => {
         console.log("resRsult" + resResult);
         if(Object.keys(resResult).length === 0) {
-            console.log("조건문 진입성공");
             page--; 
             end = true; 
             return;}
@@ -207,17 +188,25 @@ function getProfileCardList() {
         for (let rep of resResult) {
             const {avgRate, followed, mostChampList, profileImage, tier, userAccount, userComment, userFacebook, userGender, userInstagram, userMatchingPoint, userNickname, userPosition, userTwitter} = rep;
             // console.log(rep);
+            // mostOne = '';
+            // mostTwo = '';
+            // mostThree = '';
+            // mostOne = mostChampList[i].champName;
+            // mostTwo = mostChampList[i].champName;
+            // mostThree = mostChampList[i].champName;
+            let mostChampTag = '';
             for (let i = 0; i < mostChampList.length; i++) {
-                if (mostChampList[i].mostNo === 1) mostOne = mostChampList[i].champName;
-                else if (mostChampList[i].mostNo === 2) mostTwo = mostChampList[i].champName;
-                else mostThree = mostChampList[i].champName;
-            }
-            changedTier = transTier(tier);
-            console.log(mostOne + mostTwo + mostThree);
-            console.log("인스타" + userInstagram);
+                if (mostChampList[i].mostNo === 1) mostChampTag += '<li class="most-pic first-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="first-champ"></li>'
+                else if (mostChampList[i].mostNo === 2) mostChampTag += '<li class="most-pic second-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="second-champ"></li>'
+                else if (mostChampList[i].mostNo === 3) mostChampTag += '<li class="most-pic third-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="third-champ"></li>'
+            }        
+            // console.log(mostOne + mostTwo + mostThree);
+            // console.log("인스타" + userInstagram);
+
+            const tierImgSrc = transTier(tier) !== null ? '"/assets/img/main/TFT_Regalia_'+ transTier(tier) +'.png"' : '/assets/img/main/unranked-removebg-preview.png';
             
             profileCardTag += '<div id = "'+ userAccount +'" class="duo-profile">'
-                                   + '<img class="duo-tier" src="/assets/img/main/TFT_Regalia_'+ changedTier +'.png" alt="tier">'
+                                   + '<img class="duo-tier" src=' + tierImgSrc + ' alt="tier">'
                                     
                                    + '<div class="profile-left-side">'
                                       + '<div class="profile-frame">'
@@ -244,9 +233,7 @@ function getProfileCardList() {
                                        + '<div class="profile-comment"><p>'+ userComment +'</p></div>'
                                        + '<div class="profile-most-champ">'
                                            + '<ul class="champ-list">'
-                                               + '<li class="most-pic first-champ"><img src="'+ getChampionImg(mostOne) +'" alt="first-champ"></li>'
-                                               + '<li class="most-pic second-champ"><img src="'+ getChampionImg(mostTwo) +'" alt="second-champ"></li>'
-                                               + '<li class="most-pic third-champ"><img src="'+ getChampionImg(mostThree) +'" alt="third-champ"></li>'
+                                               + mostChampTag
                                            + '</ul>'
                                        + '</div>'
                                    + '</div>'
@@ -256,6 +243,8 @@ function getProfileCardList() {
                             }
             $profileCardWrapper.innerHTML += profileCardTag;                         
         // ====================================================================================
+        //채팅 생성하기
+        makeChattingRoom();
     });
 
  }
@@ -313,4 +302,32 @@ function getProfileCardList() {
     // 프로필 카드 불러오기 함수(비동기)
    getProfileCardList();
 
+    // 로그인 실패시 메세지
+    renderFailMessage();
+
 })();
+
+function renderFailMessage() {
+    const signInFailMsg = new URL(window.location.href).searchParams.get("msg");
+
+    let msg;
+
+    switch (signInFailMsg) {
+        case 'NOT_ADMIN':
+            msg = '관리자만 접근 가능합니다.';
+            break;
+        case 'NEED_LOGIN' :
+            msg = '로그인이 필요합니다.';
+            break;
+        case 'NO_ACC':
+            msg = '존재하지 않는 계정입니다.';
+            break;
+        case 'NO_PW':
+            msg = '비밀번호가 틀렸습니다.';
+            break;
+        default:
+            return;
+    }
+
+    alert(msg);
+}

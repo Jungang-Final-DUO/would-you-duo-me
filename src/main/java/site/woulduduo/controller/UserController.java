@@ -2,7 +2,9 @@ package site.woulduduo.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,18 +14,25 @@ import site.woulduduo.aws.S3Service;
 import site.woulduduo.dto.request.login.LoginRequestDTO;
 import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
+import site.woulduduo.dto.request.user.ChangePasswordRequestDTO;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.chatting.MatchingInfoResponseDTO;
+import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.user.*;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.LoginResult;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
+import site.woulduduo.service.UserService;
+
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.EmailService;
+import site.woulduduo.service.UserService;
+import site.woulduduo.util.LoginUtil;
 import site.woulduduo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,8 +44,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static site.woulduduo.enumeration.LoginResult.SUCCESS;
-import static site.woulduduo.util.LoginUtil.isAutoLogin;
-import static site.woulduduo.util.LoginUtil.isLogin;
+import static site.woulduduo.util.LoginUtil.*;
 
 @Controller
 @Slf4j
@@ -50,6 +58,7 @@ public class UserController {
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final S3Service s3Service;
+    private final PasswordEncoder passwordEncoder;
 
     // 메인페이지 - 프로필 카드 불러오기(비동기)
     @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
@@ -153,18 +162,17 @@ public class UserController {
             , HttpServletRequest request
     ) {
 
+        System.out.println("dto.getRequestURI() = " + dto.getRequestURI());
         log.info("/user/sign-in POST ! - {}", dto);
 
         LoginResult result = userService.authenticate(dto, request.getSession(), response);
 
         // 로그인 성공시
         if (result == SUCCESS) {
-
             // 서버에서 세션에 로그인 정보를 저장
-            userService.maintainLoginState(
-                    request.getSession(), dto.getUserAccount());
+            userService.maintainLoginState(request.getSession(), dto.getUserAccount());
 
-            return "redirect:/";
+            return dto.getRequestURI();
         }
 
         // 1회용으로 쓰고 버릴 데이터
@@ -173,6 +181,7 @@ public class UserController {
         // 로그인 실패시
         return "redirect:/";
     }
+
 
     // 로그아웃 요청 처리
     @GetMapping("/user/sign-out")
@@ -198,6 +207,84 @@ public class UserController {
         return "redirect:/";
     }
 
+    // 마이페이지
+    @GetMapping("/user/my-page")
+    public String showMyPage(HttpSession session, Model model) {
+        log.info("/user/my-page GET");
+
+            String userAccount;
+        try {
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        } catch (NullPointerException e) {
+            return "/?msg=NEED_LOGIN";
+        }
+
+        MatchingInfoResponseDTO myMypageInfoDto = userService.getMyMypageInfo(userAccount);
+        model.addAttribute("me", myMypageInfoDto);
+
+        return "my-page/mypage-myinfo";
+    }
+
+    @RequestMapping(value = "/api/v1/users", method = {RequestMethod.PUT, RequestMethod.PATCH})
+    public ResponseEntity<?> modify(@RequestBody UserModifyRequestDTO dto, HttpSession session) {
+
+        // 세션에서 로그인한 사용자 정보 가져오기
+        LoginUserResponseDTO loggedInUser = (LoginUserResponseDTO) session.getAttribute(LoginUtil.LOGIN_KEY);
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        // 사용자 정보 수정
+        boolean isModified = userService.modifyUser(dto);
+        if (isModified) {
+
+            session.removeAttribute(LOGIN_KEY);
+
+            userService.maintainLoginState(session, dto.getUserAccount());
+
+            // 정보 변경 성공
+            return ResponseEntity.ok("정보가 성공적으로 변경되었습니다.");
+        } else {
+            // 정보 변경 실패
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("정보 변경에 실패했습니다.");
+        }
+    }
+
+    // 마이페이지 - 비밀번호 변경 페이지 열기
+    @GetMapping("/user/change-password")
+    public String changePassword() {
+        return "my-page/pwdchange";
+    }
+
+    // 마이페이지 - 비밀번호 변경 처리
+    @RequestMapping(value = "/api/v1/users/change-password", method = {RequestMethod.PUT, RequestMethod.PATCH})
+    public ResponseEntity<?> changePassword(HttpSession session, @RequestBody ChangePasswordRequestDTO dto) {
+        // 세션을 이용한 인증 및 현재 사용자 확인 로직
+        String currentUserAccount = (String) session.getAttribute("userAccount");
+        if (currentUserAccount == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // 사용자 계정 값 조회
+        User foundUser = userRepository.findByUserAccount(currentUserAccount);
+        if (foundUser == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        // 비밀번호 변경 로직
+        boolean success = userService.changePassword(session, dto);
+        if (!success) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        // 변경된 비밀번호 반환
+        return ResponseEntity.ok(foundUser.getUserPassword());
+    }
+
+
+
+
+
 
 //    // 프로필 사진 등록
 //    @PostMapping("/api/v1/users/profile")
@@ -216,16 +303,33 @@ public class UserController {
 
     // 마이페이지 - 프로필 카드 등록페이지 열기
     @GetMapping("/user/register-duo")
-    public String registerDUO(/*HttpSession session, */Model model) {
+    public String registerDUO(HttpSession session) {
+
+        String userAccount;
+
+        try {
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        } catch (NullPointerException e) {
+            return "/?msg=NEED_LOGIN";
+        }
 
         return "my-page/mypage-duoprofile";
     }
 
+
     // 마이페이지 - 프로필카드 등록 처리
     @PostMapping("/user/register-duo")
-    public String registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
+    public String registerDUO(HttpSession session, UserCommentRequestDTO dto, Model model) {
 
-        boolean b = userService.registerDUO(/*session, */dto);
+        String userAccount;
+
+        try {
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        } catch (NullPointerException e) {
+            return "/?msg=NEED_LOGIN";
+        }
+
+        boolean b = userService.registerDUO(session, dto);
         log.info("프로필카드등록 성공여부 : {}", b);
         log.info("@@@@dto@@@@ :{}", dto);
 
@@ -235,12 +339,25 @@ public class UserController {
     // 마이 페이지 - 쓴 리뷰 페이지 열기
     @GetMapping("/user/matching-list")
     public String showMatchingList(HttpSession session) {
+
+        String userAccount;
+
+        try {
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        } catch (NullPointerException e) {
+            return "/?msg=NEED_LOGIN";
+        }
+
         return "my-page/matching-list";
     }
 
     @GetMapping("/user/admin")
     //관리자 페이지 열기
-    public String showAdminpage(/*HttpSession session, */Model model) {
+    public String showAdminpage(HttpSession session, Model model) {
+
+        String x = isAdmin(session);
+        if (x != null) return x;
+
         AdminPageResponseDTO adminPageInfo = userService.getAdminPageInfo();
         model.addAttribute("count", adminPageInfo);
         return "admin/admin";
@@ -251,6 +368,17 @@ public class UserController {
  public String modalTest(/*HttpSession session, */Model model) {
 
         return "admin/adminModal";
+    }
+
+    private static String isAdmin(HttpSession session) {
+        try {
+            if (!((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getRole().equals(Role.ADMIN)) {
+                return "redirect:/?msg=NOT_ADMIN";
+            }
+        } catch (NullPointerException e) {
+            return "redirect:/?msg=NEED_LOGIN";
+        }
+        return null;
     }
 
     //관리자 페이지 리스트 가져오기
@@ -372,6 +500,23 @@ public class UserController {
 
         return "user/user-history";
 
+    }
+
+    // 유저 팔로우
+    // 이미 팔로우되어 있다면 언팔로우
+    @PatchMapping("/api/v1/users/{userAccount}")
+    public ResponseEntity<?> follow(
+            @PathVariable String userAccount,
+            HttpSession session
+    ) {
+
+        try {
+            boolean isFollowed = userService.follow(userAccount, session);
+
+            return ResponseEntity.ok(isFollowed);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

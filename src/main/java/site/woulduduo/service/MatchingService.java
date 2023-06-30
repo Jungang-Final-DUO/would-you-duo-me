@@ -7,7 +7,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import site.woulduduo.controller.PointService;
 import site.woulduduo.dto.request.matching.MatchingFixRequestDTO;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
@@ -16,9 +15,11 @@ import site.woulduduo.dto.response.user.MyPageReviewResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Matching;
+import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.MatchingStatus;
 import site.woulduduo.repository.ChattingRepository;
 import site.woulduduo.repository.MatchingRepository;
+import site.woulduduo.repository.UserRepository;
 
 import java.util.Comparator;
 import java.util.List;
@@ -33,6 +34,7 @@ public class MatchingService {
     private final MatchingRepository matchingRepository;
     private final ChattingRepository chattingRepository;
     private final PointService pointService;
+    private final UserRepository userRepository;
 
     //    매칭 신청하기
     public long makeMatching(long chattingNo) {
@@ -100,7 +102,11 @@ public class MatchingService {
         Matching foundMatching = matchingRepository.findById(dto.getMatchingNo())
                 .orElseThrow(() -> new RuntimeException("해당하는 매칭 정보가 없습니다."));
 
-        if (!foundMatching.getChatting().getChattingFrom().getUserAccount().equals(userAccount)) {
+        Chatting chatting = foundMatching.getChatting();
+        String chattingFrom = chatting.getChattingFrom().getUserAccount();
+        log.info("chattingFrom : {}, login : {}", chattingFrom, userAccount);
+
+        if (!chattingFrom.equals(userAccount)) {
             throw new RuntimeException("유효한 사용자가 아닙니다.");
         }
 
@@ -108,6 +114,25 @@ public class MatchingService {
         foundMatching.setMatchingReviewContent(dto.getReviewContent());
 
         matchingRepository.save(foundMatching);
+
+        // 유저의 평점 수정하기
+        String chattingTo = chatting.getChattingTo().getUserAccount();
+
+        User chattingToUser = userRepository.findById(chattingTo).orElseThrow(
+                () -> new RuntimeException("해당 사용자가 없습니다")
+        );
+
+        long gottenReviewCount = chattingToUser.getChattingFromList().stream().map(
+                c -> c.getMatchingList().stream()
+                        .filter(m -> m.getMatchingReviewRate() != null)
+                        .collect(Collectors.toList())
+        ).count();
+
+        double calcAvgRate = (chattingToUser.getUserAvgRate() + dto.getReviewRate()) / gottenReviewCount;
+
+        chattingToUser.setUserAvgRate(calcAvgRate);
+
+        userRepository.save(chattingToUser);
     }
 
     /**
@@ -118,8 +143,8 @@ public class MatchingService {
      * @return - 리뷰 목록
      */
     public ListResponseDTO<UserReviewResponseDTO, Matching> getGottenReview(
-            final String userAccount,
-            final int pageNo
+            String userAccount,
+            int pageNo
     ) {
 
         PageRequest pageInfo = PageRequest.of(pageNo - 1,
@@ -181,7 +206,11 @@ public class MatchingService {
      * @param pageNo      - 페이지 번호
      * @return - 리뷰 목록
      */
-    public ListResponseDTO<MyPageReviewResponseDTO, Matching> getWrittenReviewOnMyPage(String userAccount, int pageNo) {
+
+    public ListResponseDTO<MyPageReviewResponseDTO, Matching> getWrittenReviewOnMyPage(
+            String userAccount,
+            int pageNo
+    ) {
 
         PageRequest pageInfo = PageRequest.of(pageNo - 1,
                 15,
@@ -208,5 +237,9 @@ public class MatchingService {
                     .limit(1)
                     .collect(Collectors.toList());
 
+    }
+
+    public Matching findByMatchingNo(long matchingNo) {
+        return matchingRepository.findByMatchingNo(matchingNo);
     }
 }

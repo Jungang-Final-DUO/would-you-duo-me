@@ -20,6 +20,8 @@
                         <!--         로그인 모달           -->
 
                         <div id="sign-in-modal-wrapper" class="invisible">
+                            <% String returnURI = request.getRequestURI().substring(15); %>
+                            <input type="hidden" name = "requestURI" value = "<%=returnURI.substring(0, returnURI.length()-4)%>">
                             <div id="sign-in-modal" class="user-modal">
                                 <div id="id-input-wrapper" class="input-wrapper">
                                     <label for="sign-in-user-account">이메일 주소</label>
@@ -100,7 +102,7 @@
         </nav>
 
         <nav id="common-nav-bar">
-            <c:if test="${login.userAccount eq 'admin'}">
+            <c:if test="${login.role eq 'ADMIN'}">
                 <div class="common-menu-wrapper">
                     <a href="/user/admin">관리자 페이지</a>
                 </div>
@@ -133,7 +135,7 @@
             <img class=".modal-btn" src="/assets/img/header/chatting.png" alt="채팅 버튼 아이콘">
             <!--     읽지 않은 채팅 표시   -->
             <span id="unread-chatting-count">
-                    ${false}
+<%--                    ${false}--%>
             </span>
         </button>
         <%@ include file="../chatting/chattingModal.jsp" %>
