@@ -2,7 +2,7 @@ import {drawPieGraph} from "./draw-pie-graph.js";
 import {renderReview} from "../../review/render-review.js";
 import {scrollPaging} from "../../common/scroll-paging.js";
 import {followEventHandler} from "./follow-event-handler.js";
-import {makeChattingRoom} from "../../chatting/chatting-modal";
+import {makeChattingRoom} from "../../chatting/chatting-modal.js";
 
 (() => {
     // 페이지 번호를 위한 클로저
@@ -34,10 +34,14 @@ import {makeChattingRoom} from "../../chatting/chatting-modal";
         },
         800);
 
-    // 팔로우 이벤트 등록
-    followEventHandler(userAccount, document.getElementById('user-follow-heart'));
 
-    // 채팅 버튼 이벤트 등록
-    makeChattingRoom();
+    // 로그인 했을때만 실행되는 함수
+    if (document.getElementById('chatting-btn')) {
+        // 채팅 버튼 이벤트 등록
+        makeChattingRoom();
+
+        // 팔로우 이벤트 등록
+        followEventHandler(userAccount, document.getElementById('user-follow-heart'));
+    }
 
 })();
