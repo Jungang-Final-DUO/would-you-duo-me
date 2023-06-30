@@ -9,7 +9,10 @@ import java.util.List;
 
 public interface UserQueryDSLRepositoryCustom {
 
-    List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/);
+    List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType, HttpSession session);
 
-    int modifyProfileCard(UserCommentRequestDTO dto/* , HttpSession session*/);
+    Long modifyProfileCard(UserCommentRequestDTO dto, HttpSession session);
+
+    Long deleteProfileCard(UserCommentRequestDTO dto, HttpSession session);
+
 }

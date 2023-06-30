@@ -86,7 +86,7 @@ public class UserController {
     @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
     public ResponseEntity<?> getUserProfileList(@PathVariable int page, @PathVariable String keyword, @PathVariable int size
             , @PathVariable String position, @PathVariable String gender
-            , @PathVariable String tier, @PathVariable String sort/*, HttpSession session*/) {
+            , @PathVariable String tier, @PathVariable String sort, HttpSession session) {
 
 
         System.out.println(keyword + position + gender + tier + sort);
@@ -109,7 +109,7 @@ public class UserController {
         if (!keyword.equals("all")) {
             userSearchType.setSort(sort);
         }
-        List<UserProfileResponseDTO> userServiceUserProfileList = userService.getUserProfileList(userSearchType);
+        List<UserProfileResponseDTO> userServiceUserProfileList = userService.getUserProfileList(session, userSearchType);
         System.out.println("userServiceUserProfileList = " + userServiceUserProfileList);
 
         return ResponseEntity.ok().body(userServiceUserProfileList);
@@ -247,8 +247,9 @@ public class UserController {
 
     // 마이페이지 - 프로필 카드 등록페이지 열기
     @GetMapping("/user/register-duo")
-    public String registerDUO(HttpSession session) {
-
+    public String registerDUO(HttpSession session, Model model) {
+        LoginUserResponseDTO login = (LoginUserResponseDTO) session.getAttribute("login");
+        model.addAttribute("login", login);
         return "my-page/mypage-duoprofile";
     }
 
@@ -259,6 +260,40 @@ public class UserController {
         boolean b = userService.registerDUO(session, dto);
         log.info("프로필카드등록 성공여부 : {}", b);
         log.info("@@@@dto@@@@ :{}", dto);
+
+        return "redirect:/user/register-duo";
+    }
+
+    // 마이페이지 - 프로필카드 수정
+    @PostMapping("/user/modify-duo")
+    public String modifyDUO(UserCommentRequestDTO dto, HttpSession session) {
+        Long result = userService.modifyUserComment(dto, session);
+        if (result > 0 ) {
+            log.info("success update");
+            LoginUserResponseDTO login = (LoginUserResponseDTO)session.getAttribute("login");
+            login.setUserComment(dto.getUserComment());
+            login.setUserPosition(dto.getUserPosition());
+            login.setUserMatchingPoint(dto.getUserMatchingPoint());
+        } else {
+            log.info("failed update");
+        }
+
+        return "redirect:/user/register-duo";
+    }
+
+    // 마이페이지 - 프로필카드 삭제
+    @PostMapping("/user/delete-duo")
+    public String deleteDUO(UserCommentRequestDTO dto, HttpSession session) {
+        Long result = userService.deleteUserComment(dto, session);
+        if (result > 0 ) {
+            log.info("success delete");
+            LoginUserResponseDTO login = (LoginUserResponseDTO)session.getAttribute("login");
+            login.setUserComment("");
+            login.setUserPosition(Position.NONE);
+            login.setUserMatchingPoint(0);
+        } else {
+            log.info("failed delete");
+        }
 
         return "redirect:/user/register-duo";
     }

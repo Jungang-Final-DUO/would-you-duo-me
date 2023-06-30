@@ -41,7 +41,7 @@
                     <div id="position-comment-box">
                         <form id="position-comment-form" action="/user/register-duo" method="post">
                             <!-- 포지션 선택 -->
-                            <div id="preferred-position">
+                            <div id="preferred-position" data-position="${login.userPosition}">
                                 <p id="preferred-position-title">주포지션</p>
                                 <label class="position-option">
                                     <input class="select-position" type="radio" name="userPosition" value="ALL">
@@ -65,10 +65,10 @@
                             </div>
                             <!--  자기소개 -->
                             <label><textarea id="comment" name="userComment" spellcheck="false" placeholder="자유롭게 자기소개를 입력해주세요"
-                                    autofocus></textarea></label>
+                                    autofocus>${login.userComment}</textarea></label>
                             <div id="submit-box">
                                 <p id="matching-point-title">매칭포인트</p><label id="matching-point-label">
-                                    <input id="matching-point" name="userMatchingPoint"><span>POINT</span></label>
+                                    <input id="matching-point" name="userMatchingPoint" value="${login.userMatchingPoint}"><span>POINT</span></label>
                                 <c:if test="${login.userMatchingPoint == 0}">
                                     <div class="duo-btn" id="register-duo">듀오 등록</div>
                                 </c:if>
