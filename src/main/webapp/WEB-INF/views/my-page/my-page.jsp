@@ -4,7 +4,7 @@
 <div id="my-page-sidebar">
     <div id="my-page-menu-list">
         <p class = "my-page-menu">내 정보 확인 / 변경</p>
-        <p class = "my-page-menu">듀오 프로필 등록 / 수정</p>
+        <p class = "my-page-menu"><a href="/user/register-duo">듀오 프로필 등록 / 수정</a></p>
         <p class = "my-page-menu">내가 쓴 글 / 댓글</p>
         <p class = "my-page-menu">출석 체크</p>
         <p class = "my-page-menu">비밀번호 변경</p>

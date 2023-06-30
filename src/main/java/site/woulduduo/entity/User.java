@@ -3,10 +3,7 @@ package site.woulduduo.entity;
 import lombok.*;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.CreationTimestamp;
-import site.woulduduo.enumeration.Gender;
-import site.woulduduo.enumeration.LoginType;
-import site.woulduduo.enumeration.Position;
-import site.woulduduo.enumeration.Tier;
+import site.woulduduo.enumeration.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -159,6 +156,10 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Builder.Default
     private List<MostChamp> mostChampList = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Role role = Role.COMMON;
 
     // 양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
     public void addReply(Reply reply) {

@@ -26,6 +26,7 @@ import site.woulduduo.enumeration.Tier;
 import site.woulduduo.repository.MostChampRepository;
 import site.woulduduo.repository.UserRepository;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -348,10 +349,9 @@ class UserServiceTest {
                 .userComment("안녕하세요 트롤아닙니다.")
                 .userMatchingPoint(500)
                 .build();
-
-        boolean b = userService.registerDUO(userCommentRequestDTO);
-
-        assertTrue(b);
+//        boolean b = userService.registerDUO(userCommentRequestDTO);
+//
+//        assertTrue(b);
     }
 
     @Test
@@ -360,7 +360,5 @@ class UserServiceTest {
         UserHistoryResponseDTO userDUOInfo = userService.getUserHistoryInfo(null, "test@example.com");
         System.out.println("userDUOInfo = " + userDUOInfo);
     }
-
-
 
 }

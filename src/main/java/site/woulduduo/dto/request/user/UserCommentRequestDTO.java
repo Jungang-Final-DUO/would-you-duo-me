@@ -18,7 +18,6 @@ import javax.validation.constraints.Size;
 @Builder
 public class UserCommentRequestDTO {
     @NotNull
-    @Enumerated(EnumType.STRING)
     private Position userPosition;
 
     @NotNull

@@ -52,6 +52,15 @@ function checkPoint() {
     }
 };
 
+// 세션 정보에 매칭포인트가 0인지 체크
+// function checkMatchingPoint() {
+//     const sessionMatchingPoint = ${login.userMatchingPoint};
+//     if (sessionMatchingPoint === 0) {
+//
+//     }
+// }
+
+
 //========= 메인 실행부 =========//
 (function () {
     // 프로필 카드 등록 함수
