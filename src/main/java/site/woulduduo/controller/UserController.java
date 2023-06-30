@@ -205,26 +205,10 @@ public class UserController {
     public String showMyPage(HttpSession session, Model model) {
         log.info("/user/my-page GET");
 
-        String userAccount;
-
         try {
-            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+            String userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
         } catch (NullPointerException e) {
             return "/?msg=NEED_LOGIN";
-        }
-
-        // 사용자 정보 가져오기
-        User user = null;
-        user = userService.getUser(userAccount);
-
-
-        // 모델에 사용자 정보 추가
-        if (user != null) {
-            // 사용자 정보 속성 추가
-            model.addAttribute("login", user); // 사용자 정보를 "login" 속성으로 추가
-
-            log.info("userBirthday: {}", user.getUserBirthday());
-
         }
 
         return "my-page/mypage-myinfo";
@@ -242,6 +226,11 @@ public class UserController {
         // 사용자 정보 수정
         boolean isModified = userService.modifyUser(dto);
         if (isModified) {
+
+            session.removeAttribute(LOGIN_KEY);
+
+            userService.maintainLoginState(session, dto.getUserAccount());
+
             // 정보 변경 성공
             return ResponseEntity.ok("정보가 성공적으로 변경되었습니다.");
         } else {

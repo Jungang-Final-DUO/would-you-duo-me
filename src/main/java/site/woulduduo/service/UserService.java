@@ -293,9 +293,9 @@ public class UserService {
         user.setUserNickname(dto.getUserNickname());
         user.setUserBirthday(dto.getUserBirthday());
         user.setLolNickname(dto.getLolNickname());
-        user.setUserInstagram(dto.getUserInstagram());
-        user.setUserFacebook(dto.getUserFacebook());
-        user.setUserTwitter(dto.getUserTwitter());
+        user.setUserInstagram(dto.getUserInstagram().equals("") ? null : dto.getUserInstagram());
+        user.setUserFacebook(dto.getUserFacebook().equals("") ? null : dto.getUserFacebook());
+        user.setUserTwitter(dto.getUserTwitter().equals("") ? null : dto.getUserTwitter());
 
         // 사용자 정보 저장
         userRepository.save(user);
