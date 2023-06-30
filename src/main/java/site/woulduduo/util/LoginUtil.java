@@ -31,7 +31,7 @@ public class LoginUtil {
         return loginUserInfo.getUserAccount();
     }
 
-//    // 관리자인지 확인해주는 메서드
+    // 관리자인지 확인해주는 메서드
 //    public static boolean isAdmin(HttpSession session) {
 //        LoginUserResponseDTO loginUser
 //                = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);

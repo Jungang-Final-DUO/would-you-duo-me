@@ -71,7 +71,7 @@ public class User {
     private Tier lolTier;
 
     @Builder.Default
-    private Integer userCurrentPoint = 0;
+    private Integer userCurrentPoint = 1000;
 
     @Column(length = 30, unique = true)
     private String userTwitter;

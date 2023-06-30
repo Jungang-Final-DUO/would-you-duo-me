@@ -4,9 +4,12 @@ body::-webkit-scrollbar {
     display: none;
 }
 
+header {
+    display: flex;
+}
+
 #main-wrapper {
     /*border: 1px solid #fff;*/
-    display: flex;
     height: 600px;
     color: white;
 }

@@ -29,7 +29,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
     private final QMostChamp mostChamp = QMostChamp.mostChamp;
 
     @Override
-    public List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType/*, HttpSession session*/) {
+    public List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType) {
         System.out.println("IMPLPosition = " + userSearchType.getPosition());
         System.out.println("IMPLKeyword = " + userSearchType.getKeyword());
         List<User> userList = queryFactory.selectFrom(user)
@@ -63,6 +63,8 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                     .mostChampList(user.getMostChampList())
                     .profileImage((user.getUserProfileList().size() == 0) ? "basic" : user.getUserProfileList().get(0).getProfileImage())
                     .build();
+
+            log.info("dto : {}", dto);
 
             userProfiles.add(dto);
         }
