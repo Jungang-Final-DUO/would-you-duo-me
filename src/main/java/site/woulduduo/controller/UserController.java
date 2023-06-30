@@ -19,6 +19,7 @@ import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.chatting.MatchingInfoResponseDTO;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.user.*;
 import site.woulduduo.entity.User;
@@ -205,14 +206,15 @@ public class UserController {
     public String showMyPage(HttpSession session, Model model) {
         log.info("/user/my-page GET");
 
+            String userAccount;
         try {
-            String userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
         } catch (NullPointerException e) {
             return "/?msg=NEED_LOGIN";
         }
 
         MatchingInfoResponseDTO myMypageInfoDto = userService.getMyMypageInfo(userAccount);
-        model.addAttribute("info", myMypageInfoDto);
+        model.addAttribute("me", myMypageInfoDto);
 
         return "my-page/mypage-myinfo";
     }

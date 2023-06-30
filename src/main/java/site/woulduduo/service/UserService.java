@@ -813,14 +813,14 @@ public class UserService {
         //남자와 매칭확정률
         double confirmRateMale = 0;
         try {
-            confirmRateMale = confirmWithMale/(double)matchingFromMale;
+            confirmRateMale = confirmWithMale/(double)matchingFromMale * 100;
         } catch (ArithmeticException e) {
             confirmRateMale = 0;
         }
         //여자와 매칭확정률
         double confirmRateFemale = 0;
         try {
-            confirmRateFemale = confirmWithFemale/(double)matchingFromFemale;
+            confirmRateFemale = confirmWithFemale/(double)matchingFromFemale * 100;
         } catch (ArithmeticException e) {
             confirmRateMale = 0;
         }

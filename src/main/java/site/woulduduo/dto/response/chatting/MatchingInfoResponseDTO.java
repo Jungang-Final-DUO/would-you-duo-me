@@ -1,6 +1,7 @@
 package site.woulduduo.dto.response.chatting;
 
 import lombok.*;
+import org.springframework.format.annotation.NumberFormat;
 
 @Setter
 @Getter
