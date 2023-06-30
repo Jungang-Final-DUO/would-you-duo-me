@@ -76,42 +76,40 @@ h2 {
     height: 500px;
 
     text-align: center;
+    line-height: 44px;
 }
 
 .grid-title {
+    height: 44px;
+
     font-weight: bold;
+    line-height: 44px;
 }
 
 .matching-people {
-    height: 24px;
     left: 6px;
     top: 3px;
 
     font-size: 15px;
-    line-height: 18px;
 
     color: #FFFFFF;
 }
 
 .matching-day {
-    height: 24px;
     left: 6px;
     top: 3px;
 
     font-size: 15px;
-    line-height: 18px;
 
     color: #FFFFFF;
 
 }
 
 .nickname-another {
-    height: 24px;
     left: 6px;
     top: 3px;
 
     font-size: 15px;
-    line-height: 18px;
 
     color: #FFFFFF;
 
@@ -131,11 +129,9 @@ h2 {
 
 .my-review {
 
-    height: 24px;
     left: 6px;
     top: 3px;
     font-size: 15px;
-    line-height: 18px;
 
     color: #FFFFFF;
 
@@ -146,7 +142,6 @@ h2 {
     box-sizing: border-box;
 
     /* justify-content: center; */
-    height: 24px;
     left: 307px;
     top: 1px;
 
@@ -166,6 +161,10 @@ h2 {
 
     width: fit-content;
     height: fit-content;
-    margin: 0 auto;
+    margin: auto;
+}
 
+.review-write-btn:hover {
+    opacity: 0.8;
+    border: 1px solid #fff;
 }

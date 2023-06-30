@@ -15,7 +15,7 @@
     <%@ include file="../common/static-head.jsp" %>
     <link rel="stylesheet" href="/assets/css/user/history/community.css">
     <link rel="stylesheet" href="/assets/css/board/board-write.css">
-    <script src="/assets/js/board/community.js" defer type="module"></script>
+    <script src="/assets/js/board/community.js" defer type="module" charset="UTF-8" ></script>
 </head>
 
 <body>
@@ -27,13 +27,14 @@
                     <input class="search-box" id="search" type="text">
                     <button class="board-search-title-btn">
 
-                <img class="search-btn-img" src="/assets/img/community/search.png" alt="검색버튼" id="search" onclick="handleSearchClick()">
+              <img class="search-btn-img" id="search" src="/assets/img/community/search.png" alt="검색버튼">
 
                     </button>
                 </div>
 
 
 <div class="write-container">
+
 <button class="modal-btn" ><p>글쓰기</p><img src="/assets/img/community/pencilwhite.png" alt="글쓰기버튼"></button>
 <%@ include file="../board/board-write.jsp" %>
 
@@ -41,14 +42,15 @@
 
             <div class="sort-wrapper">
 
-                <div class="category-wrapper" id="category-btn" >
+               <div class="category-wrapper" id="category-btn">
+
 
                     <button class="freedom-board selected-category" id="freedom-btn" >자유</button>
                     <button class="notify-board"  >공지</button>
                     <button class="accuse-board" id="accuse-btn">신고</button>
 
                 </div>
- //input radio
+
                 <div class="orderby-wrapper">
                     <button class="new-board-btn"><img src="/assets/img/community/sunwhite.png" alt="최신순이미지">최신순</button>
                     <button class="week-recommend-btn"><img src="/assets/img/community/firewhite.png" alt="이번주이미지">이번주 추천순</button>

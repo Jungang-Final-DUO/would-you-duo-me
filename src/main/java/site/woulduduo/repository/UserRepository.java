@@ -19,10 +19,10 @@ UserRepository extends
     //아이디로 검색한 정보보기 + 페이징
     Page<User> findByUserAccountContaining(String userAccount, Pageable pageable);
 
-    //날짜별 가입 user 보기
     @Query(value = "SELECT COUNT(*) FROM User u WHERE u.userAccount = :email")
     int countByUserEmail(String email);
 
+    //날짜별 가입 user 보기
     @Query(value = "SELECT COUNT(*) FROM duo_user WHERE user_join_date = :userJoinDate",nativeQuery = true)
     int findAllWithJoinDate(LocalDate userJoinDate);
 
@@ -52,6 +52,9 @@ UserRepository extends
     @Query(value = "SELECT COUNT(*) FROM duo_user WHERE lol_nickname = :lolNickname", nativeQuery = true)
     int countByLolNickname(@Param("lolNickname") String lolNickname);
 
-
     User findByUserNickname(String messageFrom);
+
+
+
+
 }

@@ -19,18 +19,18 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.1'
-	testImplementation 'org.projectlombok:lombok:1.18.26'
-	compileOnly 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.1'
+    testImplementation 'org.projectlombok:lombok:1.18.26'
+    compileOnly 'org.projectlombok:lombok'
     testImplementation 'junit:junit:4.13.1'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'org.springframework.boot:spring-boot-starter-mail'
-
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // 이메일 전송 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     //jsp 설정
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
@@ -64,8 +64,8 @@ dependencies {
 }
 
 tasks.named('test') {
-//    useJUnitPlatform()
-    exclude '**/*' // 빌드시 전체 테스트 생략
+    useJUnitPlatform()
+//    exclude '**/*' // 빌드시 전체 테스트 생략
 }
 
 

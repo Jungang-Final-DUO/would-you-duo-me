@@ -85,7 +85,6 @@ export function selectDateEvent(){
     const dates = document.querySelectorAll('.available-date');
     dates.forEach( d => d.onclick = e => {
         const selected = e.target.closest('.available-date');
-        console.log(selected);
         dates.forEach(d => {
             d.style.color = 'black';
             d.style.background = '';

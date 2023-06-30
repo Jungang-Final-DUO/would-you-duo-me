@@ -2,13 +2,13 @@ import {selectDateEvent} from "./chatting-calendar.js";
 
 // 매칭요청을 하는 사람의 이벤트
 export function matchingRequestEvent(){
-    console.log('matchingRequestEvent 진입');
+    // console.log('matchingRequestEvent 진입');
     const requestBtn = [...document.querySelectorAll('.matching-accept-btn')];
-    console.log(requestBtn);
+    // console.log(requestBtn);
     requestBtn.forEach(
         mr => mr.onclick = async e => {
             const matchingStatus = e.target.closest('.matching-accept-btn').dataset.matchingStatus;
-            console.log(matchingStatus);
+            // console.log(matchingStatus);
             const $chattingNo = e.target.closest('.chatting-card').id;
             const $matchingNo = e.target.closest('.matching-accept-btn').dataset.matchingNo;
             switch (matchingStatus){
@@ -50,7 +50,7 @@ export function matchingResponseEvent(){
             const matchingStatus = e.target.closest('.matching-accept-btn').dataset.matchingStatus;
             const $chattingNo = e.target.closest('.chatting-card').id;
             const $matchingNo = e.target.closest('.matching-accept-btn').dataset.matchingNo;
-            console.log('온클릭 이벤트까지 넘어옴');
+            // console.log('온클릭 이벤트까지 넘어옴');
             switch (matchingStatus){
                 case 'REQUEST' :
                     document.querySelector('.match-calendar').click();
@@ -66,7 +66,7 @@ export function matchingResponseEvent(){
     const rejectBtn = [...document.querySelectorAll('.matching-reject-btn')];
     rejectBtn.forEach(
         mr => mr.onclick = e => {
-            console.log('거절 온클릭 이벤트까지 넘어옴');
+            // console.log('거절 온클릭 이벤트까지 넘어옴');
             const $chattingNo = e.target.closest('.chatting-card').id;
             const $target = e.target.closest('.chatting-message-option');
             const $acceptBtn = $target.querySelector('.matching-accept-btn');
@@ -121,7 +121,7 @@ function getMatchingPoint($chattingNo, $matchingNo){
 
 //포인트 적립 후 이벤트
 function receivedPoint($chattingNo, point){
-    console.log(point);
+    // console.log(point);
     alert(`${point} 포인트가 지급되었습니다!`);
     const chatCard = document.getElementById($chattingNo);
     const $target = chatCard.querySelector('.matching-accept-btn');
@@ -136,14 +136,14 @@ function receivedPoint($chattingNo, point){
 
 //매칭확정 버튼 -> 날짜 선택 클릭시 이벤트
 export function clickSelectDate($chattingNo, $matchingNo, matchingYear, matchingMonth, matchingDate){
-    console.log('날짜선택 클릭까지 넘어옴');
+    // console.log('날짜선택 클릭까지 넘어옴');
     const selectBtn = document.getElementById('select-date');
     selectBtn.onclick = e => {
         if (confirm(matchingMonth + '월 ' + matchingDate + '일자로 매칭을 확정하시겠습니까?')) {
             // const selectedDate = new Date(+matchingYear, +matchingMonth, +matchingDate);
-            console.log('확정됨');
+            // console.log('확정됨');
             const selectedDate = matchingYear + "-" + matchingMonth + "-" + matchingDate;
-            console.log(selectedDate);
+            // console.log(selectedDate);
             matchingConfirm($chattingNo, $matchingNo, selectedDate);
         }
     }
@@ -152,7 +152,7 @@ export function clickSelectDate($chattingNo, $matchingNo, matchingYear, matching
 
 //매칭 확정버튼 누르기
 export function  matchingConfirm(chattingNo, matchingNo, selectedDate) {
-    console.log('매칭 확정 fetch까지 넘어옴');
+    // console.log('매칭 확정 fetch까지 넘어옴');
     const matchingFixRequestDTO = {
         matchingNo : matchingNo,
         matchingDate : selectedDate
@@ -190,9 +190,9 @@ function matchingRequest(chattingNo){
 
     fetch(`/api/v1/matchings`, requestInfo)
         .then(res => res.json())
-        .then(result => {
-            changeMatchingStatus(chattingNo, result);
-        });
+        .then(result =>
+            changeMatchingStatus(chattingNo, result))
+        .then(result => sendNoticeMessage(result , '듀오 매칭을 요청합니다'));
 }
 
 //REQUEST -> CONFIRM으로 상태 변경
@@ -211,7 +211,7 @@ function changeMatchingToConfirm(chattingNo){
 
 // 게임완료 버튼 눌렀을때 이벤트
 function gameDone($chattingNo, $matchingNo){
-    console.log($matchingNo);
+    // console.log($matchingNo);
     const requestInfo = {
         method: 'PUT',
         headers: {
@@ -231,22 +231,21 @@ function gameDone($chattingNo, $matchingNo){
 }
 
 //'' -> REQUEST로 상태 변경
-function changeMatchingStatus(chattingNo, result) {
+async function changeMatchingStatus(chattingNo, result) {
     const chatCard = document.getElementById(chattingNo);
     const $target = chatCard.querySelector('.matching-accept-btn');
     $target.dataset.matchingStatus = 'REQUEST';
     $target.setAttribute('disabled', 'disabled');
     $target.dataset.matchingNo = result;
     $target.childNodes[1].nodeValue = '수락대기중';
-    sendNoticeMessage(chattingNo , '듀오 매칭을 요청합니다');
-    // return chattingNo;
+    return chattingNo;
 }
 
 // CONFIRM -> DONE으로 상태 변경
 function matchingDone(chattingNo){
-    console.log(chattingNo);
+    // console.log(chattingNo);
     const chatCard = document.getElementById(chattingNo);
-    console.log(chatCard);
+    // console.log(chatCard);
     const $target = chatCard.querySelector('.matching-accept-btn');
     $target.disabled = false;
     $target.dataset.matchingStatus = 'DONE';
@@ -256,9 +255,9 @@ function matchingDone(chattingNo){
 
 //이벤트 걸린 사람이 메세지에 상태 담아 보내기
 function sendNoticeMessage(chattingNo, msg){
-    console.log(chattingNo);
+    // console.log(chattingNo);
     const chat = document.getElementById(chattingNo);
-    console.log(chat);
+    // console.log(chat);
     // const name = chat.querySelector('div.message-to div.message-nickname').innerText;
 
     chat.querySelector('.msg').value = msg;

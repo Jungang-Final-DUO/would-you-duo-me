@@ -25,8 +25,8 @@ import site.woulduduo.repository.ReplyRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -151,26 +151,27 @@ public class BoardService {
     }
 
 
-    public List<BoardResponseDTO> getBoardList(int page, String keyword, BoardCategory boardCategory, String sort) {
-        Pageable pageable = PageRequest.of(page, 10);
+    public List<BoardResponseDTO> getBoardList(int page, String keyword, BoardCategory boardCategory) {
+
+        // TODO : 2. service 핵심 로직(키워드로 찾는다, 카테고리로 찾는다, 전체 조회를 한다.) ->
+        //        3. repository 데이터 취득 -> 4. 취득한 데이터가 service 가 controller 리턴 ->
 
         List<Board> boardList;
 
-        if (keyword != null) {
-            boardList = boardRepository.findByBoardTitleContainingIgnoreCase(keyword);
-        } else if (boardCategory != null) {
-            boardList = boardRepository.findByBoardCategory(boardCategory);
-        } else {
-            boardList = boardRepository.findAll();
-        }
+        System.out.println("keyword = " + keyword);
+        System.out.println("boardCategory = " + boardCategory);
 
-        List<BoardResponseDTO> boardResponseDTOList = new ArrayList<>();
+        List<BoardResponseDTO> collect = boardRepository.findByBoardCategory(boardCategory)
+                .stream().map(BoardResponseDTO::new).collect(Collectors.toList());
+//        List<Board> boardList = boardRepository.findByKeywordAndCategory(keyword, boardCategory);
+        return collect;
 
-        for (Board board : boardList) {
-            BoardResponseDTO boardResponseDTO = new BoardResponseDTO(board);
-            boardResponseDTOList.add(boardResponseDTO);
-        }
-        return boardResponseDTOList;
     }
+
+    public void deleteBoard(long boardNo) {
+        // 게시글 삭제
+        boardRepository.deleteById(boardNo);
+    }
+
 }
 

@@ -1,9 +1,7 @@
 package site.woulduduo.dto.response.board;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import site.woulduduo.entity.Board;
 import site.woulduduo.entity.Reply;
 import site.woulduduo.enumeration.BoardCategory;
@@ -11,8 +9,10 @@ import site.woulduduo.enumeration.BoardCategory;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Setter@Getter
-@ToString
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class BoardResponseDTO{
     private Long boardNo;
     private int boardLike;
@@ -47,7 +47,5 @@ public class BoardResponseDTO{
     }
 
 
-    public BoardResponseDTO(Long boardNo, String boardTitle, String boardContent) {
 
-    }
 }

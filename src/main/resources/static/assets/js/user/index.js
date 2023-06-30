@@ -1,4 +1,5 @@
 import { getChampionImg } from "../common/get-champion-img.js";
+import {makeChattingRoom} from "../chatting/chatting-modal.js";
 
 // 현재까지 렌더링된 페이지
 let page = 1;
@@ -29,11 +30,10 @@ function removeTag() {
 // 포지션 선택시 작동 함수
 function selectPosition() {
 
-    document.getElementById('searchBy-position').onclick = e => {
+    document.getElementById('searchBy-position').onclick = e => {       
         page = 1;
         end = false;
-        removeTag();
-        
+        removeTag(); 
         if (e.target.classList.contains('select-position')) {
             console.log("포지션 클릭성공" + e.target);
             // 체크된 버튼 있는지 확인
@@ -59,13 +59,13 @@ function selectGender() {
         if (e.target.classList.contains('select-gender')) {
             console.log("성별 클릭성공" + e.target);
             // 체크된 성별 있는지 확인
-                for (let i = 0; i < $genderOption.length; i++) {
-                    if ($genderOption[i].checked) {
-                        gender = $genderOption[i].value;
-                        console.log(gender);
-                        getProfileCardList();    
-                    }
+            for (let i = 0; i < $genderOption.length; i++) {
+                if ($genderOption[i].checked) {
+                    gender = $genderOption[i].value;
+                    console.log(gender);
+                    getProfileCardList();    
                 }
+            }
         }
     }
 }
@@ -98,8 +98,7 @@ function searchName() {
     document.getElementById('searchBy-nickname').onkeyup = e => {
         page = 1;
         end = false;
-        removeTag();
-        
+        removeTag();  
         console.log("키워드 입력중" + e.target.value);
         keyword = document.getElementById('searchBy-nickname').value;
         getProfileCardList();
@@ -119,31 +118,22 @@ function transTier(tier) {
     switch (tier) {
         case 'CHA':
             return "Challenger";
-            break;
         case 'IRO':
             return "Iron";
-            break;
         case 'BRO':
             return "Bronze";
-            break;
         case 'SIL':
             return "Silver";
-            break;
         case 'GOL':
             return "Gold";
-            break;
         case 'PLA':
             return "Platinum";
-            break;
         case 'DIA':
             return "Diamond";
-            break;
         case 'MAS':
             return "Master";
-            break;
         case 'GRA':
             return "GrandMaster";
-            break;
         default:
             return null;
     }
@@ -154,25 +144,42 @@ function checkProfile(profileImage) {
     return profileImage === "basic" ? "/assets/img/main/basic-profile.png" : profileImage;
 }
 
+// 팔로잉 상태에 따라 하트 이미지 주기
+function checkFollowing(followed) {
+    return followed === false ? "not-following" : "following";
+}
+
+// sns null 값 확인 함수
+function checkSNS(userInstagram, userFacebook, userTwitter) {
+    let snsTag = '';
+
+    if(userInstagram !== null) {
+        snsTag += '<a href="'+ userInstagram +'" class="sns-type instagram"><img class="sns-image" src="/assets/img/main/instagram.png" alt="instagram"></a>'
+    }
+    if(userFacebook !== null) {
+        snsTag += '<a href="'+ userFacebook +'" class="sns-type facebook"><img class="sns-image" src="/assets/img/main/facebook.png" alt="facebook"></a>'
+    }
+    if(userTwitter !== null) {
+        snsTag += '<a href="'+ userTwitter +'" class="sns-type twitter"><img class="sns-image" src="/assets/img/main/twitter.png" alt="twitter"></a>'
+    }
+
+    return snsTag;
+}
+
 // 프로필 카드 비동기 요청 렌더링 함수
 function getProfileCardList() { 
     let profileCardTag = '';
     let mostOne = '';
     let mostTwo = '';
     let mostThree = '';
-    let changedTier = '';
-    // console.log("fetch도착");
-    // console.log("키워드"+keyword);
 
     if(keyword === '') keyword = '-';
-    // console.log("강제키워드"+keyword);
 
     fetch(profileCardListURL +'/' + page + '/' + keyword + '/' + size + '/' + position + '/' + gender + '/' + tier + '/' + sort)
     .then(res => res.json())
     .then(resResult => {
         console.log("resRsult" + resResult);
         if(Object.keys(resResult).length === 0) {
-            console.log("조건문 진입성공");
             page--; 
             end = true; 
             return;}
@@ -180,26 +187,33 @@ function getProfileCardList() {
         
         for (let rep of resResult) {
             const {avgRate, followed, mostChampList, profileImage, tier, userAccount, userComment, userFacebook, userGender, userInstagram, userMatchingPoint, userNickname, userPosition, userTwitter} = rep;
-
+            // console.log(rep);
+            // mostOne = '';
+            // mostTwo = '';
+            // mostThree = '';
+            // mostOne = mostChampList[i].champName;
+            // mostTwo = mostChampList[i].champName;
+            // mostThree = mostChampList[i].champName;
+            let mostChampTag = '';
             for (let i = 0; i < mostChampList.length; i++) {
-                if (mostChampList[i].mostNo === 1) mostOne = mostChampList[i].champName;
-                else if (mostChampList[i].mostNo === 2) mostTwo = mostChampList[i].champName;
-                else mostThree = mostChampList[i].champName;
-            }
-            changedTier = transTier(tier);
-            console.log(mostOne + mostTwo + mostThree);
+                if (mostChampList[i].mostNo === 1) mostChampTag += '<li class="most-pic first-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="first-champ"></li>'
+                else if (mostChampList[i].mostNo === 2) mostChampTag += '<li class="most-pic second-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="second-champ"></li>'
+                else if (mostChampList[i].mostNo === 3) mostChampTag += '<li class="most-pic third-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="third-champ"></li>'
+            }        
+            // console.log(mostOne + mostTwo + mostThree);
+            // console.log("인스타" + userInstagram);
+
+            const tierImgSrc = transTier(tier) !== null ? '"/assets/img/main/TFT_Regalia_'+ transTier(tier) +'.png"' : '/assets/img/main/unranked-removebg-preview.png';
             
             profileCardTag += '<div id = "'+ userAccount +'" class="duo-profile">'
-                                   + '<img class="duo-tier" src="/assets/img/main/TFT_Regalia_'+ changedTier +'.png" alt="tier">'
+                                   + '<img class="duo-tier" src=' + tierImgSrc + ' alt="tier">'
                                     
                                    + '<div class="profile-left-side">'
                                       + '<div class="profile-frame">'
                                            + '<img class="profile-image" src="'+ checkProfile(profileImage) +'" alt="프로필 이미지">'
                                        + '</div>'
                                       + '<div class="profile-sns">'
-                                           + '<a href="'+ userInstagram +'" class="sns-type instagram"><img class="sns-image" src="/assets/img/main/instagram.png" alt="instagram"></a>'
-                                           + '<a href="'+ userFacebook +'" class="sns-type facebook"><img class="sns-image" src="/assets/img/main/facebook.png" alt="facebook"></a>'
-                                           + '<a href="'+ userTwitter +'" class="sns-type twitter"><img class="sns-image" src="/assets/img/main/twitter.png" alt="twitter"></a>'
+                                           + checkSNS(userInstagram, userFacebook, userTwitter)
                                            + '<div class="sns-type chatting-icon"><img class="sns-image" src="/assets/img/main/chatting-icon.png" alt="chatting"></div>'
                                        + '</div>'
                                    + '</div>'
@@ -208,7 +222,7 @@ function getProfileCardList() {
                                       + '<div class="position-nickname">'
                                            + '<img class="preferred-position" src="/assets/img/main/'+ userPosition +'.png" alt="포지션">'
                                            + '<p class="user-nickname">'+ userNickname +'</p>'
-                                           + '<img class="follow-status" src="/assets/img/main/not-following.png" alt="following">'
+                                           + '<img class="follow-status" src="/assets/img/main/'+ checkFollowing(followed) +'.png" alt="following" data-following="'+ followed +'">'
                                        + '</div>'
                                        + '<div class="rate-matching-point">'
                                            + '<div class="rate-matching-point rate-point-box"><img class="rate-matching-point-image" src="/assets/img/main/star.png" alt="rate">'
@@ -219,9 +233,7 @@ function getProfileCardList() {
                                        + '<div class="profile-comment"><p>'+ userComment +'</p></div>'
                                        + '<div class="profile-most-champ">'
                                            + '<ul class="champ-list">'
-                                               + '<li class="most-pic first-champ"><img src="'+ getChampionImg(mostOne) +'" alt="first-champ"></li>'
-                                               + '<li class="most-pic second-champ"><img src="'+ getChampionImg(mostTwo) +'" alt="second-champ"></li>'
-                                               + '<li class="most-pic third-champ"><img src="'+ getChampionImg(mostThree) +'" alt="third-champ"></li>'
+                                               + mostChampTag
                                            + '</ul>'
                                        + '</div>'
                                    + '</div>'
@@ -229,11 +241,22 @@ function getProfileCardList() {
 
               
                             }
-        $profileCardWrapper.innerHTML += profileCardTag;                         
+            $profileCardWrapper.innerHTML += profileCardTag;                         
         // ====================================================================================
+        //채팅 생성하기
+        makeChattingRoom();
     });
 
  }
+
+ // 하트 이미지 클릭시 팔로잉 상태에 따라 비동기 요청 함수
+//  function follow() {
+//     const $followImg = document.querySelector('.follow-status');
+
+//     $followImg.onclick = e => {
+//         console.log(e.target.dataset.following);
+//     }
+//  }
  
  let loading = false; // 초기에는 로딩 상태가 아님을 나타내는 변수
 
@@ -259,10 +282,12 @@ function getProfileCardList() {
         }
   });
 
+ 
+
 
 //========= 메인 실행부 =========//
 (function () {
-
+    
     // 포지션 선택시 동작
     selectPosition();
     // 성별 선택시 동작
@@ -272,7 +297,37 @@ function getProfileCardList() {
     // 검색창 입력시 동작
     searchName();   
 
+    //  follow();
+    
     // 프로필 카드 불러오기 함수(비동기)
-    getProfileCardList();
+   getProfileCardList();
+
+    // 로그인 실패시 메세지
+    renderFailMessage();
 
 })();
+
+function renderFailMessage() {
+    const signInFailMsg = new URL(window.location.href).searchParams.get("msg");
+
+    let msg;
+
+    switch (signInFailMsg) {
+        case 'NOT_ADMIN':
+            msg = '관리자만 접근 가능합니다.';
+            break;
+        case 'NEED_LOGIN' :
+            msg = '로그인이 필요합니다.';
+            break;
+        case 'NO_ACC':
+            msg = '존재하지 않는 계정입니다.';
+            break;
+        case 'NO_PW':
+            msg = '비밀번호가 틀렸습니다.';
+            break;
+        default:
+            return;
+    }
+
+    alert(msg);
+}

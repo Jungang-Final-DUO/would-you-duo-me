@@ -1,4 +1,4 @@
-@import url("/assets/css/common.css");
+@import "../common/common.css";
 
 #main-wrapper{
     /* border:  1px solid #ffffff; */
@@ -373,7 +373,7 @@ height: 100%;
 /* 댓글 작성란 */
 #main-wrapper .container .right_box .reply_container #reply{
     width: 100%;
-    border:none;    
+    border:none;
     background-color:#e7e7e7;
    resize: none;
     outline: none;
