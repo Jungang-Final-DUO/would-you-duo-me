@@ -746,7 +746,7 @@ public class UserService {
 
     }
 
-    public List<UserProfileResponseDTO> getUserProfileList(/*HttpSession session, */UserSearchType userSearchType) {
+    public List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType) {
         List<UserProfileResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
 
         for (UserProfileResponseDTO userProfile : userProfileList) {

@@ -202,9 +202,11 @@ function getProfileCardList() {
             }        
             // console.log(mostOne + mostTwo + mostThree);
             // console.log("인스타" + userInstagram);
+
+            const tierImgSrc = transTier(tier) !== null ? '"/assets/img/main/TFT_Regalia_'+ transTier(tier) +'.png"' : '/assets/img/main/unranked-removebg-preview.png';
             
             profileCardTag += '<div id = "'+ userAccount +'" class="duo-profile">'
-                                   + '<img class="duo-tier" src="/assets/img/main/TFT_Regalia_'+ transTier(tier) +'.png" alt="tier">'
+                                   + '<img class="duo-tier" src=' + tierImgSrc + ' alt="tier">'
                                     
                                    + '<div class="profile-left-side">'
                                       + '<div class="profile-frame">'
