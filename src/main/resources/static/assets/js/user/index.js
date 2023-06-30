@@ -297,4 +297,26 @@ function getProfileCardList() {
     // 프로필 카드 불러오기 함수(비동기)
    getProfileCardList();
 
+    // 로그인 실패시 메세지
+    renderFailMessage();
+
 })();
+
+function renderFailMessage() {
+    const signInFailMsg = new URL(window.location.href).searchParams.get("msg");
+
+    let msg;
+
+    switch (signInFailMsg) {
+        case 'NO_ACC':
+            msg = '존재하지 않는 계정입니다.';
+            break;
+        case 'NO_PW':
+            msg = '비밀번호가 틀렸습니다.';
+            break;
+        default:
+            return;
+    }
+
+    alert(msg);
+}
