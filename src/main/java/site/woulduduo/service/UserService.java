@@ -17,6 +17,7 @@ import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.chatting.MatchingInfoResponseDTO;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.page.PageResponseDTO;
 import site.woulduduo.dto.response.user.*;
@@ -24,10 +25,7 @@ import site.woulduduo.dto.riot.LeagueV4DTO;
 import site.woulduduo.dto.riot.MatchV5DTO;
 import site.woulduduo.dto.riot.MostChampInfo;
 import site.woulduduo.entity.*;
-import site.woulduduo.enumeration.Gender;
-import site.woulduduo.enumeration.LoginResult;
-import site.woulduduo.enumeration.Position;
-import site.woulduduo.enumeration.Tier;
+import site.woulduduo.enumeration.*;
 import site.woulduduo.exception.NotFollowedException;
 import site.woulduduo.exception.NoRankException;
 import site.woulduduo.repository.*;
@@ -64,7 +62,6 @@ public class UserService {
     private final FollowRepository followRepository;
     private final UserProfileRepository userProfileRepository;
     private final MostChampRepository mostChampRepository;
-    private final site.woulduduo.service.MatchingService matchingService;
 
 
     final String id = "abc1234";
@@ -714,5 +711,62 @@ public class UserService {
         followRepository.delete(followState);
 
         return false;
+    }
+
+    //마이페이지 내활동정보 페이지
+    public MatchingInfoResponseDTO getMyMypageInfo(String userAccount) {
+        User user = userRepository.findById(userAccount).orElseThrow();
+
+//        듀오활동정보
+        //남자에게 받은 매칭 요청
+        int matchingFromMale = matchingRepository.countByChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(Gender.M, user);
+        //여자에게 받은 매칭 요청
+        int matchingFromFemale = matchingRepository.countByChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(Gender.M, user);
+        //남자에게 받은 매칭 수락건
+        List<MatchingStatus> matchingStatus = List.of(MatchingStatus.CONFIRM, MatchingStatus.DONE);
+        int confirmWithMale = matchingRepository.countByMatchingStatusInAndChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(matchingStatus, Gender.M, user);
+        //여자에게 받은 매칭 수락건
+        int confirmWithFemale = matchingRepository.countByMatchingStatusInAndChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(matchingStatus, Gender.F, user);
+        //남자와 매칭확정률
+        double confirmRateMale = 0;
+        try {
+            confirmRateMale = confirmWithMale/(double)matchingFromMale;
+        } catch (ArithmeticException e) {
+            confirmRateMale = 0;
+        }
+        //여자와 매칭확정률
+        double confirmRateFemale = 0;
+        try {
+            confirmRateFemale = confirmWithFemale/(double)matchingFromFemale;
+        } catch (ArithmeticException e) {
+            confirmRateMale = 0;
+        }
+
+//        내 호감도
+        //팔로워
+        int followers = followRepository.countByFollowTo(user);
+        //팔로윙
+        int followings = followRepository.countByFollowFrom(user);
+        //호감도
+        Double userAvgRate = user.getUserAvgRate();
+        //팔로워순위
+        int rank = followRepository.getFollowerRank(userAccount);
+        //경고횟수
+        long accuseCount = accuseRepository.countByUser(user);
+        //총활동점수
+        long totalScore = (long) ((followers * 200L) + (userAvgRate * 100) - (accuseCount * 500));
+
+        return MatchingInfoResponseDTO.builder()
+                .receivedMatchingFromMale(matchingFromMale)
+                .receivedMatchingFromFemale(matchingFromFemale)
+                .confirmedMatchingWithMale(confirmWithMale)
+                .confirmedMatchingWithFemale(confirmWithFemale)
+                .confirmRateWithMale(confirmRateMale)
+                .confirmRateWithFemale(confirmRateFemale)
+                .userAvgRate(userAvgRate)
+                .rank(rank)
+                .accuseCount(accuseCount)
+                .totalScore(totalScore)
+                .build();
     }
 }

@@ -16,6 +16,7 @@ import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.chatting.MatchingInfoResponseDTO;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.user.*;
 import site.woulduduo.entity.User;
@@ -60,6 +61,8 @@ public class UserController {
             return "/?msg=NEED_LOGIN";
         }
 
+        MatchingInfoResponseDTO myMypageInfoDto = userService.getMyMypageInfo(userAccount);
+        model.addAttribute("info", myMypageInfoDto);
 
 //        log.info("/user/my-page GET");
 //

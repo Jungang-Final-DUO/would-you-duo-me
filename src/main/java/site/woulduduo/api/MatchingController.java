@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
 import site.woulduduo.dto.request.matching.MatchingFixRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.chatting.MatchingInfoResponseDTO;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.user.MyPageReviewResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
