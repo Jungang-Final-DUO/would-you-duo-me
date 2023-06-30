@@ -228,23 +228,23 @@ public class UserService {
         // 세션의 수명을 설정
         session.setMaxInactiveInterval(60 * 60); // 1시간
 
-        // 모스트 챔피언 및 티어 정보 갱신
+        // 티어 정보 갱신
         user.setLolTier(riotApiService.getTier(lolNickname));
 
-        List<String> newMost3 = riotApiService.getMost3Champions(lolNickname);
-
-        for (int i = 0; i < 3; i++) {
-
-            MostChamp foundMost = mostChampRepository.getAllByUser_UserAccountAndMostNo(userAccount, i + 1);
-
-            try {
-                foundMost.setChampName(newMost3.get(i));
-            } catch (IndexOutOfBoundsException e) {
-                foundMost.setChampName("");
-            }
-
-            mostChampRepository.save(foundMost);
-        }
+//        List<String> newMost3 = riotApiService.getMost3Champions(lolNickname);
+//
+//        for (int i = 0; i < 3; i++) {
+//
+//            MostChamp foundMost = mostChampRepository.getAllByUser_UserAccountAndMostNo(userAccount, i + 1);
+//
+//            try {
+//                foundMost.setChampName(newMost3.get(i));
+//            } catch (IndexOutOfBoundsException e) {
+//                foundMost.setChampName("");
+//            }
+//
+//            mostChampRepository.save(foundMost);
+//        }
 
     }
 
