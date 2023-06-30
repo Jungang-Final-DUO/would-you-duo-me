@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
+
     <%@ include file="../common/static-head.jsp" %>
     <link rel="stylesheet" href="/assets/css/user/history/community.css">
     <link rel="stylesheet" href="/assets/css/board/board-write.css">
@@ -18,13 +19,16 @@
 </head>
 
 <body>
+     <%@ include file="../common/header.jsp" %>
     <div id="main-wrapper">
         <div class="community-wrapper">
             <div class="search-write-wrapper">
                 <div class="search-container">
-                    <input class="search-box" type="text">
+                    <input class="search-box" id="search" type="text">
                     <button class="board-search-title-btn">
-                        <img class="searh-btn-img" src="/assets/img/community/search.png" alt="검색버튼">
+
+                <img class="search-btn-img" src="/assets/img/community/search.png" alt="검색버튼" id="search" onclick="handleSearchClick()">
+
                     </button>
                 </div>
 
@@ -36,11 +40,15 @@
 
 
             <div class="sort-wrapper">
-                <div class="category-wrapper">
-                    <button class="freedom-board selected-category">자유</button>
-                    <button class="notify-board">공지</button>
-                    <button class="accuse-board">신고</button>
+
+                <div class="category-wrapper" id="category-btn" >
+
+                    <button class="freedom-board selected-category" id="freedom-btn" >자유</button>
+                    <button class="notify-board"  >공지</button>
+                    <button class="accuse-board" id="accuse-btn">신고</button>
+
                 </div>
+ //input radio
                 <div class="orderby-wrapper">
                     <button class="new-board-btn"><img src="/assets/img/community/sunwhite.png" alt="최신순이미지">최신순</button>
                     <button class="week-recommend-btn"><img src="/assets/img/community/firewhite.png" alt="이번주이미지">이번주 추천순</button>
@@ -99,239 +107,12 @@
                         </ul>
                     </div>
                 </div>
-                <div class="board-list-wrapper">
-                    <ul class="board-list-container">
-                        <a href="#">
-                            <li class="board-card">
-                                <div class="board-recommend-box">
-                                    <img src="/assets/img/community/upgray.png" alt="추천수">
-                                    <div class="board-recommend">356</div>
-                                </div>
-                                <div class="board-body-box">
-                                    <div class="board-title">안녕하세요! 신입입니다``!
-                                        <span class="reply-amount">[34]</span>
-                                    </div>
-                                    <div class="board-info">
-                                        <span class="board-category">자유</span>|<span class="board-writer">뽀로로2014</span>|<span class="board-write-time">3분전</span>
-                                    </div>
-                                </div>
-                                <img class="board-img" src="/assets/img/community/naruto.jpg" alt="미리보기사진">
-                                <div class="board-view-count-box">
-                                    <img src="/assets/img/community/viewgray.png" alt="조회수">
-                                    <div class="board-view-count">67</div>
-                                </div>
-                            </li>
-                        </a>
-                        <li class="board-card">
-                            <div class="board-recommend-box">
-                                <img src="/assets/img/community/upgray.png" alt="추천수">
-                                <div class="board-recommend">356</div>
-                            </div>
-                            <div class="board-body-box">
-                                <div class="board-title">안녕하세요! 신입입니다!
-                                    <span class="reply-amount">[34]</span>
-                                </div>
-                                <div class="board-info">
-                                    <span class="board-category">자유</span>|<span class="board-writer">뽀로로2014</span>|<span class="board-write-time">3분전</span>
-                                </div>
-                            </div>
-                            <img class="board-img" src="/assets/img/community/ani.jpg" alt="미리보기사진">
-                            <div class="board-view-count-box">
-                                <img src="/assets/img/community/viewgray.png" alt="조회수">
-                                <div class="board-view-count">67</div>
-                            </div>
-                        </li>
-                        <li class="board-card">
-                            <div class="board-recommend-box">
-                                <img src="/assets/img/community/upgray.png" alt="추천수">
-                                <div class="board-recommend">356</div>
-                            </div>
-                            <div class="board-body-box">
-                                <div class="board-title">안녕하세요! 신입입니다!
-                                    <span class="reply-amount">[34]</span>
-                                </div>
-                                <div class="board-info">
-                                    <span class="board-category">자유</span>|<span class="board-writer">뽀로로2014</span>|<span class="board-write-time">3분전</span>
-                                </div>
-                            </div>
-                            <img class="board-img" src="/assets/img/community/lem.jpg" alt="미리보기사진">
-                            <div class="board-view-count-box">
-                                <img src="/assets/img/community/viewgray.png" alt="조회수">
-                                <div class="board-view-count">67</div>
-                            </div>
-                        </li>
-                        <li class="board-card">
-                            <div class="board-recommend-box">
-                                <img src="/assets/img/community/upgray.png" alt="추천수">
-                                <div class="board-recommend">356</div>
-                            </div>
-                            <div class="board-body-box">
-                                <div class="board-title">안녕하세요! 신입입니다!
-                                    <span class="reply-amount">[34]</span>
-                                </div>
 
-                                <div class="board-info">
-                                    <span class="board-category">자유</span>|<span class="board-writer">뽀로로2014</span>|<span class="board-write-time">3분전</span>
-                                </div>
-                            </div>
-                            <img class="board-img" src="/assets/img/community/naruto.jpg" alt="미리보기사진">
-                            <div class="board-view-count-box">
-                                <img src="/assets/img/community/viewgray.png" alt="조회수">
-                                <div class="board-view-count">67</div>
-                            </div>
-                        </li>
-                        <li class="board-card">
-                            <div class="board-recommend-box">
-                                <img src="/assets/img/community/upgray.png" alt="추천수">
-                                <div class="board-recommend">356</div>
-                            </div>
-                            <div class="board-body-box">
-                                <div class="board-title">안녕하세요! 신입입니다!
-                                    <span class="reply-amount">[34]</span>
-                                </div>
-                                <div class="board-info">
-                                    <span class="board-category">자유</span>|<span class="board-writer">뽀로로2014</span>|<span class="board-write-time">3분전</span>
-                                </div>
-                            </div>
-                            <img class="board-img" src="/assets/img/community/ani.jpg" alt="미리보기사진">
-                            <div class="board-view-count-box">
-                                <img src="/assets/img/community/viewgray.png" alt="조회수">
-                                <div class="board-view-count">67</div>
-                            </div>
-                        </li>
-                        <li class="board-card">
-                            <div class="board-recommend-box">
-                                <img src="/assets/img/community/upgray.png" alt="추천수">
-                                <div class="board-recommend">356</div>
-                            </div>
-                            <div class="board-body-box">
-                                <div class="board-title">안녕하세요! 신입입니다!
-                                    <span class="reply-amount">[34]</span>
-                                </div>
-                                <div class="board-info">
-                                    <span class="board-category">자유</span>|<span class="board-writer">뽀로로2014</span>|<span class="board-write-time">3분전</span>
-                                </div>
-                            </div>
-                            <img class="board-img" src="/assets/img/community/lem.jpg" alt="미리보기사진">
-                            <div class="board-view-count-box">
-                                <img src="/assets/img/community/viewgray.png" alt="조회수">
-                                <div class="board-view-count">67</div>
-                            </div>
-                        </li>
-                        <li class="board-card">
-                            <div class="board-recommend-box">
-                                <img src="/assets/img/community/upgray.png" alt="추천수">
-                                <div class="board-recommend">356</div>
-                            </div>
-                            <div class="board-body-box">
-                                <div class="board-title">안녕하세요! 신입입니다!
-                                    <span class="reply-amount">[34]</span>
-                                </div>
-                                <div class="board-info">
-                                    <span class="board-category">자유</span>|<span class="board-writer">뽀로로2014</span>|<span class="board-write-time">3분전</span>
-                                </div>
-                            </div>
-                            <img class="board-img" src="/assets/img/community/naruto.jpg" alt="미리보기사진">
-                            <div class="board-view-count-box">
-                                <img src="/assets/img/community/viewgray.png" alt="조회수">
-                                <div class="board-view-count">67</div>
-                            </div>
-                        </li>
-                        <li class="board-card">
-                            <div class="board-recommend-box">
-                                <img src="/assets/img/community/upgray.png" alt="추천수">
-                                <div class="board-recommend">356</div>
-                            </div>
-                            <div class="board-body-box">
-                                <div class="board-title">안녕하세요! 신입입니다!
-                                    <span class="reply-amount">[34]</span>
-                                </div>
-                                <div class="board-info">
-                                    <span class="board-category">자유</span>|<span class="board-writer">뽀로로2014</span>|<span class="board-write-time">3분전</span>
-                                </div>
-                            </div>
-                            <img class="board-img" src="/assets/img/community/ani.jpg" alt="미리보기사진">
-                            <div class="board-view-count-box">
-                                <img src="/assets/img/community/viewgray.png" alt="조회수">
-                                <div class="board-view-count">67</div>
-                            </div>
-                        </li>
-                        <li class="board-card">
-                            <div class="board-recommend-box">
-                                <img src="/assets/img/community/upgray.png" alt="추천수">
-                                <div class="board-recommend">356</div>
-                            </div>
-                            <div class="board-body-box">
-                                <div class="board-title">안녕하세요! 신입입니다!
-                                    <span class="reply-amount">[34]</span>
-                                </div>
-                                <div class="board-info">
-                                    <span class="board-category">자유</span>|<span class="board-writer">뽀로로2014</span>|<span class="board-write-time">3분전</span>
-                                </div>
-                            </div>
-                            <img class="board-img" src="/assets/img/community/lem.jpg" alt="미리보기사진">
-                            <div class="board-view-count-box">
-                                <img src="/assets/img/community/viewgray.png" alt="조회수">
-                                <div class="board-view-count">67</div>
-                            </div>
-                        </li>
-                        <li class="board-card">
-                            <div class="board-recommend-box">
-                                <img src="/assets/img/community/upgray.png" alt="추천수">
-                                <div class="board-recommend">356</div>
-                            </div>
-                            <div class="board-body-box">
-                                <div class="board-title">안녕하세요! 신입입니다!
-                                    <span class="reply-amount">[34]</span>
-                                </div>
 
-                                <div class="board-info">
-                                    <span class="board-category">자유</span>|<span class="board-writer">뽀로로2014</span>|<span class="board-write-time">3분전</span>
-                                </div>
-                            </div>
-                            <img class="board-img" src="/assets/img/community/naruto.jpg" alt="미리보기사진">
-                            <div class="board-view-count-box">
-                                <img src="/assets/img/community/viewgray.png" alt="조회수">
-                                <div class="board-view-count">67</div>
-                            </div>
-                        </li>
-                        <li class="board-card">
-                            <div class="board-recommend-box">
-                                <img src="/assets/img/community/upgray.png" alt="추천수">
-                                <div class="board-recommend">356</div>
-                            </div>
-                            <div class="board-body-box">
-                                <div class="board-title">안녕하세요! 신입입니다!
-                                    <span class="reply-amount">[34]</span>
-                                </div>
-                                <div class="board-info">
-                                    <span class="board-category">자유</span>|<span class="board-writer">뽀로로2014</span>|<span class="board-write-time">3분전</span>
-                                </div>
-                            </div>
-                            <img class="board-img" src="/assets/img/community/ani.jpg" alt="미리보기사진">
-                            <div class="board-view-count-box">
-                                <img src="/assets/img/community/viewgray.png" alt="조회수">
-                                <div class="board-view-count">67</div>
-                            </div>
-                        </li>
-                        <li class="board-card">
-                            <div class="board-recommend-box">
-                                <img src="/assets/img/community/upgray.png" alt="추천수">
-                                <div class="board-recommend">356</div>
-                            </div>
-                            <div class="board-body-box">
-                                <div class="board-title">안녕하세요! 신입입니다!
-                                    <span class="reply-amount">[34]</span>
-                                </div>
-                                <div class="board-info">
-                                    <span class="board-category">자유</span>|<span class="board-writer">뽀로로2014</span>|<span class="board-write-time">3분전</span>
-                                </div>
-                            </div>
-                            <img class="board-img" src="/assets/img/community/lem.jpg" alt="미리보기사진">
-                            <div class="board-view-count-box">
-                                <img src="/assets/img/community/viewgray.png" alt="조회수">
-                                <div class="board-view-count">67</div>
-                            </div>
+
+
+
+
                         </li>
                     </ul>
                 </div>

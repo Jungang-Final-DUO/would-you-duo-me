@@ -2,12 +2,16 @@ package site.woulduduo.dto.request.board;
 
 import lombok.*;
 import site.woulduduo.entity.Board;
+import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.BoardCategory;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+
+
 @Builder
 @Getter
 @Setter
@@ -24,6 +28,7 @@ public class BoardWriteRequestDTO {
     private String boardTitle;
 
 
+    private String userAccount;
     private BoardCategory boardCategory;
 
     private String boardContent;
@@ -32,14 +37,16 @@ public class BoardWriteRequestDTO {
 //    }
 
 
-    public Board toEntity(){
+    public Board toEntity() {
         return Board.builder()
                 .boardTitle(this.boardTitle)
                 .boardCategory(this.boardCategory)
                 .boardContent(this.boardContent)
+                .user(User.builder().userAccount(userAccount).build())
                 .build();
-
     }
+
+
 
 
 

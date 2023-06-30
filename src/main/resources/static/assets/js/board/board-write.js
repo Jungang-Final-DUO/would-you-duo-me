@@ -16,7 +16,7 @@
 //
 //        //도메인 전역변수 매핑경로오류...
 //
-//    fetch('http://localhost:8282/board/', {
+//  ard/'  fetch('http://localhost:8282/bo, {
 //        method: 'GET',
 //
 //    })
