@@ -15,7 +15,7 @@ public class CustomErrorPageConfig implements ErrorPageRegistrar {
      */
     @Override
     public void registerErrorPages(ErrorPageRegistry registry) {
-        ErrorPage errorPage429 = new ErrorPage(HttpStatus.TOO_MANY_REQUESTS, "/error/429");
+        ErrorPage errorPage429 = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error/429");
 
         registry.addErrorPages(errorPage429);
     }
