@@ -13,6 +13,7 @@ import org.springframework.web.util.WebUtils;
 import site.woulduduo.dto.request.login.LoginRequestDTO;
 import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
+import site.woulduduo.dto.request.user.ChangePasswordRequestDTO;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
@@ -238,7 +239,7 @@ public class UserService {
         }
     }
 
-    // 마이페이지 정보수정
+    // 마이페이지 - 정보수정
     public boolean modifyUser(UserModifyRequestDTO dto) {
         // 사용자 정보 가져오기
         User user = userRepository.findByUserAccount(dto.getUserAccount());
@@ -260,6 +261,53 @@ public class UserService {
 
         return true;
     }
+
+    // 마이페이지 - 비밀번호 변경
+    public boolean changePassword(HttpSession session, ChangePasswordRequestDTO dto) {
+        // 세션에서 현재 사용자 정보를 가져옵니다.
+        String userAccount = (String) session.getAttribute("userAccount");
+        if (userAccount == null) {
+            return false; // 세션에 사용자 계정 정보가 없으면 변경 실패로 처리합니다.
+        }
+
+        // 사용자 정보를 데이터베이스에서 조회합니다.
+        User user = userRepository.findByUserAccount(userAccount);
+        if (user == null) {
+            return false; // 사용자 정보가 없으면 변경 실패로 처리합니다.
+        }
+
+        // 기존 비밀번호를 확인합니다.
+        if (!passwordEncoder.matches(dto.getUserPassword(), user.getUserPassword())) {
+            return false; // 입력된 기존 비밀번호가 일치하지 않으면 변경 실패로 처리
+        }
+
+        // 새로운 비밀번호를 설정
+        String newEncryptedPassword = passwordEncoder.encode(dto.getNewPassword());
+        user.setUserPassword(newEncryptedPassword);
+
+        // 사용자 정보를 저장
+        userRepository.save(user);
+
+        // 변경된 비밀번호를 세션에 업데이트
+        session.setAttribute("userPassword", newEncryptedPassword);
+
+        return true; // 비밀번호 변경 성공을 반환
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -69,7 +69,7 @@
 
         if (username !== '' && !instagramUsernamePattern.test(username)) {
             instagramInput.style.borderColor = 'red';
-            document.getElementById('instagramChk').innerHTML = '<b style="color: red;">[사용자 아이디는 영문 소문자와 숫자로만 구성되며, 최소 5자부터 최대 20자까지 허용됩니다. 밑줄 (_)과 마침표 (.)는 사용할 수 있지만, 연속으로 사용하거나 시작/끝에 위치할 수 없습니다.]</b>';
+            document.getElementById('instagramChk').innerHTML = '';
         } else {
             instagramInput.style.borderColor = 'skyblue';
             document.getElementById('instagramChk').innerHTML = '';
@@ -85,10 +85,10 @@
 
         if (username !== '' && !facebookUsernamePattern.test(username)) {
             facebookInput.style.borderColor = 'red';
-            document.getElementById('facebookChk').innerHTML = '<b style="color: red;">[영문 대소문자, 숫자, 점(.), 밑줄(_)로만 구성된 5자 이상, 20자 이하의 사용자 이름을 입력해주세요.]</b>';
+            document.getElementById('facebookChk').innerHTML = '';
         } else {
             facebookInput.style.borderColor = 'skyblue';
-            document.getElementById('facebookChk').innerHTML = '<b style="color: skyblue;">[확인됐습니다.]</b>';
+            document.getElementById('facebookChk').innerHTML = '';
         }
     };
 
@@ -101,10 +101,10 @@
 
         if (userId !== '' && !userIdPattern.test(userId)) {
             twitterInput.style.borderColor = 'red';
-            document.getElementById('twitterChk').innerHTML = '<b style="color: red;">[사용자 아이디는 영문 기준 최소 4자부터 최대 15자까지 허용됩니다.]</b>';
+            document.getElementById('twitterChk').innerHTML = '';
         } else {
             twitterInput.style.borderColor = 'skyblue';
-            document.getElementById('twitterChk').innerHTML = '<b style="color: skyblue;">[확인됐습니다.]</b>';
+            document.getElementById('twitterChk').innerHTML = '';
         }
     };
 

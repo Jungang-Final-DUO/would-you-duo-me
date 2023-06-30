@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import site.woulduduo.aws.S3Service;
 import site.woulduduo.dto.request.login.LoginRequestDTO;
 import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
+import site.woulduduo.dto.request.user.ChangePasswordRequestDTO;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
@@ -53,6 +55,7 @@ public class UserController {
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final S3Service s3Service;
+    private final PasswordEncoder passwordEncoder;
 
     // 메인페이지 - 프로필 카드 불러오기(비동기)
     @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
@@ -168,8 +171,6 @@ public class UserController {
     }
 
 
-
-
     // 로그아웃 요청 처리
     @GetMapping("/user/sign-out")
     public String signOut(HttpServletRequest request, HttpServletResponse response) {
@@ -236,6 +237,41 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("정보 변경에 실패했습니다.");
         }
     }
+
+    // 마이페이지 - 비밀번호 변경 페이지 열기
+    @GetMapping("/user/change-password")
+    public String changePassword() {
+        return "my-page/pwdchange";
+    }
+
+    // 마이페이지 - 비밀번호 변경 처리
+    @RequestMapping(value = "/api/v1/users/change-password", method = {RequestMethod.PUT, RequestMethod.PATCH})
+    public ResponseEntity<?> changePassword(HttpSession session, @RequestBody ChangePasswordRequestDTO dto) {
+        // 세션을 이용한 인증 및 현재 사용자 확인 로직
+        String currentUserAccount = (String) session.getAttribute("userAccount");
+        if (currentUserAccount == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // 사용자 계정 값 조회
+        User foundUser = userRepository.findByUserAccount(currentUserAccount);
+        if (foundUser == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        // 비밀번호 변경 로직
+        boolean success = userService.changePassword(session, dto);
+        if (!success) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        // 변경된 비밀번호 반환
+        return ResponseEntity.ok(foundUser.getUserPassword());
+    }
+
+
+
+
 
 
 
