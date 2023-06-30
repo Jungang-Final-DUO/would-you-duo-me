@@ -311,6 +311,12 @@ function renderFailMessage() {
     let msg;
 
     switch (signInFailMsg) {
+        case 'NOT_ADMIN':
+            msg = '관리자만 접근 가능합니다.';
+            break;
+        case 'NEED_LOGIN' :
+            msg = '로그인이 필요합니다.';
+            break;
         case 'NO_ACC':
             msg = '존재하지 않는 계정입니다.';
             break;

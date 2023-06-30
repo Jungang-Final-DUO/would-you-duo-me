@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import site.woulduduo.dto.request.matching.MatchingFixRequestDTO;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
+import site.woulduduo.dto.request.matching.MatchingFixRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.user.MyPageReviewResponseDTO;
@@ -15,12 +15,11 @@ import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Matching;
 import site.woulduduo.service.ChattingService;
 import site.woulduduo.service.MatchingService;
-import site.woulduduo.util.LoginUtil;
 
 import javax.servlet.http.HttpSession;
 
-import static site.woulduduo.util.LoginUtil.*;
 import static site.woulduduo.util.LoginUtil.LOGIN_KEY;
+import static site.woulduduo.util.LoginUtil.isMyChatting;
 
 @RestController
 @RequestMapping("/api/v1/matchings")
@@ -58,7 +57,12 @@ public class MatchingController {
     public ResponseEntity<?> writeReview(HttpSession session, @RequestBody ReviewWriteRequestDTO dto) {
 
 //       세션에 로그인처리가 완료된 이후에 사용
-       String userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        String userAccount = null;
+        try {
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        } catch (NullPointerException e) {
+            return ResponseEntity.badRequest().body("로그인하고 이용해주세요");
+        }
 
 //        String userAccount = "user1";
 

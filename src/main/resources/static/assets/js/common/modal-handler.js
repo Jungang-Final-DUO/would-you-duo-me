@@ -15,7 +15,7 @@ export function modalHandler($modalBtn) {
                 const unread = document.getElementById('unread-chatting-count');
                 unread.style.display = 'none';
                 // console.log('채팅모달 열기 진입');
-                getChattingList();
+                getChattingList().then();
             }
             // 해당 모달이 메세지 다이어로그라면 내부 메세지 출력
             if($target.classList.contains('message-dialog')){

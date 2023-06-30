@@ -216,6 +216,7 @@ public class UserService {
                 .userPosition(user.getUserPosition() != null ? user.getUserPosition() : Position.NONE)
                 .userMatchingPoint(user.getUserMatchingPoint() != null ? user.getUserMatchingPoint() : 0)
                 .userProfileImage(user.getLatestProfileImage())
+                .role(user.getRole())
                 .build();
 
         // userProfileImage 값 확인
