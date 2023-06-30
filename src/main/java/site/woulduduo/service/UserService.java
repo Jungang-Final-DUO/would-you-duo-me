@@ -217,6 +217,10 @@ public class UserService {
                 .userMatchingPoint(user.getUserMatchingPoint() != null ? user.getUserMatchingPoint() : 0)
                 .userProfileImage(user.getLatestProfileImage())
                 .role(user.getRole())
+                .userInstagram(user.getUserInstagram())
+                .userFacebook(user.getUserFacebook())
+                .userTwitter(user.getUserTwitter())
+                .userBirthday(user.getUserBirthday())
                 .build();
 
         // userProfileImage 값 확인
@@ -274,6 +278,37 @@ public class UserService {
 
         }
     }
+
+    // 마이페이지 정보수정
+    public boolean modifyUser(UserModifyRequestDTO dto) {
+        // 사용자 정보 가져오기
+        User user = userRepository.findByUserAccount(dto.getUserAccount());
+        if (user == null) {
+            // 사용자 정보가 존재하지 않는 경우
+            return false;
+        }
+
+        // 사용자 정보 수정
+        user.setUserNickname(dto.getUserNickname());
+        user.setUserBirthday(dto.getUserBirthday());
+        user.setLolNickname(dto.getLolNickname());
+        user.setUserInstagram(dto.getUserInstagram());
+        user.setUserFacebook(dto.getUserFacebook());
+        user.setUserTwitter(dto.getUserTwitter());
+
+        // 사용자 정보 저장
+        userRepository.save(user);
+
+        return true;
+    }
+
+
+
+
+
+
+
+
 
 
     /**
