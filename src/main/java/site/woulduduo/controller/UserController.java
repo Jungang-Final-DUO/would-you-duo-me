@@ -20,16 +20,11 @@ import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.user.*;
 import site.woulduduo.entity.User;
-import site.woulduduo.enumeration.Gender;
-import site.woulduduo.enumeration.LoginResult;
-import site.woulduduo.enumeration.Position;
-import site.woulduduo.enumeration.Tier;
 import site.woulduduo.enumeration.*;
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.EmailService;
 import site.woulduduo.service.UserService;
 import site.woulduduo.util.LoginUtil;
-import site.woulduduo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,39 +49,6 @@ public class UserController {
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final S3Service s3Service;
-
-    // 마이페이지
-    @GetMapping("/user/my-page")
-    public String showMyPage(HttpSession session, Model model) {
-
-        String userAccount;
-
-        try {
-            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
-        } catch (NullPointerException e) {
-            return "/?msg=NEED_LOGIN";
-        }
-
-
-//        log.info("/user/my-page GET");
-//
-//        // 사용자 정보 가져오기
-//        User user = null;
-//        if (session != null && session.getId() != null) {
-//            user = userService.getUser(session.getId());
-//        }
-//
-//        // 모델에 사용자 정보 추가
-//        if (user != null) {
-//            // 사용자 정보 속성 추가
-//            model.addAttribute("login", user); // 사용자 정보를 "login" 속성으로 추가
-//
-//            log.info("userBirthday: {}", user.getUserBirthday());
-//
-//        }
-
-        return "my-page/mypage-myinfo";
-    }
 
     // 메인페이지 - 프로필 카드 불러오기(비동기)
     @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
@@ -211,8 +173,6 @@ public class UserController {
     }
 
 
-
-
     // 로그아웃 요청 처리
     @GetMapping("/user/sign-out")
     public String signOut(HttpServletRequest request, HttpServletResponse response) {
@@ -242,11 +202,18 @@ public class UserController {
     public String showMyPage(HttpSession session, Model model) {
         log.info("/user/my-page GET");
 
+        String userAccount;
+
+        try {
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        } catch (NullPointerException e) {
+            return "/?msg=NEED_LOGIN";
+        }
+
         // 사용자 정보 가져오기
         User user = null;
-        if (session != null && session.getId() != null) {
-            user = userService.getUser(session.getId());
-        }
+        user = userService.getUser(userAccount);
+
 
         // 모델에 사용자 정보 추가
         if (user != null) {
@@ -279,30 +246,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("정보 변경에 실패했습니다.");
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //    // 프로필 사진 등록
