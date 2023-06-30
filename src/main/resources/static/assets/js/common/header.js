@@ -14,9 +14,6 @@ import {renderMatchingCalendar} from "../chatting/chatting-calendar.js";
         // 소켓 연결
         connectSocket();
 
-        //채팅 생성하기
-        makeChattingRoom();
-
         //안읽은 메세지 출력
         renderTotalUnreadMessages();
 

@@ -1,4 +1,5 @@
 import { getChampionImg } from "../common/get-champion-img.js";
+import {makeChattingRoom} from "../chatting/chatting-modal.js";
 
 // 현재까지 렌더링된 페이지
 let page = 1;
@@ -240,6 +241,8 @@ function getProfileCardList() {
                             }
             $profileCardWrapper.innerHTML += profileCardTag;                         
         // ====================================================================================
+        //채팅 생성하기
+        makeChattingRoom();
     });
 
  }
