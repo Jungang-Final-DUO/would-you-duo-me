@@ -21,6 +21,5 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
     @Query(value = "SELECT COUNT(*) FROM duo_board WHERE board_written_date >= DATE(NOW()) AND board_written_date < DATE_ADD(DATE(NOW()), INTERVAL 1 DAY)",nativeQuery = true)
     int findAllWithBoardWrittenDate();
 
-    @Query(value = "SELECT * FROM duo_board WHERE userAccount LIKE '%query%')",nativeQuery = true)
-    Page<Board> findbyUserAccountContaining(String userAccount, Pageable pageable);
+    Page<Board> findByUser_UserAccountContaining(String userAccount, Pageable pageable);
 }

@@ -137,7 +137,7 @@
               <div class="sign_date uls"></div>
             </div>
           </a>
-          
+
           <% } %>
 
 
@@ -242,90 +242,90 @@
         }
       }
 
-  totalUserButton.onclick = e => {
-  boardDisplayNone();
-  accuseDisplayNone();
-  UserMenuBar.style.display = '';
+      totalUserButton.onclick = e => {
+        boardDisplayNone();
+        accuseDisplayNone();
+        UserMenuBar.style.display = '';
 
-  const pageNum = 1; // 초기 페이지 설정
-const searchInput = document.getElementById('search_input');
-  const button = document.getElementById('search_button');
+        const pageNum = 1; // 초기 페이지 설정
+        const searchInput = document.getElementById('search_input');
+        const button = document.getElementById('search_button');
 
-  let  keyword = ""; // 초기에는 빈 문자열로 설정합니다.
-  console.log('클릭전 키워드',keyword);
+        let keyword = ""; // 초기에는 빈 문자열로 설정합니다.
+        console.log('클릭전 키워드', keyword);
 
-  button.onclick = e => {
-    keyword = searchInput.value; // 입력된 텍스트 값으로 keyword를 업데이트합니다.
-    console.log(keyword);
+        button.onclick = e => {
+          keyword = searchInput.value; // 입력된 텍스트 값으로 keyword를 업데이트합니다.
+          console.log(keyword);
 
-    
-    if(keyword==""){
-      keyword="";
-    }
 
-    // 사용자 목록을 가져오는 함수 호출
-    getUserList(pageNum, keyword);
-  };
+          if (keyword == "") {
+            keyword = "";
+          }
 
-  // 사용자 목록을 가져오는 함수 호출 (초기에는 keyword가 빈 문자열로 호출됩니다.)
-  getUserList(pageNum, keyword);
-  console.log('함수전달할 때  키워드',keyword);
+          // 사용자 목록을 가져오는 함수 호출
+          getUserList(pageNum, keyword);
+        };
 
-};
+        // 사용자 목록을 가져오는 함수 호출 (초기에는 keyword가 빈 문자열로 호출됩니다.)
+        getUserList(pageNum, keyword);
+        console.log('함수전달할 때  키워드', keyword);
 
-function getUserList(pageNum,keyword) {
-  
-  console.log('totalpageNum=================', pageNum);
-  console.log('회원관리 비동기 호출');
-  fetch(`/api/v1/users/admin?pageNum=\${pageNum}&keyword=\${keyword}`)
-    .then(response => response.json())
-    .then(res => {
+      };
 
-      const list = res.list;
-      console.log('list: ', list);
+      function getUserList(pageNum, keyword) {
 
-      for (let listOne of list) {
-        const {
-          rowNum,
-          userNickname,
-          gender,
-          boardCount,
-          replyCount,
-          reportCount,
-          point,
-          followCount,
-          joinDate,
-        } = listOne;
+        console.log('totalpageNum=================', pageNum);
+        console.log('회원관리 비동기 호출');
+        fetch(`/api/v1/users/admin?pageNum=\${pageNum}&keyword=\${keyword}`)
+          .then(response => response.json())
+          .then(res => {
+
+            const list = res.list;
+            console.log('list: ', list);
+
+            for (let listOne of list) {
+              const {
+                rowNum,
+                userNickname,
+                gender,
+                boardCount,
+                replyCount,
+                reportCount,
+                point,
+                followCount,
+                joinDate,
+              } = listOne;
+            }
+
+            for (let i = 0; i < userList.length; i++) {
+              userList[i].style.display = '';
+            }
+            console.log('res', res);
+
+            totalUser(list);
+            renderUserList(res);
+
+            locationToDetail(list);
+
+          });
       }
 
-      for (let i = 0; i < userList.length; i++) {
-        userList[i].style.display = '';
+
+
+      function totalUser(list) {
+        uln(list);
+        uli(list);
+        ulg(list);
+        ulb(list);
+        ulr(list);
+        ulw(list);
+        ulp(list);
+        ulf(list);
+        uls(list);
       }
-      console.log('res', res);
 
-      totalUser(list);
-      renderUserList(res);
-
-      locationToDetail(list);
-
-    });
-}
-
-
-
-function totalUser(list){
-  uln(list);
-  uli(list);
-  ulg(list);
-  ulb(list);
-  ulr(list);
-  ulw(list);
-  ulp(list);
-  ulf(list);
-  uls(list);
-}
-
-function uln(list) {
+      function uln(list) {
         const ulArray = document.querySelectorAll('.uln');
         ulArray.forEach((ulElement, index) => {
           const asd = list[index].rowNum;
@@ -397,91 +397,91 @@ function uln(list) {
           ulElement.innerText = asd;
         });
       }
-  
-  
-      function renderUserList({ 
-        count, 
-        pageInfo, 
-        list 
+
+
+      function renderUserList({
+        count,
+        pageInfo,
+        list
       }) {
-  console.log('userList count: ', count);
-  console.log('userList pageInfo: ', pageInfo);
-  console.log('userList list: ', list);
+        console.log('userList count: ', count);
+        console.log('userList pageInfo: ', pageInfo);
+        console.log('userList list: ', list);
 
-  // 페이지 렌더링
-  renderPage(pageInfo);
+        // 페이지 렌더링
+        renderPage(pageInfo);
 
-}
-
-
-
-//페이징
-function renderPage({
-  startPage,
-  endPage,
-  currentPage,
-  prev,
-  next,
-  totalCount,
-  PAGE_COUNT
-}) {
-console.log(`userList 페이지 렌더링 함수`);
-
-  let tag = "";
-
-  //이전 버튼 만들기
-  if (prev) {
-    tag += "<li class='page-item'><a class='page-link page-active' href='" + (startPage - 1) +
-      "'>이전</a></li>";
-  }
-  //페이지 번호 리스트 만들기
-  for (let i = startPage; i <= endPage; i++) {
-    let active = '';
-    if (currentPage.pageNo === i) {
-      console.log(currentPage.pageNo);
-      active = 'p-active';
-    }
-
-    tag += "<li class='page-item " + active + "'><a class='page-link page-custom' href='" + i +
-      "'>" + i + "</a></li>";
-  }
-  //다음 버튼 만들기
-  if (next) {
-    tag += "<li class='page-item'><a class='page-link page-active' href='" + (endPage + 1) +
-      "'>다음</a></li>";
-  }
-
-  // 페이지태그 렌더링
-  const $pageUl = document.querySelector('.pagination');
-  $pageUl.innerHTML = tag;
-
-  // ul에 마지막페이지 번호 저장.
-  $pageUl.dataset.fp = endPage;
-
- 
-} 
+      }
 
 
 
-// 유저페이지 클릭 이벤트 핸들러
-function makePageButtonUserClickEvent() {
-  // 페이지 버튼 클릭이벤트 처리
-  const $pageUl = document.querySelector('.pagination');
-  $pageUl.onclick = e => {
-    if (!e.target.matches('.page-item a')) return;
+      //페이징
+      function renderPage({
+        startPage,
+        endPage,
+        currentPage,
+        prev,
+        next,
+        totalCount,
+        PAGE_COUNT
+      }) {
+        console.log(`userList 페이지 렌더링 함수`);
 
-    e.preventDefault(); // 태그의 기본 동작 중단
+        let tag = "";
 
-    // 누른 페이지 번호 가져오기
-    const pageNum = e.target.getAttribute('href');
-    console.log("======total", pageNum);
+        //이전 버튼 만들기
+        if (prev) {
+          tag += "<li class='page-item'><a class='page-link page-active' href='" + (startPage - 1) +
+            "'>이전</a></li>";
+        }
+        //페이지 번호 리스트 만들기
+        for (let i = startPage; i <= endPage; i++) {
+          let active = '';
+          if (currentPage.pageNo === i) {
+            console.log(currentPage.pageNo);
+            active = 'p-active';
+          }
 
-    // 페이지 번호에 맞는 목록 비동기 요청
-    getUserList(pageNum);
-  };
-}
+          tag += "<li class='page-item " + active + "'><a class='page-link page-custom' href='" + i +
+            "'>" + i + "</a></li>";
+        }
+        //다음 버튼 만들기
+        if (next) {
+          tag += "<li class='page-item'><a class='page-link page-active' href='" + (endPage + 1) +
+            "'>다음</a></li>";
+        }
 
-makePageButtonUserClickEvent();
+        // 페이지태그 렌더링
+        const $pageUl = document.querySelector('.pagination');
+        $pageUl.innerHTML = tag;
+
+        // ul에 마지막페이지 번호 저장.
+        $pageUl.dataset.fp = endPage;
+
+
+      }
+
+
+
+      // 유저페이지 클릭 이벤트 핸들러
+      function makePageButtonUserClickEvent() {
+        // 페이지 버튼 클릭이벤트 처리
+        const $pageUl = document.querySelector('.pagination');
+        $pageUl.onclick = e => {
+          if (!e.target.matches('.page-item a')) return;
+
+          e.preventDefault(); // 태그의 기본 동작 중단
+
+          // 누른 페이지 번호 가져오기
+          const pageNum = e.target.getAttribute('href');
+          console.log("======total", pageNum);
+
+          // 페이지 번호에 맞는 목록 비동기 요청
+          getUserList(pageNum);
+        };
+      }
+
+      makePageButtonUserClickEvent();
 
 
       function locationToDetail(list) {
@@ -505,82 +505,82 @@ makePageButtonUserClickEvent();
 
 
       todayUserButton.onclick = e => {
-  console.log('today userlist click 실행');
+        console.log('today userlist click 실행');
 
-  boardDisplayNone();
-  accuseDisplayNone();
+        boardDisplayNone();
+        accuseDisplayNone();
 
-  UserMenuBar.style.display = '';
+        UserMenuBar.style.display = '';
 
-  const pageNum = 1; // 초기 페이지 설정
+        const pageNum = 1; // 초기 페이지 설정
 
-  const searchInput = document.getElementById('search_input');
-  const button = document.getElementById('search_button');
+        const searchInput = document.getElementById('search_input');
+        const button = document.getElementById('search_button');
 
-  let  keyword = ""; // 초기에는 빈 문자열로 설정합니다.
-  console.log('클릭전 키워드',keyword);
+        let keyword = ""; // 초기에는 빈 문자열로 설정합니다.
+        console.log('클릭전 키워드', keyword);
 
-  button.onclick = e => {
-    keyword = searchInput.value; // 입력된 텍스트 값으로 keyword를 업데이트합니다.
-    console.log(keyword);
+        button.onclick = e => {
+          keyword = searchInput.value; // 입력된 텍스트 값으로 keyword를 업데이트합니다.
+          console.log(keyword);
 
-    if(keyword==""){
-      keyword="";
-    }
+          if (keyword == "") {
+            keyword = "";
+          }
 
-    // 사용자 목록을 가져오는 함수 호출
-    getUserTodayList(pageNum, keyword);
-  };
+          // 사용자 목록을 가져오는 함수 호출
+          getUserTodayList(pageNum, keyword);
+        };
 
-  // 사용자 목록을 가져오는 함수 호출 (초기에는 keyword가 빈 문자열로 호출됩니다.)
-  getUserTodayList(pageNum, keyword);
-  console.log('함수전달할 때  키워드',keyword);
+        // 사용자 목록을 가져오는 함수 호출 (초기에는 keyword가 빈 문자열로 호출됩니다.)
+        getUserTodayList(pageNum, keyword);
+        console.log('함수전달할 때  키워드', keyword);
 
-};
+      };
 
 
-// 금일 유저
-function getUserTodayList(pageNum, keyword) {
-  fetch(`/api/v1/users/admin1?pageNum=\${pageNum}&keyword=\${keyword}`)
-    .then(response => response.json())
-    .then(res => {
-      console.log('res', res);
-      const list = res.list;
+      // 금일 유저
+      function getUserTodayList(pageNum, keyword) {
+        fetch(`/api/v1/users/admin1?pageNum=\${pageNum}&keyword=\${keyword}`)
+          .then(response => response.json())
+          .then(res => {
+            console.log('res', res);
+            const list = res.list;
 
-      for (let listOne of list) {
-        const {
-          rowNum,
-          userNickname,
-          gender,
-          boardCount,
-          replyCount,
-          reportCount,
-          point,
-          followCount,
-          joinDate,
-        } = listOne;
-       
+            for (let listOne of list) {
+              const {
+                rowNum,
+                userNickname,
+                gender,
+                boardCount,
+                replyCount,
+                reportCount,
+                point,
+                followCount,
+                joinDate,
+              } = listOne;
+
+            }
+
+            for (let i = 0; i < userList.length; i++) {
+              userList[i].style.display = '';
+            }
+
+            // 유저리스트 관련 동작
+            uln1(list);
+            uli1(list);
+            ulg1(list);
+            ulb1(list);
+            ulr1(list);
+            ulw1(list);
+            ulp1(list);
+            ulf1(list);
+            uls1(list);
+            locationToTodayDetail(list);
+
+            renderUserTodayList(res);
+          });
       }
-
-      for (let i = 0; i < userList.length; i++) {
-        userList[i].style.display = '';
-      }
-
-      // 유저리스트 관련 동작
-      uln1(list);
-      uli1(list);
-      ulg1(list);
-      ulb1(list);
-      ulr1(list);
-      ulw1(list);
-      ulp1(list);
-      ulf1(list);
-      uls1(list);
-      locationToTodayDetail(list);
-
-      renderUserTodayList(res);
-    });
-}
 
 
       function uln1(list) {
@@ -697,15 +697,15 @@ function getUserTodayList(pageNum, keyword) {
         list
       }) {
         console.log('count: ', count);
-         console.log('pageInfo: ', pageInfo);
-         console.log('list: ', list);
+        console.log('pageInfo: ', pageInfo);
+        console.log('list: ', list);
 
         //페이지 렌더링
         renderUserTodayPage(pageInfo);
       }
 
-       //페이징
-       function renderUserTodayPage({
+      //페이징
+      function renderUserTodayPage({
         startPage,
         endPage,
         currentPage,
@@ -761,7 +761,7 @@ function getUserTodayList(pageNum, keyword) {
           // 누른 페이지 번호 가져오기
           const pageNum = e.target.getAttribute('href');
           // console.log(pageNum);
-          console.log("======today",pageNum)
+          console.log("======today", pageNum)
 
           // 페이지 번호에 맞는 목록 비동기 요청
           getUserTodayList(pageNum);
@@ -774,7 +774,7 @@ function getUserTodayList(pageNum, keyword) {
       makePageButtonUserTodayClickEvent();
 
 
-      
+
       function locationToTodayDetail(list) {
         console.log('list: ', list);
 
@@ -798,7 +798,36 @@ function getUserTodayList(pageNum, keyword) {
         accuseDisplayNone();
         boardMenuBar.style.display = '';
 
-        fetch('/api/v1/boards/admin')
+        const pageNum = 1; // 초기 페이지 설정
+
+
+        const searchInput = document.getElementById('search_input');
+        const button = document.getElementById('search_button');
+
+        let keyword = ""; // 초기에는 빈 문자열로 설정합니다.
+
+        button.onclick = e => {
+          keyword = searchInput.value; // 입력된 텍스트 값으로 keyword를 업데이트합니다.
+          console.log(keyword);
+
+          if (keyword == "") {
+            keyword = "";
+          }
+
+          // 사용자 목록을 가져오는 함수 호출
+          getBoardList(pageNum, keyword);
+        };
+
+        // 사용자 목록을 가져오는 함수 호출 (초기에는 keyword가 빈 문자열로 호출됩니다.)
+        getBoardList(pageNum, keyword);
+        console.log('함수전달할 때  키워드', keyword);
+
+      };
+
+
+      function getBoardList(pageNum, keyword) {
+
+        fetch(`/api/v1/boards/admin?pageNum=\${pageNum}&keyword=\${keyword}`)
           .then(response => response.json())
           .then(res => {
             const list = res.list;
@@ -806,7 +835,7 @@ function getUserTodayList(pageNum, keyword) {
             for (let listOne of list) {
               const {
                 boardNo,
-                userNickname,
+                userAccount,
                 boardTitle,
                 boardWrittenDate,
                 boardViewCount
@@ -836,10 +865,10 @@ function getUserTodayList(pageNum, keyword) {
               };
             }
 
-            renderUserList(res);
+            renderBoardList(res);
 
           });
-      };
+      }
 
       function bln(list) {
         const ulArray = document.querySelectorAll('.bln');
@@ -852,7 +881,7 @@ function getUserTodayList(pageNum, keyword) {
       function blm(list) {
         const ulArray = document.querySelectorAll('.blm');
         ulArray.forEach((ulElement, index) => {
-          const asd = list[index].userNickname;
+          const asd = list[index].userAccount;
           ulElement.innerText = asd;
         });
       }
@@ -913,13 +942,127 @@ function getUserTodayList(pageNum, keyword) {
         blc(newList);
       }
 
-      //금일 보드
-      todayBoardButton.onclick = e => {
 
-        boardMenuBar.style.display = '';
+      //보드 페이징
+
+      function renderBoardList({
+        count,
+        pageInfo,
+        list
+      }) {
+        console.log('count: ', count);
+        console.log('pageInfo: ', pageInfo);
+        console.log('list: ', list);
+
+        //페이지 렌더링
+        renderBoardPage(pageInfo);
+      }
+
+      //페이징
+      function renderBoardPage({
+        startPage,
+        endPage,
+        currentPage,
+        prev,
+        next,
+        totalCount,
+        PAGE_COUNT
+      }) {
+
+
+        let tag = "";
+
+        //이전 버튼 만들기
+        if (prev) {
+          tag += "<li class='page-item'><a class='page-link page-active' href='" + (startPage - 1) +
+            "'>이전</a></li>";
+        }
+        //페이지 번호 리스트 만들기
+        for (let i = startPage; i <= endPage; i++) {
+          let active = '';
+          if (currentPage.pageNo === i) {
+            console.log(currentPage.pageNo);
+            active = 'p-active';
+          }
+
+          tag += "<li class='page-item " + active + "'><a class='page-link page-custom' href='" + i +
+            "'>" + i + "</a></li>";
+        }
+        //다음 버튼 만들기
+        if (next) {
+          tag += "<li class='page-item'><a class='page-link page-active' href='" + (endPage + 1) +
+            "'>다음</a></li>";
+        }
+
+        // 페이지태그 렌더링
+        const $pageUl = document.querySelector('.pagination');
+        $pageUl.innerHTML = tag;
+
+        // ul에 마지막페이지 번호 저장.
+        $pageUl.dataset.fp = finalPage;
+
+      }
+
+      // 유저페이지 클릭 이벤트 핸들러
+      function makePageButtonBoardClickEvent() {
+        // 페이지 버튼 클릭이벤트 처리
+        const $pageUl = document.querySelector('.pagination');
+        $pageUl.onclick = e => {
+          if (!e.target.matches('.page-item a')) return;
+
+          e.preventDefault(); // 태그의 기본 동작 중단
+
+          // 누른 페이지 번호 가져오기
+          const pageNum = e.target.getAttribute('href');
+          // console.log(pageNum);
+          console.log("======today", pageNum)
+
+          // 페이지 번호에 맞는 목록 비동기 요청
+          getBoardList(pageNum);
+        };
+      }
+
+
+
+      // 페이지 버튼 이벤트 등록
+      makePageButtonBoardClickEvent();
+
+
+
+      todayBoardButton.onclick = e => {
         userDisplayNone();
         accuseDisplayNone();
-        fetch('/api/v1/boards/admin1')
+        boardMenuBar.style.display = '';
+
+        const pageNum = 1; // 초기 페이지 설정
+
+
+        const searchInput = document.getElementById('search_input');
+        const button = document.getElementById('search_button');
+
+        let keyword = ""; // 초기에는 빈 문자열로 설정합니다.
+
+        button.onclick = e => {
+          keyword = searchInput.value; // 입력된 텍스트 값으로 keyword를 업데이트합니다.
+          console.log(keyword);
+
+          if (keyword == "") {
+            keyword = "";
+          }
+
+          // 사용자 목록을 가져오는 함수 호출
+          getBoardTodayList(pageNum, keyword);
+        };
+
+        // 사용자 목록을 가져오는 함수 호출 (초기에는 keyword가 빈 문자열로 호출됩니다.)
+        getBoardTodayList(pageNum, keyword);
+        console.log('함수전달할 때  키워드', keyword);
+
+      };
+
+      function getBoardTodayList(pageNum, keyword) {
+
+        fetch(`/api/v1/boards/admin1?pageNum=\${pageNum}&keyword=\${keyword}`)
           .then(response => response.json())
           .then(res => {
             // console.log('res: ', res);
@@ -930,7 +1073,7 @@ function getUserTodayList(pageNum, keyword) {
             for (let listOne of list) {
               const {
                 boardNo,
-                userNickname,
+                userAccount,
                 boardTitle,
                 boardWrittenDate,
                 boardViewCount
@@ -962,7 +1105,7 @@ function getUserTodayList(pageNum, keyword) {
                 }
               };
             }
-            renderUserList(res);
+            renderBoardTodayList(res);
 
           });
       }
@@ -985,7 +1128,7 @@ function getUserTodayList(pageNum, keyword) {
           if (index >= list.length) {
             ulElement.innerText = ''; // 공백으로 출력
           } else {
-            const asd = list[index].userNickname;
+            const asd = list[index].userAccount;
             ulElement.innerText = asd;
           }
         });
@@ -1057,6 +1200,100 @@ function getUserTodayList(pageNum, keyword) {
         bld1(newList);
         blc1(newList);
       }
+
+      //보드 페이징
+
+      function renderBoardTodayList({
+        count,
+        pageInfo,
+        list
+      }) {
+        console.log('count: ', count);
+        console.log('pageInfo: ', pageInfo);
+        console.log('list: ', list);
+
+        //페이지 렌더링
+        renderBoardTodayPage(pageInfo);
+      }
+
+      //페이징
+      function renderBoardTodayPage({
+        startPage,
+        endPage,
+        currentPage,
+        prev,
+        next,
+        totalCount,
+        PAGE_COUNT
+      }) {
+
+
+        let tag = "";
+
+        //이전 버튼 만들기
+        if (prev) {
+          tag += "<li class='page-item'><a class='page-link page-active' href='" + (startPage - 1) +
+            "'>이전</a></li>";
+        }
+        //페이지 번호 리스트 만들기
+        for (let i = startPage; i <= endPage; i++) {
+          let active = '';
+          if (currentPage.pageNo === i) {
+            console.log(currentPage.pageNo);
+            active = 'p-active';
+          }
+
+          tag += "<li class='page-item " + active + "'><a class='page-link page-custom' href='" + i +
+            "'>" + i + "</a></li>";
+        }
+        //다음 버튼 만들기
+        if (next) {
+          tag += "<li class='page-item'><a class='page-link page-active' href='" + (endPage + 1) +
+            "'>다음</a></li>";
+        }
+
+        // 페이지태그 렌더링
+        const $pageUl = document.querySelector('.pagination');
+        $pageUl.innerHTML = tag;
+
+        // ul에 마지막페이지 번호 저장.
+        $pageUl.dataset.fp = finalPage;
+
+      }
+
+      // 유저페이지 클릭 이벤트 핸들러
+      function makePageButtonTodayBoardClickEvent() {
+        // 페이지 버튼 클릭이벤트 처리
+        const $pageUl = document.querySelector('.pagination');
+        $pageUl.onclick = e => {
+          if (!e.target.matches('.page-item a')) return;
+
+          e.preventDefault(); // 태그의 기본 동작 중단
+
+          // 누른 페이지 번호 가져오기
+          const pageNum = e.target.getAttribute('href');
+          // console.log(pageNum);
+          console.log("======today", pageNum)
+
+          // 페이지 번호에 맞는 목록 비동기 요청
+          getBoardTodayList(pageNum);
+        };
+      }
+
+
+
+      // 페이지 버튼 이벤트 등록
+      makePageButtonTodayBoardClickEvent();
+
+
+
+
+
+
+
+
+
+
 
 
       // const keyword = '';
@@ -1248,8 +1485,6 @@ function getUserTodayList(pageNum, keyword) {
           }
         });
       }
-
-
     </script>
 </body>
 

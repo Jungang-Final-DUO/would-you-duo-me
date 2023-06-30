@@ -104,7 +104,15 @@ public class BoardController {
 
     //금일 등록된 boardlist
     @GetMapping("/api/v1/boards/admin1")
-    public ResponseEntity<?> getTodayBoardListByAdmin(PageDTO dto){
+    public ResponseEntity<?> getTodayBoardListByAdmin(
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "1") int pageNum) {
+
+        PageDTO dto = PageDTO.builder()
+                .page(pageNum)
+                .keyword(keyword)
+                .size(10)
+                .build();
         log.info("{}ddttoo==",dto);
 
         ListResponseDTO<BoardsByAdminResponseDTO, Board> boardsByAdminResponseDTOUserListResponseDTO = boardService.todayBoardByAdmin(dto);
