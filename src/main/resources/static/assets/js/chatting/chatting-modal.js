@@ -231,6 +231,10 @@ async function renderChattingList(result) {
                 $rightBtn.dataset.matchingStatus = matchingStatus;
                 matching_accept_container.appendChild($rightBtn);
 
+                if(chattingFrom === userNickname){
+                    $rightBtn.style.display = 'none';
+                }
+
                 const chatting_handshake_img = document.createElement('img');
                 chatting_handshake_img.classList.add('chatting-handshake-img');
                 chatting_handshake_img.src = '/assets/img/chattingModal/handshake.png';
