@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import site.woulduduo.dto.request.chatting.MessageRequestDTO;
 import site.woulduduo.dto.response.chatting.ChattingDetailResponseDTO;
 import site.woulduduo.dto.response.chatting.ChattingListResponseDTO;
+import site.woulduduo.dto.response.chatting.RecentMessageResponseDTO;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Message;
@@ -102,8 +103,14 @@ public class ChattingController {
 
         User user = userRepository.findById(loginUserInfo.getUserAccount()).orElseThrow();
         int unreadMessages = chattingService.countUnreadMessages(chatting, user);
+        Message recentMessage = getRecentMessage(chatting);
 
-        return ResponseEntity.ok().body(unreadMessages);
+        RecentMessageResponseDTO recentMessageResponseDTO = RecentMessageResponseDTO.builder()
+                .unreadCount(unreadMessages)
+                .message(recentMessage.getMessageContent())
+                .build();
+        recentMessageResponseDTO.makeShortenMessage(recentMessageResponseDTO.getMessage());
+        return ResponseEntity.ok().body(recentMessageResponseDTO);
     }
 
     // 전체 안읽은 메세지 개수 읽어오기
@@ -120,20 +127,9 @@ public class ChattingController {
     }
 
     // 최신 메세지 읽어오기
-    @GetMapping("/messages/recent/{chattingNo}")
-    public ResponseEntity<?> getRecentMessage(
-            HttpSession session,
-            @PathVariable long chattingNo
-    ){
-        LoginUserResponseDTO loginUserInfo = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
-        Chatting chatting = chattingService.findByChattingNo(chattingNo);
-        boolean accessFlag = isMyChatting(loginUserInfo, chatting);
-        if(!accessFlag){
-            return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
-        }
+    public Message getRecentMessage(Chatting chatting){
 
-        Message recentMessage = messageService.findByChattingOrderByMessageTimeDesc(chatting);
-        return ResponseEntity.ok().body(recentMessage);
+       return messageService.findByChattingOrderByMessageTimeDesc(chatting);
     }
 
     //    채팅 신청하기

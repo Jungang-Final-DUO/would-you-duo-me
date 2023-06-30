@@ -300,21 +300,25 @@ export function toBack() {
 export function renderUnreadMessages(chattingNo) {
     const $chatting = document.getElementById(chattingNo);
     // console.log($chatting);
-    const $target = $chatting.querySelector('.chatting-unread');
+    const $targetCount = $chatting.querySelector('.chatting-unread');
+    const $targetMessage = $chatting.querySelector('.chatting-current-message');
     // console.log($target);
 
     fetch(`/api/v1/chat/messages/unread/${chattingNo}`)
         .then(res => res.json())
-        .then(unread => {
-            if(unread === 0){
-                $target.style.display = 'none';
-            } else if (unread >= 0 && unread <= 200) {
-                $target.style.display = 'block';
-                $target.innerText = unread;
+        .then(result => {
+            const {unreadCount, recentMessage} = result;
+            if(unreadCount === 0){
+                $targetCount.style.display = 'none';
+            } else if (unreadCount >= 0 && unreadCount <= 200) {
+                $targetCount.style.display = 'block';
+                $targetCount.innerText = unreadCount;
             } else {
-                $target.style.display = 'block';
-                $target.innerText = '200+';
+                $targetCount.style.display = 'block';
+                $targetCount.innerText = '200+';
             }
+
+            $targetMessage.innerText = recentMessage;
         })
 
 }
