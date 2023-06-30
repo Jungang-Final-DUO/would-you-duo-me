@@ -307,7 +307,7 @@ export function renderUnreadMessages(chattingNo) {
     fetch(`/api/v1/chat/messages/unread/${chattingNo}`)
         .then(res => res.json())
         .then(result => {
-            const {unreadCount, recentMessage} = result;
+            const {unreadCount, message} = result;
             if(unreadCount === 0){
                 $targetCount.style.display = 'none';
             } else if (unreadCount >= 0 && unreadCount <= 200) {
@@ -318,7 +318,7 @@ export function renderUnreadMessages(chattingNo) {
                 $targetCount.innerText = '200+';
             }
 
-            $targetMessage.innerText = recentMessage;
+            $targetMessage.innerText = message;
         })
 
 }
