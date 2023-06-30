@@ -107,11 +107,17 @@ public class UserService {
         // 프로필 사진 저장
         // 모스트 챔피언 3개 또는 그 이하 저장
         List<String> most3Champions = riotApiService.getMost3Champions(dto.getLolNickname());
-        for (int i = 0; i < most3Champions.size(); i++) {
+        for (int i = 0; i < 3; i++) {
+            String champName = null;
+            try {
+                champName = most3Champions.get(i);
+            } catch (IndexOutOfBoundsException e) {
+                champName = "";
+            }
             mostChampRepository.save(MostChamp.builder()
                     .user(saved)
                     .mostNo(i + 1)
-                    .champName(most3Champions.get(i))
+                    .champName(champName)
                     .build());
         }
 
@@ -200,15 +206,21 @@ public class UserService {
         User user = getUser(userAccount);
 
         // 현재 로그인한 사람의 화면에 보여줄 일부정보(더 추가해야할수도 있음)
+        String lolNickname = user.getLolNickname();
         LoginUserResponseDTO dto = LoginUserResponseDTO.builder()
                 .userAccount(user.getUserAccount())
                 .userNickname(user.getUserNickname())
-                .lolNickname(user.getLolNickname())
+                .lolNickname(lolNickname)
                 .userCurrentPoint(user.getUserCurrentPoint())
                 .userComment(user.getUserComment() != null ? user.getUserComment() : "")
                 .userPosition(user.getUserPosition() != null ? user.getUserPosition() : Position.NONE)
                 .userMatchingPoint(user.getUserMatchingPoint() != null ? user.getUserMatchingPoint() : 0)
                 .userProfileImage(user.getLatestProfileImage())
+                .role(user.getRole())
+                .userInstagram(user.getUserInstagram())
+                .userFacebook(user.getUserFacebook())
+                .userTwitter(user.getUserTwitter())
+                .userBirthday(user.getUserBirthday())
                 .build();
 
         // userProfileImage 값 확인
@@ -220,6 +232,25 @@ public class UserService {
 
         // 세션의 수명을 설정
         session.setMaxInactiveInterval(60 * 60); // 1시간
+
+        // 티어 정보 갱신
+        user.setLolTier(riotApiService.getTier(lolNickname));
+
+//        List<String> newMost3 = riotApiService.getMost3Champions(lolNickname);
+//
+//        for (int i = 0; i < 3; i++) {
+//
+//            MostChamp foundMost = mostChampRepository.getAllByUser_UserAccountAndMostNo(userAccount, i + 1);
+//
+//            try {
+//                foundMost.setChampName(newMost3.get(i));
+//            } catch (IndexOutOfBoundsException e) {
+//                foundMost.setChampName("");
+//            }
+//
+//            mostChampRepository.save(foundMost);
+//        }
+
     }
 
     // 유저 정보를 가져오는 서비스기능
@@ -247,6 +278,37 @@ public class UserService {
 
         }
     }
+
+    // 마이페이지 정보수정
+    public boolean modifyUser(UserModifyRequestDTO dto) {
+        // 사용자 정보 가져오기
+        User user = userRepository.findByUserAccount(dto.getUserAccount());
+        if (user == null) {
+            // 사용자 정보가 존재하지 않는 경우
+            return false;
+        }
+
+        // 사용자 정보 수정
+        user.setUserNickname(dto.getUserNickname());
+        user.setUserBirthday(dto.getUserBirthday());
+        user.setLolNickname(dto.getLolNickname());
+        user.setUserInstagram(dto.getUserInstagram());
+        user.setUserFacebook(dto.getUserFacebook());
+        user.setUserTwitter(dto.getUserTwitter());
+
+        // 사용자 정보 저장
+        userRepository.save(user);
+
+        return true;
+    }
+
+
+
+
+
+
+
+
 
 
     /**
@@ -648,8 +710,9 @@ public class UserService {
 
     /**
      * 해당 유저가 현재 팔로우를 했다면 언팔로우, 언팔 상태면 팔로우를 하는 메서드
+     *
      * @param followTo - 누구에게
-     * @param session - 로그인 한 사람
+     * @param session  - 로그인 한 사람
      * @return - 팔로우 했다면 true, 언팔로우 했다면 false
      * @throws RuntimeException - 잘못된 유저 정보일 때 예외 던짐
      */

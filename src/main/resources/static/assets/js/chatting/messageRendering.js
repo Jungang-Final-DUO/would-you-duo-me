@@ -23,7 +23,6 @@ export function outputMessage(message) {
     }
 
 
-    const otherProfile = room.querySelector('.chatting-profile-img').src;
     const matchingBtn = room.querySelector('.matching-accept-btn');
     const chatting_message_option = room.querySelector('.chatting-message-option');
 
@@ -35,7 +34,7 @@ export function outputMessage(message) {
         div.classList.add('chatting-message-card');
         div.classList.add('message-from');
         div.innerHTML = `
-                <img class="chatting-profile" src="/assets/img/chattingModal/woogi.jpg" alt="프로필이미지">
+                <img class="chatting-profile" src="${message.myProfile}" alt="프로필이미지">
                 <div class="message-content-container">
                     <div class="message-nickname">${message.username}</div>
                     <div class="message-content-wrapper">
@@ -47,6 +46,8 @@ export function outputMessage(message) {
 
     // 내가 받은 메세지일때
     } else {
+        //상대방 프로필 사진
+        const yourProfile = room.querySelector('.chatting-profile-img').src;
 
         // 매칭 ststus가 request로 변하면 메세지 받은 사람 버튼 수락/거절로 변경
         if(room.dataset.chattingFrom !== userNickname && message.matchingStatus === 'REQUEST' && matchingBtn.childNodes[1].nodeValue !== `매칭 수락`){
@@ -101,7 +102,7 @@ export function outputMessage(message) {
         div.classList.add('chatting-message-card');
         div.classList.add('message-to');
         div.innerHTML = `
-                <img class="chatting-profile" src="/assets/img/chattingModal/woogi.jpg" alt="프로필이미지">
+                <img class="chatting-profile" src="${yourProfile}" alt="프로필이미지">
                 <div class="message-content-container">
                         <div class="message-nickname">${message.username}</div>
                         <div class="message-content-wrapper">
@@ -133,12 +134,22 @@ function setChattingDetailBox(chattingNo, result) {
 
     for (const msg of messageList) {
         const {messageFrom, messageContent, messageTime} = msg;
-        const message = {
+        let message = {
             room: chattingNo,
             username: messageFrom,
+            myProfile: myProfileImage,
+            yourProfile: yourProfileImage,
             text: messageContent,
             time: messageTime
         }
+
+        if(message.myProfile === 'noProfile'){
+            message.myProfile = '/assets/img/chattingModal/user.png';
+        }
+        if(message.yourProfile === 'noProfile'){
+            message.yourProfile = '/assets/img/chattingModal/user.png';
+        }
+
         outputMessage(message);
     }
     scrollDown();
@@ -146,7 +157,7 @@ function setChattingDetailBox(chattingNo, result) {
 }
 
 // 메세지 저장
-export function saveMessage({username, room, msg, matchingStatus, matchingNo}) {
+export function saveMessage({username, room, msg}) {
     const messageDTO = {
         chattingNo: room,
         messageContent: msg,
@@ -166,12 +177,6 @@ export function saveMessage({username, room, msg, matchingStatus, matchingNo}) {
             // else console.log('메세지 저장 실패');
         // })
 
-}
-
-// 채팅 중일때 메세지 실시간 렌더 및 DB 저장
-export function renderAndSaveMessage(message) {
-    outputMessage(message);
-    saveMessage(message);
 }
 
 // 채팅중일때 메세지 읽음 처리

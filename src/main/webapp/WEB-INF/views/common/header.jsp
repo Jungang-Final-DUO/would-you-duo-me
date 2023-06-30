@@ -102,7 +102,7 @@
         </nav>
 
         <nav id="common-nav-bar">
-            <c:if test="${login.userAccount eq 'admin'}">
+            <c:if test="${login.role eq 'ADMIN'}">
                 <div class="common-menu-wrapper">
                     <a href="/user/admin">관리자 페이지</a>
                 </div>

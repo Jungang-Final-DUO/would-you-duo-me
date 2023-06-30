@@ -49,10 +49,11 @@ public class ChattingService {
         System.out.println("chattingFrom = " + chattingFrom);
 //        Chatting chattingTo = chattingRepository.findByChattingFromAndChattingTo(chattingUser, /*session.getAttribute()*/ me);
 //        System.out.println("chattingTo = " + chattingTo);
-        if (myName.equals(userAccount)) {
-            System.out.println("나와의 채팅!?");
-            chattingNo = 0;
-        }else if (chattingFrom != null) {
+//        if (myName.equals(userAccount)) {
+//            System.out.println("나와의 채팅!?");
+//            chattingNo = 0;
+//        }else
+        if (chattingFrom != null) {
             System.out.println("이미 존재하는 채팅내역임");
             chattingNo = chattingFrom.getChattingNo();
         } else {
@@ -69,6 +70,9 @@ public class ChattingService {
                     .messageContent("안녕하세요, 대화를 신청해주셔서 감사합니다!")
                     .chatting(saved)
                     .build();
+            if (myName.equals(userAccount)){
+                message.setMessageContent("나와의 채팅");
+            }
             Message firstMessage = messageRepository.save(message);
         }
 
@@ -124,7 +128,7 @@ public class ChattingService {
                     .collect(Collectors.toList());
             return profileList.get(0).getProfileImage();
         } catch (IndexOutOfBoundsException e) {
-            return "프로필 사진이 존재하지 않습니다."; // default 이미지 경로로 변경예정
+            return "noProfile"; // default 이미지 경로로 변경예정
         }
     }
 

@@ -2,6 +2,7 @@ package site.woulduduo.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,17 +14,17 @@ import site.woulduduo.dto.request.login.LoginRequestDTO;
 import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.request.page.UserSearchType;
 import site.woulduduo.dto.request.user.UserCommentRequestDTO;
+import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.user.*;
 import site.woulduduo.entity.User;
-import site.woulduduo.enumeration.Gender;
-import site.woulduduo.enumeration.LoginResult;
-import site.woulduduo.enumeration.Position;
-import site.woulduduo.enumeration.Tier;
+import site.woulduduo.enumeration.*;
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.EmailService;
 import site.woulduduo.service.UserService;
+import site.woulduduo.util.LoginUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,8 +35,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static site.woulduduo.enumeration.LoginResult.SUCCESS;
-import static site.woulduduo.util.LoginUtil.isAutoLogin;
-import static site.woulduduo.util.LoginUtil.isLogin;
+import static site.woulduduo.util.LoginUtil.*;
 
 @Controller
 @Slf4j
@@ -49,29 +49,6 @@ public class UserController {
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final S3Service s3Service;
-
-    // 마이페이지
-    @GetMapping("/user/my-page")
-    public String showMyPage(HttpSession session, Model model) {
-//        log.info("/user/my-page GET");
-//
-//        // 사용자 정보 가져오기
-//        User user = null;
-//        if (session != null && session.getId() != null) {
-//            user = userService.getUser(session.getId());
-//        }
-//
-//        // 모델에 사용자 정보 추가
-//        if (user != null) {
-//            // 사용자 정보 속성 추가
-//            model.addAttribute("login", user); // 사용자 정보를 "login" 속성으로 추가
-//
-//            log.info("userBirthday: {}", user.getUserBirthday());
-//
-//        }
-
-        return "my-page/mypage-myinfo";
-    }
 
     // 메인페이지 - 프로필 카드 불러오기(비동기)
     @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
@@ -182,10 +159,8 @@ public class UserController {
 
         // 로그인 성공시
         if (result == SUCCESS) {
-
             // 서버에서 세션에 로그인 정보를 저장
-            userService.maintainLoginState(
-                    request.getSession(), dto.getUserAccount());
+            userService.maintainLoginState(request.getSession(), dto.getUserAccount());
 
             return dto.getRequestURI();
         }
@@ -196,6 +171,7 @@ public class UserController {
         // 로그인 실패시
         return "redirect:/";
     }
+
 
     // 로그아웃 요청 처리
     @GetMapping("/user/sign-out")
@@ -221,6 +197,56 @@ public class UserController {
         return "redirect:/";
     }
 
+    // 마이페이지
+    @GetMapping("/user/my-page")
+    public String showMyPage(HttpSession session, Model model) {
+        log.info("/user/my-page GET");
+
+        String userAccount;
+
+        try {
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        } catch (NullPointerException e) {
+            return "/?msg=NEED_LOGIN";
+        }
+
+        // 사용자 정보 가져오기
+        User user = null;
+        user = userService.getUser(userAccount);
+
+
+        // 모델에 사용자 정보 추가
+        if (user != null) {
+            // 사용자 정보 속성 추가
+            model.addAttribute("login", user); // 사용자 정보를 "login" 속성으로 추가
+
+            log.info("userBirthday: {}", user.getUserBirthday());
+
+        }
+
+        return "my-page/mypage-myinfo";
+    }
+
+    @RequestMapping(value = "/api/v1/users", method = {RequestMethod.PUT, RequestMethod.PATCH})
+    public ResponseEntity<?> modify(@RequestBody UserModifyRequestDTO dto, HttpSession session) {
+
+        // 세션에서 로그인한 사용자 정보 가져오기
+        LoginUserResponseDTO loggedInUser = (LoginUserResponseDTO) session.getAttribute(LoginUtil.LOGIN_KEY);
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        // 사용자 정보 수정
+        boolean isModified = userService.modifyUser(dto);
+        if (isModified) {
+            // 정보 변경 성공
+            return ResponseEntity.ok("정보가 성공적으로 변경되었습니다.");
+        } else {
+            // 정보 변경 실패
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("정보 변경에 실패했습니다.");
+        }
+    }
+
 
 //    // 프로필 사진 등록
 //    @PostMapping("/api/v1/users/profile")
@@ -241,12 +267,29 @@ public class UserController {
     @GetMapping("/user/register-duo")
     public String registerDUO(HttpSession session) {
 
+        String userAccount;
+
+        try {
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        } catch (NullPointerException e) {
+            return "/?msg=NEED_LOGIN";
+        }
+
         return "my-page/mypage-duoprofile";
     }
+
 
     // 마이페이지 - 프로필카드 등록 처리
     @PostMapping("/user/register-duo")
     public String registerDUO(HttpSession session, UserCommentRequestDTO dto, Model model) {
+
+        String userAccount;
+
+        try {
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        } catch (NullPointerException e) {
+            return "/?msg=NEED_LOGIN";
+        }
 
         boolean b = userService.registerDUO(session, dto);
         log.info("프로필카드등록 성공여부 : {}", b);
@@ -258,21 +301,50 @@ public class UserController {
     // 마이 페이지 - 쓴 리뷰 페이지 열기
     @GetMapping("/user/matching-list")
     public String showMatchingList(HttpSession session) {
+
+        String userAccount;
+
+        try {
+            userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
+        } catch (NullPointerException e) {
+            return "/?msg=NEED_LOGIN";
+        }
+
         return "my-page/matching-list";
     }
 
     @GetMapping("/user/admin")
     //관리자 페이지 열기
-    public String showAdminpage(/*HttpSession session, */Model model) {
+    public String showAdminpage(HttpSession session, Model model) {
+
+        String x = isAdmin(session);
+        if (x != null) return x;
+
         AdminPageResponseDTO adminPageInfo = userService.getAdminPageInfo();
         model.addAttribute("count", adminPageInfo);
         return "admin/admin";
     }
 
+    private static String isAdmin(HttpSession session) {
+        try {
+            if (!((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getRole().equals(Role.ADMIN)) {
+                return "redirect:/?msg=NOT_ADMIN";
+            }
+        } catch (NullPointerException e) {
+            return "redirect:/?msg=NEED_LOGIN";
+        }
+        return null;
+    }
+
     //관리자 페이지 리스트 가져오기
     @GetMapping("/api/v1/users/admin")
     public ResponseEntity<?> getUserListByAdmin(
+            HttpSession session,
             @RequestBody PageDTO dto) {
+
+        if (!((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getRole().equals(Role.ADMIN)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
 
@@ -289,6 +361,10 @@ public class UserController {
     @GetMapping("/user/detail/admin")
     //관리자 페이지 자세히 보기
     public String showDetailByAdmin(HttpSession session, Model model, String userAccount) {
+
+        String x = isAdmin(session);
+        if (x != null) return x;
+
         UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userAccount);
 
         model.addAttribute("udByAdmin", userDetailByAdmin);
@@ -330,6 +406,7 @@ public class UserController {
             @PathVariable String userAccount,
             HttpSession session
     ) {
+
         try {
             boolean isFollowed = userService.follow(userAccount, session);
 

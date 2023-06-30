@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import site.woulduduo.dto.request.chatting.MessageRequestDTO;
 import site.woulduduo.dto.response.chatting.ChattingDetailResponseDTO;
 import site.woulduduo.dto.response.chatting.ChattingListResponseDTO;
+import site.woulduduo.dto.response.chatting.RecentMessageResponseDTO;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Message;
@@ -38,9 +39,16 @@ public class ChattingController {
     public ResponseEntity<?> getChattingList(
             HttpSession session
 //            @PathVariable String userId
-    ){
+    ) {
         LoginUserResponseDTO loginUserInfo = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
-        User user = userRepository.findById(loginUserInfo.getUserAccount()).orElseThrow();
+        User user = null;
+        try {
+            user = userRepository.findById(loginUserInfo.getUserAccount()).orElseThrow(
+                    () -> new RuntimeException("로그인 하고 이용해주세요")
+            );
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         List<ChattingListResponseDTO> chattingList = chattingService.getChattingList(user);
 
         return ResponseEntity.ok().body(chattingList);
@@ -52,12 +60,15 @@ public class ChattingController {
     public ResponseEntity<?> getChattingDetail(
             HttpSession session
 //            @PathVariable String userId
-            ,@PathVariable long chattingNo
-    ){
+            , @PathVariable long chattingNo
+    ) {
         LoginUserResponseDTO loginUserInfo = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
         Chatting chatting = chattingService.findByChattingNo(chattingNo);
-        boolean accessFlag = isMyChatting(loginUserInfo, chatting);
-        if(!accessFlag){
+        boolean accessFlag = false;
+
+        accessFlag = isMyChatting(loginUserInfo, chatting);
+
+        if (!accessFlag) {
             return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
         }
 
@@ -71,13 +82,16 @@ public class ChattingController {
     //메세지 저장하기
     @PostMapping("/messages")
     public ResponseEntity<?> sendMessage(
-                        HttpSession session,
+            HttpSession session,
             @RequestBody MessageRequestDTO dto
-    ){
+    ) {
         LoginUserResponseDTO loginUserInfo = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
         Chatting chatting = chattingService.findByChattingNo(dto.getChattingNo());
-        boolean accessFlag = isMyChatting(loginUserInfo, chatting);
-        if(!accessFlag){
+        boolean accessFlag = false;
+
+        accessFlag = isMyChatting(loginUserInfo, chatting);
+
+        if (!accessFlag) {
             return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
         }
 
@@ -89,21 +103,30 @@ public class ChattingController {
     // 추후 session에 회원정보 담기면 경로 수정
     @GetMapping("/messages/unread/{chattingNo}")
     public ResponseEntity<?> getUnreadMessageCount(
-                        HttpSession session
+            HttpSession session
 //            @PathVariable String userId
-            ,@PathVariable long chattingNo
-    ){
+            , @PathVariable long chattingNo
+    ) {
         LoginUserResponseDTO loginUserInfo = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
         Chatting chatting = chattingService.findByChattingNo(chattingNo);
-        boolean accessFlag = isMyChatting(loginUserInfo, chatting);
-        if(!accessFlag){
+        boolean accessFlag = false;
+
+        accessFlag = isMyChatting(loginUserInfo, chatting);
+
+        if (!accessFlag) {
             return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
         }
 
         User user = userRepository.findById(loginUserInfo.getUserAccount()).orElseThrow();
         int unreadMessages = chattingService.countUnreadMessages(chatting, user);
+        Message recentMessage = getRecentMessage(chatting);
 
-        return ResponseEntity.ok().body(unreadMessages);
+        RecentMessageResponseDTO recentMessageResponseDTO = RecentMessageResponseDTO.builder()
+                .unreadCount(unreadMessages)
+                .message(recentMessage.getMessageContent())
+                .build();
+        recentMessageResponseDTO.makeShortenMessage(recentMessageResponseDTO.getMessage());
+        return ResponseEntity.ok().body(recentMessageResponseDTO);
     }
 
     // 전체 안읽은 메세지 개수 읽어오기
@@ -111,53 +134,51 @@ public class ChattingController {
     public ResponseEntity<?> getTotalUnreadMessageCount(
 //            @PathVariable String userId
             HttpSession session
-    ){
+    ) {
         LoginUserResponseDTO loginUserInfo = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
-        User user = userRepository.findById(loginUserInfo.getUserAccount()).orElseThrow();
+        User user = null;
+        try {
+            user = userRepository.findById(loginUserInfo.getUserAccount()).orElseThrow();
+        } catch (NullPointerException e) {
+            return ResponseEntity.badRequest().body("로그인하고 이용해주세요");
+        }
         int totalUnreadMessages = chattingService.getTotalUnreadMessageCount(user);
 
         return ResponseEntity.ok().body(totalUnreadMessages);
     }
 
     // 최신 메세지 읽어오기
-    @GetMapping("/messages/recent/{chattingNo}")
-    public ResponseEntity<?> getRecentMessage(
-            HttpSession session,
-            @PathVariable long chattingNo
-    ){
-        LoginUserResponseDTO loginUserInfo = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
-        Chatting chatting = chattingService.findByChattingNo(chattingNo);
-        boolean accessFlag = isMyChatting(loginUserInfo, chatting);
-        if(!accessFlag){
-            return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
-        }
-
-        Message recentMessage = messageService.findByChattingOrderByMessageTimeDesc(chatting);
-        return ResponseEntity.ok().body(recentMessage);
+    public Message getRecentMessage(Chatting chatting){
+       return messageService.findByChattingOrderByMessageTimeDesc(chatting);
     }
 
     //    채팅 신청하기
     @PostMapping("/chattings/new")
     public ResponseEntity<?> makeChatting(
-                        HttpSession session,
+            HttpSession session,
             @RequestBody String userAccount
 //            ,@PathVariable String userAccount
-    ){
+    ) {
         LoginUserResponseDTO loginUserInfo = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
 //        System.out.println("userId = " + loginUserInfo.getUserAccount());
 //        System.out.println("userAccount" + userAccount);
-        long chattingNo = chattingService.makeChatting(loginUserInfo.getUserAccount(), userAccount);
+        long chattingNo = 0;
+        try {
+            chattingNo = chattingService.makeChatting(loginUserInfo.getUserAccount(), userAccount);
+        } catch (NullPointerException e) {
+            return ResponseEntity.badRequest().body("로그인하고 이용해주세요");
+        }
         return ResponseEntity.ok().body(chattingNo);
     }
 
     //메세지 읽기
     @RequestMapping(value = "/messages/read", method = {RequestMethod.PATCH, RequestMethod.PUT})
-    public ResponseEntity<?> readMessages(@RequestBody long chattingNo, HttpSession session){
+    public ResponseEntity<?> readMessages(@RequestBody long chattingNo, HttpSession session) {
 
         LoginUserResponseDTO loginUserInfo = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
         Chatting chatting = chattingService.findByChattingNo(chattingNo);
         boolean accessFlag = isMyChatting(loginUserInfo, chatting);
-        if(!accessFlag){
+        if (!accessFlag) {
             return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
         }
         String userAccount = loginUserInfo.getUserAccount();

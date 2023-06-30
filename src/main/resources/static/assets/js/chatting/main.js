@@ -41,9 +41,12 @@ export function connectSocket() {
         const username = document.getElementById('loginUserInfo').dataset.userNickname;
         const msg = e.target.querySelector('.msg').value;
         const room = e.target.closest('.chatting-card').id;
+        const $li = e.target.closest('li');
+        const me = $li.querySelectorAll('.message-from');
+        const myProfile = me[0].querySelector('.chatting-profile').src;
         const chatBox = document.getElementById(room);
         const matchingStatus = chatBox.querySelector('.matching-accept-btn').dataset.matchingStatus;
-        const matchingNo = chatBox.querySelector('.matching-accept-btn').dataset.matchingNo;
+        // const matchingNo = chatBox.querySelector('.matching-accept-btn').dataset.matchingNo;
 
         // if(msg.length > 100){
         //     alert('메세지는 100자 이내로 작성해주세요');
@@ -51,10 +54,10 @@ export function connectSocket() {
         // }
 
         //Emit message to server
-        socket.emit('chatMessage', {username, room, msg, matchingStatus, matchingNo});
+        socket.emit('chatMessage', {username, room, myProfile, msg, matchingStatus});
 
         //save message
-        saveMessage({username, room, msg, matchingStatus, matchingNo});
+        saveMessage({username, room, msg, matchingStatus});
 
         //clear message
         e.target.querySelector('.msg').value = '';
