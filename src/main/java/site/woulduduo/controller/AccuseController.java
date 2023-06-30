@@ -10,10 +10,10 @@ import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.accuse.AccuseListResponseDTO;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
+import site.woulduduo.entity.Accuse;
 import site.woulduduo.enumeration.AdminViewType;
 import site.woulduduo.enumeration.Role;
 import site.woulduduo.service.AccuseService;
-import site.woulduduo.entity.Accuse;
 
 import javax.servlet.http.HttpSession;
 
@@ -36,7 +36,9 @@ import static site.woulduduo.util.LoginUtil.LOGIN_KEY;
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        List<AccuseListResponseDTO> accuseListByAdmin = accuseService.getAccuseListByAdmin();
+        PageDTO dto = PageDTO.builder().page(page).build();
+
+        ListResponseDTO<AccuseListResponseDTO, Accuse> accuseListByAdmin = accuseService.getAccuseListByAdmin(dto);
         return ResponseEntity
                 .ok()
                 .body(accuseListByAdmin);

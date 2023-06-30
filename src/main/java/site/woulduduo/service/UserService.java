@@ -44,6 +44,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static site.woulduduo.enumeration.LoginResult.*;
+import static site.woulduduo.util.LoginUtil.LOGIN_KEY;
 
 @Service
 @Slf4j
@@ -579,8 +580,6 @@ public class UserService {
         User byUserNickName = userRepository.findByUserNickname(dto.getUserNickname());
 
         System.out.println("userByNickName123 = " + byUserNickName);
-    //포인트 증가
-    public boolean increaseUserPoint(UserModifyRequestDTO dto) {
         //지급포인트
         int userAddPoint = dto.getUserAddPoint();
         System.out.println("userAddPoint = " + userAddPoint);
