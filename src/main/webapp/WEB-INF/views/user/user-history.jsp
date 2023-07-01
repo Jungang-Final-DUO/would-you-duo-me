@@ -67,20 +67,32 @@
                                 <img src="/assets/img/main/instagram.png" alt="인스타그램 아이콘">
                             </a>
                         </c:if>
+                        <c:if test="${history.userInstagram eq null}">
+                            <img class = "image-with-null" src="/assets/img/main/instagram.png" alt="인스타그램 아이콘">
+                        </c:if>
                         <c:if test="${history.userFacebook ne null}">
                             <a href="https://facebook.com/${history.userFacebook}" class="btn">
                                 <img src="/assets/img/main/facebook.png" alt="페이스북 아이콘">
                             </a>
+                        </c:if>
+                        <c:if test="${history.userFacebook eq null}">
+                                <img class = "image-with-null" src="/assets/img/main/facebook.png" alt="페이스북 아이콘">
                         </c:if>
                         <c:if test="${history.userTwitter ne null}">
                             <a href="https://twitter.com/${history.userTwitter}" class="btn">
                                 <img src="/assets/img/main/twitter.png" alt="트위터 아이콘">
                             </a>
                         </c:if>
+                        <c:if test="${history.userTwitter eq null}">
+                                <img class = "image-with-null" src="/assets/img/main/twitter.png" alt="트위터 아이콘">
+                        </c:if>
                         <c:if test="${history.userMatchingPoint ne null}">
                             <button class="btn chatting-icon">
                                 <img src="/assets/img/main/chatting-icon.png" alt="채팅 아이콘">
                             </button>
+                        </c:if>
+                        <c:if test="${history.userMatchingPoint eq null}">
+                            <img class = "image-with-null" src="/assets/img/main/chatting-icon.png" alt="채팅 아이콘">
                         </c:if>
                     </div>
                     <!-- end of sns chat button wrapper-->
