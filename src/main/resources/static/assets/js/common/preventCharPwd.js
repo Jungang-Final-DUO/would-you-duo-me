@@ -6,7 +6,11 @@ function chkCharCode(event) {
         (keyCode >= 65 && keyCode <= 90) || // Alphabet
         (keyCode === 32) || // Space
         (keyCode === 8) || // BackSpace
-        (keyCode === 189) // Dash
+        (keyCode === 189) || // Dash
+        (keyCode >= 49 && keyCode <= 56) || // !@#$%^&*
+        (keyCode >= 191 && keyCode <= 192) || // ?~
+        (keyCode === 189) || // _
+        (keyCode === 16) // shift
     );
     if (!isValidKey) {
         event.target.value = '';
