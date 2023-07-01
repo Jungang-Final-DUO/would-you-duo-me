@@ -24,5 +24,5 @@ public interface FollowRepository extends JpaRepository<Follow, FollowCompositeK
             "from duo_user_follow\n" +
             "group by follow_to) as rank_table\n" +
             "where follow_to = ?1", nativeQuery = true)
-    int getFollowerRank(String userAccount);
+    Integer getFollowerRank(String userAccount);
 }

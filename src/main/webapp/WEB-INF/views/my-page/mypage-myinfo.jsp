@@ -113,7 +113,7 @@
                                     </div>
                                     <div id="other-info-box">
                                         <div class="my-other-data"><span>팔로워 순위</span><span
-                                                class="data">${me.rank}</span>등
+                                                class="data">${me.rank == null ? "집계x" : me.rank}</span>등
                                         </div>
                                         <div class="my-other-data"><span>비매너 신고</span><span
                                                 class="data">${me.accuseCount}</span>건

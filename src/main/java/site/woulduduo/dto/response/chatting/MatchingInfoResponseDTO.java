@@ -1,7 +1,6 @@
 package site.woulduduo.dto.response.chatting;
 
 import lombok.*;
-import org.springframework.format.annotation.NumberFormat;
 
 @Setter
 @Getter
@@ -31,7 +30,7 @@ public class MatchingInfoResponseDTO {
     //호감도
     private double userAvgRate;
     //팔로워 순위
-    private int rank;
+    private Integer rank;
     //경고횟수
     private long accuseCount;
     //총활동점수
