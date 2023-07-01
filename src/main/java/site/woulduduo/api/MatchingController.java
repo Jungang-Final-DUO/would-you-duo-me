@@ -53,6 +53,12 @@ public class MatchingController {
         }
     }
 
+    /**
+     * 리뷰 작성
+     * @param session - 본인인지 확인하기용 세션
+     * @param dto - 작성 요청 dto
+     * @return - 작성 결과를 담은 응답객체
+     */
     @RequestMapping(value = "/reviews", method = {RequestMethod.PATCH, RequestMethod.PUT})
     public ResponseEntity<?> writeReview(HttpSession session, @RequestBody ReviewWriteRequestDTO dto) {
 

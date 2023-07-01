@@ -34,7 +34,7 @@
                 <img class="position-image" src="/assets/img/main/TOP.png" alt="TOP"></label>
             <label class="position-option">
                 <input class="select-position" type="radio" name="position" value="JUG">
-                <img class="position-image" src="/assets/img/main/JGL.png" alt="JUG"></label>
+                <img class="position-image" src="/assets/img/main/JUG.png" alt="JUG"></label>
             <label class="position-option">
                 <input class="select-position" type="radio" name="position" value="MID">
                 <img class="position-image" src="/assets/img/main/MID.png" alt="MID"></label>

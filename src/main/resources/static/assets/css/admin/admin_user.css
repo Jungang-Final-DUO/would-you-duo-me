@@ -1,5 +1,4 @@
 
-
 #main-wrapper{
     /* border: 1px solid #ffffff; */
     height: 600px;
@@ -8,9 +7,6 @@
     /* border: 1px solid #000; */
 
 }
-
-
-
 
 #main-wrapper .side_container{
     height: 600px;
@@ -214,14 +210,11 @@ margin-left:8%;
 #main-wrapper .center_container #main_controller #userinfo #userinfo_content #user_name{
     /* border: 1px solid #ff0000; */
     height: 10%;
-}
-
-#main-wrapper .center_container #main_controller #userinfo #userinfo_content #user_name p{
     color: white;
     font-size: 40px;
 
-
 }
+
 
 #main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info{
     /* border: 1px solid #ffe600; */
@@ -255,16 +248,15 @@ margin-left:8%;
 }
 
 #main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info .second_info_ul{
-    /* border: 1px solid #000; */
     margin-left: 50px;
-    width: 120px;
+    width: 200px;
 }
+
 
 #main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info .second_info_ul #give_point{
     border: none;
     background-color: transparent;
     width: 70px;
-    margin-right: 10px;
     text-align: right;
     color: white;
 }
@@ -272,12 +264,25 @@ margin-left:8%;
 #main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info .second_info_ul li{
 border-bottom: 1px solid #ffffff;
 text-align: right;
+width: 70%;
 }
 
+
+#main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info .second_info_ul #div_contain{
+    display: flex;
+    height: 50px;
+    position: relative;
+}
+
+#main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info .second_info_ul #secound_info_li{
+    /* border: 3px solid #000; */
+}
 
 #main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info .second_info_ul input:focus{
     outline: none;
 }
+
+
 
 #main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info #right_info{
     /* border: 1px solid #9c1212; */
@@ -291,8 +296,12 @@ text-align: right;
 #main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info #right_info .second_info_ul div{
 /* border: 1px solid #000; */
 display: flex;
-margin-top: 25px;
 }
+
+#main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info #right_info .second_info_ul #img_li{
+    margin-top: 20px;
+}
+
 
 
 #main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info #right_info .second_info_ul div a{
@@ -302,6 +311,7 @@ margin-top: 25px;
 }
 #main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info #right_info .second_info_ul div a img{
     width: 15px;
+
     /* border: 1px solid #ff0000; */
 
 }
@@ -319,10 +329,15 @@ margin-left: 10px;
 
 #main-wrapper .center_container #main_controller #userinfo #userinfo_content #detail_info .payment{
     color: white;    
-    height: 10%;
+    height: 40%;
     width: 40px;
     text-align: center;
-    padding-top: 0.5%;
-    margin-top: 77px;
     font-size: 8px;
+    position: absolute;
+    right: 3px;
+    bottom: 0px;
 }
+
+.red {
+    filter: grayscale(0%) brightness(100%);
+  }

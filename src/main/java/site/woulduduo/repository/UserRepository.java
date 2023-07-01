@@ -12,22 +12,22 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public interface UserRepository extends
+public interface
+UserRepository extends
         JpaRepository<User,String> {
 
     //아이디로 검색한 정보보기 + 페이징
     Page<User> findByUserAccountContaining(String userAccount, Pageable pageable);
 
-    //날짜별 가입 user 보기
     @Query(value = "SELECT COUNT(*) FROM User u WHERE u.userAccount = :email")
     int countByUserEmail(String email);
 
+    //날짜별 가입 user 보기
     @Query(value = "SELECT COUNT(*) FROM duo_user WHERE user_join_date = :userJoinDate",nativeQuery = true)
     int findAllWithJoinDate(LocalDate userJoinDate);
 
     //nickname으로 User 객체 찾기
-    @Query(value = "SELECT * FROM duo_user WHERE user_nickname = :userNickName",nativeQuery = true)
-    User findByNickName(String userNickName);
+
     //가입수
     long countByUserAccount(String userAccount);
 
@@ -52,6 +52,7 @@ public interface UserRepository extends
     int countByLolNickname(@Param("lolNickname") String lolNickname);
 
     User findByUserNickname(String messageFrom);
+
 
 
 

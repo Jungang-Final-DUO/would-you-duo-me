@@ -15,9 +15,11 @@ import site.woulduduo.dto.response.user.MyPageReviewResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
 import site.woulduduo.entity.Chatting;
 import site.woulduduo.entity.Matching;
+import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.MatchingStatus;
 import site.woulduduo.repository.ChattingRepository;
 import site.woulduduo.repository.MatchingRepository;
+import site.woulduduo.repository.UserRepository;
 
 import java.util.Comparator;
 import java.util.List;
@@ -32,6 +34,7 @@ public class MatchingService {
     private final MatchingRepository matchingRepository;
     private final ChattingRepository chattingRepository;
     private final PointService pointService;
+    private final UserRepository userRepository;
 
     //    매칭 신청하기
     public long makeMatching(long chattingNo) {
@@ -99,7 +102,8 @@ public class MatchingService {
         Matching foundMatching = matchingRepository.findById(dto.getMatchingNo())
                 .orElseThrow(() -> new RuntimeException("해당하는 매칭 정보가 없습니다."));
 
-        String chattingFrom = foundMatching.getChatting().getChattingFrom().getUserAccount();
+        Chatting chatting = foundMatching.getChatting();
+        String chattingFrom = chatting.getChattingFrom().getUserAccount();
         log.info("chattingFrom : {}, login : {}", chattingFrom, userAccount);
 
         if (!chattingFrom.equals(userAccount)) {
@@ -110,6 +114,26 @@ public class MatchingService {
         foundMatching.setMatchingReviewContent(dto.getReviewContent());
 
         matchingRepository.save(foundMatching);
+
+        // 유저의 평점 수정하기
+        String chattingTo = chatting.getChattingTo().getUserAccount();
+
+        User chattingToUser = userRepository.findById(chattingTo).orElseThrow(
+                () -> new RuntimeException("해당 사용자가 없습니다")
+        );
+
+        // 유저가 이번 것까지 포함한 평가를 받은 횟수
+        long gottenReviewCount = chattingToUser.getChattingFromList().stream().map(
+                c -> c.getMatchingList().stream()
+                        .filter(m -> m.getMatchingReviewRate() != null)
+                        .collect(Collectors.toList())
+        ).count();
+
+        double calcAvgRate = (chattingToUser.getUserAvgRate() * (gottenReviewCount - 1) + dto.getReviewRate()) / gottenReviewCount;
+
+        chattingToUser.setUserAvgRate(calcAvgRate);
+
+        userRepository.save(chattingToUser);
     }
 
     /**

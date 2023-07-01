@@ -139,6 +139,13 @@ public class ChattingService {
     ) {
 //       내가 보낸 채팅
         List<Chatting> fromList = chattingRepository.findByChattingFrom(user);
+        Chatting toBeRemoved = null;
+        for (Chatting chatting : fromList) {
+            if(chatting.getChattingTo().equals(user)){
+                toBeRemoved = chatting;
+            }
+        }
+        fromList.remove(toBeRemoved);
         fromList.forEach(messageService::getMessages);
 //       내가 받은 채팅
         List<Chatting> toList = chattingRepository.findByChattingTo(user);

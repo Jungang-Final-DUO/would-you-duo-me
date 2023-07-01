@@ -43,6 +43,7 @@ header {
     /*border: 1px solid #fff;*/
     position: relative;
     border-left: 1px solid #FFFFFF;
+    height: 600px;
 }
 
 /* 우측영역 작은 wrapper */
