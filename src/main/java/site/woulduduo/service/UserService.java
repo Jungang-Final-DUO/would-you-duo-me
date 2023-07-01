@@ -235,8 +235,8 @@ public class UserService {
         // 세션의 수명을 설정
         session.setMaxInactiveInterval(60 * 60); // 1시간
 
-        // 티어 정보 갱신
-        user.setLolTier(riotApiService.getTier(lolNickname));
+//        // 티어 정보 갱신
+//        user.setLolTier(riotApiService.getTier(lolNickname));
 
 //        List<String> newMost3 = riotApiService.getMost3Champions(lolNickname);
 //
@@ -735,6 +735,13 @@ public class UserService {
         );
         String lolNickname = foundUser.getLolNickname();
 
+        // 티어 정보 갱신
+        Tier newTier = riotApiService.getTier(lolNickname);
+
+        foundUser.setLolTier(newTier);
+
+        userRepository.save(foundUser);
+
         List<MatchV5DTO.MatchInfo.ParticipantDTO> last20ParticipantDTOList = riotApiService.getLast20ParticipantDTOList(lolNickname);
 
         LeagueV4DTO rankInfo = null;
@@ -804,7 +811,7 @@ public class UserService {
                 .userTwitter(foundUser.getUserTwitter())
                 .lolNickname(lolNickname)
                 .userComment(foundUser.getUserComment())
-                .tier(foundUser.getLolTier())
+                .tier(newTier)
                 // 모스트 3 챔피언 정보
                 .mostChampInfos(mostChampInfoList)
                 // riot api 를 통해 얻어오는 솔로랭크 혹은 자유랭크 데이터

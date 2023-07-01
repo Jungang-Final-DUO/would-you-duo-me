@@ -165,7 +165,8 @@ public class UserController {
             // 서버에서 세션에 로그인 정보를 저장
             userService.maintainLoginState(request.getSession(), dto.getUserAccount());
 
-            return dto.getRequestURI();
+//            return dto.getRequestURI();
+            return "index";
         }
 
         // 1회용으로 쓰고 버릴 데이터

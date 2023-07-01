@@ -310,7 +310,7 @@ function getProfileCardList() {
 function renderFailMessage() {
     const signInFailMsg = new URL(window.location.href).searchParams.get("msg");
 
-    let msg;
+    let msg = null;
 
     switch (signInFailMsg) {
         case 'NOT_ADMIN':
@@ -326,8 +326,8 @@ function renderFailMessage() {
             msg = '비밀번호가 틀렸습니다.';
             break;
         default:
-            return;
     }
 
-    alert(msg);
+    if (msg !== null)
+        alert(msg);
 }
