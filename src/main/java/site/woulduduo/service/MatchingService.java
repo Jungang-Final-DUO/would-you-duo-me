@@ -122,13 +122,14 @@ public class MatchingService {
                 () -> new RuntimeException("해당 사용자가 없습니다")
         );
 
+        // 유저가 이번 것까지 포함한 평가를 받은 횟수
         long gottenReviewCount = chattingToUser.getChattingFromList().stream().map(
                 c -> c.getMatchingList().stream()
                         .filter(m -> m.getMatchingReviewRate() != null)
                         .collect(Collectors.toList())
         ).count();
 
-        double calcAvgRate = (chattingToUser.getUserAvgRate() + dto.getReviewRate()) / gottenReviewCount;
+        double calcAvgRate = (chattingToUser.getUserAvgRate() * (gottenReviewCount - 1) + dto.getReviewRate()) / gottenReviewCount;
 
         chattingToUser.setUserAvgRate(calcAvgRate);
 
