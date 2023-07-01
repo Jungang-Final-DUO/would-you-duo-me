@@ -88,7 +88,7 @@
                                     class="my-registered-info" id="twitter" name="userTwitter"
                                     value="${login.userTwitter}" placeholder="sns id를 입력하세요"></label></div>
                         </div>
-                        <div id="my-info-btn" class="my-info">
+                        <div id="my-info-btn" class="my-info-btn">
                             <button type="submit" id="modify-btn" class="btn">
                                 정보변경
                             </button>
