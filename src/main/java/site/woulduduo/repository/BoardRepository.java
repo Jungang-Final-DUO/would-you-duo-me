@@ -7,10 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import site.woulduduo.entity.Board;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.BoardCategory;
-//메서드 쿼리 커스텀 할라면 넣어야 함
-import java.awt.print.Pageable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {

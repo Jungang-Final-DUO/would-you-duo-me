@@ -446,7 +446,6 @@ public class UserService {
 //            long followToCount = followRepository.findToByAccount(user);
 
 
-            dto.setUserAccount(user.getUserAccount());
             dto.setGender(user.getUserGender().toString());
             dto.setBoardCount(boardCount);
             dto.setReplyCount(replyCount);
@@ -463,7 +462,6 @@ public class UserService {
     }
 
     public AdminPageResponseDTO getAdminPageInfo() {
-    public AdminPageResponseDTO getAdminPageInfo(){
         int userFindAllCount = userFindAllCount();
         int userFindByToday = userFindByToday();
         int accuseFindAllCount = accuseFindAllCount();
@@ -931,4 +929,5 @@ public class UserService {
                 .totalScore(totalScore)
                 .build();
     }
+
 }
