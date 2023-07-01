@@ -154,13 +154,13 @@ function checkSNS(userInstagram, userFacebook, userTwitter) {
     let snsTag = '';
 
     if(userInstagram !== null) {
-        snsTag += '<a href="'+ userInstagram +'" class="sns-type instagram"><img class="sns-image" src="/assets/img/main/instagram.png" alt="instagram"></a>'
+        snsTag += '<a href="https://instagram.com/'+ userInstagram +'" class="sns-type instagram"><img class="sns-image" src="/assets/img/main/instagram.png" alt="instagram"></a>'
     }
     if(userFacebook !== null) {
-        snsTag += '<a href="'+ userFacebook +'" class="sns-type facebook"><img class="sns-image" src="/assets/img/main/facebook.png" alt="facebook"></a>'
+        snsTag += '<a href="https://facebook.com/'+ userFacebook +'" class="sns-type facebook"><img class="sns-image" src="/assets/img/main/facebook.png" alt="facebook"></a>'
     }
     if(userTwitter !== null) {
-        snsTag += '<a href="'+ userTwitter +'" class="sns-type twitter"><img class="sns-image" src="/assets/img/main/twitter.png" alt="twitter"></a>'
+        snsTag += '<a href="https://twitter.com/'+ userTwitter +'" class="sns-type twitter"><img class="sns-image" src="/assets/img/main/twitter.png" alt="twitter"></a>'
     }
 
     return snsTag;
@@ -205,7 +205,7 @@ function getProfileCardList() {
 
             const tierImgSrc = transTier(tier) !== null ? '"/assets/img/main/TFT_Regalia_'+ transTier(tier) +'.png"' : '/assets/img/main/unranked-removebg-preview.png';
             
-            profileCardTag += '<div id = "'+ userAccount +'" class="duo-profile">'
+            profileCardTag += `<div id = "`+ userAccount +`" class="duo-profile" onclick="window.location.href='/user/user-history?userAccount=${userAccount}'">`
                                    + '<img class="duo-tier" src=' + tierImgSrc + ' alt="tier">'
                                     
                                    + '<div class="profile-left-side">'
