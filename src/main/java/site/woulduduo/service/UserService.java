@@ -910,7 +910,7 @@ public class UserService {
         //호감도
         Double userAvgRate = user.getUserAvgRate();
         //팔로워순위
-        int rank = followRepository.getFollowerRank(userAccount);
+        Integer rank = followRepository.getFollowerRank(userAccount);
         //경고횟수
         long accuseCount = accuseRepository.countByUser(user);
         //총활동점수

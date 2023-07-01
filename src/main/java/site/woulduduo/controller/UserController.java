@@ -205,7 +205,7 @@ public class UserController {
     public String showMyPage(HttpSession session, Model model) {
         log.info("/user/my-page GET");
 
-            String userAccount;
+        String userAccount;
         try {
             userAccount = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
         } catch (NullPointerException e) {
@@ -213,6 +213,7 @@ public class UserController {
         }
 
         MatchingInfoResponseDTO myMypageInfoDto = userService.getMyMypageInfo(userAccount);
+
         model.addAttribute("me", myMypageInfoDto);
 
         return "my-page/mypage-myinfo";
@@ -275,10 +276,6 @@ public class UserController {
     }
 
 
-
-
-
-
 //    // 프로필 사진 등록
 //    @PostMapping("/api/v1/users/profile")
 //    public ResponseEntity<?> addProfile(ProfileAddRequestDTO dto, HttpSession session) {
@@ -336,9 +333,9 @@ public class UserController {
     @PostMapping("/user/modify-duo")
     public String modifyDUO(UserCommentRequestDTO dto, HttpSession session) {
         Long result = userService.modifyUserComment(dto, session);
-        if (result > 0 ) {
+        if (result > 0) {
             log.info("success update");
-            LoginUserResponseDTO login = (LoginUserResponseDTO)session.getAttribute("login");
+            LoginUserResponseDTO login = (LoginUserResponseDTO) session.getAttribute("login");
             login.setUserComment(dto.getUserComment());
             login.setUserPosition(dto.getUserPosition());
             login.setUserMatchingPoint(dto.getUserMatchingPoint());
@@ -353,9 +350,9 @@ public class UserController {
     @PostMapping("/user/delete-duo")
     public String deleteDUO(UserCommentRequestDTO dto, HttpSession session) {
         Long result = userService.deleteUserComment(dto, session);
-        if (result > 0 ) {
+        if (result > 0) {
             log.info("success delete");
-            LoginUserResponseDTO login = (LoginUserResponseDTO)session.getAttribute("login");
+            LoginUserResponseDTO login = (LoginUserResponseDTO) session.getAttribute("login");
             login.setUserComment("");
             login.setUserPosition(Position.NONE);
             login.setUserMatchingPoint(0);
@@ -395,7 +392,7 @@ public class UserController {
 
     @GetMapping("/user/modal")
 //모달테스트
- public String modalTest(/*HttpSession session, */Model model) {
+    public String modalTest(/*HttpSession session, */Model model) {
 
         return "admin/adminModal";
     }
@@ -423,9 +420,9 @@ public class UserController {
                 .size(10)
                 .build();
 
-        log.info("{}ddttoo==",dto);
+        log.info("{}ddttoo==", dto);
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
-        log.info("userbyadmin11111 : {}",userListByAdmin);
+        log.info("userbyadmin11111 : {}", userListByAdmin);
 
         log.info("/api/v1/users/admin/");
 
@@ -448,38 +445,38 @@ public class UserController {
                 .size(10)
                 .build();
 
-        log.info("dtodto={}",dto);
+        log.info("dtodto={}", dto);
 
         ListResponseDTO<UserByAdminResponseDTO, User> userListTodayByAdmin = userService.todayUserByAdMin(dto);
-        log.info("userListTodayByAdmin123 : {}",userListTodayByAdmin);
+        log.info("userListTodayByAdmin123 : {}", userListTodayByAdmin);
 
-   return ResponseEntity
-           .ok()
-           .body(userListTodayByAdmin);
+        return ResponseEntity
+                .ok()
+                .body(userListTodayByAdmin);
     }
 
     @GetMapping("/user/detail/admin")
     //관리자 페이지 자세히 보기
-    public String showDetailByAdmin(HttpSession session,Model model,@RequestParam String userNickname){
-        log.info("{}nickname = ",userNickname);
+    public String showDetailByAdmin(HttpSession session, Model model, @RequestParam String userNickname) {
+        log.info("{}nickname = ", userNickname);
 
         UserDetailByAdminResponseDTO userDetailByAdmin = userService.getUserDetailByAdmin(userNickname);
 
-        log.info("{}userDetailByAdmin = ",userDetailByAdmin);
+        log.info("{}userDetailByAdmin = ", userDetailByAdmin);
 
-        model.addAttribute("udByAdmin",userDetailByAdmin);
+        model.addAttribute("udByAdmin", userDetailByAdmin);
         return "admin/admin_user";
 
     }
 
     @GetMapping("/user/detail/banBoolean")
 //    //관리자 페이지 자세히 보기
-    public ResponseEntity<?> showBanIsBoolean(HttpSession session, @RequestParam String nickname){
-        log.info("{}nickname = ",nickname);
+    public ResponseEntity<?> showBanIsBoolean(HttpSession session, @RequestParam String nickname) {
+        log.info("{}nickname = ", nickname);
 
         boolean userDetailByAdmin = userService.getUserBanBooleanByAdmin(nickname);
 
-        log.info("{}userDetailByAdmin = ",userDetailByAdmin);
+        log.info("{}userDetailByAdmin = ", userDetailByAdmin);
 
         return ResponseEntity
                 .ok()
@@ -490,10 +487,10 @@ public class UserController {
     @PostMapping("/user/point")
     @ResponseBody
     public ResponseEntity<?> changePointStatus(
-            HttpSession session, @RequestBody UserModifyRequestDTO dto){
-        log.info("{}-----------------------",dto);
+            HttpSession session, @RequestBody UserModifyRequestDTO dto) {
+        log.info("{}-----------------------", dto);
         boolean b = userService.increaseUserPoint(dto);
-        log.info("{}---123123",b);
+        log.info("{}---123123", b);
         int i = userService.currentPoint(dto);
 
 
@@ -503,13 +500,11 @@ public class UserController {
     }
 
 
-
-
     @PostMapping("/user/ban")
     @ResponseBody
     public ResponseEntity<?> changeBanStatus(HttpSession session, @RequestBody UserModifyRequestDTO dto) {
         String userNickname = dto.getUserNickname();
-        log.info("{}123123123",userNickname);
+        log.info("{}123123123", userNickname);
         log.info("{}---------userIsBanneduserIsBanned---------", dto);
         boolean b = userService.changeBanStatus(dto);
         log.info("{}aaaaaaaaaaaaaaaaaaaa123123", b);

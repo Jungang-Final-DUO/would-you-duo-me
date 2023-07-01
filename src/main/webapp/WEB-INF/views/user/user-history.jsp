@@ -220,6 +220,7 @@
             <!-- end of game result and review wrapper-->
         </div>
         <!--    end of history wrapper-->
+        <%@ include file="../common/footer.jsp" %>
     </div>
 
 </body>
