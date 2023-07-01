@@ -5,6 +5,7 @@ import {connectSocket} from "../chatting/main.js";
 import {addDropdownEvent} from "./dropdown-handler.js";
 import {signInSubmitHandler} from "../user/sign-in-submit-handler.js";
 import {renderMatchingCalendar} from "../chatting/chatting-calendar.js";
+import {preventCharPwd} from "./preventCharPwd.js";
 
 (async () => {
 
@@ -38,5 +39,8 @@ import {renderMatchingCalendar} from "../chatting/chatting-calendar.js";
 
     // 위로가기 버튼 이벤트
     toTopBtnHandler();
+
+    // 비밀번호에 한글 입력 막기
+    preventCharPwd();
 
 })();
