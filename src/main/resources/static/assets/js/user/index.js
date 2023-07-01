@@ -1,4 +1,5 @@
 import { getChampionImg } from "../common/get-champion-img.js";
+import {makeChattingRoom} from "../chatting/chatting-modal.js";
 
 // 현재까지 렌더링된 페이지
 let page = 1;
@@ -117,31 +118,22 @@ function transTier(tier) {
     switch (tier) {
         case 'CHA':
             return "Challenger";
-            break;
         case 'IRO':
             return "Iron";
-            break;
         case 'BRO':
             return "Bronze";
-            break;
         case 'SIL':
             return "Silver";
-            break;
         case 'GOL':
             return "Gold";
-            break;
         case 'PLA':
             return "Platinum";
-            break;
         case 'DIA':
             return "Diamond";
-            break;
         case 'MAS':
             return "Master";
-            break;
         case 'GRA':
             return "GrandMaster";
-            break;
         default:
             return null;
     }
@@ -210,9 +202,11 @@ function getProfileCardList() {
             }        
             // console.log(mostOne + mostTwo + mostThree);
             // console.log("인스타" + userInstagram);
+
+            const tierImgSrc = transTier(tier) !== null ? '"/assets/img/main/TFT_Regalia_'+ transTier(tier) +'.png"' : '/assets/img/main/unranked-removebg-preview.png';
             
             profileCardTag += '<div id = "'+ userAccount +'" class="duo-profile">'
-                                   + '<img class="duo-tier" src="/assets/img/main/TFT_Regalia_'+ transTier(tier) +'.png" alt="tier">'
+                                   + '<img class="duo-tier" src=' + tierImgSrc + ' alt="tier">'
                                     
                                    + '<div class="profile-left-side">'
                                       + '<div class="profile-frame">'
@@ -249,6 +243,8 @@ function getProfileCardList() {
                             }
             $profileCardWrapper.innerHTML += profileCardTag;                         
         // ====================================================================================
+        //채팅 생성하기
+        makeChattingRoom();
     });
 
  }
@@ -306,4 +302,32 @@ function getProfileCardList() {
     // 프로필 카드 불러오기 함수(비동기)
    getProfileCardList();
 
+    // 로그인 실패시 메세지
+    renderFailMessage();
+
 })();
+
+function renderFailMessage() {
+    const signInFailMsg = new URL(window.location.href).searchParams.get("msg");
+
+    let msg;
+
+    switch (signInFailMsg) {
+        case 'NOT_ADMIN':
+            msg = '관리자만 접근 가능합니다.';
+            break;
+        case 'NEED_LOGIN' :
+            msg = '로그인이 필요합니다.';
+            break;
+        case 'NO_ACC':
+            msg = '존재하지 않는 계정입니다.';
+            break;
+        case 'NO_PW':
+            msg = '비밀번호가 틀렸습니다.';
+            break;
+        default:
+            return;
+    }
+
+    alert(msg);
+}

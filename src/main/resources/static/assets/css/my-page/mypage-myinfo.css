@@ -4,9 +4,12 @@ body::-webkit-scrollbar {
     display: none;
 }
 
+header {
+    display: flex;
+}
+
 #main-wrapper {
     /*border: 1px solid #fff;*/
-    display: flex;
     height: 600px;
     color: white;
 }
@@ -40,6 +43,7 @@ body::-webkit-scrollbar {
     /*border: 1px solid #fff;*/
     position: relative;
     border-left: 1px solid #FFFFFF;
+    height: 600px;
 }
 
 /* 우측영역 작은 wrapper */

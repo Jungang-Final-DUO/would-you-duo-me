@@ -14,12 +14,7 @@ import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.*;
-
-import site.woulduduo.dto.response.user.UserProfileResponseDTO;
 import site.woulduduo.entity.User;
-
-import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
-import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
@@ -45,6 +40,8 @@ class UserServiceTest {
 
     @Autowired
     private MostChampRepository mostChampRepository;
+
+
     @BeforeEach
     void userInsert() {
         for (int i = 1; i < 42; i++) {
@@ -242,6 +239,12 @@ class UserServiceTest {
         assertThrows(IllegalArgumentException.class, () -> userService.register(dto2));
     }
 
+
+
+
+
+
+
     @Test
     @DisplayName("관리자페이지 정보 count 확인")
     void getCountByAdmin() {
@@ -360,7 +363,6 @@ class UserServiceTest {
         UserHistoryResponseDTO userDUOInfo = userService.getUserHistoryInfo(null, "test@example.com");
         System.out.println("userDUOInfo = " + userDUOInfo);
     }
-
 
 
 }

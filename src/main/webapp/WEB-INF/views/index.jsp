@@ -34,7 +34,7 @@
                 <img class="position-image" src="/assets/img/main/TOP.png" alt="TOP"></label>
             <label class="position-option">
                 <input class="select-position" type="radio" name="position" value="JUG">
-                <img class="position-image" src="/assets/img/main/JGL.png" alt="JUG"></label>
+                <img class="position-image" src="/assets/img/main/JUG.png" alt="JUG"></label>
             <label class="position-option">
                 <input class="select-position" type="radio" name="position" value="MID">
                 <img class="position-image" src="/assets/img/main/MID.png" alt="MID"></label>
@@ -90,9 +90,9 @@
     </div>
     <!--    프로필카드 리스트 영역 -->
     <div id="profile-cards-wrapper">
-<%--        <!--        프로필 카드 한 장 -->--%>
-<%--<!--        가장 바깥 div에 유저아이디 넣기 -->--%>
-<%--        <div id = "test4@test.com" class="duo-profile">--%>
+        <!--        프로필 카드 한 장 -->
+<!--        가장 바깥 div에 유저아이디 넣기 -->
+<%--        <div id = "test5@test.com" class="duo-profile">--%>
 <%--            <img class="duo-tier" src="/assets/img/main/TFT_Regalia_Challenger.png" alt="tier">--%>
 <%--            <!--            프로필 카드 좌측 -->--%>
 <%--             <div class="profile-left-side">--%>
@@ -140,7 +140,7 @@
 <%--        <!--        아래부터는 지워도 되는 부분입니다 --------------------------------------------------------------------->--%>
 <%--        <!--        프로필 카드 한 장 -->--%>
 <%--        <!--        가장 바깥 div에 유저아이디 넣기 -->--%>
-<%--        <div id = "test3" class="duo-profile">--%>
+<%--        <div id = "test@test.com" class="duo-profile">--%>
 <%--            <img class="duo-tier" src="/assets/img/main/TFT_Regalia_Challenger.png" alt="tier">--%>
 <%--            <!--            프로필 카드 좌측 -->--%>
 <%--            <div class="profile-left-side">--%>
@@ -185,7 +185,7 @@
 <%--                </div>--%>
 <%--            </div>--%>
 <%--        </div>--%>
-<%--        <!--  여기까지 지워도 되는 부분입니다 --------------------------------------------------------------------->--%>
+        <!--  여기까지 지워도 되는 부분입니다 --------------------------------------------------------------------->
     </div>
 
     <!--</div>-->

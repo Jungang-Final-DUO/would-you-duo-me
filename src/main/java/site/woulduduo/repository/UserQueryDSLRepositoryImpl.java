@@ -3,7 +3,6 @@ package site.woulduduo.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.querydsl.jpa.impl.JPAUpdateClause;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -52,7 +51,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 //                .orderBy(user.userAvgRate.desc())
                 .fetch();
         log.info("### userList ###: {}", userList);
-    // select 로 불러온 user 리스트 UserProfilesResponseDTO로 변환해 리스트에 담아주기
+        // select 로 불러온 user 리스트 UserProfilesResponseDTO로 변환해 리스트에 담아주기
         List<UserProfileResponseDTO> userProfiles = new ArrayList<>();
         for (User user : userList) {
             UserProfileResponseDTO dto = UserProfileResponseDTO.builder()
@@ -68,10 +67,12 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                     .userNickname(user.getUserNickname())
                     .avgRate(user.getUserAvgRate())
                     .mostChampList(user.getMostChampList())
-                    .profileImage((user.getUserProfileList().size() == 0)? "basic" : user.getUserProfileList().get(0).getProfileImage())
+                    .profileImage((user.getUserProfileList().size() == 0) ? "basic" : user.getUserProfileList().get(0).getProfileImage())
                     .build();
 
-                    userProfiles.add(dto);
+            log.info("dto : {}", dto);
+
+            userProfiles.add(dto);
         }
 
 
@@ -110,7 +111,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
     // 2페이지부터 offset 조정
     private Long checkPage(int page) {
-        return page == 1 ? 0 : ((long)page - 1) * 20;
+        return page == 1 ? 0 : ((long) page - 1) * 20;
     }
 
     // 티어 파라미터가 null인지 체크
@@ -131,7 +132,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
     // 검색 키워드가 null인지 체크
     private BooleanExpression keywordContains(String keyword) {
-        return StringUtils.isNullOrEmpty(keyword)? null : user.userNickname.contains(keyword);
+        return StringUtils.isNullOrEmpty(keyword) ? null : user.userNickname.contains(keyword);
     }
 
 
