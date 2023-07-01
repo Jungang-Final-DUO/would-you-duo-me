@@ -361,23 +361,24 @@ public class UserService {
      * <p>
      * //     * @param session - 접속한 사용자
      *
+     * @param session - 접속한 사용자
      * @return 등록성공여부
      * @Param dto - 프로필카드 등록 dto
      */
     public boolean registerDUO(HttpSession session, UserCommentRequestDTO dto) {
 
-        User exUser = User.builder()
-                .userSessionId("abc1234@ddd.com")
-                .userAccount("abc1234@ddd.com")
-                .userPassword("12345678")
-                .lolTier(Tier.CHA)
-                .userGender(Gender.M)
-                .userBirthday(LocalDate.of(2000, 03, 16))
-                .userNickname("HongChaa")
-                .lolNickname("HongChaa")
-                .build();
-
-        userRepository.save(exUser);
+//        User exUser = User.builder()
+//                .userSessionId("abc1234@ddd.com")
+//                .userAccount("abc1234@ddd.com")
+//                .userPassword("12345678")
+//                .lolTier(Tier.CHA)
+//                .userGender(Gender.M)
+//                .userBirthday(LocalDate.of(2000, 03, 16))
+//                .userNickname("HongChaa")
+//                .lolNickname("HongChaa")
+//                .build();
+//
+//        userRepository.save(exUser);
         LoginUserResponseDTO loginUser = (LoginUserResponseDTO) session.getAttribute("login");
         Optional<User> user = userRepository.findById(loginUser.getUserAccount());
 
@@ -393,6 +394,20 @@ public class UserService {
             userRepository.save(u);
         });
         return true;
+    }
+
+    // 프로필 카드 수정
+    public Long modifyUserComment(UserCommentRequestDTO dto, HttpSession session) {
+        log.info("dto : {}", dto);
+
+        return userQueryDSLRepositoryCustom.modifyProfileCard(dto, session);
+    }
+
+    // 프로필 카드 삭제
+    public Long deleteUserComment(UserCommentRequestDTO dto, HttpSession session) {
+        log.info("dto : {}", dto);
+
+        return userQueryDSLRepositoryCustom.deleteProfileCard(dto, session);
     }
 
 
@@ -743,8 +758,8 @@ public class UserService {
 
     }
 
-    public List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType) {
-        List<UserProfileResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
+    public List<UserProfileResponseDTO> getUserProfileList(HttpSession session, UserSearchType userSearchType) {
+        List<UserProfileResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType, session);
 
         for (UserProfileResponseDTO userProfile : userProfileList) {
             log.info("@@@ userProfile @@@@@ : {}", userProfile.toString());
