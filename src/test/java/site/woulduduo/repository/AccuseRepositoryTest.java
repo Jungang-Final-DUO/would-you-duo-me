@@ -13,10 +13,7 @@ import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Tier;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @Rollback(false)
@@ -30,23 +27,25 @@ class AccuseRepositoryTest {
 
     @BeforeEach
     void bulkInsert() {
-            for (int i = 1; i <= 50; i++) {
-            User User1 = User.builder()
-                    .userAccount("acvd"+i)
-                    .userNickname("asd"+i)
-                    .userPassword("12345")
-                    .userCurrentPoint(123)
-                    .userBirthday(LocalDate.of(1990,11,07))
-                    .lolNickname("asd"+i)
-                    .userGender(Gender.F)
-                    .lolTier(Tier.DIA)
-                    .build();
-            User save = userRepository.save(User1);
+        User User1 = User.builder()
+                .userAccount("acvdZZ")
+                .userNickname("asZZd")
+                .userPassword("12345")
+                .userCurrentPoint(123)
+                .userBirthday(LocalDate.of(1990,11,07))
+                .lolNickname("asZZd")
+                .userGender(Gender.F)
+                .lolTier(Tier.DIA)
+                .build();
+        User save = userRepository.save(User1);
+
+        for (int i = 1; i <= 50; i++) {
 
 
             Accuse accuse = Accuse.builder()
                     .user(save)
                     .accuseType("경고"+i)
+                    .accuseEtc("기타아라비아숫자 드디어되든느디아"+i)
                     .build();
 
             Accuse asave = accuseRepository.save(accuse);
@@ -61,22 +60,32 @@ class AccuseRepositoryTest {
         System.out.println("size = " + size);
     }
 
+    @Test
+    @DisplayName("해당 별명 accuse개수 확인")
+    void countbyUser(){
+        User byUserNickName = userRepository.findByUserNickname("asd13");
+        System.out.println("byUserNickName = " + byUserNickName);
+        List<Accuse> accuseList = byUserNickName.getAccuseList();
+        int size = accuseList.size();
+        System.out.println("size = " + size);
+
+    }
+
 
     @Test
     @DisplayName("사용자 저장")
     void saveTest(){
-        List<Accuse> all = accuseRepository.findAll();
-        System.out.println("all = " + all);
+//        List<Accuse> all = accuseRepository.findAll();
+//        System.out.println("all = " + all);
         User user4 = User.builder()
-                .userAccount("345")
-                .userNickname("345")
+                .userAccount("qreqwrqwer")
+                .userNickname("qwerqwer")
                 .userPassword("345")
                 .userCurrentPoint(345)
                 .userBirthday(LocalDate.of(1999,11,07))
-                .lolNickname("345")
+                .lolNickname("qwerqwer")
                 .userGender(Gender.F)
                 .lolTier(Tier.DIA)
-                .accuseList(all)
                 .build();
         User save2 = userRepository.save(user4);
 

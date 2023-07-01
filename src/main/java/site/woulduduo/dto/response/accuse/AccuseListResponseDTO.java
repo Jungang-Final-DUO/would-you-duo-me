@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class AccuseListResponseDTO {
 
     private long accuseNo;
-    private String userAccount;
+    private String userNickname;
     private String accuseType;
     private String accuseETC;
     private LocalDate accuseWrittenDate;
@@ -24,8 +24,8 @@ public class AccuseListResponseDTO {
 
     public AccuseListResponseDTO(Accuse accuse){
         this.accuseNo=accuse.getAccuseNo();
-        this.userAccount=accuse.getUser().getUserAccount();
-        this.accuseType=accuse.getAccuseType();
+        this.userNickname=accuse.getUser().getUserNickname();
+        this.accuseType=accuseType(accuse,20);
         this.accuseETC=accuse.getAccuseEtc();
         this.accuseWrittenDate=accuseDate(accuse.getAccuseWrittenDate());
     }
@@ -34,5 +34,14 @@ public class AccuseListResponseDTO {
 
         LocalDate localDate = dateTime.toLocalDate();
         return localDate;
+    }
+    public String accuseType(Accuse accuse, int maxLength) {
+        String string = accuse.getAccuseType().toString();
+        int length = string.length();
+        if (length <= maxLength) {
+            return string;
+        }else{
+            return string.substring(0,maxLength)+"...";
+        }
     }
 }

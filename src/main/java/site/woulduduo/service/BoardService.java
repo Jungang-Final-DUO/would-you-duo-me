@@ -16,11 +16,11 @@ import site.woulduduo.dto.response.board.BoardResponseDTO;
 import site.woulduduo.dto.response.board.BoardsByAdminResponseDTO;
 import site.woulduduo.dto.response.page.PageResponseDTO;
 import site.woulduduo.entity.Board;
-import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.BoardCategory;
 import site.woulduduo.repository.BoardLikeRepository;
 import site.woulduduo.repository.BoardRepository;
 import site.woulduduo.repository.ReplyRepository;
+import site.woulduduo.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,6 +39,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
     private final BoardLikeRepository boardLikeRepository;
+    private final UserRepository userRepository;
 
 
     //조회
@@ -97,38 +98,86 @@ public class BoardService {
 
 
     //전체 BoardList DTO 변환 (Admin)+ 페이징
-    public ListResponseDTO<BoardsByAdminResponseDTO, User> getBoardListByAdmin(PageDTO dto) {
+    public ListResponseDTO<BoardsByAdminResponseDTO,Board> getBoardListByAdmin(PageDTO dto){
+
+
         Pageable pageable = PageRequest.of(
                 dto.getPage() - 1,
                 dto.getSize(),
-                Sort.by("boardWrittenDate").descending()
+                Sort.by("boardNo").descending()
         );
-        Page<Board> all = boardRepository.findAll(pageable);
 
-        List<BoardsByAdminResponseDTO> collect = all.stream()
+        String keyword = dto.getKeyword();
+        if ("".equals(keyword)){
+            keyword=null;
+        }
+
+        String userAccount = dto.getKeyword();
+        Page<Board> boards;
+
+        if (userAccount==null) {
+            boards = boardRepository.findAll(pageable);
+        }else{
+            boards = boardRepository.findByUser_UserAccountContaining(userAccount, pageable);
+        }
+
+
+        System.out.println("all = " + boards);
+        List<BoardsByAdminResponseDTO> collect = boards.stream()
                 .map(BoardsByAdminResponseDTO::new)
                 .collect(toList());
 
-        return ListResponseDTO.builder()
-                .count(all.getSize())
-                .pageInfo(new PageResponseDTO(all))
+
+
+        System.out.println("collect = " + collect);
+        return ListResponseDTO.<BoardsByAdminResponseDTO,Board>builder()
+                .count(collect.size())
+                .pageInfo(new PageResponseDTO<>(boards))
                 .list(collect)
                 .build();
     }
 
+    //게시글 삭제
+    public boolean deleteBoard(long boardNo) {
+        System.out.println("boardNo = " + boardNo);
+        Board byBoardNo = boardRepository.findByBoardNo(boardNo);
+        System.out.println("byBoardNo = " + byBoardNo);
+
+        if (byBoardNo != null) {
+            boardRepository.deleteByBoardNo(boardNo);
+            return true;
+        }
+
+        return false;
+    }
+
     //금일 작성 게시물 (ADMIN)
-    public ListResponseDTO<BoardsByAdminResponseDTO, User> todayBoardByAdmin(PageDTO dto) {
+    public ListResponseDTO<BoardsByAdminResponseDTO, Board> todayBoardByAdmin(PageDTO dto) {
 
         Pageable pageable = PageRequest.of(
                 dto.getPage() - 1,
                 dto.getSize(),
-                Sort.by("boardWrittenDate").descending()
+                Sort.by("boardNo").descending()
         );
-        Page<Board> all = boardRepository.findAll(pageable);
+
+        String keyword = dto.getKeyword();
+        if ("".equals(keyword)){
+            keyword=null;
+        }
+
+        String userAccount = dto.getKeyword();
+        Page<Board> boards;
+
+        if (userAccount==null) {
+            boards = boardRepository.findAll(pageable);
+        }else{
+            boards = boardRepository.findByUser_UserAccountContaining(userAccount, pageable);
+        }
+
         List<Board> todayBoardList = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
 
-        for (Board board : all) {
+        for (Board board : boards) {
             System.out.println("boardsByAdminResponseDTO = " + board);
             LocalDateTime writtenDate = board.getBoardWrittenDate();
             LocalDate localDate = writtenDate.toLocalDate();
@@ -141,9 +190,14 @@ public class BoardService {
                 .map(BoardsByAdminResponseDTO::new)
                 .collect(toList());
 
-        return ListResponseDTO.builder()
+
+        System.out.println("collect----- = " + collect);
+
+
+        System.out.println("collect = " + collect);
+        return ListResponseDTO.<BoardsByAdminResponseDTO, Board>builder()
                 .count(collect.size())
-                .pageInfo(new PageResponseDTO(all))
+                .pageInfo(new PageResponseDTO<>(boards))
                 .list(collect)
                 .build();
 

@@ -3,6 +3,7 @@ package site.woulduduo.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import site.woulduduo.dto.request.board.BoardModifyRequestDTO;
@@ -11,6 +12,7 @@ import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.board.BoardResponseDTO;
 import site.woulduduo.dto.response.board.BoardsByAdminResponseDTO;
+import site.woulduduo.entity.Board;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.BoardCategory;
@@ -158,10 +160,22 @@ public class BoardController {
 
 
     //관리자페이지 boardlist 가져오기
-    @GetMapping("api/v1/boards/admin")
-    public ResponseEntity<?> getBoardListByAdmin(PageDTO dto) {
-        ListResponseDTO<BoardsByAdminResponseDTO, User> boardListByAdmin = boardService.getBoardListByAdmin(dto);
-        ListResponseDTO<BoardsByAdminResponseDTO, User> boardsByAdminResponseDTOUserListResponseDTO = boardService.todayBoardByAdmin(dto);
+    @GetMapping("/api/v1/boards/admin")
+    public ResponseEntity<?> getBoardListByAdmin(
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "1") int pageNum) {
+
+        PageDTO dto = PageDTO.builder()
+                .page(pageNum)
+                .keyword(keyword)
+                .size(10)
+                .build();
+
+        log.info("{}ddttoo==",dto);
+        ListResponseDTO<BoardsByAdminResponseDTO, Board> boardListByAdmin = boardService.getBoardListByAdmin(dto);
+        log.info("userbyadmin11111 : {}",boardListByAdmin);
+
+        log.info("/api/v1/users/admin/");
 
 
         return ResponseEntity
@@ -169,6 +183,42 @@ public class BoardController {
                 .body(boardListByAdmin);
     }
 
+    //보드 삭제
+    @DeleteMapping("/api/v1/boards/admin/delete")
+    public ResponseEntity<?>  deleteBoardByAdmin(long boardNo ){
+        log.info("{}boardNo1212==",boardNo);
+
+        boolean b1 = boardService.deleteBoard(boardNo);
+        System.out.println("b1 = " + b1);
+
+        return ResponseEntity
+                .ok()
+                .body(b1);
+
+    }
+
+
+    //금일 등록된 boardlist
+    @GetMapping("/api/v1/boards/admin1")
+    public ResponseEntity<?> getTodayBoardListByAdmin(
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "1") int pageNum) {
+
+        PageDTO dto = PageDTO.builder()
+                .page(pageNum)
+                .keyword(keyword)
+                .size(10)
+                .build();
+        log.info("{}ddttoo==",dto);
+
+        ListResponseDTO<BoardsByAdminResponseDTO, Board> boardsByAdminResponseDTOUserListResponseDTO = boardService.todayBoardByAdmin(dto);
+        log.info("boardListByAdmin : {}",boardsByAdminResponseDTOUserListResponseDTO);
+
+
+        return ResponseEntity
+                .ok()
+                .body(boardsByAdminResponseDTOUserListResponseDTO);
+    }
 
 }
 

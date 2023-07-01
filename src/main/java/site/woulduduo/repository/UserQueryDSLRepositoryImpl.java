@@ -70,8 +70,6 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                     .profileImage((user.getUserProfileList().size() == 0) ? "basic" : user.getUserProfileList().get(0).getProfileImage())
                     .build();
 
-            log.info("dto : {}", dto);
-
             userProfiles.add(dto);
         }
 
