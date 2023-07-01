@@ -41,9 +41,7 @@ export function connectSocket() {
         const username = document.getElementById('loginUserInfo').dataset.userNickname;
         const msg = e.target.querySelector('.msg').value;
         const room = e.target.closest('.chatting-card').id;
-        const $li = e.target.closest('li');
-        const me = $li.querySelectorAll('.message-from');
-        const myProfile = me[0].querySelector('.chatting-profile').src;
+        const myProfile = document.querySelector('.myProfileImage').src;
         const chatBox = document.getElementById(room);
         const matchingStatus = chatBox.querySelector('.matching-accept-btn').dataset.matchingStatus;
         // const matchingNo = chatBox.querySelector('.matching-accept-btn').dataset.matchingNo;

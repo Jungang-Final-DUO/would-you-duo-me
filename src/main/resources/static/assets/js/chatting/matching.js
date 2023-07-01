@@ -128,10 +128,11 @@ function receivedPoint($chattingNo, point){
     const handShakeImg = $target.querySelector('.chatting-handshake-img');
     handShakeImg.src = '/assets/img/chattingModal/handshake.png';
     handShakeImg.alt = '매칭수락이미지';
-    $target.dataset.matchingStatus = '';
+    // $target.dataset.matchingStatus = '';
     $target.disabled = true;
     $target.childNodes[1].nodeValue = '매칭 대기';
-    $target.dataset.matchingNo = '';
+    // $target.dataset.matchingNo = '';
+    sendNoticeMessage($chattingNo, '즐거운 게임이었어요');
 }
 
 //매칭확정 버튼 -> 날짜 선택 클릭시 이벤트
@@ -172,7 +173,7 @@ export function  matchingConfirm(chattingNo, matchingNo, selectedDate) {
             if(result === true){
                 document.querySelector('.match-calendar').click();
                 changeMatchingToConfirm(chattingNo);
-                sendNoticeMessage(chattingNo, '매칭이 확정되었습니다.');
+                sendNoticeMessage(chattingNo, `매칭이 확정되었습니다.<br>매칭일자 : ${selectedDate}`);
             }
         });
 }
@@ -247,9 +248,9 @@ function matchingDone(chattingNo){
     const chatCard = document.getElementById(chattingNo);
     // console.log(chatCard);
     const $target = chatCard.querySelector('.matching-accept-btn');
-    $target.disabled = false;
+    $target.disabled = true;
     $target.dataset.matchingStatus = 'DONE';
-    $target.childNodes[1].nodeValue = '매칭 신청';
+    $target.childNodes[1].nodeValue = '정산중';
 
 }
 
@@ -267,10 +268,11 @@ function sendNoticeMessage(chattingNo, msg){
 //최근 매칭내역 가져오기(이벤트 상대방 매칭넘버 렌더링용)
 export function getRecentMatchingNo(chattingNo){
 
-    fetch(`/api/v1/matchings/${chattingNo}`)
+    return fetch(`/api/v1/matchings/${chattingNo}`)
         .then(res => res.json())
         .then(result => {
             setMatchingNo(chattingNo, result);
+            return result;
         });
 }
 
