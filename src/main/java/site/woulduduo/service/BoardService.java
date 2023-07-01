@@ -12,6 +12,7 @@ import site.woulduduo.dto.request.board.BoardModifyRequestDTO;
 import site.woulduduo.dto.request.board.BoardWriteRequestDTO;
 import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.board.BoardResponseDTO;
 import site.woulduduo.dto.response.board.BoardsByAdminResponseDTO;
 import site.woulduduo.dto.response.page.PageResponseDTO;
 import site.woulduduo.entity.Board;
@@ -24,6 +25,7 @@ import site.woulduduo.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -41,8 +43,8 @@ public class BoardService {
 
 
     //조회
-    private Board getBoard(Long boardNo){
-        return  boardRepository.findById(boardNo)
+    private Board getBoard(Long boardNo) {
+        return boardRepository.findById(boardNo)
                 .orElseThrow(
                         () -> new RuntimeException(
                                 boardNo + "번 게시물이 존재하지 않습니다."
@@ -61,7 +63,7 @@ public class BoardService {
         //게시글 쓰기 board 엔터티 생성
         Board saved = boardRepository.save(dto.toEntity());
         System.out.println("saved = " + saved);
-        if(saved != null) {
+        if (saved != null) {
             return true;
         }
         return false;
@@ -70,18 +72,16 @@ public class BoardService {
     }
 
 
-
-
     //수정
-  public Long modifyBoard(BoardModifyRequestDTO dto) {
+    public Long modifyBoard(BoardModifyRequestDTO dto) {
 
-       //수정 전 데이터 조회
-      final Board boardEntity = getBoard(dto.getBoardNo());
+        //수정 전 데이터 조회
+        final Board boardEntity = getBoard(dto.getBoardNo());
 //        if (boardEntity == null) {
 //            return false;
 //        }
 
-       //수정 시작
+        //수정 시작
         boardEntity.setBoardTitle(dto.getBoardTitle());
         boardEntity.setBoardContent(dto.getBoardContent());
         boardEntity.setBoardCategory(BoardCategory.NOTICE);
@@ -94,13 +94,15 @@ public class BoardService {
 
     }
 
+    //조회
+
+
     //전체 BoardList DTO 변환 (Admin)+ 페이징
     public ListResponseDTO<BoardsByAdminResponseDTO,Board> getBoardListByAdmin(PageDTO dto){
-        System.out.println("dtoservice = " + dto);
 
 
         Pageable pageable = PageRequest.of(
-                dto.getPage()-1,
+                dto.getPage() - 1,
                 dto.getSize(),
                 Sort.by("boardNo").descending()
         );
@@ -150,13 +152,10 @@ public class BoardService {
     }
 
     //금일 작성 게시물 (ADMIN)
-    public ListResponseDTO<BoardsByAdminResponseDTO,Board> todayBoardByAdmin(PageDTO dto){
-
-        System.out.println("dtoservice = " + dto);
-
+    public ListResponseDTO<BoardsByAdminResponseDTO, Board> todayBoardByAdmin(PageDTO dto) {
 
         Pageable pageable = PageRequest.of(
-                dto.getPage()-1,
+                dto.getPage() - 1,
                 dto.getSize(),
                 Sort.by("boardNo").descending()
         );
@@ -182,7 +181,7 @@ public class BoardService {
             System.out.println("boardsByAdminResponseDTO = " + board);
             LocalDateTime writtenDate = board.getBoardWrittenDate();
             LocalDate localDate = writtenDate.toLocalDate();
-            if(localDate!=null&&localDate.equals(currentDate)){
+            if (localDate != null && localDate.equals(currentDate)) {
                 todayBoardList.add(board);
             }
         }
@@ -204,4 +203,28 @@ public class BoardService {
 
 
     }
+
+
+    public List<BoardResponseDTO> getBoardList(int page, String keyword, BoardCategory boardCategory, String sort) {
+        Pageable pageable = PageRequest.of(page, 10);
+
+        List<Board> boardList;
+
+        if (keyword != null) {
+            boardList = boardRepository.findByBoardTitleContainingIgnoreCase(keyword);
+        } else if (boardCategory != null) {
+            boardList = boardRepository.findByBoardCategory(boardCategory);
+        } else {
+            boardList = boardRepository.findAll();
+        }
+
+        List<BoardResponseDTO> boardResponseDTOList = new ArrayList<>();
+
+        for (Board board : boardList) {
+            BoardResponseDTO boardResponseDTO = new BoardResponseDTO(board);
+            boardResponseDTOList.add(boardResponseDTO);
+        }
+        return boardResponseDTOList;
+    }
 }
+

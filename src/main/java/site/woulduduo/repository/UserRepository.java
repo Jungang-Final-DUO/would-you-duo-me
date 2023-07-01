@@ -12,7 +12,8 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public interface UserRepository extends
+public interface
+UserRepository extends
         JpaRepository<User,String> {
 
     //아이디로 검색한 정보보기 + 페이징

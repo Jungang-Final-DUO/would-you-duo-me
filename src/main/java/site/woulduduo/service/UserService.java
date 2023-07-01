@@ -365,23 +365,24 @@ public class UserService {
      * <p>
      * //     * @param session - 접속한 사용자
      *
+     * @param session - 접속한 사용자
      * @return 등록성공여부
      * @Param dto - 프로필카드 등록 dto
      */
     public boolean registerDUO(HttpSession session, UserCommentRequestDTO dto) {
 
-        User exUser = User.builder()
-                .userSessionId("abc1234@ddd.com")
-                .userAccount("abc1234@ddd.com")
-                .userPassword("12345678")
-                .lolTier(Tier.CHA)
-                .userGender(Gender.M)
-                .userBirthday(LocalDate.of(2000, 03, 16))
-                .userNickname("HongChaa")
-                .lolNickname("HongChaa")
-                .build();
-
-        userRepository.save(exUser);
+//        User exUser = User.builder()
+//                .userSessionId("abc1234@ddd.com")
+//                .userAccount("abc1234@ddd.com")
+//                .userPassword("12345678")
+//                .lolTier(Tier.CHA)
+//                .userGender(Gender.M)
+//                .userBirthday(LocalDate.of(2000, 03, 16))
+//                .userNickname("HongChaa")
+//                .lolNickname("HongChaa")
+//                .build();
+//
+//        userRepository.save(exUser);
         LoginUserResponseDTO loginUser = (LoginUserResponseDTO) session.getAttribute("login");
         Optional<User> user = userRepository.findById(loginUser.getUserAccount());
 
@@ -399,6 +400,69 @@ public class UserService {
         return true;
     }
 
+    // 프로필 카드 수정
+    public Long modifyUserComment(UserCommentRequestDTO dto, HttpSession session) {
+        log.info("dto : {}", dto);
+
+        return userQueryDSLRepositoryCustom.modifyProfileCard(dto, session);
+    }
+
+    // 프로필 카드 삭제
+    public Long deleteUserComment(UserCommentRequestDTO dto, HttpSession session) {
+        log.info("dto : {}", dto);
+
+        return userQueryDSLRepositoryCustom.deleteProfileCard(dto, session);
+    }
+
+
+//    public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
+//        userRepository.count();
+//        return null;
+//    }
+
+    public List<UserByAdminResponseDTO> getUserListByAdmin() {
+
+
+//        // Pageable객체 생성
+//        Pageable pageable = PageRequest.of(
+//                type.getPage() - 1,
+//                type.getSize(),
+//                Sort.by("createDate").descending()
+//        );
+
+        //전체불러오기
+        List<User> all = userRepository.findAll();
+        //user정보
+//        List<User> users = all.getContent();
+
+        //dto리스트생성 및 dto 생성
+        List<UserByAdminResponseDTO> userListByAdmin = new ArrayList<>();
+        UserByAdminResponseDTO dto = new UserByAdminResponseDTO();
+        for (User user : all) {
+            //bc,rc,rc,fc 카운터 찾는 메서드
+            long accuseCount = accuseRepository.countByUser(user);
+            long boardCount = boardRepository.countByUser(user);
+            long replyCount = replyRepository.countByUser(user);
+//            long followToCount = followRepository.findToByAccount(user);
+
+
+            dto.setUserAccount(user.getUserAccount());
+            dto.setGender(user.getUserGender().toString());
+            dto.setBoardCount(boardCount);
+            dto.setReplyCount(replyCount);
+            dto.setReportCount(accuseCount);
+            dto.setPoint(user.getUserCurrentPoint());
+            dto.setFollowCount(3);
+
+            userListByAdmin.add(dto);
+        }
+        List<UserByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
+        System.out.println("userListByAdmin1 = " + userListByAdmin1);
+
+        return userListByAdmin;
+    }
+
+    public AdminPageResponseDTO getAdminPageInfo() {
     public AdminPageResponseDTO getAdminPageInfo(){
         int userFindAllCount = userFindAllCount();
         int userFindByToday = userFindByToday();
@@ -758,8 +822,8 @@ public class UserService {
 
     }
 
-    public List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType) {
-        List<UserProfileResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
+    public List<UserProfileResponseDTO> getUserProfileList(HttpSession session, UserSearchType userSearchType) {
+        List<UserProfileResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType, session);
 
         for (UserProfileResponseDTO userProfile : userProfileList) {
             log.info("@@@ userProfile @@@@@ : {}", userProfile.toString());
