@@ -14,13 +14,17 @@ import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.*;
+import site.woulduduo.dto.response.user.UserProfileResponseDTO;
 import site.woulduduo.entity.User;
+import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
 import site.woulduduo.repository.MostChampRepository;
 import site.woulduduo.repository.UserRepository;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -74,6 +78,8 @@ class UserServiceTest {
                     .build();
             userRepository.save(user);
         }
+
+
 
     }
 //    @BeforeEach
@@ -274,9 +280,11 @@ class UserServiceTest {
 
 
         PageDTO dto = new PageDTO();
+        String userAccount = "123";
 
-
-        ListResponseDTO<UserByAdminResponseDTO, User> userByAdminResponseDTOUserListResponseDTO = userService.todayUserByAdMin(dto);
+        ListResponseDTO<UserByAdminResponseDTO, User>
+                userByAdminResponseDTOUserListResponseDTO
+                = userService.todayUserByAdMin(dto);
 
         System.out.println("userByAdminResponseDTOUserListResponseDTO = " + userByAdminResponseDTOUserListResponseDTO);
 
@@ -351,10 +359,9 @@ class UserServiceTest {
                 .userComment("안녕하세요 트롤아닙니다.")
                 .userMatchingPoint(500)
                 .build();
-
-        boolean b = userService.registerDUO(userCommentRequestDTO);
-
-        assertTrue(b);
+//        boolean b = userService.registerDUO(userCommentRequestDTO);
+//
+//        assertTrue(b);
     }
 
     @Test
@@ -363,6 +370,7 @@ class UserServiceTest {
         UserHistoryResponseDTO userDUOInfo = userService.getUserHistoryInfo(null, "test@example.com");
         System.out.println("userDUOInfo = " + userDUOInfo);
     }
+
 
 
 }

@@ -1,6 +1,7 @@
 package site.woulduduo.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 
 import static site.woulduduo.util.EmailUtil.EMAIL_KEY;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class EmailController {
@@ -26,6 +28,7 @@ public class EmailController {
             HttpSession session,
             @RequestBody UserRegisterRequestDTO dto
     ) {
+        log.info("/user/send-email POST : email = {}", dto.getUserEmail());
         try {
             String authCode = emailService.sendEmail(dto.getUserEmail());
             session.setAttribute(EMAIL_KEY, authCode);

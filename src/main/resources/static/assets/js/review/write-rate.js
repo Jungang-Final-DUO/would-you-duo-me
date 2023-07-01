@@ -1,10 +1,10 @@
-export async function renderRateModal(matchingNo, userNickname) {
+export async function renderRateModal(matchingNo, userNickname, profileImage) {
     const $rateModal = document.createElement('dialog');
-    $rateModal.innerHTML = `<div id="review-modal-background">
-        <div id="review-modal-wrapper">
+    $rateModal.id = 'review-modal-wrapper';
+    $rateModal.innerHTML = `
             <div id="review-modal-title">
                 <input type="hidden" name="matchingNo" value="${matchingNo}">
-                <div id="profile-image-frame"><img id="profile-image" src="/assets/img/chattingModal/young.jpg"
+                <div id="profile-image-frame"><img id="profile-image" src="${profileImage}"
                                                    alt="profile"></div>
                 <div id="nickname-rate">
                     <div id="user-nickname">${userNickname}</div>
@@ -28,10 +28,12 @@ export async function renderRateModal(matchingNo, userNickname) {
                                                                                              src="/assets/img/chattingModal/send-review.png"
                                                                                              alt="send-review"></label>
             </div>
-        </div>
-    </div>`;
+    `;
 
-    document.getElementById('send-review').onclick = async e => {
+    $rateModal.querySelector('#send-review').onclick = async e => {
+        const reviewContent = document.getElementById('reviewContent')
+            .value;
+
         const res = await fetch("/api/v1/matchings/reviews",
             {
                 method: 'PUT',
@@ -40,18 +42,19 @@ export async function renderRateModal(matchingNo, userNickname) {
                 },
                 body: JSON.stringify({
                     matchingNo: matchingNo,
-                    reviewContent: document.getElementById('reviewContent')
-                        .innerText,
+                    reviewContent: reviewContent,
                     reviewRate: +document.getElementById('give-rate').dataset.rate
                 })
             });
-        
+
         if (res.status === 200) {
             alert('리뷰 등록에 성공했습니다!');
+            window.location.href = `/user/matching-list`;
         } else {
             alert(`리뷰 등록에 실패했습니다. 오류 메세지 : ${await res.text()}`);
         }
     }
+
 
     return $rateModal;
 }

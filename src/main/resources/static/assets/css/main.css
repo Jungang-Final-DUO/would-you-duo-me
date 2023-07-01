@@ -244,6 +244,11 @@ body::-webkit-scrollbar {
     margin-right: 3px;
 }
 
+.sns-image.sns-image-with-null {
+    opacity: 0.5;
+    cursor: default;
+}
+
 .profile-right-side {
     /*border: 1px solid #fff;*/
     width: 50%;

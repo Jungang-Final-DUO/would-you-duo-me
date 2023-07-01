@@ -1,12 +1,16 @@
 const $registerBtn = document.getElementById("register-duo");
 const $matchingPoint = document.getElementById("matching-point"); // 매칭포인트 input 부분
+const $positionOption = document.querySelectorAll(".select-position"); // 포지션 선택 라디오 버튼
+const $comment = document.getElementById("comment"); // 자기소개 입력 부분
+const form = document.getElementById("position-comment-form"); // 폼 태그 부분
+
+
+// 입력값 검증 함수
+
 
 // 프로필카드 등록버튼 클릭시 함수
 function registerCard() {
     $registerBtn.onclick = e => {
-        const $positionOption = document.querySelectorAll(".select-position"); // 포지션 선택 라디오 버튼
-        const $comment = document.getElementById("comment"); // 자기소개 입력 부분
-        const form = document.getElementById("position-comment-form"); // 폼 태그 부분
 
         let selectedPosition = '';
         // 체크된 버튼 있는지 확인
@@ -52,11 +56,56 @@ function checkPoint() {
     }
 };
 
+// 세션 정보에 매칭포인트가 0인지 체크
+function checkMatchingPoint() {
+    const sessionPosition = document.getElementById('preferred-position').dataset.position;
+    
+
+    console.log(sessionPosition);
+        console.log("매칭포인트 존재");
+        // 포지션 체크해주기
+        for (let i = 0; i < $positionOption.length; i++) {
+            if ($positionOption[i].value === sessionPosition) {
+                console.log("value 일치 성공");
+                $positionOption[i].checked = true;
+            }
+        }
+        // $matchingPoint.value = sessionMatchingPoint;
+   
+}
+
+// 프로필카드 수정 버튼 클릭시 함수
+function modifyCard() {
+    document.getElementById('modify-duo').onclick = e => {
+        form.action = "/user/modify-duo";
+        if(confirm("지금 내용으로 수정하시겠습니까?")) {
+            form.submit();
+        }
+    }
+}
+// 프로필카드 삭제 버튼 클릭시 함수
+function deleteCard() {
+    document.getElementById('delete-duo').onclick = e => {
+        form.action = "/user/delete-duo";
+        if(confirm("지금 내용으로 삭제하시겠습니까?")) {
+            form.submit();
+        }
+    }
+}
+
 //========= 메인 실행부 =========//
 (function () {
     // 프로필 카드 등록 함수
-    registerCard();
+    if ($matchingPoint.value === 0) {
+        registerCard();
+    }
     // 매칭포인트 값 검증 함수
     checkPoint();
+    // 프로필카드가 기존에 등록되어 있는 경우 프로필카드 정보 띄워주기
+    if ($matchingPoint.value !== 0) {
+        checkMatchingPoint();
+        modifyCard();
+        deleteCard()
+    }
 
 })();
