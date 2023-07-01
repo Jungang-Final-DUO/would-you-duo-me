@@ -223,6 +223,10 @@ width: 100%;
 
 }
 
+#main-wrapper #right_menu .bottom_menu .menubar .blc{
+    margin-left: 10%;
+}
+
 #main-wrapper #right_menu .bottom_menu .menubar .no{
     margin-left: 5px;
     width: 5%;
@@ -230,7 +234,7 @@ width: 100%;
 
 #main-wrapper #right_menu .bottom_menu .menubar .nickname{
     margin-left: 5px;
-    width: 20%;
+    width: 15%;
 }
 
 #main-wrapper #right_menu .bottom_menu .menubar .gender{
@@ -264,9 +268,39 @@ width: 100%;
 }
 
 #main-wrapper #right_menu .bottom_menu .menubar .sign_date{
-    margin-left:40px;
+    margin-left:60px;
     width: 10%;
 }
+
+#main-wrapper #right_menu .bottom_menu .pageNo{
+    height: 5%;
+   margin-top: 2%;
+   display: flex;
+   justify-content: center;    
+}
+
+#main-wrapper #right_menu .bottom_menu .pageNo .page_no{
+   display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   justify-content: center;
+   width: 60%;
+   height: 100%;
+}
+
+#main-wrapper #right_menu .bottom_menu .pageNo .page_no li{
+ border: 1px solid #ffffff;
+ width: 7%;
+ height: 100%;
+ font-size: 13px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ text-align: center;
+ cursor: pointer;
+
+}
+
 
 /* 게시글관리 */
 
@@ -280,19 +314,24 @@ width: 100%;
     width: 10%;
 }
 
-#main-wrapper #right_menu .bottom_menu .menubar .select_count{
-    margin-left:20px;
-    width: 7%;
+#main-wrapper #right_menu .bottsom_menu .menubar .select_count{
+    padding-left:60px;
+    width: 5%;
 }
 
-#main-wrapper #right_menu .bottom_menu .menubar #delete{
+#main-wrapper #right_menu .bottom_menu .menubar div:last-child{
 height: 60%;
-margin-left: 40px;
 padding-top: 7px;
 background-color: rgba(255, 255, 255, 0);
+cursor: pointer;
+width: 15%;
 /* border: 1px solid #000; */
-
 }
+
+#main-wrapper #right_menu .bottom_menu .menubar #board_select_count{
+    padding-left: 60px;
+}
+
 
 #main-wrapper #right_menu .bottom_menu .menubar button{
     cursor: pointer;
@@ -313,15 +352,20 @@ background-color: rgba(255, 255, 255, 0);
 }
 #main-wrapper #right_menu .bottom_menu .menubar .accuse_title{
     margin-left:20px;
-    width: 40%;
+    width: 38%;
 }
 #main-wrapper #right_menu .bottom_menu .menubar .accuse_etc{
     margin-left:20px;
-    width: 40%;
+    width: 38%;
 }
 
 #main-wrapper #right_menu .bottom_menu .menubar .accuse_count{
-    margin-left:20px;
+    margin-left:40px;
+    width: 10%;
+}
+
+#main-wrapper #right_menu .bottom_menu .menubar .delete{
+    padding-left :100px;
     width: 10%;
 }
 

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.entity.Accuse;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
@@ -187,10 +188,11 @@ class UserRepositoryTest {
         System.out.println("userJoinDate = " + userJoinDate);
     }
 
+
     @Test
     @DisplayName("nickname으로 User 객체 찾기")
     void searchUserByNickName() {
-        User byNickName = userRepository.findByNickName("345");
+        User byNickName = userRepository.findByUserNickname("asd100");
         System.out.println("byNickName = " + byNickName);
     }
 
@@ -200,21 +202,24 @@ class UserRepositoryTest {
         //given
         int pageNo = 1;
         int amount = 10;
+        String userAccount = "";
+
+        PageDTO dto = new PageDTO();
+        dto.setPage(pageNo);
+        dto.setSize(amount);
+        dto.setKeyword(userAccount);
 
         // 페이지 정보 생성
         // 페이지번호가 zero-based
-        Pageable pageInfo
-                = PageRequest.of(pageNo - 1,
-                amount,
-                //Sort.by("name").descending() // 정렬기준 필드명
-                Sort.by(
-                        Sort.Order.desc("userJoinDate")
-                )
+        Pageable pageable = PageRequest.of(
+                dto.getPage()-1,
+                dto.getSize(),
+                Sort.by("userJoinDate").descending()
         );
 
         //when
         Page<User> users
-                = userRepository.findAll(pageInfo);
+                = userRepository.findByUserAccountContaining(userAccount, pageable);
 
         // 페이징 완료된 데이터셋
         List<User> studentList = users.getContent();
@@ -229,6 +234,7 @@ class UserRepositoryTest {
         Pageable next = users.getPageable().next();
 
         //then
+        System.out.println("studentList = " + studentList);
         System.out.println("\n\n\n");
         System.out.println("totalPages = " + totalPages);
         System.out.println("totalElements = " + totalElements);
@@ -245,15 +251,24 @@ class UserRepositoryTest {
         //given
         int pageNo = 1;
         int size = 10;
-        Pageable pageInfo = PageRequest.of(pageNo - 1, size);
-        //when
-        Page<User> users
-                = userRepository.findByUserAccountContaining("123", pageInfo);
+        String userAccount = "345";
+
+        Pageable pageable = PageRequest.of(
+                pageNo - 1,
+                size,
+                Sort.by("userJoinDate").descending()
+        );
+
+        Page<User> users = userRepository.findByUserAccountContaining("34", PageRequest.of(0,5));
 
         //then
-        System.out.println("\n\n\n");
-        users.getContent().forEach(System.out::println);
-        System.out.println("\n\n\n");
+        System.out.println("users = " + users);
+        List<User> content = users.getContent();
+        System.out.println("content = " + content);
+        int size1 = users.getSize();
+        System.out.println("size1 = " + size1);
+        int size2 = content.size();
+        System.out.println("size2 = " + size2);
     }
 
 
@@ -264,7 +279,7 @@ class UserRepositoryTest {
 
         System.out.println("user1 = " + user1);
     }
-    
+
     @Test
     @DisplayName("닉네임으로 아이디 찾아오기")
     void findByNicknameTest(){

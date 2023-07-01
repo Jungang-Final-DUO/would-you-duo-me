@@ -14,7 +14,10 @@ import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.*;
+import site.woulduduo.dto.response.user.UserProfileResponseDTO;
 import site.woulduduo.entity.User;
+import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
+import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
 import site.woulduduo.enumeration.Tier;
@@ -75,6 +78,8 @@ class UserServiceTest {
                     .build();
             userRepository.save(user);
         }
+
+
 
     }
 //    @BeforeEach
@@ -275,9 +280,11 @@ class UserServiceTest {
 
 
         PageDTO dto = new PageDTO();
+        String userAccount = "123";
 
-
-        ListResponseDTO<UserByAdminResponseDTO, User> userByAdminResponseDTOUserListResponseDTO = userService.todayUserByAdMin(dto);
+        ListResponseDTO<UserByAdminResponseDTO, User>
+                userByAdminResponseDTOUserListResponseDTO
+                = userService.todayUserByAdMin(dto);
 
         System.out.println("userByAdminResponseDTOUserListResponseDTO = " + userByAdminResponseDTOUserListResponseDTO);
 
@@ -363,6 +370,7 @@ class UserServiceTest {
         UserHistoryResponseDTO userDUOInfo = userService.getUserHistoryInfo(null, "test@example.com");
         System.out.println("userDUOInfo = " + userDUOInfo);
     }
+
 
 
 }
