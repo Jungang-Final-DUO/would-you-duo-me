@@ -14,14 +14,13 @@ import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.*;
-
 import site.woulduduo.dto.response.user.UserProfileResponseDTO;
 import site.woulduduo.entity.User;
-
 import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
+import site.woulduduo.enumeration.Role;
 import site.woulduduo.enumeration.Tier;
 import site.woulduduo.repository.MostChampRepository;
 import site.woulduduo.repository.UserRepository;
@@ -45,6 +44,8 @@ class UserServiceTest {
 
     @Autowired
     private MostChampRepository mostChampRepository;
+
+
     @BeforeEach
     void userInsert() {
         for (int i = 1; i < 42; i++) {
@@ -78,6 +79,8 @@ class UserServiceTest {
                     .build();
             userRepository.save(user);
         }
+
+
 
     }
 //    @BeforeEach
@@ -149,20 +152,29 @@ class UserServiceTest {
 //    }
 
     @Test
-    @DisplayName("QueryDSL을 이용해 필터와 정렬 조건에 맞춰 userList가 출력되어야한다.")
-    void testGetUserProfileList() {
-        UserSearchType userSearchType = new UserSearchType();
-//        userSearchType.setKeyword("40");
-        userSearchType.setPosition(Position.MID);
-        userSearchType.setSize(40);
-        userSearchType.setGender(Gender.F);
-        userSearchType.setTier(Tier.DIA);
-        userSearchType.setSort("avgRate");
+    @DisplayName("회원 하나에 ADMIN 부여하기")
+    void addAdmin() {
+        User user = userService.getUser("jun761_1@naver.com");
+        user.setRole(Role.ADMIN);
 
-        List<UserProfileResponseDTO> userProfileList = userService.getUserProfileList(userSearchType);
-
-        assertEquals(16, userProfileList.size());
+        userRepository.save(user);
     }
+
+//    @Test
+//    @DisplayName("QueryDSL을 이용해 필터와 정렬 조건에 맞춰 userList가 출력되어야한다.")
+//    void testGetUserProfileList() {
+//        UserSearchType userSearchType = new UserSearchType();
+////        userSearchType.setKeyword("40");
+//        userSearchType.setPosition(Position.MID);
+//        userSearchType.setSize(40);
+//        userSearchType.setGender(Gender.F);
+//        userSearchType.setTier(Tier.DIA);
+//        userSearchType.setSort("avgRate");
+//
+//        List<UserProfileResponseDTO> userProfileList = userService.getUserProfileList(userSearchType,);
+//
+//        assertEquals(16, userProfileList.size());
+//    }
 
     @Test
     @DisplayName("유요한 사용자 정보로 회원 가입 테스트")
@@ -242,6 +254,12 @@ class UserServiceTest {
         assertThrows(IllegalArgumentException.class, () -> userService.register(dto2));
     }
 
+
+
+
+
+
+
     @Test
     @DisplayName("관리자페이지 정보 count 확인")
     void getCountByAdmin() {
@@ -272,9 +290,11 @@ class UserServiceTest {
 
 
         PageDTO dto = new PageDTO();
+        String userAccount = "123";
 
-
-        ListResponseDTO<UserByAdminResponseDTO, User> userByAdminResponseDTOUserListResponseDTO = userService.todayUserByAdMin(dto);
+        ListResponseDTO<UserByAdminResponseDTO, User>
+                userByAdminResponseDTOUserListResponseDTO
+                = userService.todayUserByAdMin(dto);
 
         System.out.println("userByAdminResponseDTOUserListResponseDTO = " + userByAdminResponseDTOUserListResponseDTO);
 

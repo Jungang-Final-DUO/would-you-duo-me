@@ -57,4 +57,11 @@ class FollowRepositoryTest {
 
     }
 
+    @Test
+    @DisplayName("팔로워 순위 확인")
+    void getFollowRankTest(){
+        String userAccount = "test@test.com";
+        int followerRank = followRepository.getFollowerRank(userAccount);
+        System.out.println("followerRank = " + followerRank);
+    }
 }

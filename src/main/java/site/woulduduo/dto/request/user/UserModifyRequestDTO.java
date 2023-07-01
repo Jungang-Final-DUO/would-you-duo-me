@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @Builder
 public class UserModifyRequestDTO {
 
+    private String userAccount;
+
     private String userNickname;
 
     private LocalDate userBirthday;

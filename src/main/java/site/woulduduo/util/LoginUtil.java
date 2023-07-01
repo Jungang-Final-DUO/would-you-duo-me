@@ -2,6 +2,7 @@ package site.woulduduo.util;
 
 import org.springframework.web.util.WebUtils;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
+import site.woulduduo.entity.Chatting;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -30,7 +31,7 @@ public class LoginUtil {
         return loginUserInfo.getUserAccount();
     }
 
-//    // 관리자인지 확인해주는 메서드
+    // 관리자인지 확인해주는 메서드
 //    public static boolean isAdmin(HttpSession session) {
 //        LoginUserResponseDTO loginUser
 //                = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
@@ -43,5 +44,10 @@ public class LoginUtil {
 //        return targetAccount.equals(getCurrentLoginMemberAccount(session));
 //    }
 
+    //내가 참여한 채팅인지 확인
+    public static boolean isMyChatting(LoginUserResponseDTO loginUserInfo, Chatting chatting){
+        return chatting.getChattingFrom().getUserNickname().equals(loginUserInfo.getUserNickname())
+                || chatting.getChattingTo().getUserNickname().equals(loginUserInfo.getUserNickname());
+    }
 
 }

@@ -1,35 +1,36 @@
 import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
-import {renderRateModal} from "../review/write-rate.js";
 
-export function getChattingList() {
+export async function getChattingList() {
     // 추후 session에 회원정보 담기면 경로 수정
-    const userId = document.getElementById('loginUserInfo').dataset.userAccount;
-    fetch(`/api/v1/chat/chattings/${userId}`)
+    await fetch(`/api/v1/chat/chattings`)
         .then(res => res.json())
-        .then(result => renderChattingList(result))
+        .then(result => renderChattingList(result));
 }
 
 // 채팅 클릭했을때 메세지창 열어줘야함
 function makeChatting(chat) {
-    const userId = document.getElementById('loginUserInfo').dataset.userAccount;
 
-    chat.onclick = () => {
+    chat.onclick = (e) => {
         const userAccount = chat.closest('.duo-profile').id;
-        console.log('makeChatting 도달');
+        // console.log('makeChatting 도달');
         const requestInfo = {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
             },
-            body: userId
+            body: userAccount
         }
 
-        fetch(`/api/v1/chat/chattings/${userAccount}`, requestInfo)
+        fetch(`/api/v1/chat/chattings/new`, requestInfo)
             .then(res => res.json())
-            .then(result => {
+            .then(async result => {
                 // result = 생성된 채팅번호
-                getChattingList();
-                document.getElementById('chatting-btn').click();
+                // console.log(result);
+                await getChattingList();
+                document.querySelector('.chatting-modal-dialog').open = true;
+                const chatting = document.getElementById(result);
+                // console.log(chatting);
+                chatting.querySelector('.modal-btn').click();
             });
     }
 }
@@ -41,7 +42,7 @@ export function makeChattingRoom() {
     );
 }
 
-function renderChattingList(result) {
+async function renderChattingList(result) {
     const myNickname = document.getElementById('loginUserInfo').dataset.userNickname;
     document.querySelector('.chatting-modal-container').innerHTML = '';
 
@@ -54,7 +55,7 @@ function renderChattingList(result) {
     } else {
         for (let i = 0; i < result.length; i++) {
 
-            const {
+            let {
                 chattingNo,
                 chattingFrom, //채팅을 먼저 요청한 사람 닉네임
                 profileImage,
@@ -64,6 +65,10 @@ function renderChattingList(result) {
                 matchingStatus,
                 matchingNo,
             } = result[i];
+
+            if(profileImage === 'noProfile'){
+                profileImage = '/assets/img/chattingModal/user.png';
+            }
 
             let $chattings = document.createElement('li');
             $chattings.id = chattingNo;
@@ -77,7 +82,7 @@ function renderChattingList(result) {
             $modal_btn.classList.add('chatting-card-inner');
             $modal_btn.classList.add('modal-btn');
 
-            $modal_btn.innerHTML = `<img src="/assets/img/chattingModal/woogi.jpg" alt="프로필 이미지" class="chatting-profile-img">
+            $modal_btn.innerHTML = `<img src="${profileImage}" alt="프로필 이미지" class="chatting-profile-img">
                 <div class="chatting-info">
                     <div class="chatting-nickname">${userNickname}</div>
                     <div class="chatting-current-message">${messageContent}</div>
@@ -86,6 +91,18 @@ function renderChattingList(result) {
 
             $chattings.appendChild($chat_card);
             $chat_card.appendChild($modal_btn);
+
+            const chattingUnread = $modal_btn.querySelector('.chatting-unread');
+
+            if(messageUnreadCount === 0){
+                chattingUnread.style.display = 'none';
+            } else if (messageUnreadCount >= 0 && messageUnreadCount <= 200) {
+                chattingUnread.style.display = 'block';
+                chattingUnread.innerText = messageUnreadCount;
+            } else {
+                chattingUnread.style.display = 'block';
+                chattingUnread.innerText = '200+';
+            }
 
             const $dialog = document.createElement('dialog');
             $dialog.classList.add('message-dialog');
@@ -131,9 +148,9 @@ function renderChattingList(result) {
             chatting_message_option.appendChild(matching_accept_container);
 
             // 로그인 한 사람이 Chatting To일때
-            console.log(myNickname);
-            console.log(chattingFrom);
-            if(chattingFrom !== myNickname) {
+            // console.log(myNickname);
+            // console.log(chattingFrom);
+            if (chattingFrom !== myNickname) {
                 const matching_accept_btn = document.createElement('button');
                 matching_accept_btn.classList.add('matching-accept-btn');
                 matching_accept_btn.dataset.matchingStatus = matchingStatus;
@@ -168,36 +185,55 @@ function renderChattingList(result) {
                         matching_accept_btn.childNodes[1].nodeValue = `매칭 확정`;
                         matching_accept_btn.dataset.matchingNo = matchingNo;
                         break;
+
                     case 'REJECT':
                         matching_accept_btn.disabled = true;
                         matching_accept_btn.childNodes[1].nodeValue = `매칭 대기`;
                         matching_accept_btn.dataset.matchingNo = matchingNo;
                         break;
+
                     case 'DONE':
+                        const flag = await searchPointHistory(matchingNo);
+                        // console.log('왜?');
                         matching_accept_btn.dataset.matchingNo = matchingNo;
-                        chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
-                        chatting_handshake_img.alt = '게임완료이미지';
-                        matching_accept_btn.appendChild(chatting_handshake_img);
-                        matching_accept_btn.append('포인트 받기');
-                        break;
+                        // console.log(flag);
+                        if(!flag) {
+                        // console.log('안받음');
+                            matching_accept_btn.disabled = false;
+                            chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
+                            chatting_handshake_img.alt = '게임완료이미지';
+                            matching_accept_btn.childNodes[1].nodeValue = `포인트 받기`;
+                            break;
+                        }else {
+                        // console.log('받음');
+                            matching_accept_btn.disabled = true;
+                            matching_accept_btn.dataset.matchingNo = '';
+                            chatting_handshake_img.src = '/assets/img/chattingModal/handshake.png';
+                            chatting_handshake_img.alt = '매칭수락이미지';
+                            matching_accept_btn.childNodes[1].nodeValue = '매칭 대기';
+                            break;
+                        }
                     default :
                         matching_accept_btn.disabled = true;
-                        // matching_accept_btn.classList.add('matching-waiting');
                         matching_accept_btn.dataset.matchingNo = '';
                 }
 
             }
 
             // 로그인 한 사람이 Chatting From일 때
-            console.log(myNickname);
-            console.log(chattingFrom);
-            if(chattingFrom === myNickname) {
+            // console.log(myNickname);
+            // console.log(chattingFrom);
+            if (chattingFrom === myNickname) {
 
                 let $rightBtn = document.createElement('button');
                 $rightBtn.classList.add('gameover-btn');
                 $rightBtn.classList.add('matching-accept-btn');
                 $rightBtn.dataset.matchingStatus = matchingStatus;
                 matching_accept_container.appendChild($rightBtn);
+
+                if(chattingFrom === userNickname){
+                    $rightBtn.style.display = 'none';
+                }
 
                 const chatting_handshake_img = document.createElement('img');
                 chatting_handshake_img.classList.add('chatting-handshake-img');
@@ -210,11 +246,9 @@ function renderChattingList(result) {
                     case 'REQUEST':
                         $rightBtn.disabled = true;
                         $rightBtn.childNodes[1].nodeValue = `수락 대기중`;
-                        // $rightBtn.classList.add('matching-requested');
                         $rightBtn.dataset.matchingNo = matchingNo;
                         break;
                     case 'CONFIRM':
-                        // $rightBtn.classList.add('matching-confirmed');
                         $rightBtn.childNodes[1].nodeValue = `게임 완료`;
                         $rightBtn.dataset.matchingNo = matchingNo;
                         break;
@@ -223,19 +257,25 @@ function renderChattingList(result) {
                         $rightBtn.dataset.matchingNo = matchingNo;
                         break;
                     case 'DONE':
-                        chatting_handshake_img.src = '/assets/img/chattingModal/checkmark.png';
-                        chatting_handshake_img.alt = '게임완료이미지';
-                        $rightBtn.dataset.matchingNo = matchingNo;
-                        $rightBtn.appendChild(chatting_handshake_img);
-                        $rightBtn.append('후기 작성');
-                        $rightBtn.onclick = async e => {
-                            const $rateModal = await renderRateModal(matchingNo, userNickname);
-                            document.body.appendChild($rateModal);
-                            $rateModal.show();
+                        const flag = await searchPointHistory(matchingNo);
+                        if(flag) {
+                            $rightBtn.disabled = false;
+                            // console.log('안받음');
+                            chatting_handshake_img.src = '/assets/img/chattingModal/handshake.png';
+                            chatting_handshake_img.alt = '매칭수락이미지';
+                            $rightBtn.dataset.matchingNo = matchingNo;
+                            $rightBtn.childNodes[1].nodeValue = `매칭 신청`;
+                        } else {
+                            $rightBtn.disabled = true;
+                            $rightBtn.childNodes[1].nodeValue = `정산중`;
                         }
+                        // $rightBtn.onclick = async e => {
+                        //     const $rateModal = await renderRateModal(matchingNo, userNickname);
+                        //     document.body.appendChild($rateModal);
+                        //     $rateModal.show();
+                        // }
                         break;
                     default :
-                        // $rightBtn.classList.add('matching-request');
                         $rightBtn.dataset.matchingNo = '';
                 }
             }
@@ -243,7 +283,8 @@ function renderChattingList(result) {
             const message_send_box = document.createElement('input');
             message_send_box.classList.add('message-send-box');
             message_send_box.classList.add('msg');
-            message_send_box.placeholder = '메시지를 입력해주세요';
+            message_send_box.placeholder = '메시지를 100자 이내로 입력해주세요';
+            message_send_box.setAttribute('maxlength', '100');
             message_send_box.setAttribute('required', 'required');
             message_send_box.setAttribute('autofocus', 'autofocus');
             chatForm.appendChild(message_send_box);
@@ -275,13 +316,51 @@ export function toBack() {
 export function renderUnreadMessages(chattingNo) {
     const $chatting = document.getElementById(chattingNo);
     // console.log($chatting);
-    const $target = $chatting.querySelector('.chatting-unread');
+    const $targetCount = $chatting.querySelector('.chatting-unread');
+    const $targetMessage = $chatting.querySelector('.chatting-current-message');
     // console.log($target);
 
-    const userId = document.getElementById('loginUserInfo').dataset.userAccount;
-    fetch(`/api/v1/chat/messages/unread/${userId}/${chattingNo}`)
+    fetch(`/api/v1/chat/messages/unread/${chattingNo}`)
         .then(res => res.json())
-        .then(unread => {
-            $target.innerText = unread;
+        .then(result => {
+            const {unreadCount, message} = result;
+            if(unreadCount === 0){
+                $targetCount.style.display = 'none';
+            } else if (unreadCount >= 0 && unreadCount <= 200) {
+                $targetCount.style.display = 'block';
+                $targetCount.innerText = unreadCount;
+            } else {
+                $targetCount.style.display = 'block';
+                $targetCount.innerText = '200+';
+            }
+
+            $targetMessage.innerText = message;
+        })
+
+}
+
+export function renderTotalUnreadMessages(){
+    // console.log('모달 꺼집니당 메세지 갯수 세어야함..');
+
+    const $target = document.getElementById('unread-chatting-count');
+    fetch(`/api/v1/chat/messages/unread`)
+        .then(res => res.json())
+        .then(totalUnread => {
+            if(totalUnread === 0){
+                $target.style.display = 'none';
+            } else if (totalUnread >= 0 && totalUnread <= 200) {
+                $target.style.display = 'block';
+                $target.innerText = totalUnread;
+            } else {
+                $target.style.display = 'block';
+                $target.innerText = '200+';
+            }
         })
 }
+
+//해당 매칭으로 포인트 지급 받았는지 확인
+export function searchPointHistory(matchingNo) {
+    return fetch(`/api/v1/points/matching/${matchingNo}`)
+        .then(res => res.json());
+}
+
