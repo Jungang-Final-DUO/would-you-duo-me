@@ -300,7 +300,7 @@ public class UserController {
 
         String userAccount;
 
-        LoginUserResponseDTO loginInfo = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY))
+        LoginUserResponseDTO loginInfo = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY));
 
         try {
             userAccount = loginInfo.getUserAccount();
