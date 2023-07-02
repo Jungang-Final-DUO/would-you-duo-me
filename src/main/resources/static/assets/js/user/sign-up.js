@@ -243,10 +243,16 @@ import {addModalBtnEvent} from "../common/modal-handler.js";
 
     birthdayInput.onblur = () => {
         const birthdayValue = birthdayInput.value;
+        const currentDate = new Date();
+        const selectedDate = new Date(birthdayValue);
 
         if (birthdayValue.trim() === '') {
             birthdayInput.style.borderColor = 'red';
             document.getElementById('birthdayChk').innerHTML = '<b style="color: red;">[생년월일은 필수값입니다!]</b>';
+            checkResultList[4] = false;
+        } else if (currentDate.getFullYear() - selectedDate.getFullYear() <= 18) {
+            birthdayInput.style.borderColor = 'red';
+            document.getElementById('birthdayChk').innerHTML = '<b style="color: red;">[미성년자는 가입불가합니다.]</b>';
             checkResultList[4] = false;
         } else {
             birthdayInput.style.borderColor = 'skyblue';
@@ -254,6 +260,23 @@ import {addModalBtnEvent} from "../common/modal-handler.js";
             checkResultList[4] = true;
         }
     };
+
+
+    // const birthdayInput = document.getElementById('user-birthday');
+    //
+    // birthdayInput.onblur = () => {
+    //     const birthdayValue = birthdayInput.value;
+    //
+    //     if (birthdayValue.trim() === '') {
+    //         birthdayInput.style.borderColor = 'red';
+    //         document.getElementById('birthdayChk').innerHTML = '<b style="color: red;">[생년월일은 필수값입니다!]</b>';
+    //         checkResultList[4] = false;
+    //     } else {
+    //         birthdayInput.style.borderColor = 'skyblue';
+    //         document.getElementById('birthdayChk').innerHTML = '<b style="color: skyblue;">[확인됐습니다.]</b>';
+    //         checkResultList[4] = true;
+    //     }
+    // };
 
     // 소환사 아이디 입력값 검증
     const lolNicknameInput = document.getElementById('lol-nickname');
