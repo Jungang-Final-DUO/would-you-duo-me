@@ -892,25 +892,25 @@ public class UserService {
         //남자에게 받은 매칭 요청
         int matchingFromMale = matchingRepository.countByChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(Gender.M, user);
         //여자에게 받은 매칭 요청
-        int matchingFromFemale = matchingRepository.countByChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(Gender.M, user);
+        int matchingFromFemale = matchingRepository.countByChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(Gender.F, user);
         //남자에게 받은 매칭 수락건
         List<MatchingStatus> matchingStatus = List.of(MatchingStatus.CONFIRM, MatchingStatus.DONE);
         int confirmWithMale = matchingRepository.countByMatchingStatusInAndChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(matchingStatus, Gender.M, user);
         //여자에게 받은 매칭 수락건
         int confirmWithFemale = matchingRepository.countByMatchingStatusInAndChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(matchingStatus, Gender.F, user);
         //남자와 매칭확정률
-        double confirmRateMale = 0;
+        double confirmRateMale = 0.0;
         try {
-            confirmRateMale = confirmWithMale/(double)matchingFromMale * 100;
+            confirmRateMale = Math.round(((double) confirmWithMale / (double) matchingFromMale * 10000.0) / 100.0);
         } catch (ArithmeticException e) {
-            confirmRateMale = 0;
+            confirmRateMale = 0.0;
         }
         //여자와 매칭확정률
         double confirmRateFemale = 0;
         try {
-            confirmRateFemale = confirmWithFemale/(double)matchingFromFemale * 100;
+            confirmRateFemale = Math.round(((double) confirmWithFemale / (double) matchingFromFemale * 10000.0) / 100.0);
         } catch (ArithmeticException e) {
-            confirmRateMale = 0;
+            confirmRateMale = 0.0;
         }
 
 //        내 호감도
