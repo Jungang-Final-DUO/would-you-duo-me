@@ -459,6 +459,7 @@ public class UserService {
     //오늘 accuse 조회수(admin)
     public int accuseFindByToday() {
         int allWithAccuseWrittenDate = accuseRepository.findAllWithAccuseWrittenDate();
+        System.out.println("allWithAccuseWrittenDate = " + allWithAccuseWrittenDate);
         return allWithAccuseWrittenDate;
     }
 
@@ -491,6 +492,7 @@ public class UserService {
             // 전체 불러오기
             users = userRepository.findAll(pageable);
             List<User> content = users.getContent();
+            int accusesize = content.size();
         } else {
             // 특정 키워드를 포함하는 계정 불러오기
             users = userRepository.findByUserAccountContaining(keyword, pageable);
@@ -535,6 +537,9 @@ public class UserService {
         if (userAccount==null) {
             // 전체 불러오기
             users = userRepository.findAll(pageable);
+            int accusesize = users.getContent().size();
+            System.out.println("accusesize = " + accusesize);
+
         } else {
             // 특정 키워드를 포함하는 계정 불러오기
             users = userRepository.findByUserAccountContaining(userAccount, pageable);
@@ -550,6 +555,9 @@ public class UserService {
             }
         }
 
+        System.out.println("todayUserList = " + todayUserList);
+        int todaysize = todayUserList.size();
+        System.out.println("todaysize = " + todaysize);
         List<UserByAdminResponseDTO> collect = todayUserList.stream()
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());

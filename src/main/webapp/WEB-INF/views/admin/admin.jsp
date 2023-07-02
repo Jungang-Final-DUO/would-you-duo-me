@@ -592,16 +592,17 @@ function locationToDetail(list) {
 
   // 사용자 목록을 가져오는 함수 호출 (초기에는 keyword가 빈 문자열로 호출됩니다.)
   getBoardList(pageNum, keyword);
-  console.log('함수전달할 때  키워드', keyword);
+  console.log('함수전달할 때  키워드total', keyword);
 };
 
 
 function getBoardList(pageNum, keyword) {
 
-  fetch(`/api/v1/boards/admin1?pageNum=\${pageNum}&keyword=\${keyword}`)
+  fetch(`/api/v1/boards/admin?pageNum=\${pageNum}&keyword=\${keyword}`)
     .then(response => response.json())
     .then(res => {
       const list = res.list;
+      console.log('함수전달할 때  키워드res', res);
 
       for (let i = 0; i < boardList.length; i++) {
         const boardLink = boardList[i];
@@ -659,7 +660,7 @@ function deleteBoard(list, index) {
 
       if (res == true) {
         // 게시물 삭제 후 새로운 데이터 가져오기
-        fetch('/api/v1/boards/admin1') // 새로운 데이터 가져오기 API 엔드포인트로 변경해야 함
+        fetch('/api/v1/boards/admin') // 새로운 데이터 가져오기 API 엔드포인트로 변경해야 함
           .then(response => response.json())
           .then(res => {
             console.log('res123123123:', res);
@@ -706,7 +707,6 @@ function updateBoardTotalList(newList) {
 
             button.onclick = e => {
                 keyword = searchInput.value; // 입력된 텍스트 값으로 keyword를 업데이트합니다.
-                console.log(keyword);
 
                 if (keyword == "") {
                     keyword = "";
@@ -718,7 +718,6 @@ function updateBoardTotalList(newList) {
 
             // 사용자 목록을 가져오는 함수 호출 (초기에는 keyword가 빈 문자열로 호출됩니다.)
             getBoardTodayList(pageNum, keyword);
-            console.log('함수전달할 때  키워드', keyword);
         };
 
 
@@ -778,7 +777,6 @@ function updateBoardTodayLink(boardLink, data) {
 
 function deleteTodayBoard(list, index) {
   const boardNo = list[index].boardNo;
-  console.log('asd123====', boardNo);
 
   fetch(`/api/v1/boards/admin/delete?boardNo=\${boardNo}`, {
     method: 'DELETE'
@@ -791,11 +789,9 @@ function deleteTodayBoard(list, index) {
         fetch('/api/v1/boards/admin1') // 새로운 데이터 가져오기 API 엔드포인트로 변경해야 함
           .then(response => response.json())
           .then(res => {
-            console.log('res123123123:', res);
 
             const newList = res.list;
             // 새로운 데이터를 이용하여 화면 업데이트
-            console.log('newlist나갑니다', newList);
 
             updateBoardTodayList(newList);
           });
@@ -805,7 +801,6 @@ function deleteTodayBoard(list, index) {
 
 function updateBoardTodayList(newList) {
   // 게시물 리스트 업데이트
-  console.log('newlist나갑니다',newList);
   for (let i = 0; i < boardList.length; i++) {
     const boardLink = boardList[i];
 
@@ -830,27 +825,27 @@ function updateBoardTodayList(newList) {
             const pageNum = 1; // 초기 페이지 설정
             const searchInput = document.getElementById('search_input');
             const button = document.getElementById('search_button');
-            let totalKeyword = ""; // 새로운 변수 totalKeyword를 선언
+            let keyword = ""; // 새로운 변수 totalKeyword를 선언
             button.onclick = e => {
-                totalKeyword = searchInput.value; // 입력된 텍스트 값으로 totalKeyword를 업데이트합니다.
-                console.log(totalKeyword);
+                keyword = searchInput.value; // 입력된 텍스트 값으로 totalKeyword를 업데이트합니다.
+                console.log(keyword);
 
-                if (totalKeyword == "") {
-                    totalKeyword = "";
+                if (keyword == "") {
+                    keyword = "";
                 }
 
                 // 사용자 목록을 가져오는 함수 호출
-                getAccusesList(pageNum, totalKeyword);
+                getAccusesList(pageNum, keyword);
             };
 
             // 사용자 목록을 가져오는 함수 호출 (초기에는 totalKeyword가 빈 문자열로 호출됩니다.)
-            getAccusesList(pageNum, totalKeyword);
+            getAccusesList(pageNum, keyword);
         };
 
-        function getAccusesList(pageNum, totalKeyword) {
-            console.log('함수전달할 때  키워드', totalKeyword);
+        function getAccusesList(pageNum, keyword) {
+            console.log('함수전달할 때  키워드', keyword);
 
-            fetch(`/api/v1/user/accuse?pageNum=\${pageNum}&keyword=\${totalKeyword}`)
+            fetch(`/api/v1/user/accuse?pageNum=\${pageNum}&keyword=\${keyword}`)
                 .then(response => response.json())
                 .then(res => {
                     console.log('res: ', res);
