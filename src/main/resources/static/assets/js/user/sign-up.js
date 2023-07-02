@@ -130,8 +130,6 @@ import {addModalBtnEvent} from "../common/modal-handler.js";
             }
         }
 
-        // 이메일 재전송 버튼 등록
-
         return addConfirmBtnHandler();
     }
 

@@ -78,9 +78,6 @@
                                 <button class="btn">확인</button>
                             </div>
 
-                            <div>
-                                <button class="btn" id="resend-email-btn">이메일 재전송</button>
-                            </div>
                         </div>
                     </dialog>
 
