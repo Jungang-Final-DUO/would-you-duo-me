@@ -71,6 +71,13 @@
     margin-right: 15px;
 }
 
+#sns-chat-btn-wrapper img.image-with-null {
+    opacity: 0.5;
+    cursor: default;
+}
+
+
+
 #lol-nickname-comment-wrapper {
     width: 45%;
     display: grid;

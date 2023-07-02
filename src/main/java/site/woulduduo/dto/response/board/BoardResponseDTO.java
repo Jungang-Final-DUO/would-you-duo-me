@@ -47,4 +47,7 @@ public class BoardResponseDTO{
     }
 
 
+    public BoardResponseDTO(Long boardNo, String boardTitle, String boardContent) {
+
+    }
 }

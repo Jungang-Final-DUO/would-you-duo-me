@@ -20,6 +20,8 @@
                         <!--         로그인 모달           -->
 
                         <div id="sign-in-modal-wrapper" class="invisible">
+                            <% String returnURI = request.getRequestURI().substring(15); %>
+                            <input type="hidden" name = "requestURI" value = "<%=returnURI.substring(0, returnURI.length()-4)%>">
                             <div id="sign-in-modal" class="user-modal">
                                 <div id="id-input-wrapper" class="input-wrapper">
                                     <label for="sign-in-user-account">이메일 주소</label>
@@ -73,10 +75,10 @@
                             <div id="my-page-header">
                                 <div id="profile-img-wrapper">
                                     <c:if test="${login.userProfileImage == null}">
-                                        <img src="/assets/img/header/defaultProfile.jpg" alt="프로필 이미지">
+                                        <img class = "myProfileImage" src="/assets/img/chattingModal/user.png" alt="프로필 이미지">
                                     </c:if>
                                     <c:if test="${login.userProfileImage != null}">
-                                        <img src="${login.userProfileImage}" alt="프로필 이미지">
+                                        <img class = "myProfileImage" src="${login.userProfileImage}" alt="프로필 이미지">
                                     </c:if>
                                 </div>
                                 <div id="nickname-wrapper">${login.userNickname}</div>
@@ -100,6 +102,11 @@
         </nav>
 
         <nav id="common-nav-bar">
+            <c:if test="${login.role eq 'ADMIN'}">
+                <div class="common-menu-wrapper">
+                    <a href="/user/admin">관리자 페이지</a>
+                </div>
+            </c:if>
             <div class="common-menu-wrapper">
                 <a href="/board/list">커뮤니티</a>
             </div>
@@ -128,10 +135,11 @@
             <img class=".modal-btn" src="/assets/img/header/chatting.png" alt="채팅 버튼 아이콘">
             <!--     읽지 않은 채팅 표시   -->
             <span id="unread-chatting-count">
-                    ${false}
+<%--                    ${false}--%>
             </span>
         </button>
         <%@ include file="../chatting/chattingModal.jsp" %>
+        <%@ include file="../chatting/chattingCalendar.jsp" %>
     </c:if>
 
 

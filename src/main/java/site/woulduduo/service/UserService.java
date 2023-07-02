@@ -18,19 +18,16 @@ import site.woulduduo.dto.request.user.UserCommentRequestDTO;
 import site.woulduduo.dto.request.user.UserModifyRequestDTO;
 import site.woulduduo.dto.request.user.UserRegisterRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.chatting.MatchingInfoResponseDTO;
 import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.page.PageResponseDTO;
 import site.woulduduo.dto.response.user.*;
 import site.woulduduo.dto.riot.LeagueV4DTO;
 import site.woulduduo.dto.riot.MatchV5DTO;
 import site.woulduduo.dto.riot.MostChampInfo;
-import site.woulduduo.entity.Accuse;
-import site.woulduduo.entity.Board;
-import site.woulduduo.entity.User;
-import site.woulduduo.entity.UserProfile;
-import site.woulduduo.enumeration.Gender;
-import site.woulduduo.enumeration.LoginResult;
-import site.woulduduo.enumeration.Tier;
+import site.woulduduo.entity.*;
+import site.woulduduo.enumeration.*;
+import site.woulduduo.exception.NotFollowedException;
 import site.woulduduo.exception.NoRankException;
 import site.woulduduo.repository.*;
 import site.woulduduo.util.LoginUtil;
@@ -47,6 +44,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static site.woulduduo.enumeration.LoginResult.*;
+import static site.woulduduo.util.LoginUtil.LOGIN_KEY;
 
 @Service
 @Slf4j
@@ -65,7 +63,6 @@ public class UserService {
     private final FollowRepository followRepository;
     private final UserProfileRepository userProfileRepository;
     private final MostChampRepository mostChampRepository;
-    private final site.woulduduo.service.MatchingService matchingService;
 
 
     final String id = "abc1234";
@@ -102,9 +99,26 @@ public class UserService {
                 .userRecentLoginDate(LocalDateTime.now())
                 .build();
 
-        userRepository.save(user);
+
+        User saved = userRepository.save(user);
 
         // 프로필 사진 저장
+        // 모스트 챔피언 3개 또는 그 이하 저장
+        List<String> most3Champions = riotApiService.getMost3Champions(dto.getLolNickname());
+        for (int i = 0; i < 3; i++) {
+            String champName = null;
+            try {
+                champName = most3Champions.get(i);
+            } catch (IndexOutOfBoundsException e) {
+                champName = "";
+            }
+            mostChampRepository.save(MostChamp.builder()
+                    .user(saved)
+                    .mostNo(i + 1)
+                    .champName(champName)
+                    .build());
+        }
+
         String[] profileImagePaths = dto.getProfileImagePaths();
         if (profileImagePaths != null) {
             for (String imagePath : profileImagePaths) {
@@ -117,6 +131,9 @@ public class UserService {
                 }
             }
         }
+
+
+
         log.info("회원 가입이 완료되었습니다.");
     }
 
@@ -137,6 +154,7 @@ public class UserService {
             default:
                 throw new IllegalArgumentException("잘못된 검사 타입입니다.");
         }
+
         return flagNum;
     }
 
@@ -190,12 +208,17 @@ public class UserService {
         User user = getUser(userAccount);
 
         // 현재 로그인한 사람의 화면에 보여줄 일부정보(더 추가해야할수도 있음)
+        String lolNickname = user.getLolNickname();
         LoginUserResponseDTO dto = LoginUserResponseDTO.builder()
                 .userAccount(user.getUserAccount())
                 .userNickname(user.getUserNickname())
-                .lolNickname(user.getLolNickname())
+                .lolNickname(lolNickname)
                 .userCurrentPoint(user.getUserCurrentPoint())
+                .userComment(user.getUserComment() != null ? user.getUserComment() : "")
+                .userPosition(user.getUserPosition() != null ? user.getUserPosition() : Position.NONE)
+                .userMatchingPoint(user.getUserMatchingPoint() != null ? user.getUserMatchingPoint() : 0)
                 .userProfileImage(user.getLatestProfileImage())
+                .role(user.getRole())
                 .userInstagram(user.getUserInstagram())
                 .userFacebook(user.getUserFacebook())
                 .userTwitter(user.getUserTwitter())
@@ -207,10 +230,29 @@ public class UserService {
         System.out.println("UserProfileImage: " + userProfileImage);
 
         // 이 정보를 세션에 저장
-        session.setAttribute(LoginUtil.LOGIN_KEY, dto);
+        session.setAttribute(LOGIN_KEY, dto);
 
         // 세션의 수명을 설정
         session.setMaxInactiveInterval(60 * 60); // 1시간
+
+//        // 티어 정보 갱신
+//        user.setLolTier(riotApiService.getTier(lolNickname));
+
+//        List<String> newMost3 = riotApiService.getMost3Champions(lolNickname);
+//
+//        for (int i = 0; i < 3; i++) {
+//
+//            MostChamp foundMost = mostChampRepository.getAllByUser_UserAccountAndMostNo(userAccount, i + 1);
+//
+//            try {
+//                foundMost.setChampName(newMost3.get(i));
+//            } catch (IndexOutOfBoundsException e) {
+//                foundMost.setChampName("");
+//            }
+//
+//            mostChampRepository.save(foundMost);
+//        }
+
     }
 
     // 유저 정보를 가져오는 서비스기능
@@ -252,9 +294,9 @@ public class UserService {
         user.setUserNickname(dto.getUserNickname());
         user.setUserBirthday(dto.getUserBirthday());
         user.setLolNickname(dto.getLolNickname());
-        user.setUserInstagram(dto.getUserInstagram());
-        user.setUserFacebook(dto.getUserFacebook());
-        user.setUserTwitter(dto.getUserTwitter());
+        user.setUserInstagram(dto.getUserInstagram().equals("") ? null : dto.getUserInstagram());
+        user.setUserFacebook(dto.getUserFacebook().equals("") ? null : dto.getUserFacebook());
+        user.setUserTwitter(dto.getUserTwitter().equals("") ? null : dto.getUserTwitter());
 
         // 사용자 정보 저장
         userRepository.save(user);
@@ -318,24 +360,31 @@ public class UserService {
 
 
 
+    /**
+     * 마이페이지 - 프로필카드 등록 메서드
+     * <p>
+     * //     * @param session - 접속한 사용자
+     *
+     * @param session - 접속한 사용자
+     * @return 등록성공여부
+     * @Param dto - 프로필카드 등록 dto
+     */
+    public boolean registerDUO(HttpSession session, UserCommentRequestDTO dto) {
 
-
-    public boolean registerDUO(/*HttpSession session, */UserCommentRequestDTO dto) {
-
-        User exUser = User.builder()
-                .userSessionId("abc1234@ddd.com")
-                .userAccount("abc1234@ddd.com")
-                .userPassword("12345678")
-                .lolTier(Tier.CHA)
-                .userGender(Gender.M)
-                .userBirthday(LocalDate.of(2000, 03, 16))
-                .userNickname("HongChaa")
-                .lolNickname("HongChaa")
-                .build();
-
-        userRepository.save(exUser);
-
-        Optional<User> user = userRepository.findById(exUser.getUserSessionId());
+//        User exUser = User.builder()
+//                .userSessionId("abc1234@ddd.com")
+//                .userAccount("abc1234@ddd.com")
+//                .userPassword("12345678")
+//                .lolTier(Tier.CHA)
+//                .userGender(Gender.M)
+//                .userBirthday(LocalDate.of(2000, 03, 16))
+//                .userNickname("HongChaa")
+//                .lolNickname("HongChaa")
+//                .build();
+//
+//        userRepository.save(exUser);
+        LoginUserResponseDTO loginUser = (LoginUserResponseDTO) session.getAttribute("login");
+        Optional<User> user = userRepository.findById(loginUser.getUserAccount());
 
         System.out.println("user = " + user);
         if (user.isEmpty()) {
@@ -350,6 +399,21 @@ public class UserService {
         });
         return true;
     }
+
+    // 프로필 카드 수정
+    public Long modifyUserComment(UserCommentRequestDTO dto, HttpSession session) {
+        log.info("dto : {}", dto);
+
+        return userQueryDSLRepositoryCustom.modifyProfileCard(dto, session);
+    }
+
+    // 프로필 카드 삭제
+    public Long deleteUserComment(UserCommentRequestDTO dto, HttpSession session) {
+        log.info("dto : {}", dto);
+
+        return userQueryDSLRepositoryCustom.deleteProfileCard(dto, session);
+    }
+
 
 //    public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
 //        userRepository.count();
@@ -382,7 +446,6 @@ public class UserService {
 //            long followToCount = followRepository.findToByAccount(user);
 
 
-            dto.setUserAccount(user.getUserAccount());
             dto.setGender(user.getUserGender().toString());
             dto.setBoardCount(boardCount);
             dto.setReplyCount(replyCount);
@@ -398,7 +461,7 @@ public class UserService {
         return userListByAdmin;
     }
 
-    public AdminPageResponseDTO getAdminPageInfo(){
+    public AdminPageResponseDTO getAdminPageInfo() {
         int userFindAllCount = userFindAllCount();
         int userFindByToday = userFindByToday();
         int accuseFindAllCount = accuseFindAllCount();
@@ -459,52 +522,79 @@ public class UserService {
     }
 
     //유저리스트 DTO변환(Admin) + 페이징
-    public ListResponseDTO<UserByAdminResponseDTO,User> getUserListByAdmin(PageDTO dto) {
+    public ListResponseDTO<UserByAdminResponseDTO, User> getUserListByAdmin(PageDTO dto) {
 
         Pageable pageable = PageRequest.of(
-                dto.getPage()-1,
+                dto.getPage() - 1,
                 dto.getSize(),
                 Sort.by("userJoinDate").descending()
         );
-        //전체불러오기
-        Page<User> all = userRepository.findAll(pageable);
+        String keyword = dto.getKeyword();
+        if ("".equals(keyword)){
+            keyword=null;
+        }
+
+        String userAccount = dto.getKeyword();
+        Page<User> users;
+
+        if (userAccount==null) {
+            // 전체 불러오기
+            users = userRepository.findAll(pageable);
+        } else {
+            // 특정 키워드를 포함하는 계정 불러오기
+            users = userRepository.findByUserAccountContaining(userAccount, pageable);
+        }
 
 
-        List<UserByAdminResponseDTO> collect = all.stream()
+        List<UserByAdminResponseDTO> collect = users.stream()
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
-//
-        int i=1;
+
+        int i = (dto.getPage() - 1) * dto.getSize() + 1;
         for (UserByAdminResponseDTO user : collect) {
             user.setRowNum(i);
             i++;
         }
 
-
-        return ListResponseDTO.builder()
-                .count(all.getSize())
-                .pageInfo(new PageResponseDTO(all))
+        return ListResponseDTO.<UserByAdminResponseDTO, User>builder()
+                .count(collect.size())
+                .pageInfo(new PageResponseDTO<>(users))
                 .list(collect)
                 .build();
-
     }
 
+
+
+
     //금일 가입자(Admin)
-    public ListResponseDTO<UserByAdminResponseDTO,User> todayUserByAdMin(PageDTO dto) {
+    public ListResponseDTO<UserByAdminResponseDTO, User> todayUserByAdMin(PageDTO dto) {
         Pageable pageable = PageRequest.of(
-                dto.getPage()-1,
+                dto.getPage() - 1,
                 dto.getSize(),
                 Sort.by("userJoinDate").descending()
         );
-        //전체불러오기
-        Page<User> all = userRepository.findAll(pageable);
+        String keyword = dto.getKeyword();
+        if ("".equals(keyword)){
+            keyword=null;
+        }
+
+        String userAccount = dto.getKeyword();
+        Page<User> users;
+
+        if (userAccount==null) {
+            // 전체 불러오기
+            users = userRepository.findAll(pageable);
+        } else {
+            // 특정 키워드를 포함하는 계정 불러오기
+            users = userRepository.findByUserAccountContaining(userAccount, pageable);
+        }
+
         List<User> todayUserList = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
 
-        for (User user : all) {
-            System.out.println("userByAdminResponseDTO = " + user);
+        for (User user : users) {
             LocalDate joinDate = user.getUserJoinDate();
-            if (joinDate!=null&&joinDate.equals(currentDate)) {
+            if (joinDate != null && joinDate.equals(currentDate)) {
                 todayUserList.add(user);
             }
         }
@@ -512,91 +602,124 @@ public class UserService {
         List<UserByAdminResponseDTO> collect = todayUserList.stream()
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
-//
-        int i=1;
+
+        int i = (dto.getPage() - 1) * dto.getSize() + 1;
         for (UserByAdminResponseDTO user : collect) {
             user.setRowNum(i);
             i++;
         }
 
-        System.out.println("collect = " + collect);
-
-        return ListResponseDTO.builder()
+        return ListResponseDTO.<UserByAdminResponseDTO, User>builder()
                 .count(collect.size())
-                .pageInfo(new PageResponseDTO(all))
+                .pageInfo(new PageResponseDTO<>(users))
                 .list(collect)
                 .build();
     }
 
 
-
     //userDetailByAdmin
-    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userAccount) {
-        User oneUser = userRepository.findByUserAccount("345");
+    public UserDetailByAdminResponseDTO getUserDetailByAdmin(String userNickName) {
+        User byUserNickName = userRepository.findByUserNickname(userNickName);
         UserDetailByAdminResponseDTO userDetail =
-                new UserDetailByAdminResponseDTO(oneUser);
+                new UserDetailByAdminResponseDTO(byUserNickName);
 
 
 
         return userDetail;
     }
+    public boolean getUserBanBooleanByAdmin(String userNickname) {
+        User byUserNickName = userRepository.findByUserNickname(userNickname);
+
+        boolean userIsBanned = byUserNickName.isUserIsBanned();
 
 
-//포인트 증가
-    public boolean increaseUserPoint(UserModifyRequestDTO dto){
+        return userIsBanned;
+    }
+
+
+    //포인트 증가
+    public boolean increaseUserPoint(UserModifyRequestDTO dto) {
+        User byUserNickName = userRepository.findByUserNickname(dto.getUserNickname());
+
+        System.out.println("userByNickName123 = " + byUserNickName);
         //지급포인트
         int userAddPoint = dto.getUserAddPoint();
+        System.out.println("userAddPoint = " + userAddPoint);
+        String addPoint = String.valueOf(userAddPoint);
+
+        //-99999 ~ +99999 가 맞는지 확인
+        boolean matches = addPoint.matches("-?[0-9]{1,5}");
+        System.out.println("matches = " + matches);
         //현재포인트
-        int userCurrentPoint = dto.getUserCurrentPoint();
-        String currentPoint = String.valueOf(userCurrentPoint);
+        int userCurrentPoint = byUserNickName.getUserCurrentPoint();
+        System.out.println("userCurrentPoint = " + userCurrentPoint);
         //더한값
         int total = userCurrentPoint + userAddPoint;
 
         //-99999 ~ +99999 가 맞는지 확인
-        boolean matches = currentPoint.matches("-?[0-9]{1,5}");
-
         //현재포인트와 total이 같지 않다면 저장
-        if(userCurrentPoint!=total){
-            //
-            if(matches!=false) {
-                User userByNickName = findUserByNickName(dto);
-                userByNickName.setUserCurrentPoint(total);
-                User save = userRepository.save(userByNickName);
+        if (userCurrentPoint != total) {
+
+            if (matches != false) {
+                byUserNickName.setUserCurrentPoint(total);
+                User save = userRepository.save(byUserNickName);
+                currentPoint(dto);
                 System.out.println("save = " + save);
                 return true;
             }
-        }return false;
+            return false;
+        }
+        return false;
 
     }
 
-    //밴 boolean
-    public boolean changeBanStatus(UserModifyRequestDTO dto){
-        int userIsBanned = dto.getUserIsBanned();
-        User userByNickName = findUserByNickName(dto);
+    //현재포인트 렌더링 메서드
+    public int currentPoint(UserModifyRequestDTO dto) {
+        User byUserNickName = userRepository.findByUserNickname(dto.getUserNickname());
+        Integer userCurrentPoint = byUserNickName.getUserCurrentPoint();
 
-        //userIsBanned가 1이면 참
+        return userCurrentPoint;
+    }
+
+    //밴 boolean
+    public boolean changeBanStatus(UserModifyRequestDTO dto) {
+        int userIsBanned = dto.getUserIsBanned();
+        System.out.println("userIsBanned12 = " + userIsBanned);
+        User byUserNickName = userRepository.findByUserNickname(dto.getUserNickname());
+        boolean userIsBanned1 = byUserNickName.isUserIsBanned();
+        System.out.println("userIsBanned1 = " + userIsBanned1);
+
+        //클릭이 동작된것 front 에서 1을 보내줄것
         if(userIsBanned==1) {
-            userByNickName.setUserIsBanned(true);
-            User save = userRepository.save(userByNickName);
+            //userIsBanned가 1이면 참
+            if (userIsBanned1 == true) {
+                byUserNickName.setUserIsBanned(false);
+                User save = userRepository.save(byUserNickName);
+                boolean userIsBanned2 = save.isUserIsBanned();
+                System.out.println("userIsBanned2 = " + userIsBanned2);
+                return false;
+            }
+            byUserNickName.setUserIsBanned(true);
+            User save = userRepository.save(byUserNickName);
+            boolean userIsBanned2 = save.isUserIsBanned();
+            System.out.println("userIsBanned2 = " + userIsBanned2);
             return true;
-        }userByNickName.setUserIsBanned(false);
-        User save = userRepository.save(userByNickName);
+        }
+
+
         return false;
 
     }
 
     //닉네임으로 user 찾기
     public User findUserByNickName(UserModifyRequestDTO dto){
-        String userNickname = dto.getUserNickname();
-        User userByNickName = userRepository.findByNickName(userNickname);
+        User byUserNickName = userRepository.findByUserNickname(dto.getUserNickname());
 
-        return userByNickName;
+
+        return byUserNickName;
     }
 
-//    public boolean changeUserPoint(UserModifyRequestDTO dto){
-//
-//        return false;
-//    }
+
 
     /**
      * 사용자의 듀오 정보를 구하는 메서드
@@ -611,6 +734,13 @@ public class UserService {
                 () -> new RuntimeException("해당하는 유저가 없습니다.")
         );
         String lolNickname = foundUser.getLolNickname();
+
+        // 티어 정보 갱신
+        Tier newTier = riotApiService.getTier(lolNickname);
+
+        foundUser.setLolTier(newTier);
+
+        userRepository.save(foundUser);
 
         List<MatchV5DTO.MatchInfo.ParticipantDTO> last20ParticipantDTOList = riotApiService.getLast20ParticipantDTOList(lolNickname);
 
@@ -627,7 +757,9 @@ public class UserService {
 
         boolean isFollowed = false;
         try {
-            isFollowed = followRepository.existsByFollowFromAndFollowTo(session.getAttribute("로그인키").toString(), userAccount);
+            isFollowed = followRepository.existsByFollowFromAndFollowTo(
+                    ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount()
+                    , userAccount) == 1;
         } catch (NullPointerException ignored) {
         }
 
@@ -679,7 +811,7 @@ public class UserService {
                 .userTwitter(foundUser.getUserTwitter())
                 .lolNickname(lolNickname)
                 .userComment(foundUser.getUserComment())
-                .tier(foundUser.getLolTier())
+                .tier(newTier)
                 // 모스트 3 챔피언 정보
                 .mostChampInfos(mostChampInfoList)
                 // riot api 를 통해 얻어오는 솔로랭크 혹은 자유랭크 데이터
@@ -695,8 +827,8 @@ public class UserService {
 
     }
 
-    public List<UserProfileResponseDTO> getUserProfileList(/*HttpSession session, */UserSearchType userSearchType) {
-        List<UserProfileResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType);
+    public List<UserProfileResponseDTO> getUserProfileList(HttpSession session, UserSearchType userSearchType) {
+        List<UserProfileResponseDTO> userProfileList = userQueryDSLRepositoryCustom.getUserProfileList(userSearchType, session);
 
         for (UserProfileResponseDTO userProfile : userProfileList) {
             log.info("@@@ userProfile @@@@@ : {}", userProfile.toString());
@@ -705,10 +837,104 @@ public class UserService {
     }
 
 
+    /**
+     * 해당 유저가 현재 팔로우를 했다면 언팔로우, 언팔 상태면 팔로우를 하는 메서드
+     *
+     * @param followTo - 누구에게
+     * @param session  - 로그인 한 사람
+     * @return - 팔로우 했다면 true, 언팔로우 했다면 false
+     * @throws RuntimeException - 잘못된 유저 정보일 때 예외 던짐
+     */
+    public boolean follow(String followTo, HttpSession session) throws RuntimeException {
 
+        String followFrom = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
 
+        if (followTo.equals(followFrom)) throw new RuntimeException("해당하는 유저가 없습니다.");
 
+        Follow followState;
 
+        try {
+            followState = followRepository.findById(FollowCompositeKey.builder()
+                    .followFrom(followFrom)
+                    .followTo(followTo)
+                    .build()).orElseThrow(
+                    () -> new NotFollowedException("팔로우 합니다")
+            );
+        } catch (NotFollowedException e) {
+            followRepository.save(
+                    Follow.builder()
+                            .followTo(userRepository.findById(followTo).orElseThrow(
+                                    () -> new RuntimeException("해당하는 유저가 없습니다.")
+                            ))
+                            .followFrom(userRepository.findById(followFrom).orElseThrow(
+                                    () -> new RuntimeException("해당하는 유저가 없습니다.")
+                            ))
+                            .build()
+            );
 
+            return true;
+        }
+
+        followRepository.delete(followState);
+
+        return false;
+    }
+
+    //마이페이지 내활동정보 페이지
+    public MatchingInfoResponseDTO getMyMypageInfo(String userAccount) {
+        User user = userRepository.findById(userAccount).orElseThrow();
+
+//        듀오활동정보
+        //남자에게 받은 매칭 요청
+        int matchingFromMale = matchingRepository.countByChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(Gender.M, user);
+        //여자에게 받은 매칭 요청
+        int matchingFromFemale = matchingRepository.countByChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(Gender.M, user);
+        //남자에게 받은 매칭 수락건
+        List<MatchingStatus> matchingStatus = List.of(MatchingStatus.CONFIRM, MatchingStatus.DONE);
+        int confirmWithMale = matchingRepository.countByMatchingStatusInAndChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(matchingStatus, Gender.M, user);
+        //여자에게 받은 매칭 수락건
+        int confirmWithFemale = matchingRepository.countByMatchingStatusInAndChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(matchingStatus, Gender.F, user);
+        //남자와 매칭확정률
+        double confirmRateMale = 0;
+        try {
+            confirmRateMale = confirmWithMale/(double)matchingFromMale * 100;
+        } catch (ArithmeticException e) {
+            confirmRateMale = 0;
+        }
+        //여자와 매칭확정률
+        double confirmRateFemale = 0;
+        try {
+            confirmRateFemale = confirmWithFemale/(double)matchingFromFemale * 100;
+        } catch (ArithmeticException e) {
+            confirmRateMale = 0;
+        }
+
+//        내 호감도
+        //팔로워
+        int followers = followRepository.countByFollowTo(user);
+        //팔로윙
+        int followings = followRepository.countByFollowFrom(user);
+        //호감도
+        Double userAvgRate = user.getUserAvgRate();
+        //팔로워순위
+        Integer rank = followRepository.getFollowerRank(userAccount);
+        //경고횟수
+        long accuseCount = accuseRepository.countByUser(user);
+        //총활동점수
+        long totalScore = (long) ((followers * 200L) + (userAvgRate * 100) - (accuseCount * 500));
+
+        return MatchingInfoResponseDTO.builder()
+                .receivedMatchingFromMale(matchingFromMale)
+                .receivedMatchingFromFemale(matchingFromFemale)
+                .confirmedMatchingWithMale(confirmWithMale)
+                .confirmedMatchingWithFemale(confirmWithFemale)
+                .confirmRateWithMale(confirmRateMale)
+                .confirmRateWithFemale(confirmRateFemale)
+                .userAvgRate(userAvgRate)
+                .rank(rank)
+                .accuseCount(accuseCount)
+                .totalScore(totalScore)
+                .build();
+    }
 
 }

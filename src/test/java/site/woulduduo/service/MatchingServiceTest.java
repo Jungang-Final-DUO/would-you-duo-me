@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import site.woulduduo.dto.request.chatting.MatchingFixRequestDTO;
+import site.woulduduo.dto.request.matching.MatchingFixRequestDTO;
 import site.woulduduo.dto.request.chatting.ReviewWriteRequestDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.user.UserReviewResponseDTO;
@@ -15,7 +15,6 @@ import site.woulduduo.repository.ChattingRepository;
 import site.woulduduo.repository.MatchingRepository;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,7 +36,7 @@ class MatchingServiceTest {
     @Test
     @DisplayName("매칭을 신청하면 매칭 번호를 리턴받는다")
     void makeMatchingTest() {
-        long chattingNo = 2L;
+        long chattingNo = 27L;
 
         long matchingNo = matchingService.makeMatching(chattingNo);
 
@@ -60,13 +59,24 @@ class MatchingServiceTest {
     @Test
     @DisplayName("매칭을 확정하면 매칭일자가 입력되고 상태를 CONFIRM으로 변경한다")
     void fixScheduleTest() {
+        for (int i = 199; i <240 ; i++) {
         MatchingFixRequestDTO dto = MatchingFixRequestDTO.builder()
                 .matchingNo(3L)
-                .matchingDate(LocalDate.now())
+                .matchingDate("2023-07-19")
                 .build();
         boolean flag = matchingService.fixSchedule(dto);
         Matching rejected = matchingRepository.findByMatchingNo(dto.getMatchingNo());
         assertEquals(MatchingStatus.CONFIRM, rejected.getMatchingStatus());
+
+        }
+    }
+
+    //매칭 완료하기
+    @Test
+    void rejectTest(){
+        long matchingNo = 4L;
+        boolean flag = matchingService.gameOverMatching(matchingNo);
+        System.out.println(flag);
     }
 
     @Test
@@ -115,7 +125,7 @@ class MatchingServiceTest {
     @Test
     @DisplayName("test1@example.com이 받은 모든 채팅에 대해 매칭을 생성해야 한다.")
     void makeBulkMatchingTest() {
-        for (long i = 104; i < 200; i++) {
+        for (long i = 204; i < 250; i++) {
             matchingService.makeMatching(i);
         }
 
@@ -124,13 +134,23 @@ class MatchingServiceTest {
     @Test
     @DisplayName("test1@example.com이 받은 모든 매칭에 대해 리뷰를 생성한다")
     void writeBulkReviewTest() {
-        for (long i = 103; i < 150; i++) {
+        for (long i = 199; i < 240; i++) {
             ReviewWriteRequestDTO dto = new ReviewWriteRequestDTO();
             dto.setMatchingNo(i);
             dto.setReviewRate((int) (Math.random() * 5 + 1));
             dto.setReviewContent("리뷰내용" + i);
-            matchingService.writeReview("user" + (i - 102L), dto);
+            matchingService.writeReview("ahri@ahri.com", dto);
         }
     }
+
+
+//    @Test
+//    @DisplayName("남자에게 신청온 매칭건수 카운트")
+//    void matchingFromMaleTest(){
+//        String userID = "test@test.com";
+//        int countFromMale = matchingRepository.getMyMatchingInfo(userID);
+//        System.out.println("countFromMale = " + countFromMale);
+//
+//    }
 
 }

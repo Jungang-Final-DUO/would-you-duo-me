@@ -11,5 +11,7 @@ public class LoginRequestDTO {
 
     private String userPassword;
 
+    private String requestURI;
+
     private boolean autoLogin;
 }

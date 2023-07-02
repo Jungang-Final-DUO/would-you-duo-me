@@ -2,6 +2,8 @@ package site.woulduduo.dto.response.login;
 
 import lombok.*;
 import site.woulduduo.entity.UserProfile;
+import site.woulduduo.enumeration.Position;
+import site.woulduduo.enumeration.Role;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,7 +23,15 @@ public class LoginUserResponseDTO {
 
     private Integer userCurrentPoint;
 
+    private Position userPosition;
+
+    private String userComment;
+
+    private int userMatchingPoint;
+
     private String userProfileImage;
+
+    private Role role;
 
     private LocalDate userBirthday;
 
