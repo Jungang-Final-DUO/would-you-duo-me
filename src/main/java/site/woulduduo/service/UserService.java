@@ -415,52 +415,6 @@ public class UserService {
     }
 
 
-//    public ListResponseDTO<UsersByAdminResponseDTO> getUserListByAdmin(AdminSearchType type) {
-//        userRepository.count();
-//        return null;
-//    }
-
-    public List<UserByAdminResponseDTO> getUserListByAdmin() {
-
-
-//        // Pageable객체 생성
-//        Pageable pageable = PageRequest.of(
-//                type.getPage() - 1,
-//                type.getSize(),
-//                Sort.by("createDate").descending()
-//        );
-
-        //전체불러오기
-        List<User> all = userRepository.findAll();
-        //user정보
-//        List<User> users = all.getContent();
-
-        //dto리스트생성 및 dto 생성
-        List<UserByAdminResponseDTO> userListByAdmin = new ArrayList<>();
-        UserByAdminResponseDTO dto = new UserByAdminResponseDTO();
-        for (User user : all) {
-            //bc,rc,rc,fc 카운터 찾는 메서드
-            long accuseCount = accuseRepository.countByUser(user);
-            long boardCount = boardRepository.countByUser(user);
-            long replyCount = replyRepository.countByUser(user);
-//            long followToCount = followRepository.findToByAccount(user);
-
-
-            dto.setGender(user.getUserGender().toString());
-            dto.setBoardCount(boardCount);
-            dto.setReplyCount(replyCount);
-            dto.setReportCount(accuseCount);
-            dto.setPoint(user.getUserCurrentPoint());
-            dto.setFollowCount(3);
-
-            userListByAdmin.add(dto);
-        }
-        List<UserByAdminResponseDTO> userListByAdmin1 = userListByAdmin;
-        System.out.println("userListByAdmin1 = " + userListByAdmin1);
-
-        return userListByAdmin;
-    }
-
     public AdminPageResponseDTO getAdminPageInfo() {
         int userFindAllCount = userFindAllCount();
         int userFindByToday = userFindByToday();
@@ -505,6 +459,7 @@ public class UserService {
     //오늘 accuse 조회수(admin)
     public int accuseFindByToday() {
         int allWithAccuseWrittenDate = accuseRepository.findAllWithAccuseWrittenDate();
+        System.out.println("allWithAccuseWrittenDate = " + allWithAccuseWrittenDate);
         return allWithAccuseWrittenDate;
     }
 
@@ -524,34 +479,29 @@ public class UserService {
     //유저리스트 DTO변환(Admin) + 페이징
     public ListResponseDTO<UserByAdminResponseDTO, User> getUserListByAdmin(PageDTO dto) {
 
-        log.info("dtoo:{}",dto);
-
         Pageable pageable = PageRequest.of(
                 dto.getPage() - 1,
                 dto.getSize(),
                 Sort.by("userJoinDate").descending()
         );
         String keyword = dto.getKeyword();
-        if ("".equals(keyword)){
-            keyword=null;
-        }
 
-        String userAccount = dto.getKeyword();
         Page<User> users;
 
-        if (userAccount==null) {
+        if (keyword == null || keyword.isEmpty()) {
             // 전체 불러오기
             users = userRepository.findAll(pageable);
+            List<User> content = users.getContent();
+            int accusesize = content.size();
         } else {
             // 특정 키워드를 포함하는 계정 불러오기
-            users = userRepository.findByUserAccountContaining(userAccount, pageable);
+            users = userRepository.findByUserNicknameContaining(keyword, pageable);
+            List<User> content = users.getContent();
         }
-
 
         List<UserByAdminResponseDTO> collect = users.stream()
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
-        log.info("collect:{}",collect);
 
         int i = (dto.getPage() - 1) * dto.getSize() + 1;
         for (UserByAdminResponseDTO user : collect) {
@@ -587,9 +537,12 @@ public class UserService {
         if (userAccount==null) {
             // 전체 불러오기
             users = userRepository.findAll(pageable);
+            int accusesize = users.getContent().size();
+            System.out.println("accusesize = " + accusesize);
+
         } else {
             // 특정 키워드를 포함하는 계정 불러오기
-            users = userRepository.findByUserAccountContaining(userAccount, pageable);
+            users = userRepository.findByUserNicknameContaining(userAccount, pageable);
         }
 
         List<User> todayUserList = new ArrayList<>();
@@ -602,6 +555,9 @@ public class UserService {
             }
         }
 
+        System.out.println("todayUserList = " + todayUserList);
+        int todaysize = todayUserList.size();
+        System.out.println("todaysize = " + todaysize);
         List<UserByAdminResponseDTO> collect = todayUserList.stream()
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());

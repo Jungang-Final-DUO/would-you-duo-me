@@ -423,11 +423,17 @@ public class UserController {
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "1") int pageNum) {
 
+        if (keyword == null) {
+            keyword = ""; // keyword 값이 null일 경우 빈 문자열로 설정
+        }
+
         PageDTO dto = PageDTO.builder()
                 .page(pageNum)
                 .keyword(keyword)
                 .size(10)
                 .build();
+
+        // 이하 코드 생략
 
         log.info("{}ddttoo==", dto);
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
@@ -435,12 +441,10 @@ public class UserController {
 
         log.info("/api/v1/users/admin/");
 
-
         return ResponseEntity
                 .ok()
                 .body(userListByAdmin);
     }
-
     //관리자 페이지 금일 가입자 리스트 가져오기
     @GetMapping("/api/v1/users/admin1")
     public ResponseEntity<?> getTodayUserListByAdmin(
@@ -481,11 +485,11 @@ public class UserController {
     @GetMapping("/user/detail/banBoolean")
 //    //관리자 페이지 자세히 보기
     public ResponseEntity<?> showBanIsBoolean(HttpSession session, @RequestParam String nickname) {
-        log.info("{}nickname = ", nickname);
+        log.info("{}nicknamedetail = ", nickname);
 
         boolean userDetailByAdmin = userService.getUserBanBooleanByAdmin(nickname);
 
-        log.info("{}userDetailByAdmin = ", userDetailByAdmin);
+        log.info("{}userDetailByAdmin11111  = ", userDetailByAdmin);
 
         return ResponseEntity
                 .ok()

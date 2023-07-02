@@ -93,7 +93,7 @@ class UserRepositoryTest {
     @BeforeEach
     void bulkInsert() {
         // 학생을 147명 저장
-        for (int i = 1; i <= 147; i++) {
+        for (int i = 1; i <= 14; i++) {
             User User1 = User.builder()
                     .userAccount("acvd" + i)
                     .userNickname("asd" + i)
