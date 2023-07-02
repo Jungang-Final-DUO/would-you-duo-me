@@ -7,8 +7,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
-    <link rel="stylesheet" href="/assets/css/user/sign-up.css">
-    '
+    <link rel="stylesheet" href="/assets/css/user/sign-up.css">'
 
     <script src="/assets/js/user/sign-up.js" defer type="module"></script>
 
@@ -63,25 +62,25 @@
 
                     <label for="user-email">이메일</label>
                     <input type="text" id="user-email" name="userEmail">
-
                     <div id="emailChk"></div>
 
-
                     <button id="verification-btn" class="btn modal-btn">인증</button>
-                    <dialog id="email-confirm-modal">
-                        <div>
-                            인증 이메일이 발송되었습니다.<br>
-                            이메일 확인 후 인증번호를 입력해주세요.
-                        </div>
+                    <dialog>
+                        <div id="email-confirm-modal">
+                            <div>
+                                인증 이메일이 발송되었습니다.<br>
+                                이메일 확인 후 인증번호를 입력해주세요.
+                            </div>
 
-                        <div>
-                            <label for="confirm-code">인증번호</label>
-                            <input type="text" id="confirm-code">
-                            <button class="btn">확인</button>
-                        </div>
+                            <div>
+                                <label for="confirm-code">인증번호</label>
+                                <input type="text" id="confirm-code" placeholder="남은 시간 03:00">
+                                <button class="btn">확인</button>
+                            </div>
 
-                        <div>
-                            <button class="btn">이메일 재전송</button>
+                            <div>
+                                <button class="btn">이메일 재전송</button>
+                            </div>
                         </div>
                     </dialog>
 

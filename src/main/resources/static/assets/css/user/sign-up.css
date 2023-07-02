@@ -104,8 +104,8 @@ header h2 {
     margin-top: 30px;
     width: 50%;
 }
-#signup-btn,
-#verification-btn
+
+#sign-up-request-info-wrapper button
 , #user-gender {
     border-radius: 5px;
     border: 1px solid #fff;
@@ -266,6 +266,11 @@ header h2 {
 
 /* email confirm modal style */
 #email-confirm-modal {
+    position: relative;
+    top: 80px;
+    left: 184px;
+    transform: translate(-50%, -50%);
+
     background: rgba(255, 255, 255, 0.93);
     border-radius: 5px;
     padding: 20px 30px;
@@ -305,8 +310,6 @@ header h2 {
     border: 1px solid #000;
     border-radius: 5px;
     background: #D9D9D9;
-
-    color: #000;
 }
 
 #email-confirm-modal div:nth-child(3) {
