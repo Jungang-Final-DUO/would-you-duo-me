@@ -26,7 +26,8 @@
         <div id="user-profile-info-wrapper">
             <div id="user-main-info-wrapper">
                 <!-- 임시 이미지를 인라인 스타일로 먹임 -->
-                <button id="user-history-profile-img-wrapper" class="btn"></button>
+                <button id="user-history-profile-img-wrapper" class="btn"
+                        style="background-image: url('${history.profileImage}')"></button>
                 <div>
                     <div id="user-nickname-etc-wrapper">
                         <!-- 달러랑 중괄호는 살짝 아래로 내려가있기 때문에 중앙정렬이 안맞아 보이는 것-->
