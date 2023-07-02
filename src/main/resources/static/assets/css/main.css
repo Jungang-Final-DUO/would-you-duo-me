@@ -270,7 +270,11 @@ body::-webkit-scrollbar {
 .user-nickname {
     /*border: 1px solid #fff;*/
     width: fit-content;
+    max-width: 105px;
+    max-height: 20px;
+    overflow: hidden;
     margin-left: 10px;
+    line-height: 20px;
 }
 
 .follow-status {
