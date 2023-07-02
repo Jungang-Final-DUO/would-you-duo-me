@@ -852,7 +852,7 @@ public class UserService {
 
         String followFrom = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
 
-        if (followTo.equals(followFrom)) throw new RuntimeException("해당하는 유저가 없습니다.");
+        if (followTo.equals(followFrom)) throw new RuntimeException("자기 자신은 팔로우할 수 없습니다.");
 
         Follow followState;
 
