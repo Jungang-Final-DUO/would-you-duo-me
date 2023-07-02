@@ -23,7 +23,9 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 
                 document.getElementById('user-email').style.borderColor = 'skyblue';
 
-                return true;
+                checkResultList[6] = true;
+
+                document.getElementById('emailChk').innerHTML = '<b style="color: skyblue;">[인증되었습니다]</b>';
             }
 
         }
@@ -148,7 +150,7 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
             checkResultList[0] = false;
         } else if (!nicknamePattern.test(nicknameValue)) {
             nicknameInput.style.borderColor = 'red';
-            document.getElementById('nicknameChk').innerHTML = '<b style="color: red;">[한글,영문,숫자 포함 2~8자리입니다.]</b>';
+            document.getElementById('nicknameChk').innerHTML = '<b style="color: red;">[닉네임은 2~8자리여야 하며, 한글, 영문, 숫자만 포함해야 합니다.]</b>';
             checkResultList[0] = false;
         } else {
             nicknameInput.style.borderColor = 'skyblue';
@@ -181,10 +183,9 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
     });
 
     // 이메일 입력값 검증
-
     const isEmailValid = checkEmailValidation().then();
 
-    checkResultList[6] = sendVerificationEmail(isEmailValid).then();
+    sendVerificationEmail(isEmailValid).then();
 
     // 패스워드 검사 정규표현식
     const passwordPattern = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*?_~]).{8,16}$/;
@@ -219,11 +220,11 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 
         if (passwordCheckValue.trim() === '') {
             passwordCheckInput.style.borderColor = 'red';
-            document.getElementById('pwChk2').innerHTML = '<b style="color: red;">[확인란은 필수값입니다!]</b>';
+            document.getElementById('pwChk2').innerHTML = '<b style="color: red;">[비밀번호 확인란은 필수값입니다!]</b>';
             checkResultList[3] = false;
         } else if (passwordCheckInput.value !== passwordInput.value) {
             passwordCheckInput.style.borderColor = 'red';
-            document.getElementById('pwChk2').innerHTML = '<b style="color: red;">[위와 똑같이 입력해주세요.]</b>';
+            document.getElementById('pwChk2').innerHTML = '<b style="color: red;">[비밀번호를 똑같이 입력해주세요.]</b>';
             checkResultList[3] = false;
         } else {
             passwordCheckInput.style.borderColor = 'skyblue';
@@ -237,16 +238,10 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 
     birthdayInput.onblur = () => {
         const birthdayValue = birthdayInput.value;
-        const currentDate = new Date();
-        const selectedDate = new Date(birthdayValue);
 
         if (birthdayValue.trim() === '') {
             birthdayInput.style.borderColor = 'red';
             document.getElementById('birthdayChk').innerHTML = '<b style="color: red;">[생년월일은 필수값입니다!]</b>';
-            checkResultList[4] = false;
-        } else if (currentDate.getFullYear() - selectedDate.getFullYear() <= 18) {
-            birthdayInput.style.borderColor = 'red';
-            document.getElementById('birthdayChk').innerHTML = '<b style="color: red;">[미성년자는 가입 불가합니다.]</b>';
             checkResultList[4] = false;
         } else {
             birthdayInput.style.borderColor = 'skyblue';
@@ -254,7 +249,6 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
             checkResultList[4] = true;
         }
     };
-
 
     // 소환사 아이디 입력값 검증
     const lolNicknameInput = document.getElementById('lol-nickname');
@@ -265,11 +259,11 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 
         if (lolNicknameValue === '') {
             lolNicknameInput.style.borderColor = 'red';
-            document.getElementById('lolNicknameChk').innerHTML = '<b style="color: red;">[롤계정은 필수값입니다!]</b>';
+            document.getElementById('lolNicknameChk').innerHTML = '<b style="color: red;">[소환사 닉네임은 필수값입니다!]</b>';
             checkResultList[5] = false;
         } else if (!lolNicknamePattern.test(lolNicknameValue)) {
             lolNicknameInput.style.borderColor = 'red';
-            document.getElementById('lolNicknameChk').innerHTML = '<b style="color: red;">[소환사 닉네임을 입력해주세요]</b>';
+            document.getElementById('lolNicknameChk').innerHTML = '<b style="color: red;">[인게임의 소환사 닉네임을 입력해주세요]</b>';
             checkResultList[5] = false;
         } else {
             lolNicknameInput.style.borderColor = 'skyblue';
@@ -293,18 +287,17 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
     // (선택값)SNS 계정(가입 이메일,휴대폰이 아닌 사용자 아이디) 입력 검증식
     // 인스타 사용자 아이디 검증식
     const instagramInput = document.getElementById('instagram');
-    // 사용자 아이디는 영문 소문자와 숫자로만 구성되며, 최소 5자부터 최대 20자까지 허용됩니다. 밑줄 (_)과 마침표 (.)는 사용할 수 있지만, 연속으로 사용하거나 시작/끝에 위치할 수 없습니다.
     const instagramUsernamePattern = /^[a-z0-9](?:[a-z0-9._]*[a-z0-9]){5,20}$/  // 인스타그램 사용자 아이디 패턴
 
     instagramInput.onblur = () => {
         const username = instagramInput.value.trim();
 
         if (username === '') {
-            instagramInput.style.borderColor = 'greenyellow';
-            document.getElementById('instagramChk').innerHTML = '<b style="color: greenyellow;">[인스타 id는 선택값입니다!]</b>';
+            instagramInput.style.borderColor = 'red';
+            document.getElementById('instagramChk').innerHTML = '<b style="color: red;">[insta id는 선택값입니다.!]</b>';
         } else if (!instagramUsernamePattern.test(username)) {
-            instagramInput.style.borderColor = 'greenyellow';
-            document.getElementById('instagramChk').innerHTML = '<b style="color: greenyellow;">[사용자 아이디를 입력해주세요.]</b>';
+            instagramInput.style.borderColor = 'red';
+            document.getElementById('instagramChk').innerHTML = '<b style="color: red;">[사용자 아이디는 영문 소문자와 숫자로만 구성되며, 최소 5자부터 최대 20자까지 허용됩니다. 밑줄 (_)과 마침표 (.)는 사용할 수 있지만, 연속으로 사용하거나 시작/끝에 위치할 수 없습니다.]</b>';
         } else {
             instagramInput.style.borderColor = 'skyblue';
             document.getElementById('instagramChk').innerHTML = '<b style="color: skyblue;">[확인됐습니다.]</b>';
@@ -313,18 +306,17 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 
     // 페이스북 사용자 아이디 검증식
     const facebookInput = document.getElementById('facebook');
-    // 영문 대소문자, 숫자, 점(.), 밑줄(_)로만 구성된 5자 이상, 20자 이하의 사용자 이름을 입력해주세요.
     const facebookUsernamePattern = /^[a-zA-Z0-9._]{5,20}$/; // 페이스북 사용자 이름 패턴
 
     facebookInput.onblur = () => {
         const username = facebookInput.value.trim();
 
         if (username === '') {
-            facebookInput.style.borderColor = 'greenyellow';
-            document.getElementById('facebookChk').innerHTML = '<b style="color: greenyellow;">[페이스북 id는 선택값입니다!]</b>';
+            facebookInput.style.borderColor = 'red';
+            document.getElementById('facebookChk').innerHTML = '<b style="color: red;">[페이스북 사용자 이름은 필수값입니다!]</b>';
         } else if (!facebookUsernamePattern.test(username)) {
-            facebookInput.style.borderColor = 'greenyellow';
-            document.getElementById('facebookChk').innerHTML = '<b style="color: greenyellow;">[사용자 아이디를 입력해주세요.]</b>';
+            facebookInput.style.borderColor = 'red';
+            document.getElementById('facebookChk').innerHTML = '<b style="color: red;">[영문 대소문자, 숫자, 점(.), 밑줄(_)로만 구성된 5자 이상, 20자 이하의 사용자 이름을 입력해주세요.]</b>';
         } else {
             facebookInput.style.borderColor = 'skyblue';
             document.getElementById('facebookChk').innerHTML = '<b style="color: skyblue;">[확인됐습니다.]</b>';
@@ -333,18 +325,17 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 
     // 트위터 사용자 아이디 검증식
     const twitterInput = document.getElementById('twitter');
-    // 사용자 아이디는 영문 기준 최소 4자부터 최대 15자까지 허용됩니다.
     const userIdPattern = /^[a-zA-Z0-9_]{4,15}$/; // 사용자 아이디 패턴
 
     twitterInput.onblur = () => {
         const userId = twitterInput.value.trim();
 
         if (userId === '') {
-            twitterInput.style.borderColor = 'greenyellow';
-            document.getElementById('twitterChk').innerHTML = '<b style="color: greenyellow;">[트위터 id는 선택값입니다.!]</b>';
+            twitterInput.style.borderColor = 'red';
+            document.getElementById('twitterChk').innerHTML = '<b style="color: red;">[twitter id는 선택값입니다.!]</b>';
         } else if (!userIdPattern.test(userId)) {
-            twitterInput.style.borderColor = 'greenyellow';
-            document.getElementById('twitterChk').innerHTML = '<b style="color: greenyellow;">[사용자 아이디를 입력해주세요.]</b>';
+            twitterInput.style.borderColor = 'red';
+            document.getElementById('twitterChk').innerHTML = '<b style="color: red;">[사용자 아이디는 영문 기준 최소 4자부터 최대 15자까지 허용됩니다.]</b>';
         } else {
             twitterInput.style.borderColor = 'skyblue';
             document.getElementById('twitterChk').innerHTML = '<b style="color: skyblue;">[확인됐습니다.]</b>';
