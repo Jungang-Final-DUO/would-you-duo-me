@@ -15,7 +15,7 @@ export async function renderReview({$wrapper, userAccount, pageNo}) {
             $review.classList.add('each-review-wrapper');
             $review.innerHTML = `
                             <div class="review-profile-img"
-                                 style="background-image: url('${profileImage}')"></div>
+                                 style="background-image: url('${profileImage}');background-size: cover;"></div>
                             <div class="review-content-wrapper">
                                 <div class="review-rate-wrapper">
                                     <div class="review-user-nickname">${userNickname}</div>

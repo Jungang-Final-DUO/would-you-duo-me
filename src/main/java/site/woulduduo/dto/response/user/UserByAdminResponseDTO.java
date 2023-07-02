@@ -15,7 +15,7 @@ import java.time.LocalDate;
 
 public class UserByAdminResponseDTO {
     private int rowNum;
-    private String userAccount;
+    private String userNickname;
     private String gender;
     private long boardCount;
     private long replyCount;
@@ -26,7 +26,7 @@ public class UserByAdminResponseDTO {
 
 
     public UserByAdminResponseDTO(User user) {
-        this.userAccount=user.getUserAccount();
+        this.userNickname=user.getUserNickname();
         this.gender=user.getUserGender().toString();
         this.point=user.getUserCurrentPoint();
         this.boardCount=user.getBoardList().size();

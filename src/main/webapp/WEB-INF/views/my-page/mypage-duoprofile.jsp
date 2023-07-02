@@ -30,10 +30,10 @@
                     <!--        프로필 사진 -->
                     <!-- <img id="duo-tier-image" src="/assets/img/mypage/TFT_Regalia_Challenger.png" alt="tier"> -->
                     <div id="duo-image-frame">
-                        <c:if test="${login.userProfileImg != null}">
-                            <img id="duo-profile-image" src="${login.userProfileImg}" alt="profile-image">
+                        <c:if test="${login.userProfileImage != null}">
+                            <img id="duo-profile-image" src="${login.userProfileImage}" alt="profile-image">
                         </c:if>
-                        <c:if test="${login.userProfileImg == null}">
+                        <c:if test="${login.userProfileImage == null}">
                             <img id="duo-profile-image" src="/assets/img/main/basic-profile.png" alt="profile-image">
                         </c:if>
                     </div>
@@ -41,7 +41,7 @@
                     <div id="position-comment-box">
                         <form id="position-comment-form" action="/user/register-duo" method="post">
                             <!-- 포지션 선택 -->
-                            <div id="preferred-position">
+                            <div id="preferred-position" data-position="${login.userPosition}">
                                 <p id="preferred-position-title">주포지션</p>
                                 <label class="position-option">
                                     <input class="select-position" type="radio" name="userPosition" value="ALL">
@@ -64,12 +64,18 @@
                                     <img class="position-image" src="/assets/img/mypage/SUP.png" alt="SUP"></label>
                             </div>
                             <!--  자기소개 -->
-                            <label><textarea id="comment" name="userComment" placeholder="자유롭게 자기소개를 입력해주세요"
-                                    autofocus></textarea></label>
+                            <label><textarea id="comment" name="userComment" spellcheck="false" placeholder="자유롭게 자기소개를 입력해주세요"
+                                    autofocus>${login.userComment}</textarea></label>
                             <div id="submit-box">
                                 <p id="matching-point-title">매칭포인트</p><label id="matching-point-label">
-                                    <input id="matching-point" name="userMatchingPoint"><span>POINT</span></label>
-                                <div id="register-duo">듀오 등록</div>
+                                    <input id="matching-point" name="userMatchingPoint" value="${login.userMatchingPoint}" data-matchingpoint="${login.userMatchingPoint}"><span>POINT</span></label>
+                                <c:if test="${login.userMatchingPoint == 0}">
+                                    <div class="duo-btn" id="register-duo">듀오 등록</div>
+                                </c:if>
+                                <c:if test="${login.userMatchingPoint != 0}">
+                                    <div class="duo-btn" id="modify-duo">수정</div>
+                                    <div class="duo-btn" id="delete-duo">삭제</div>
+                                </c:if>
                             </div>
                         </form>
                     </div>

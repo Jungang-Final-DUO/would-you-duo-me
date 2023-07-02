@@ -22,11 +22,12 @@
     <!-- 헤더가 위치할 자리 -->
     <%@ include file="../common/header.jsp" %>
 
-    <div id="history-wrapper" data-user-account="${history.userAccount}">
+    <div id="history-wrapper" class = "duo-profile-account" data-user-account="${history.userAccount}">
         <div id="user-profile-info-wrapper">
             <div id="user-main-info-wrapper">
                 <!-- 임시 이미지를 인라인 스타일로 먹임 -->
-                <button id="profile-img-wrapper" class="btn"></button>
+                <button id="user-history-profile-img-wrapper" class="btn"
+                        style="background-image: url('${history.profileImage}')"></button>
                 <div>
                     <div id="user-nickname-etc-wrapper">
                         <!-- 달러랑 중괄호는 살짝 아래로 내려가있기 때문에 중앙정렬이 안맞아 보이는 것-->
@@ -36,20 +37,24 @@
                         </div>
                         <div id="user-follow-heart">
                             <button class="btn">
-                                <!-- 팔로우 했을 경우 -->
-                                <img src="/assets/img/main/following.png" alt="팔로우 시 하트">
+                                <c:if test="${history.followed}">
+                                    <!-- 팔로우 했을 경우 -->
+                                    <img src="/assets/img/main/following.png" alt="팔로우 시 하트">
+                                </c:if>
                                 <!-- 팔로우 하지 않았을 경우 -->
-                                <!-- <img src="/assets/img/main/not-following.png" alt="언팔로우 시 하트">-->
+                                <c:if test="${!history.followed}">
+                                    <img src="/assets/img/main/not-following.png" alt="언팔로우 시 하트">
+                                </c:if>
                             </button>
                         </div>
                     </div>
                     <!-- end of user-nickname-etc-wrapper -->
                     <div id="rate-point-wrapper">
-                        <div id="rate-wrapper">
-                            <img src="/assets/img/main/star.png" alt="별점 아이콘">
-                            <span>${history.userAvgRate}</span>
-                        </div>
                         <c:if test="${history.userMatchingPoint ne null}">
+                            <div id="rate-wrapper">
+                                <img src="/assets/img/main/star.png" alt="별점 아이콘">
+                                <span>${history.userAvgRate}</span>
+                            </div>
                             <div id="point-wrapper">
                                 <img src="/assets/img/main/coin.png" alt="포인트 아이콘">
                                 <span>${history.userMatchingPoint}</span>
@@ -59,24 +64,36 @@
                     <!-- end of rate point wrapper -->
                     <div id="sns-chat-btn-wrapper">
                         <c:if test="${history.userInstagram ne null}">
-                            <a href="https://instagram.com/${history.userInstagram}" class="btn">
+                            <a href="https://instagram.com/${history.userInstagram}" class="btn" target="_blank">
                                 <img src="/assets/img/main/instagram.png" alt="인스타그램 아이콘">
                             </a>
                         </c:if>
+                        <c:if test="${history.userInstagram eq null}">
+                            <img class = "image-with-null" src="/assets/img/main/instagram.png" alt="인스타그램 아이콘">
+                        </c:if>
                         <c:if test="${history.userFacebook ne null}">
-                            <a href="https://facebook.com/${history.userFacebook}" class="btn">
+                            <a href="https://facebook.com/${history.userFacebook}" class="btn" target="_blank">
                                 <img src="/assets/img/main/facebook.png" alt="페이스북 아이콘">
                             </a>
                         </c:if>
+                        <c:if test="${history.userFacebook eq null}">
+                                <img class = "image-with-null" src="/assets/img/main/facebook.png" alt="페이스북 아이콘">
+                        </c:if>
                         <c:if test="${history.userTwitter ne null}">
-                            <a href="https://twitter.com/${history.userTwitter}" class="btn">
+                            <a href="https://twitter.com/${history.userTwitter}" class="btn" target="_blank">
                                 <img src="/assets/img/main/twitter.png" alt="트위터 아이콘">
                             </a>
                         </c:if>
+                        <c:if test="${history.userTwitter eq null}">
+                                <img class = "image-with-null" src="/assets/img/main/twitter.png" alt="트위터 아이콘">
+                        </c:if>
                         <c:if test="${history.userMatchingPoint ne null}">
-                            <button class="btn">
+                            <button class="btn chatting-icon">
                                 <img src="/assets/img/main/chatting-icon.png" alt="채팅 아이콘">
                             </button>
+                        </c:if>
+                        <c:if test="${history.userMatchingPoint eq null}">
+                            <img class = "image-with-null" src="/assets/img/main/chatting-icon.png" alt="채팅 아이콘">
                         </c:if>
                     </div>
                     <!-- end of sns chat button wrapper-->
@@ -105,7 +122,7 @@
                 </div>
                 <div id="rank-etc-wrapper">
                     <div id="rank-point-info-wrapper">
-                        <span>${history.tier}</span>
+                        <span>${history.tier} ${history.rank}</span>
                         <span>${history.leaguePoints}LP</span>
                     </div>
                     <div id="simple-win-rate-wrapper">
@@ -216,6 +233,7 @@
             <!-- end of game result and review wrapper-->
         </div>
         <!--    end of history wrapper-->
+        <%@ include file="../common/footer.jsp" %>
     </div>
 
 </body>

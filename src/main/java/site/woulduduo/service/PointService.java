@@ -26,8 +26,8 @@ public class PointService {
     public int checkCurrentPoint(long chattingNo) {
         Chatting chatting = chattingRepository.findByChattingNo(chattingNo);
 
-        User from = userRepository.findByUserAccount(chatting.getChattingFrom().getUserAccount());
-        User to = userRepository.findByUserAccount(chatting.getChattingTo().getUserAccount());
+        User from = userRepository.findById(chatting.getChattingFrom().getUserAccount()).orElseThrow();
+        User to = userRepository.findById(chatting.getChattingTo().getUserAccount()).orElseThrow();
 
         int currentPoint = from.getUserCurrentPoint();
         int needed = to.getUserMatchingPoint();
@@ -51,7 +51,7 @@ public class PointService {
         Point pointHistory = pointRepository.save(givingPoint);
         System.out.println("payMatchingPoint 서비스 givingPoint : " + givingPoint.getPointAmount());
 
-        User user = userRepository.findByUserAccount(chatting.getChattingFrom().getUserAccount());
+        User user = userRepository.findById(chatting.getChattingFrom().getUserAccount()).orElseThrow();
         user.setUserCurrentPoint(user.getUserCurrentPoint() + givingPoint.getPointAmount());
         user.addPoint(pointHistory);
         userRepository.save(user);
@@ -75,7 +75,7 @@ public class PointService {
                 .build();
         Point pointHistory = pointRepository.save(givingPoint);
 
-        User user = userRepository.findByUserAccount(chatting.getChattingTo().getUserAccount());
+        User user = userRepository.findById(chatting.getChattingTo().getUserAccount()).orElseThrow();
         user.setUserCurrentPoint(user.getUserCurrentPoint() + givingPoint.getPointAmount());
         user.addPoint(pointHistory);
         userRepository.save(user);

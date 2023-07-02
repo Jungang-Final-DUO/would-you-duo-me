@@ -12,18 +12,20 @@ import site.woulduduo.dto.request.board.BoardModifyRequestDTO;
 import site.woulduduo.dto.request.board.BoardWriteRequestDTO;
 import site.woulduduo.dto.request.page.PageDTO;
 import site.woulduduo.dto.response.ListResponseDTO;
+import site.woulduduo.dto.response.board.BoardResponseDTO;
 import site.woulduduo.dto.response.board.BoardsByAdminResponseDTO;
 import site.woulduduo.dto.response.page.PageResponseDTO;
 import site.woulduduo.entity.Board;
-import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.BoardCategory;
 import site.woulduduo.repository.BoardLikeRepository;
 import site.woulduduo.repository.BoardRepository;
 import site.woulduduo.repository.ReplyRepository;
+import site.woulduduo.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -37,11 +39,12 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
     private final BoardLikeRepository boardLikeRepository;
+    private final UserRepository userRepository;
 
 
     //조회
-    private Board getBoard(Long boardNo){
-        return  boardRepository.findById(boardNo)
+    private Board getBoard(Long boardNo) {
+        return boardRepository.findById(boardNo)
                 .orElseThrow(
                         () -> new RuntimeException(
                                 boardNo + "번 게시물이 존재하지 않습니다."
@@ -60,7 +63,7 @@ public class BoardService {
         //게시글 쓰기 board 엔터티 생성
         Board saved = boardRepository.save(dto.toEntity());
         System.out.println("saved = " + saved);
-        if(saved != null) {
+        if (saved != null) {
             return true;
         }
         return false;
@@ -69,18 +72,16 @@ public class BoardService {
     }
 
 
-
-
     //수정
-  public Long modifyBoard(BoardModifyRequestDTO dto) {
+    public Long modifyBoard(BoardModifyRequestDTO dto) {
 
-       //수정 전 데이터 조회
-      final Board boardEntity = getBoard(dto.getBoardNo());
+        //수정 전 데이터 조회
+        final Board boardEntity = getBoard(dto.getBoardNo());
 //        if (boardEntity == null) {
 //            return false;
 //        }
 
-       //수정 시작
+        //수정 시작
         boardEntity.setBoardTitle(dto.getBoardTitle());
         boardEntity.setBoardContent(dto.getBoardContent());
         boardEntity.setBoardCategory(BoardCategory.NOTICE);
@@ -93,58 +94,138 @@ public class BoardService {
 
     }
 
-    //전체 BoardList DTO 변환 (Admin)+ 페이징
-    public ListResponseDTO<BoardsByAdminResponseDTO,User> getBoardListByAdmin(PageDTO dto){
-        Pageable pageable = PageRequest.of(
-                dto.getPage()-1,
-                dto.getSize(),
-                Sort.by("boardWrittenDate").descending()
-        );
-        Page<Board> all = boardRepository.findAll(pageable);
+    //조회
 
-        List<BoardsByAdminResponseDTO> collect = all.stream()
+
+    //전체 BoardList DTO 변환 (Admin)+ 페이징
+    public ListResponseDTO<BoardsByAdminResponseDTO,Board> getBoardListByAdmin(PageDTO dto){
+
+
+        Pageable pageable = PageRequest.of(
+                dto.getPage() - 1,
+                dto.getSize(),
+                Sort.by("boardNo").descending()
+        );
+
+        String keyword = dto.getKeyword();
+        if ("".equals(keyword)){
+            keyword=null;
+        }
+
+        String userAccount = dto.getKeyword();
+        Page<Board> boards;
+
+        if (userAccount==null) {
+            boards = boardRepository.findAll(pageable);
+        }else{
+            boards = boardRepository.findByUser_UserAccountContaining(userAccount, pageable);
+        }
+
+
+        System.out.println("all = " + boards);
+        List<BoardsByAdminResponseDTO> collect = boards.stream()
                 .map(BoardsByAdminResponseDTO::new)
                 .collect(toList());
 
-        return ListResponseDTO.builder()
-                .count(all.getSize())
-                .pageInfo(new PageResponseDTO(all))
+
+
+        System.out.println("collect = " + collect);
+        return ListResponseDTO.<BoardsByAdminResponseDTO,Board>builder()
+                .count(collect.size())
+                .pageInfo(new PageResponseDTO<>(boards))
                 .list(collect)
                 .build();
     }
 
-    //금일 작성 게시물 (ADMIN)
-    public ListResponseDTO<BoardsByAdminResponseDTO,User> todayBoardByAdmin(PageDTO dto){
+    //게시글 삭제
+    public boolean deleteBoard(long boardNo) {
+        System.out.println("boardNo = " + boardNo);
+        Board byBoardNo = boardRepository.findByBoardNo(boardNo);
+        System.out.println("byBoardNo = " + byBoardNo);
 
+        if (byBoardNo != null) {
+            boardRepository.deleteByBoardNo(boardNo);
+            return true;
+        }
+
+        return false;
+    }
+
+    //금일 작성 게시물 (ADMIN)
+    public ListResponseDTO<BoardsByAdminResponseDTO, Board> todayBoardByAdmin(PageDTO dto) {
+        System.out.println("서비스dto = " + dto);
         Pageable pageable = PageRequest.of(
-                dto.getPage()-1,
+                dto.getPage() - 1,
                 dto.getSize(),
-                Sort.by("boardWrittenDate").descending()
+                Sort.by("boardNo").descending()
         );
-        Page<Board> all = boardRepository.findAll(pageable);
+
+        String keyword = dto.getKeyword();
+        if ("".equals(keyword)){
+            keyword=null;
+        }
+
+        String userAccount = dto.getKeyword();
+        Page<Board> boards;
+
+        if (userAccount==null) {
+            boards = boardRepository.findAll(pageable);
+        }else{
+            boards = boardRepository.findByUser_UserAccountContaining(userAccount, pageable);
+        }
+
         List<Board> todayBoardList = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
 
-        for (Board board : all) {
+        for (Board board : boards) {
             System.out.println("boardsByAdminResponseDTO = " + board);
             LocalDateTime writtenDate = board.getBoardWrittenDate();
             LocalDate localDate = writtenDate.toLocalDate();
-            if(localDate!=null&&localDate.equals(currentDate)){
+            if (localDate != null && localDate.equals(currentDate)) {
                 todayBoardList.add(board);
             }
         }
 
+        System.out.println("todayBoardList = " + todayBoardList);
         List<BoardsByAdminResponseDTO> collect = todayBoardList.stream()
                 .map(BoardsByAdminResponseDTO::new)
                 .collect(toList());
 
-        return ListResponseDTO.builder()
+
+        System.out.println("collect----- = " + collect);
+
+
+        System.out.println("collect = " + collect);
+        return ListResponseDTO.<BoardsByAdminResponseDTO, Board>builder()
                 .count(collect.size())
-                .pageInfo(new PageResponseDTO(all))
+                .pageInfo(new PageResponseDTO<>(boards))
                 .list(collect)
                 .build();
 
 
     }
 
+
+    public List<BoardResponseDTO> getBoardList(int page, String keyword, BoardCategory boardCategory, String sort) {
+        Pageable pageable = PageRequest.of(page, 10);
+
+        List<Board> boardList;
+
+        if (keyword != null) {
+            boardList = boardRepository.findByBoardTitleContainingIgnoreCase(keyword);
+        } else if (boardCategory != null) {
+            boardList = boardRepository.findByBoardCategory(boardCategory);
+        } else {
+            boardList = boardRepository.findAll();
+        }
+
+        List<BoardResponseDTO> boardResponseDTOList = new ArrayList<>();
+
+        for (Board board : boardList) {
+            BoardResponseDTO boardResponseDTO = new BoardResponseDTO(board);
+            boardResponseDTOList.add(boardResponseDTO);
+        }
+        return boardResponseDTOList;
+    }
 }
+
