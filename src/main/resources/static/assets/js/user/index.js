@@ -154,17 +154,17 @@ function checkSNS(userInstagram, userFacebook, userTwitter) {
     let snsTag = '';
 
     if(userInstagram !== null) {
-        snsTag += '<a href="https://instagram.com/'+ userInstagram +'" class="sns-type instagram"><img class="sns-image" src="/assets/img/main/instagram.png" alt="instagram"></a>'
+        snsTag += '<a target = "_blank" href="https://instagram.com/'+ userInstagram +'" class="sns-link sns-type instagram"><img class="sns-image" src="/assets/img/main/instagram.png" alt="instagram"></a>'
     } else {
         snsTag += '<img class="sns-image sns-image-with-null" src="/assets/img/main/instagram.png" alt="instagram">'
     }
     if(userFacebook !== null) {
-        snsTag += '<a href="https://facebook.com/'+ userFacebook +'" class="sns-type facebook"><img class="sns-image" src="/assets/img/main/facebook.png" alt="facebook"></a>'
+        snsTag += '<a target = "_blank" href="https://facebook.com/'+ userFacebook +'" class="sns-link sns-type facebook"><img class="sns-image" src="/assets/img/main/facebook.png" alt="facebook"></a>'
     } else {
         snsTag += '<img class="sns-image sns-image-with-null" src="/assets/img/main/facebook.png" alt="facebook">'
     }
     if(userTwitter !== null) {
-        snsTag += '<a href="https://twitter.com/'+ userTwitter +'" class="sns-type twitter"><img class="sns-image" src="/assets/img/main/twitter.png" alt="twitter"></a>'
+        snsTag += '<a target = "_blank" href="https://twitter.com/'+ userTwitter +'" class="sns-link sns-type twitter"><img class="sns-image" src="/assets/img/main/twitter.png" alt="twitter"></a>'
     } else {
         snsTag += '<img class="sns-image sns-image-with-null" src="/assets/img/main/twitter.png" alt="twitter">'
     }
@@ -243,8 +243,10 @@ function getProfileCardList() {
                             }
             $profileCardWrapper.innerHTML += profileCardTag;                         
         // ====================================================================================
+        stopPropagation();
         //채팅 생성하기
         makeChattingRoom();
+
     });
  }
 
@@ -375,4 +377,12 @@ function renderFailMessage() {
 
     if (msg !== null)
         alert(msg);
+}
+
+function stopPropagation(){
+    [...document.querySelectorAll('.sns-link ')].forEach(
+        sns => sns.onclick = e => {
+            e.stopPropagation();
+        }
+    );
 }
