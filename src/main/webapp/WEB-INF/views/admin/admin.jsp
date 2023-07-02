@@ -419,12 +419,12 @@ function makePageButtonUserClickEvent() {
 
         e.preventDefault(); // 태그의 기본 동작 중단
 
-        // 누른 페이지 번호 가져오기
+        // 누른 페이지 번호와 현재 검색어 가져오기
         const pageNum = e.target.getAttribute('href');
-        console.log("======total", pageNum);
+        const keyword = document.getElementById('search_input').value;
 
-        // 페이지 번호에 맞는 목록 비동기 요청
-        getUserList(pageNum);
+        // 페이지 번호와 검색어를 함께 목록 비동기 요청
+        getUserList(pageNum, keyword);
     };
 }
 
