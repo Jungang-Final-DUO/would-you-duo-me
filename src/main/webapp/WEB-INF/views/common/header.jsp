@@ -78,17 +78,17 @@
                                         <img class = "myProfileImage" src="/assets/img/chattingModal/user.png" alt="프로필 이미지">
                                     </c:if>
                                     <c:if test="${login.userProfileImage != null}">
-                                        <img class = "myProfileImage" src="${login.userProfileImage}" alt="프로필 이미지">
+                                        <img class = "myProfileImage" src="" alt="프로필 이미지">
                                     </c:if>
                                 </div>
-                                <div id="nickname-wrapper">${login.userNickname}</div>
+                                <div id="nickname-wrapper"></div>
                             </div>
                             <div id="user-info-wrapper">
                                 <div>
-                                    라이엇 계정 : ${login.lolNickname}
+                                    라이엇 계정 :
                                 </div>
                                 <div>
-                                    잔여 포인트 : ${login.userCurrentPoint} point
+                                    잔여 포인트 : point
                                 </div>
                             </div>
                             <div id="my-page-btn-wrapper">

@@ -55,17 +55,18 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     // 메인페이지 - 프로필 카드 불러오기(비동기)
-    @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
+    @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{follow}/{sort}")
     public ResponseEntity<?> getUserProfileList(@PathVariable int page, @PathVariable String keyword, @PathVariable int size
             , @PathVariable String position, @PathVariable String gender
-            , @PathVariable String tier, @PathVariable String sort, HttpSession session) {
+            , @PathVariable String tier,@PathVariable String follow ,@PathVariable String sort, HttpSession session) {
 
 
-        System.out.println(keyword + position + gender + tier + sort);
+        System.out.println(keyword + position + gender + tier + "  "+ follow +"  "+ sort);
 
         UserSearchType userSearchType = new UserSearchType();
         userSearchType.setPage(page);
         userSearchType.setSize(size);
+        userSearchType.setFollowers(follow);
         if (!keyword.equals("-")) {
             userSearchType.setKeyword(keyword);
         }
@@ -422,11 +423,17 @@ public class UserController {
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "1") int pageNum) {
 
+        if (keyword == null) {
+            keyword = ""; // keyword 값이 null일 경우 빈 문자열로 설정
+        }
+
         PageDTO dto = PageDTO.builder()
                 .page(pageNum)
                 .keyword(keyword)
                 .size(10)
                 .build();
+
+        // 이하 코드 생략
 
         log.info("{}ddttoo==", dto);
         ListResponseDTO<UserByAdminResponseDTO, User> userListByAdmin = userService.getUserListByAdmin(dto);
@@ -434,12 +441,10 @@ public class UserController {
 
         log.info("/api/v1/users/admin/");
 
-
         return ResponseEntity
                 .ok()
                 .body(userListByAdmin);
     }
-
     //관리자 페이지 금일 가입자 리스트 가져오기
     @GetMapping("/api/v1/users/admin1")
     public ResponseEntity<?> getTodayUserListByAdmin(
@@ -480,11 +485,11 @@ public class UserController {
     @GetMapping("/user/detail/banBoolean")
 //    //관리자 페이지 자세히 보기
     public ResponseEntity<?> showBanIsBoolean(HttpSession session, @RequestParam String nickname) {
-        log.info("{}nickname = ", nickname);
+        log.info("{}nicknamedetail = ", nickname);
 
         boolean userDetailByAdmin = userService.getUserBanBooleanByAdmin(nickname);
 
-        log.info("{}userDetailByAdmin = ", userDetailByAdmin);
+        log.info("{}userDetailByAdmin11111  = ", userDetailByAdmin);
 
         return ResponseEntity
                 .ok()
@@ -550,6 +555,19 @@ public class UserController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/api/v1/users/infos")
+    public ResponseEntity<?> getUserInfos(HttpSession session) {
+        LoginUserResponseDTO loginUser = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
+
+        if (loginUser == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        UserInfoResponseDTO userInfo = userService.getUserInfo(loginUser.getUserAccount());
+
+        return ResponseEntity.ok(userInfo);
     }
 
 }

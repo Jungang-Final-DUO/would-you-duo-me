@@ -15,7 +15,7 @@ import java.util.List;
 public interface MatchingRepository extends JpaRepository<Matching, Long> {
     Matching findByMatchingNo(long matchingNo);
 
-    @Query("SELECT m FROM Matching m WHERE m.chatting.chattingTo.userAccount = :userAccount AND m.matchingReviewRate IS NOT NULL\n")
+    @Query("SELECT m FROM Matching m WHERE m.chatting.chattingTo.userAccount = :userAccount AND m.matchingReviewRate IS NOT NULL order by m.matchingReviewRate desc \n")
     Page<Matching> findOneByChattingTo(String userAccount, Pageable pageable);
 
     @Query("SELECT m FROM Matching m WHERE m.chatting.chattingTo.userAccount = :userAccount AND m.matchingStatus != 'REJECT' order by m.matchingDate DESC")

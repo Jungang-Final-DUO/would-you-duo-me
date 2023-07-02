@@ -51,13 +51,13 @@ public class AccuseService {
             keyword=null;
         }
 
-        String userAccount = dto.getKeyword();
+        String userNickname = dto.getKeyword();
         Page<Accuse> accuses;
 
-        if (userAccount==null) {
+        if (userNickname==null) {
             accuses = accuseRepository.findAll(pageable);
         }else{
-            accuses = accuseRepository.findByUser_UserAccountContaining(userAccount, pageable);
+            accuses = accuseRepository.findByUser_UserNicknameContaining(userNickname, pageable);
         }
 
         System.out.println("accuses = " + accuses);
@@ -87,14 +87,17 @@ public class AccuseService {
             keyword=null;
         }
 
-        String userAccount = dto.getKeyword();
+        String userNickname = dto.getKeyword();
         Page<Accuse> accuses;
 
-        if (userAccount==null) {
+        if (userNickname==null) {
             accuses = accuseRepository.findAll(pageable);
         }else{
-            accuses = accuseRepository.findByUser_UserAccountContaining(userAccount, pageable);
+            accuses = accuseRepository.findByUser_UserNicknameContaining(userNickname, pageable);
         }
+
+        int accusesize = accuses.getContent().size();
+        System.out.println("accusesize = " + accusesize);
         List<Accuse> todayAccuseList = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
 
