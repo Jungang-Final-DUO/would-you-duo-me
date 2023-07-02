@@ -1,8 +1,10 @@
-export function scrollPaging($wrapper, renderingCallback, callbackParam, scrollAmount) {
+export function scrollPaging($wrapper, renderingCallback, callbackParam) {
 
     $wrapper.addEventListener('scroll', e => {
 
-        if ($wrapper.scrollTop + scrollAmount === $wrapper.scrollHeight) {
+        console.log('scrollTop:' + $wrapper.scrollTop + ', height:' + $wrapper.offsetHeight + ', scrollHeight:' + $wrapper.scrollHeight + ', clientHeight:');
+
+        if ($wrapper.scrollTop + $wrapper.offsetHeight === $wrapper.scrollHeight) {
             renderingCallback(callbackParam);
         }
     });
