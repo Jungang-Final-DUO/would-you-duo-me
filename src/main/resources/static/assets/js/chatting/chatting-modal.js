@@ -12,7 +12,7 @@ function makeChatting(chat) {
 
     chat.onclick = (e) => {
         e.stopPropagation();
-        const userAccount = chat.closest('.duo-profile').id;
+        const userAccount = chat.closest('.duo-profile-account').dataset.userAccount;
         // console.log('makeChatting 도달');
         const requestInfo = {
             method: 'POST',
