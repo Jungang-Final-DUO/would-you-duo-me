@@ -20,4 +20,11 @@ public class ErrorController {
         return "error/error429";
     }
 
+    @GetMapping("/404")
+    public String error404(HttpServletRequest request, RedirectAttributes ra) {
+        log.warn("404 에러!!");
+        ra.addFlashAttribute("url", request.getHeader("referer"));
+        return "error/error404";
+    }
+
 }

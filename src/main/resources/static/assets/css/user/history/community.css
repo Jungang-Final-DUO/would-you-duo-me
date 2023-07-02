@@ -17,16 +17,22 @@
     /* border: 1px solid #37ff00; */
 
     font-weight: 700;
-    display: flex;
-    justify-content: flex-end;
+    /*display: flex;*/
+    /*justify-content: flex-end;*/
 }
 /* 검색창 */
 .search-container {
-    border: 2px solid #ffffff;
     display: flex;
-    justify-content: center;
+    justify-content: end;
     align-items: center;
+    width: 100%;
 }
+
+#searchBox {
+    border: 2px solid #fff;
+    height: 27px;
+}
+
 .search-box {
     background: #111E30;
     color: #fff;
@@ -35,7 +41,7 @@
     text-indent: 10px;
 }
 .searh-btn-img {
-    width: 20px;
+    width: 40px;
 }
 /* 글쓰기 */
 .write-container {
@@ -66,6 +72,25 @@
     margin-left: 10px;
 }
 
+.write-btn {
+    display: flex;
+    width: 120px;
+    border: 2px solid #fff;
+    height: 27px;
+    margin-left: 15px;
+    align-items: center;
+    justify-content: center;
+}
+
+.write {
+    color: #ffffff;
+    font-size: 18px;
+}
+
+.searchImage {
+    width: 30px;
+    margin-left: 10px;
+}
 
 /* 필터, 정렬 */
 .sort-wrapper {
@@ -135,7 +160,7 @@
     background: rgba(255, 255, 255, 0.9);
     border-radius: 20px;
     height: 480px;
-
+    color: black;
     padding-top: 20px;
 }
 .rank-head {
@@ -158,11 +183,14 @@
 
 .rank-card {
     width: 80%;
-    margin: 15px 0 0 35px;
+    margin: 5px 0 0 35px;
     display: flex;
+    align-items: center;
 }
 .rank-card img {
     margin-right: 20px;
+    height: 35px;
+    width: 35px;
 }
 
 /* 게시글 카드 */

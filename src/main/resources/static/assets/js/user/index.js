@@ -9,6 +9,7 @@ let end = false;
 const profileCardListURL = "/api/v1/users";
 const $profileCardWrapper = document.getElementById('profile-cards-wrapper'); 
 
+let onlyFollow = 'all';
 let keyword = '';
 const size = 20;
 let position = 'all';
@@ -94,21 +95,38 @@ function selectTier() {
 
 // 검색 키워드 입력시 작동 함수
 function searchName() {
+  let searchTimer = null;
+  document.getElementById('searchBy-nickname').onkeyup = e => {
+    clearTimeout(searchTimer); // 이전에 예약된 호출을 취소합니다.
 
-    document.getElementById('searchBy-nickname').onkeyup = e => {
+    searchTimer = setTimeout(() => {
+      page = 1;
+      end = false;
+      removeTag();
+      keyword = document.getElementById('searchBy-nickname').value;
+      getProfileCardList();
+    }, 500); // 500ms 딜레이 후에 함수를 호출합니다.
+  };
+}
+
+// 팔로잉 버튼 클릭시 작동 함수
+function filterFollowing() {
+
+    document.getElementById('view-followings').onclick = e => {
         page = 1;
         end = false;
-        removeTag();  
-        console.log("키워드 입력중" + e.target.value);
-        keyword = document.getElementById('searchBy-nickname').value;
+        removeTag();
+        onlyFollow = 'followers';
         getProfileCardList();
     }
+
 }
 
 // 정렬 조건 변경시 작동 함수
 function selectSort() {
 
     document.getElementById('order-list').onchange = e => {
+        
         getProfileCardList();
     }
 }
@@ -154,17 +172,17 @@ function checkSNS(userInstagram, userFacebook, userTwitter) {
     let snsTag = '';
 
     if(userInstagram !== null) {
-        snsTag += '<a href="https://instagram.com/'+ userInstagram +'" class="sns-type instagram"><img class="sns-image" src="/assets/img/main/instagram.png" alt="instagram"></a>'
+        snsTag += '<a target = "_blank" href="https://instagram.com/'+ userInstagram +'" class="sns-link sns-type instagram"><img class="sns-image" src="/assets/img/main/instagram.png" alt="instagram"></a>'
     } else {
         snsTag += '<img class="sns-image sns-image-with-null" src="/assets/img/main/instagram.png" alt="instagram">'
     }
     if(userFacebook !== null) {
-        snsTag += '<a href="https://facebook.com/'+ userFacebook +'" class="sns-type facebook"><img class="sns-image" src="/assets/img/main/facebook.png" alt="facebook"></a>'
+        snsTag += '<a target = "_blank" href="https://facebook.com/'+ userFacebook +'" class="sns-link sns-type facebook"><img class="sns-image" src="/assets/img/main/facebook.png" alt="facebook"></a>'
     } else {
         snsTag += '<img class="sns-image sns-image-with-null" src="/assets/img/main/facebook.png" alt="facebook">'
     }
     if(userTwitter !== null) {
-        snsTag += '<a href="https://twitter.com/'+ userTwitter +'" class="sns-type twitter"><img class="sns-image" src="/assets/img/main/twitter.png" alt="twitter"></a>'
+        snsTag += '<a target = "_blank" href="https://twitter.com/'+ userTwitter +'" class="sns-link sns-type twitter"><img class="sns-image" src="/assets/img/main/twitter.png" alt="twitter"></a>'
     } else {
         snsTag += '<img class="sns-image sns-image-with-null" src="/assets/img/main/twitter.png" alt="twitter">'
     }
@@ -173,7 +191,7 @@ function checkSNS(userInstagram, userFacebook, userTwitter) {
 }
 
 // 프로필 카드 비동기 요청 렌더링 함수
-function getProfileCardList() { 
+function getProfileCardList() {
     let profileCardTag = '';
     let mostOne = '';
     let mostTwo = '';
@@ -181,10 +199,9 @@ function getProfileCardList() {
 
     if(keyword === '') keyword = '-';
 
-    fetch(profileCardListURL +'/' + page + '/' + keyword + '/' + size + '/' + position + '/' + gender + '/' + tier + '/' + sort)
+    fetch(profileCardListURL +'/' + page + '/' + keyword + '/' + size + '/' + position + '/' + gender + '/' + tier + '/' + onlyFollow + '/' + sort)
     .then(res => res.json())
     .then(resResult => {
-        
         if(Object.keys(resResult).length === 0) {
             page--; 
             end = true; 
@@ -196,16 +213,16 @@ function getProfileCardList() {
           
             let mostChampTag = '';
             for (let i = 0; i < mostChampList.length; i++) {
-                if (mostChampList[i].mostNo === 1) mostChampTag += '<li class="most-pic first-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="first-champ"></li>'
-                else if (mostChampList[i].mostNo === 2) mostChampTag += '<li class="most-pic second-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="second-champ"></li>'
-                else if (mostChampList[i].mostNo === 3) mostChampTag += '<li class="most-pic third-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="third-champ"></li>'
+                if (mostChampList[i].mostNo === 1 && mostChampList[i].champName !== '') mostChampTag += '<li class="most-pic first-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="first-champ"></li>'
+                else if (mostChampList[i].mostNo === 2 && mostChampList[i].champName !== '') mostChampTag += '<li class="most-pic second-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="second-champ"></li>'
+                else if (mostChampList[i].mostNo === 3 && mostChampList[i].champName !== '') mostChampTag += '<li class="most-pic third-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="third-champ"></li>'
             }        
             // console.log(mostOne + mostTwo + mostThree);
             // console.log("인스타" + userInstagram);
 
             const tierImgSrc = transTier(tier) !== null ? '"/assets/img/main/TFT_Regalia_'+ transTier(tier) +'.png"' : '/assets/img/main/unranked-removebg-preview.png';
             
-            profileCardTag += `<div id = "`+ userAccount +`" class="duo-profile" onclick="window.location.href='/user/user-history?userAccount=${userAccount}'">`
+            profileCardTag += `<div id = "`+ userAccount +`"data-userAccount="`+ userAccount +`" class="duo-profile duo-profile-account" onclick="window.location.href='/user/user-history?userAccount=${userAccount}'">`
                                    + '<img class="duo-tier" src=' + tierImgSrc + ' alt="tier">'
                                     
                                    + '<div class="profile-left-side">'
@@ -230,7 +247,7 @@ function getProfileCardList() {
                                            + '<div class="rate-matching-point matching-point-box"><img class="rate-matching-point-image" src="/assets/img/main/coin.png" alt="coin">'
                                                + '<p class="matching-point">'+ userMatchingPoint +'</p></div>'
                                        + '</div>'
-                                       + '<div class="profile-comment"><p>'+ userComment +'</p></div>'
+                                       + '<div class="profile-comment"><p>'+ subStrComment(userComment) +'</p></div>'
                                        + '<div class="profile-most-champ">'
                                            + '<ul class="champ-list">'
                                                + mostChampTag
@@ -241,19 +258,33 @@ function getProfileCardList() {
 
               
                             }
-            $profileCardWrapper.innerHTML += profileCardTag;                         
+            $profileCardWrapper.innerHTML += profileCardTag;                       
         // ====================================================================================
+        stopPropagation();
         //채팅 생성하기
         makeChattingRoom();
+        // 팔로우 기능
+        follow();
     });
  }
 
+ // userComment 글자수 오버시 ...처리
+ function subStrComment(userComment) {
+    if (userComment.length >= 25) {
+        return userComment.substring(0, 25) + "...";
+    } else {
+        return userComment;
+    }
+ }
+
+ // 전체보기 클릭시 동작함수
  function viewAll() {
     document.getElementById('view-all').onclick = e => {
         removeTag();
         page = 1;
         end = false;
         keyword = '';
+        onlyFollow = 'all';
         // 체크된 티어 있는지 확인
         for (let i = 0; i < $tierOption.length; i++) {
             if ($tierOption[i].checked) {
@@ -292,15 +323,45 @@ function getProfileCardList() {
     }
  }
 
- // 하트 이미지 클릭시 팔로잉 상태에 따라 비동기 요청 함수
-//  function follow() {
-//     const $followImg = document.querySelector('.follow-status');
+// 팔로우 / 언팔로우 기능
+function follow() {
+    const $followImgs = document.querySelectorAll('.follow-status');
 
-//     $followImg.onclick = e => {
-//         console.log(e.target.dataset.following);
-//     }
-//  }
- 
+    $followImgs.forEach($followImg => {
+
+        $followImg.onclick = e => {
+            e.stopPropagation(); // 이벤트 전파 중지
+
+
+            const $followingImg = e.target.closest('.follow-status');
+            
+            console.log(e.target.closest('.duo-profile').dataset.useraccount);
+            
+            fetch(profileCardListURL + '/' + e.target.closest('.duo-profile').dataset.useraccount, {
+                method: 'PATCH'
+            }).then(res => {
+                if (res.status === 200) {
+                    console.log("진입성공");
+                    // const isFollowed = res.json();
+                    // console.log("res.json"+isFollowed);
+                    console.log($followingImg);
+
+                    res.json().then(data => {
+                        if (data) {
+                            $followingImg.src = '/assets/img/main/following.png';
+                        } else {
+                            $followingImg.src = '/assets/img/main/not-following.png';
+                        }
+                    })                        
+                }
+            });
+        }
+    });
+}
+// =========================================================
+
+
+
  let loading = false; // 초기에는 로딩 상태가 아님을 나타내는 변수
 
  window.addEventListener('scroll', () => {
@@ -340,9 +401,9 @@ function getProfileCardList() {
     // 검색창 입력시 동작
     searchName();   
     // 전체보기 클릭시
-    viewAll()
+    viewAll();
 
-    //  follow();
+    filterFollowing();
     
     // 프로필 카드 불러오기 함수(비동기)
    getProfileCardList();
@@ -375,4 +436,12 @@ function renderFailMessage() {
 
     if (msg !== null)
         alert(msg);
+}
+
+function stopPropagation(){
+    [...document.querySelectorAll('.sns-link ')].forEach(
+        sns => sns.onclick = e => {
+            e.stopPropagation();
+        }
+    );
 }

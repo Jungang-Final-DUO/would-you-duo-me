@@ -15,9 +15,10 @@
 </head>
 
 <body>
-    <%@ include file="../common/header.jsp" %>
 
-    <div id="main-wrapper">
+
+<%@ include file="../common/header.jsp" %>
+<div id="main-wrapper">
 
 
 
@@ -343,6 +344,8 @@
 
     </div>
 
+</div>
+<%@ include file="../common/footer.jsp" %>
 
     <script>
         //경고 클릭시 빨간색
@@ -508,15 +511,17 @@
 
         const accuseTypeEtcValue = accuseTypeEtcInput[index].value;
 
-        fetch('http://localhost:8282/user/accuse', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            userNickname: userNickname,
-            accuseType: accuseType,
-            accuseEtc: accuseTypeEtcValue
+
+        fetch('/user/accuse', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userNickname: userNickname,
+                accuseType: accuseType,
+                accuseEtc: accuseTypeEtcValue
+            })
         })
     })
     .then(response => {
@@ -539,6 +544,23 @@
 
 
 
+
+        //포인트 정보 전송
+        fetch('/user/point', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userAddPoint: add,
+                userNickname: user.innerText
+            })
+        })
+            .then(response => {
+                return response.json()
+            })
+            .then(res => {
+                // console.log('res  :  -' + res);
 
 
 
