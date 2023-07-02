@@ -6,7 +6,7 @@ export function addDropdownEvent(btnId, contentId) {
             document.body.removeEventListener('click', addDropdownCloseEvent, true);
         } else {
             document.body.addEventListener('click', addDropdownCloseEvent, true);
-            const $firstInput = $contentWrapper.querySelector('input');
+            const $firstInput = $contentWrapper.querySelector('input[type="text"]');
             if ($firstInput !== null) {
                 $firstInput.focus();
             }
