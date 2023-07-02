@@ -941,4 +941,16 @@ public class UserService {
                 .build();
     }
 
+    public UserInfoResponseDTO getUserInfo(String userAccount) {
+
+        User user = userRepository.findById(userAccount).orElseThrow();
+
+        return UserInfoResponseDTO.builder()
+                .profileImage(user.getLatestProfileImage())
+                .userCurrentPoint(user.getUserCurrentPoint())
+                .userNickname(user.getUserNickname())
+                .lolNickname(user.getLolNickname())
+                .build();
+
+    }
 }

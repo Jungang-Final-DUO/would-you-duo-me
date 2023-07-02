@@ -552,5 +552,18 @@ public class UserController {
         }
     }
 
+    @GetMapping("/api/v1/users/infos")
+    public ResponseEntity<?> getUserInfos(HttpSession session) {
+        LoginUserResponseDTO loginUser = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
+
+        if (loginUser == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        UserInfoResponseDTO userInfo = userService.getUserInfo(loginUser.getUserAccount());
+
+        return ResponseEntity.ok(userInfo);
+    }
+
 }
 
