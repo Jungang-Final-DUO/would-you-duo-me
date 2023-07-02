@@ -178,17 +178,19 @@
 }
 
 .rank-body {
-    margin-top: 15px;
+    margin-top: 30px;
 }
 
 .rank-card {
     width: 80%;
     margin: 5px 0 0 35px;
     display: flex;
+    align-items: center;
 }
 .rank-card img {
     margin-right: 20px;
     height: 35px;
+    width: 35px;
 }
 
 /* 게시글 카드 */
