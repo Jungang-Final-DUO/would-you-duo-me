@@ -36,7 +36,7 @@ public class MyPageReviewResponseDTO {
             this.matchingDate = matching.getMatchingDate().format(DateTimeFormatter.ofPattern("yy-MM-dd"));
 
         if (matching.getMatchingReviewContent() != null && matching.getMatchingReviewContent().length() > 20) {
-            this.matchingReviewContent = matching.getMatchingReviewContent().substring(0, 17) + "...";
+            this.matchingReviewContent = matching.getMatchingReviewContent().substring(0, 14) + "...";
         } else {
             this.matchingReviewContent = matching.getMatchingReviewContent();
         }
