@@ -63,7 +63,9 @@
 
                     <label for="user-email">이메일</label>
                     <input type="text" id="user-email" name="userEmail">
-                    <%--                    <div id="emailChk"></div>--%>
+
+                    <div id="emailChk"></div>
+
 
                     <button id="verification-btn" class="btn modal-btn">인증</button>
                     <dialog id="email-confirm-modal">
@@ -84,28 +86,30 @@
                     </dialog>
 
                     <label for="user-password">비밀번호</label>
-                    <input type="password" id="user-password" name="userPassword">
+                    <input type="password" id="user-password" name="userPassword"><div></div>
                     <div id="pwChk"></div>
 
                     <label for="user-password-check">비밀번호 확인</label>
-                    <input type="password" id="user-password-check">
+                    <input type="password" id="user-password-check"><div></div>
                     <div id="pwChk2"></div>
 
                     <label for="user-birthday">생년월일</label>
                     <input type="date" id="user-birthday" name="userBirthday">
                     <div id="birthdayChk"></div>
 
+                    <div></div>
                     <label for="lol-nickname">롤계정</label>
-                    <input type="text" id="lol-nickname" name="lolNickname">
+                    <input type="text" id="lol-nickname" name="lolNickname"><div></div>
                     <div id="lolNicknameChk"></div>
 
                     <!--                     빈칸 -->
                     <div class="space"></div>
                     <div></div>
-                    <div></div>
+
                     <!--                     빈칸 끝 -->
 
                     <!--                    sns 계정 기입란-->
+                    <div></div>
                     <div>SNS</div>
                     <div class="sns-input-wrapper">
                         <label for="instagram"><img src="/assets/img/main/instagram.png" alt=""></label>
@@ -128,7 +132,7 @@
                         <input type="text" id="twitter" name="userTwitter" placeholder="사용자 아이디를 입력하세요">
                         <div id="twitterChk"></div>
                     </div>
-                    <div></div>
+
                 </div>
                 <div id="submit-btn-wrapper">
                     <button type="submit" id="signup-btn" class="btn">

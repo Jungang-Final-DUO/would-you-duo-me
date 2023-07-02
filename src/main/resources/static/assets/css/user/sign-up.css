@@ -121,6 +121,7 @@ header h2 {
     align-items: center;
     row-gap: 15px;
     column-gap: 20px;
+    position: relative;
 
     text-align: right;
     font-size: 1.3em;
@@ -138,23 +139,63 @@ header h2 {
 /* 검증식 inner HTML 표시 값들*/
 #sign-up-request-info-wrapper #nicknameChk {
     position: absolute;
-    top: 50%;
-    right: -130px;
-    transform: translateY(-50%);
+    top: 4px;
+    right: -295px;
+
 }
 
-
-#sign-up-request-info-wrapper #email-chk {
+#sign-up-request-info-wrapper #emailChk {
     position: absolute;
-    right: -230px;
-    top: 10%;
-    transform: translateY(-80%);
+    top: 44px;
+    right: -291px;
+
 }
 
 #sign-up-request-info-wrapper #pwChk {
-    display: inline-block;
-    margin-left: 10px;
+    position: absolute;
+    top: 84px;
+    right: -183px;
 }
+
+#sign-up-request-info-wrapper #pwChk2 {
+    position: absolute;
+    top: 124px;
+    right: -150px;
+}
+
+#sign-up-request-info-wrapper #birthdayChk {
+    position: absolute;
+    top: 164px;
+    right: -172px;
+
+}
+
+#sign-up-request-info-wrapper #lolNicknameChk {
+    position: absolute;
+    top: 203px;
+    right: -172px;
+
+}
+
+#sign-up-request-info-wrapper .sns-input-wrapper #instagramChk {
+    position: absolute;
+    top: 343px;
+    right: -190px;
+}
+
+#sign-up-request-info-wrapper .sns-input-wrapper #facebookChk {
+    position: absolute;
+    top: 392px;
+    right: -190px;
+}
+
+#sign-up-request-info-wrapper .sns-input-wrapper #twitterChk {
+    position: absolute;
+    top: 441px;
+    right: -190px;
+
+}
+
 
 
 
