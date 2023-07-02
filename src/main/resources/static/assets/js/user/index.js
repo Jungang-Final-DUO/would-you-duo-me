@@ -36,12 +36,10 @@ function selectPosition() {
         end = false;
         removeTag(); 
         if (e.target.classList.contains('select-position')) {
-            console.log("포지션 클릭성공" + e.target);
             // 체크된 버튼 있는지 확인
             for (let i = 0; i < $positionOption.length; i++) {
                 if ($positionOption[i].checked) {
                     position = $positionOption[i].value;
-                    console.log(position);
                     getProfileCardList();
                 }
             }
@@ -58,12 +56,10 @@ function selectGender() {
         removeTag();
         e.stopPropagation();
         if (e.target.classList.contains('select-gender')) {
-            console.log("성별 클릭성공" + e.target);
             // 체크된 성별 있는지 확인
             for (let i = 0; i < $genderOption.length; i++) {
                 if ($genderOption[i].checked) {
                     gender = $genderOption[i].value;
-                    console.log(gender);
                     getProfileCardList();    
                 }
             }
@@ -80,12 +76,10 @@ function selectTier() {
         removeTag();
         e.stopPropagation();
         if (e.target.classList.contains('select-tier')) {
-            console.log("티어 클릭 성공" + e.target);
             // 체크된 티어 있는지 확인
             for (let i = 0; i < $tierOption.length; i++) {
                 if ($tierOption[i].checked) {
                     tier = $tierOption[i].value;
-                    console.log(tier);
                     getProfileCardList();
                 }
             }
@@ -97,15 +91,14 @@ function selectTier() {
 function searchName() {
   let searchTimer = null;
   document.getElementById('searchBy-nickname').onkeyup = e => {
-    clearTimeout(searchTimer); // 이전에 예약된 호출을 취소합니다.
-
+    clearTimeout(searchTimer); // 이전에 예약된 호출을 취소
     searchTimer = setTimeout(() => {
       page = 1;
       end = false;
       removeTag();
       keyword = document.getElementById('searchBy-nickname').value;
       getProfileCardList();
-    }, 500); // 500ms 딜레이 후에 함수를 호출합니다.
+    }, 500); // 500ms 딜레이 후에 함수를 호출
   };
 }
 
@@ -205,11 +198,11 @@ function getProfileCardList() {
     fetch(profileCardListURL +'/' + page + '/' + keyword + '/' + size + '/' + position + '/' + gender + '/' + tier + '/' + onlyFollow + '/' + sort)
     .then(res => res.json())
     .then(resResult => {
+
         if(Object.keys(resResult).length === 0) {
             page--; 
             end = true; 
             return;}
-        // ====================================================================================
         
         for (let rep of resResult) {
             const {avgRate, followed, mostChampList, profileImage, tier, userAccount, userComment, userFacebook, userGender, userInstagram, userMatchingPoint, userNickname, userPosition, userTwitter} = rep;
@@ -220,8 +213,6 @@ function getProfileCardList() {
                 else if (mostChampList[i].mostNo === 2 && mostChampList[i].champName !== '') mostChampTag += '<li class="most-pic second-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="second-champ"></li>'
                 else if (mostChampList[i].mostNo === 3 && mostChampList[i].champName !== '') mostChampTag += '<li class="most-pic third-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="third-champ"></li>'
             }        
-            // console.log(mostOne + mostTwo + mostThree);
-            // console.log("인스타" + userInstagram);
 
             const tierImgSrc = transTier(tier) !== null ? '"/assets/img/main/TFT_Regalia_'+ transTier(tier) +'.png"' : '/assets/img/main/unranked-removebg-preview.png';
             
@@ -262,7 +253,7 @@ function getProfileCardList() {
               
                             }
             $profileCardWrapper.innerHTML += profileCardTag;                       
-        // ====================================================================================
+
         //채팅 생성하기
         makeChattingRoom();
         // 팔로우 기능
@@ -293,7 +284,6 @@ function getProfileCardList() {
             if ($tierOption[i].checked) {
                 $tierOption[i].checked = false;
                 tier = 'all';
-                console.log(tier);
             }
         }
 
@@ -303,7 +293,6 @@ function getProfileCardList() {
             if ($positionOption[i].checked) {
                 $positionOption[i].checked = false;
                 position = 'all';
-                console.log(position);
             }
         }
 
@@ -313,14 +302,12 @@ function getProfileCardList() {
             if ($genderOption[i].checked) {
                 $genderOption[i].checked = false;
                 gender = 'all';
-                console.log(gender);
             }
         }
 
         // 검색란 비워주기
         document.getElementById('searchBy-nickname').value = '';
 
-        console.log("렌더링 진입전 포지션 성별 티어"+position+gender+tier+keyword);
         getProfileCardList(); 
 
     }
@@ -351,11 +338,6 @@ function follow() {
                 method: 'PATCH'
             }).then(res => {
                 if (res.status === 200) {
-                    console.log("진입성공");
-                    // const isFollowed = res.json();
-                    // console.log("res.json"+isFollowed);
-                    console.log($followingImg);
-
                     res.json().then(data => {
                         if (data) {
                             $followingImg.src = '/assets/img/main/following.png';
@@ -368,8 +350,6 @@ function follow() {
         }
     });
 }
-// =========================================================
-
 
  
  let loading = false; // 초기에는 로딩 상태가 아님을 나타내는 변수
