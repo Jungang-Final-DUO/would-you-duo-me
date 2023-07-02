@@ -300,7 +300,7 @@
         };
 
         function getUserList(pageNum, keyword) {
-            fetch(`/api/v1/users/admin?pageNum=${pageNum}&keyword=${keyword}`)
+            fetch(`/api/v1/users/admin?pageNum=\${pageNum}&keyword=\${keyword}`)
                 .then(response => response.json())
                 .then(res => {
                     const list = res.list;
