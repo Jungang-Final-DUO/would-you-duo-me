@@ -31,24 +31,11 @@ class BoardRepositoryTest {
     @Test
     @DisplayName("게시글 save 및 해당 id가 쓴글 count")
     void saveTest() {
-        List<Board> all = boardRepository.findAll();
-        System.out.println("all = " + all);
-        User user4 = User.builder()
-                .userAccount("345")
-                .userNickname("345")
-                .userPassword("345")
-                .userCurrentPoint(345)
-                .userBirthday(LocalDate.of(1999, 11, 07))
-                .lolNickname("345")
-                .userGender(Gender.F)
-                .lolTier(Tier.DIA)
-                .boardList(all)
-                .build();
-        User save2 = userRepository.save(user4);
+        User byUserAccount = userRepository.findByUserAccount("user1");
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 20; i++) {
             Board board = Board.builder()
-                    .user(save2)
+                    .user(byUserAccount)
                     .boardTitle("게시글2제목1"+i)
                     .boardContent("게시글2내용1"+i)
                     .boardCategory(BoardCategory.ACCUSE)
@@ -60,8 +47,7 @@ class BoardRepositoryTest {
 
 
 
-        long count = boardRepository.countByUser((save2));
-        System.out.println("count = " + count);
+
     }
 
     @Test

@@ -154,27 +154,12 @@ class UserServiceTest {
     @Test
     @DisplayName("회원 하나에 ADMIN 부여하기")
     void addAdmin() {
+
         User user = userService.getUser("jun761_1@naver.com");
         user.setRole(Role.ADMIN);
 
         userRepository.save(user);
     }
-
-//    @Test
-//    @DisplayName("QueryDSL을 이용해 필터와 정렬 조건에 맞춰 userList가 출력되어야한다.")
-//    void testGetUserProfileList() {
-//        UserSearchType userSearchType = new UserSearchType();
-////        userSearchType.setKeyword("40");
-//        userSearchType.setPosition(Position.MID);
-//        userSearchType.setSize(40);
-//        userSearchType.setGender(Gender.F);
-//        userSearchType.setTier(Tier.DIA);
-//        userSearchType.setSort("avgRate");
-//
-//        List<UserProfileResponseDTO> userProfileList = userService.getUserProfileList(userSearchType,);
-//
-//        assertEquals(16, userProfileList.size());
-//    }
 
     @Test
     @DisplayName("유요한 사용자 정보로 회원 가입 테스트")
