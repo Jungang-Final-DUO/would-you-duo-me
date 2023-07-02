@@ -495,7 +495,7 @@ public class UserService {
             int accusesize = content.size();
         } else {
             // 특정 키워드를 포함하는 계정 불러오기
-            users = userRepository.findByUserAccountContaining(keyword, pageable);
+            users = userRepository.findByUserNicknameContaining(keyword, pageable);
             List<User> content = users.getContent();
         }
 
@@ -542,7 +542,7 @@ public class UserService {
 
         } else {
             // 특정 키워드를 포함하는 계정 불러오기
-            users = userRepository.findByUserAccountContaining(userAccount, pageable);
+            users = userRepository.findByUserNicknameContaining(userAccount, pageable);
         }
 
         List<User> todayUserList = new ArrayList<>();
