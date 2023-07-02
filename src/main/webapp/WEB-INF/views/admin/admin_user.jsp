@@ -19,9 +19,7 @@
 
 <div id="main-wrapper">
 
-    <div class="side_container">
-        <div class="direction_img"><img src="/assets/img/admin/왼쪽방향.png" alt="left"></div>
-    </div>
+
 
 
     <div class="center_container">
@@ -353,12 +351,10 @@
 
 
     </div>
+</div>
 
 
-    <div class="side_container">
-        <div class="direction_img"><img src="/assets/img/admin/오른쪽방향.png" alt="left"></div>
-
-    </div>
+  
     <%@ include file="../common/footer.jsp" %>
 </div>
 
@@ -377,6 +373,11 @@
     });
 
 
+
+    // 포인트 지급 버튼
+    const payment = document.getElementById('payment');
+    // 해당 유저 닉네임
+
     // 현재 포인트
     const userCurrentPoint = document.getElementById('userCurrentPoint');
 
@@ -393,9 +394,6 @@
 
     }
 
-
-    // 포인트 지급 버튼
-    const payment = document.getElementById('payment');
     // 해당 유저 닉네임
     const user = document.getElementById('user_name');
 
@@ -506,6 +504,7 @@
     }
 
     banCheck();
+
 
 
     //모달 데이터 보내기
