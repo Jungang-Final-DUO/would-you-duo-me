@@ -16,7 +16,9 @@ public class CustomErrorPageConfig implements ErrorPageRegistrar {
     @Override
     public void registerErrorPages(ErrorPageRegistry registry) {
         ErrorPage errorPage429 = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error/429");
+        ErrorPage errorPage404 = new ErrorPage(HttpStatus.NOT_FOUND, "/error/404");
 
         registry.addErrorPages(errorPage429);
+        registry.addErrorPages(errorPage404);
     }
 }

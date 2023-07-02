@@ -2,7 +2,7 @@ import {outputMessage, readMessages, saveMessage, scrollDown} from "./messageRen
 import {getChattingList, renderTotalUnreadMessages, renderUnreadMessages} from "./chatting-modal.js";
 
 export function connectSocket() {
-    const socket = io("http://192.168.219.117:3000");
+    const socket = io("http://localhost:3000");
 
     socket.on('message', message => {
 

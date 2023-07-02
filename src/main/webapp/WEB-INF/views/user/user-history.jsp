@@ -64,7 +64,7 @@
                     <!-- end of rate point wrapper -->
                     <div id="sns-chat-btn-wrapper">
                         <c:if test="${history.userInstagram ne null}">
-                            <a href="https://instagram.com/${history.userInstagram}" class="btn">
+                            <a href="https://instagram.com/${history.userInstagram}" class="btn" target="_blank">
                                 <img src="/assets/img/main/instagram.png" alt="인스타그램 아이콘">
                             </a>
                         </c:if>
@@ -72,7 +72,7 @@
                             <img class = "image-with-null" src="/assets/img/main/instagram.png" alt="인스타그램 아이콘">
                         </c:if>
                         <c:if test="${history.userFacebook ne null}">
-                            <a href="https://facebook.com/${history.userFacebook}" class="btn">
+                            <a href="https://facebook.com/${history.userFacebook}" class="btn" target="_blank">
                                 <img src="/assets/img/main/facebook.png" alt="페이스북 아이콘">
                             </a>
                         </c:if>
@@ -80,7 +80,7 @@
                                 <img class = "image-with-null" src="/assets/img/main/facebook.png" alt="페이스북 아이콘">
                         </c:if>
                         <c:if test="${history.userTwitter ne null}">
-                            <a href="https://twitter.com/${history.userTwitter}" class="btn">
+                            <a href="https://twitter.com/${history.userTwitter}" class="btn" target="_blank">
                                 <img src="/assets/img/main/twitter.png" alt="트위터 아이콘">
                             </a>
                         </c:if>

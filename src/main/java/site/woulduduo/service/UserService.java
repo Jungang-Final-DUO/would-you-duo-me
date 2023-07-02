@@ -815,6 +815,7 @@ public class UserService {
                 .lolNickname(lolNickname)
                 .userComment(foundUser.getUserComment())
                 .tier(newTier)
+                .rank(rankInfo.getRank())
                 // 모스트 3 챔피언 정보
                 .mostChampInfos(mostChampInfoList)
                 // riot api 를 통해 얻어오는 솔로랭크 혹은 자유랭크 데이터
@@ -852,7 +853,7 @@ public class UserService {
 
         String followFrom = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
 
-        if (followTo.equals(followFrom)) throw new RuntimeException("해당하는 유저가 없습니다.");
+        if (followTo.equals(followFrom)) throw new RuntimeException("자기 자신은 팔로우할 수 없습니다.");
 
         Follow followState;
 
