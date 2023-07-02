@@ -22,7 +22,7 @@
     <!-- 헤더가 위치할 자리 -->
     <%@ include file="../common/header.jsp" %>
 
-    <div id="history-wrapper" data-user-account="${history.userAccount}">
+    <div id="history-wrapper" class = "duo-profile-account" data-user-account="${history.userAccount}">
         <div id="user-profile-info-wrapper">
             <div id="user-main-info-wrapper">
                 <!-- 임시 이미지를 인라인 스타일로 먹임 -->

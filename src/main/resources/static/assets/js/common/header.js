@@ -18,6 +18,9 @@ import {preventCharPwd} from "./preventCharPwd.js";
         //안읽은 메세지 출력
         renderTotalUnreadMessages();
 
+        //채팅 생성하기
+        makeChattingRoom();
+
         // 채팅 메세지 모달 안에서 채팅방 모달로 돌아가기
         toBack();
 
