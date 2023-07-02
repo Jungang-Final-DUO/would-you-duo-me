@@ -11,7 +11,8 @@ export async function getChattingList() {
 function makeChatting(chat) {
 
     chat.onclick = (e) => {
-        const userAccount = chat.closest('.duo-profile').id;
+        e.stopPropagation();
+        const userAccount = chat.closest('.duo-profile-account').dataset.userAccount;
         // console.log('makeChatting 도달');
         const requestInfo = {
             method: 'POST',
@@ -257,10 +258,18 @@ async function renderChattingList(result) {
                         $rightBtn.dataset.matchingNo = matchingNo;
                         break;
                     case 'DONE':
-                        chatting_handshake_img.src = '/assets/img/chattingModal/handshake.png';
-                        chatting_handshake_img.alt = '매칭수락이미지';
-                        $rightBtn.dataset.matchingNo = matchingNo;
-                        $rightBtn.childNodes[1].nodeValue = `매칭 신청`;
+                        const flag = await searchPointHistory(matchingNo);
+                        if(flag) {
+                            $rightBtn.disabled = false;
+                            // console.log('안받음');
+                            chatting_handshake_img.src = '/assets/img/chattingModal/handshake.png';
+                            chatting_handshake_img.alt = '매칭수락이미지';
+                            $rightBtn.dataset.matchingNo = matchingNo;
+                            $rightBtn.childNodes[1].nodeValue = `매칭 신청`;
+                        } else {
+                            $rightBtn.disabled = true;
+                            $rightBtn.childNodes[1].nodeValue = `정산중`;
+                        }
                         // $rightBtn.onclick = async e => {
                         //     const $rateModal = await renderRateModal(matchingNo, userNickname);
                         //     document.body.appendChild($rateModal);

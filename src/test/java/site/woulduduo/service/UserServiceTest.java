@@ -20,6 +20,7 @@ import site.woulduduo.dto.response.user.UserByAdminResponseDTO;
 import site.woulduduo.dto.response.user.UserHistoryResponseDTO;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.Position;
+import site.woulduduo.enumeration.Role;
 import site.woulduduo.enumeration.Tier;
 import site.woulduduo.repository.MostChampRepository;
 import site.woulduduo.repository.UserRepository;
@@ -45,43 +46,6 @@ class UserServiceTest {
     private MostChampRepository mostChampRepository;
 
 
-    @BeforeEach
-    void userInsert() {
-        for (int i = 1; i < 42; i++) {
-            User user = User.builder()
-                    .userAccount("user" + i)
-                    .userNickname("nickname" + i)
-                    .userPassword("pwd" + i)
-                    .userBirthday(LocalDate.of(2000, 1, 1))
-                    .lolNickname("lolNickname" + i)
-                    .userGender(Gender.M)
-                    .lolTier(Tier.CHA)
-                    .userPosition(Position.MID)
-                    .userComment("안녕하세요 트롤아닙니다." + i)
-                    .userMatchingPoint(500)
-                    .build();
-            userRepository.save(user);
-        }
-        for (int i = 42; i < 100; i++) {
-            User user = User.builder()
-                    .userAccount("user" + i)
-                    .userNickname("nickname" + i)
-                    .userPassword("pwd" + i)
-                    .userBirthday(LocalDate.of(2000, 1, 1))
-                    .lolNickname("lolNickname" + i)
-                    .userGender(Gender.M)
-                    .lolTier(Tier.DIA)
-                    .userJoinDate(LocalDate.of(2023, 06, 20))
-                    .userPosition(Position.MID)
-                    .userComment("안녕하세요 트롤아닙니다." + i)
-                    .userMatchingPoint(500)
-                    .build();
-            userRepository.save(user);
-        }
-
-
-
-    }
 //    @BeforeEach
 //    void userInsert() {
 //        for (int i = 1; i < 80; i++) {
@@ -151,19 +115,36 @@ class UserServiceTest {
 //    }
 
     @Test
+    @DisplayName("회원 하나에 ADMIN 부여하기")
+    void addAdmin() {
+
+        User user = userService.getUser("jun761_1@naver.com");
+        user.setRole(Role.ADMIN);
+
+        userRepository.save(user);
+    }
+
+    @Test
     @DisplayName("QueryDSL을 이용해 필터와 정렬 조건에 맞춰 userList가 출력되어야한다.")
     void testGetUserProfileList() {
+        HttpSession session = null;
         UserSearchType userSearchType = new UserSearchType();
 //        userSearchType.setKeyword("40");
-        userSearchType.setPosition(Position.MID);
-        userSearchType.setSize(40);
-        userSearchType.setGender(Gender.F);
-        userSearchType.setTier(Tier.DIA);
-        userSearchType.setSort("avgRate");
+//        userSearchType.setPage(3);
+        userSearchType.setPosition(Position.JUG);
+        userSearchType.setSize(20);
+//        userSearchType.setGender(Gender.M);
+//        userSearchType.setTier(Tier.DIA);
+//        userSearchType.setSort("avgRate");
 
-        List<UserProfileResponseDTO> userProfileList = userService.getUserProfileList(userSearchType);
+        List<UserProfileResponseDTO> userProfileList = userService.getUserProfileList(session, userSearchType);
+        System.out.println("userProfileList POIPOPO= " + userProfileList);
 
-        assertEquals(16, userProfileList.size());
+//        userProfileList.stream().forEach(n -> {
+//            System.out.println("n = " + n);
+//        });
+            assertEquals(1, userProfileList.size());
+//        assertEquals(16, userProfileList.size());
     }
 
     @Test

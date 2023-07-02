@@ -44,7 +44,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
                         , positioneq(userSearchType.getPosition())
                         , gendereq(userSearchType.getGender())
                         , tiereq(userSearchType.getTier())
-                        , user.userMatchingPoint.isNotNull()
+                        , user.userMatchingPoint.ne(0)
                 )
                 .offset(checkPage(userSearchType.getPage()))
                 .limit(userSearchType.getSize())

@@ -74,6 +74,7 @@ header {
 }
 #main-profile-image {
     width: 200px;
+    height: 100%;
     cursor: pointer;
 }
 
@@ -145,17 +146,22 @@ header {
 }
 
 .my-info-btn {
-    position: absolute;
+    position: relative;
     bottom: 0;
     right: 0;
     border-radius: 5px;
     border: 1px solid #FFFFFF;
     padding: 5px 10px;
     cursor: pointer;
+    height: fit-content;
 }
 
 #my-info-btn {
     margin-right: 0;
+}
+
+#modify-btn {
+    color: #fff;
 }
 
 .my-info-btn:hover {

@@ -8,27 +8,35 @@ export function connectSocket() {
 
         const chat_list = document.querySelector('.chatting-modal-dialog');
 
-        if(!document.getElementById(message.room)
-            && chat_list.hasAttribute('open')
-        ){
-            getChattingList();
-        }
-
         //output message to DOM
         outputMessage(message);
 
         if(chat_list.hasAttribute('open')){
 
-            const chatroom = document.getElementById(message.room);
-            if(!chatroom.querySelector('.message-dialog').hasAttribute('open')){
-                renderUnreadMessages(message.room);
-            }else {
-                readMessages(message.room);
+            if(!document.getElementById(message.room)
+            ){
+                const chatRooms = document.querySelectorAll('.message-dialog');
+                for (const message of chatRooms) {
+                    if(message.hasAttribute('open')){
+                        return;
+                    }
+                }
+
+                getChattingList();
+            } else {
+
+                const chatroom = document.getElementById(message.room);
+                if(!chatroom.querySelector('.message-dialog').hasAttribute('open')){
+                    renderUnreadMessages(message.room);
+                }else {
+                 readMessages(message.room);
+                }
+
             }
+
         } else {
             renderTotalUnreadMessages();
         }
-
 
         scrollDown();
     });
@@ -41,9 +49,7 @@ export function connectSocket() {
         const username = document.getElementById('loginUserInfo').dataset.userNickname;
         const msg = e.target.querySelector('.msg').value;
         const room = e.target.closest('.chatting-card').id;
-        const $li = e.target.closest('li');
-        const me = $li.querySelectorAll('.message-from');
-        const myProfile = me[0].querySelector('.chatting-profile').src;
+        const myProfile = document.querySelector('.myProfileImage').src;
         const chatBox = document.getElementById(room);
         const matchingStatus = chatBox.querySelector('.matching-accept-btn').dataset.matchingStatus;
         // const matchingNo = chatBox.querySelector('.matching-accept-btn').dataset.matchingNo;

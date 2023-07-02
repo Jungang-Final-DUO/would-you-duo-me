@@ -27,12 +27,11 @@ import { addModalBtnEvent, addModalCloseEvent } from "../common/modal-handler.js
 //  console.log("Accuse button clicked!");
 //});
 window.handleSearchClick = function() {
-  const baseUrl = 'http://localhost:8282';
   const page = 1; // 페이지 번호
   const keyword = document.getElementById('search').value; // 검색 키워드 값 가져오기
   const boardCategory = document.getElementById('category-btn').value; // 게시판 카테고리 값 가져오기
 
-  fetch(`${baseUrl}/api/v1/boards/${page}/${keyword}/${boardCategory}`)
+  fetch(`/api/v1/boards/${page}/${keyword}/${boardCategory}`)
       .then(response => {
         if (response.ok) {
           return response.json();

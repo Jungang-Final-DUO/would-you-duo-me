@@ -3,7 +3,7 @@
 
 
 
- <dialog>
+ <dialog class = "write-modal">
         <div id="board-write-wrapper">
 
             <form action="/board/write" method="post">

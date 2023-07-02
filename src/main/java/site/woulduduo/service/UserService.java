@@ -235,8 +235,8 @@ public class UserService {
         // 세션의 수명을 설정
         session.setMaxInactiveInterval(60 * 60); // 1시간
 
-        // 티어 정보 갱신
-        user.setLolTier(riotApiService.getTier(lolNickname));
+//        // 티어 정보 갱신
+//        user.setLolTier(riotApiService.getTier(lolNickname));
 
 //        List<String> newMost3 = riotApiService.getMost3Champions(lolNickname);
 //
@@ -524,6 +524,8 @@ public class UserService {
     //유저리스트 DTO변환(Admin) + 페이징
     public ListResponseDTO<UserByAdminResponseDTO, User> getUserListByAdmin(PageDTO dto) {
 
+        log.info("dtoo:{}",dto);
+
         Pageable pageable = PageRequest.of(
                 dto.getPage() - 1,
                 dto.getSize(),
@@ -549,6 +551,7 @@ public class UserService {
         List<UserByAdminResponseDTO> collect = users.stream()
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
+        log.info("collect:{}",collect);
 
         int i = (dto.getPage() - 1) * dto.getSize() + 1;
         for (UserByAdminResponseDTO user : collect) {
@@ -735,6 +738,13 @@ public class UserService {
         );
         String lolNickname = foundUser.getLolNickname();
 
+        // 티어 정보 갱신
+        Tier newTier = riotApiService.getTier(lolNickname);
+
+        foundUser.setLolTier(newTier);
+
+        userRepository.save(foundUser);
+
         List<MatchV5DTO.MatchInfo.ParticipantDTO> last20ParticipantDTOList = riotApiService.getLast20ParticipantDTOList(lolNickname);
 
         LeagueV4DTO rankInfo = null;
@@ -804,7 +814,8 @@ public class UserService {
                 .userTwitter(foundUser.getUserTwitter())
                 .lolNickname(lolNickname)
                 .userComment(foundUser.getUserComment())
-                .tier(foundUser.getLolTier())
+                .tier(newTier)
+                .rank(rankInfo.getRank())
                 // 모스트 3 챔피언 정보
                 .mostChampInfos(mostChampInfoList)
                 // riot api 를 통해 얻어오는 솔로랭크 혹은 자유랭크 데이터
@@ -842,7 +853,7 @@ public class UserService {
 
         String followFrom = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
 
-        if (followTo.equals(followFrom)) throw new RuntimeException("해당하는 유저가 없습니다.");
+        if (followTo.equals(followFrom)) throw new RuntimeException("자기 자신은 팔로우할 수 없습니다.");
 
         Follow followState;
 
@@ -910,7 +921,7 @@ public class UserService {
         //호감도
         Double userAvgRate = user.getUserAvgRate();
         //팔로워순위
-        int rank = followRepository.getFollowerRank(userAccount);
+        Integer rank = followRepository.getFollowerRank(userAccount);
         //경고횟수
         long accuseCount = accuseRepository.countByUser(user);
         //총활동점수
