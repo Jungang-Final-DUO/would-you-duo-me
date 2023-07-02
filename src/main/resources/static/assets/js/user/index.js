@@ -196,16 +196,16 @@ function getProfileCardList() {
           
             let mostChampTag = '';
             for (let i = 0; i < mostChampList.length; i++) {
-                if (mostChampList[i].mostNo === 1) mostChampTag += '<li class="most-pic first-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="first-champ"></li>'
-                else if (mostChampList[i].mostNo === 2) mostChampTag += '<li class="most-pic second-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="second-champ"></li>'
-                else if (mostChampList[i].mostNo === 3) mostChampTag += '<li class="most-pic third-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="third-champ"></li>'
+                if (mostChampList[i].mostNo === 1 && mostChampList[i].champName !== '') mostChampTag += '<li class="most-pic first-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="first-champ"></li>'
+                else if (mostChampList[i].mostNo === 2 && mostChampList[i].champName !== '') mostChampTag += '<li class="most-pic second-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="second-champ"></li>'
+                else if (mostChampList[i].mostNo === 3 && mostChampList[i].champName !== '') mostChampTag += '<li class="most-pic third-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="third-champ"></li>'
             }        
             // console.log(mostOne + mostTwo + mostThree);
             // console.log("인스타" + userInstagram);
 
             const tierImgSrc = transTier(tier) !== null ? '"/assets/img/main/TFT_Regalia_'+ transTier(tier) +'.png"' : '/assets/img/main/unranked-removebg-preview.png';
             
-            profileCardTag += `<div id = "`+ userAccount +`" class="duo-profile" onclick="window.location.href='/user/user-history?userAccount=${userAccount}'">`
+            profileCardTag += `<div id = "`+ userAccount +`"data-userAccount="`+ userAccount +`" class="duo-profile" onclick="window.location.href='/user/user-history?userAccount=${userAccount}'">`
                                    + '<img class="duo-tier" src=' + tierImgSrc + ' alt="tier">'
                                     
                                    + '<div class="profile-left-side">'
@@ -245,6 +245,8 @@ function getProfileCardList() {
         // ====================================================================================
         //채팅 생성하기
         makeChattingRoom();
+        // 팔로우 기능
+        follow();
     });
  }
 
@@ -294,12 +296,63 @@ function getProfileCardList() {
 
  // 하트 이미지 클릭시 팔로잉 상태에 따라 비동기 요청 함수
 //  function follow() {
-//     const $followImg = document.querySelector('.follow-status');
-
+//     const $followImg =  document.querySelector('.follow-status');
+// // document.getElementById('profile-cards-wrapper')
 //     $followImg.onclick = e => {
-//         console.log(e.target.dataset.following);
+//         e.stopPropagation();
+
+//         if (e.target.classList.contains('follow-status')) {
+//             console.log(e.target.dataset.following);
+
+//             const res = fetch(profileCardListURL+'/'+e.target.closest('.duo-profile').dataset.userAccount,
+//             {
+//                 method: 'PATCH'
+//             });
+
+//             if (res.ok) {
+//                 const isFollowed = res.json();
+//                 const $followingImg = e.target.closest('.follow-status').querySelector('img');
+
+//                 if (isFollowed) {
+//                     $followingImg.src = '/assets/img/main/following.png';
+//                 } else {
+//                     $followingImg.src = '/assets/img/main/not-following.png';
+//                 }
+//             }
+//         }
 //     }
 //  }
+
+// =========================================================
+function follow() {
+    const $followImgs = document.querySelectorAll('.follow-status');
+    
+    $followImgs.forEach($followImg => {
+        $followImg.onclick = e => {
+            e.stopPropagation(); // 이벤트 전파 중지
+            
+            console.log(e.target.closest('.duo-profile').dataset.useraccount);
+            
+            const res = fetch(profileCardListURL + '/' + e.target.closest('.duo-profile').dataset.useraccount, {
+                method: 'PATCH'
+            });
+            
+            if (res.ok) {
+                const isFollowed = res.json();
+                const $followingImg = e.target.closest('.follow-status');
+                
+                if (isFollowed) {
+                    $followingImg.src = '/assets/img/main/following.png';
+                } else {
+                    $followingImg.src = '/assets/img/main/not-following.png';
+                }
+            }
+        }
+    });
+}
+// =========================================================
+
+
  
  let loading = false; // 초기에는 로딩 상태가 아님을 나타내는 변수
 
@@ -341,8 +394,6 @@ function getProfileCardList() {
     searchName();   
     // 전체보기 클릭시
     viewAll()
-
-    //  follow();
     
     // 프로필 카드 불러오기 함수(비동기)
    getProfileCardList();
