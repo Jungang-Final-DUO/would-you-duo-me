@@ -62,7 +62,7 @@ function checkMatchingPoint() {
     
 
     console.log(sessionPosition);
-        console.log("매칭포인트 존재");
+        // console.log("매칭포인트 존재");
         // 포지션 체크해주기
         for (let i = 0; i < $positionOption.length; i++) {
             if ($positionOption[i].value === sessionPosition) {
@@ -87,7 +87,7 @@ function modifyCard() {
 function deleteCard() {
     document.getElementById('delete-duo').onclick = e => {
         form.action = "/user/delete-duo";
-        if(confirm("지금 내용으로 삭제하시겠습니까?")) {
+        if(confirm("프로필카드를 삭제하시겠습니까?")) {
             form.submit();
         }
     }
@@ -95,17 +95,21 @@ function deleteCard() {
 
 //========= 메인 실행부 =========//
 (function () {
+    console.log("세션에 담긴 매칭포인트"+$matchingPoint.dataset.matchingpoint);
     // 프로필 카드 등록 함수
-    if ($matchingPoint.value === 0) {
+    if (+$matchingPoint.dataset.matchingpoint === 0) {
+        console.log("세션매포 0임");
         registerCard();
     }
     // 매칭포인트 값 검증 함수
     checkPoint();
+
     // 프로필카드가 기존에 등록되어 있는 경우 프로필카드 정보 띄워주기
-    if ($matchingPoint.value !== 0) {
+    if (+$matchingPoint.dataset.matchingpoint !== 0) {
+        console.log("세션매포 존재");
         checkMatchingPoint();
         modifyCard();
-        deleteCard()
+        deleteCard();
     }
 
 })();

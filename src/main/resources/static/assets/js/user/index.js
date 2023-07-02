@@ -184,7 +184,7 @@ function getProfileCardList() {
     fetch(profileCardListURL +'/' + page + '/' + keyword + '/' + size + '/' + position + '/' + gender + '/' + tier + '/' + sort)
     .then(res => res.json())
     .then(resResult => {
-        console.log("resRsult" + resResult);
+        
         if(Object.keys(resResult).length === 0) {
             page--; 
             end = true; 
@@ -193,13 +193,7 @@ function getProfileCardList() {
         
         for (let rep of resResult) {
             const {avgRate, followed, mostChampList, profileImage, tier, userAccount, userComment, userFacebook, userGender, userInstagram, userMatchingPoint, userNickname, userPosition, userTwitter} = rep;
-            // console.log(rep);
-            // mostOne = '';
-            // mostTwo = '';
-            // mostThree = '';
-            // mostOne = mostChampList[i].champName;
-            // mostTwo = mostChampList[i].champName;
-            // mostThree = mostChampList[i].champName;
+          
             let mostChampTag = '';
             for (let i = 0; i < mostChampList.length; i++) {
                 if (mostChampList[i].mostNo === 1) mostChampTag += '<li class="most-pic first-champ"><img src="'+ getChampionImg(mostChampList[i].champName) +'" alt="first-champ"></li>'
@@ -252,7 +246,50 @@ function getProfileCardList() {
         //채팅 생성하기
         makeChattingRoom();
     });
+ }
 
+ function viewAll() {
+    document.getElementById('view-all').onclick = e => {
+        removeTag();
+        page = 1;
+        end = false;
+        keyword = '';
+        // 체크된 티어 있는지 확인
+        for (let i = 0; i < $tierOption.length; i++) {
+            if ($tierOption[i].checked) {
+                $tierOption[i].checked = false;
+                tier = 'all';
+                console.log(tier);
+            }
+        }
+
+
+        // 체크된 포지션 있는지 확인
+        for (let i = 0; i < $positionOption.length; i++) {
+            if ($positionOption[i].checked) {
+                $positionOption[i].checked = false;
+                position = 'all';
+                console.log(position);
+            }
+        }
+
+
+        // 체크된 성별 있는지 확인
+        for (let i = 0; i < $genderOption.length; i++) {
+            if ($genderOption[i].checked) {
+                $genderOption[i].checked = false;
+                gender = 'all';
+                console.log(gender);
+            }
+        }
+
+        // 검색란 비워주기
+        document.getElementById('searchBy-nickname').value = '';
+
+        console.log("렌더링 진입전 포지션 성별 티어"+position+gender+tier+keyword);
+        getProfileCardList(); 
+
+    }
  }
 
  // 하트 이미지 클릭시 팔로잉 상태에 따라 비동기 요청 함수
@@ -302,6 +339,8 @@ function getProfileCardList() {
     selectTier();
     // 검색창 입력시 동작
     searchName();   
+    // 전체보기 클릭시
+    viewAll()
 
     //  follow();
     
