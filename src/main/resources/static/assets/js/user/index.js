@@ -94,21 +94,25 @@ function selectTier() {
 
 // 검색 키워드 입력시 작동 함수
 function searchName() {
+  let searchTimer = null;
+  document.getElementById('searchBy-nickname').onkeyup = e => {
+    clearTimeout(searchTimer); // 이전에 예약된 호출을 취소합니다.
 
-    document.getElementById('searchBy-nickname').onkeyup = e => {
-        page = 1;
-        end = false;
-        removeTag();  
-        console.log("키워드 입력중" + e.target.value);
-        keyword = document.getElementById('searchBy-nickname').value;
-        getProfileCardList();
-    }
+    searchTimer = setTimeout(() => {
+      page = 1;
+      end = false;
+      removeTag();
+      keyword = document.getElementById('searchBy-nickname').value;
+      getProfileCardList();
+    }, 500); // 500ms 딜레이 후에 함수를 호출합니다.
+  };
 }
 
 // 정렬 조건 변경시 작동 함수
 function selectSort() {
 
     document.getElementById('order-list').onchange = e => {
+        
         getProfileCardList();
     }
 }
@@ -173,7 +177,7 @@ function checkSNS(userInstagram, userFacebook, userTwitter) {
 }
 
 // 프로필 카드 비동기 요청 렌더링 함수
-function getProfileCardList() { 
+function getProfileCardList() {
     let profileCardTag = '';
     let mostOne = '';
     let mostTwo = '';
@@ -184,7 +188,6 @@ function getProfileCardList() {
     fetch(profileCardListURL +'/' + page + '/' + keyword + '/' + size + '/' + position + '/' + gender + '/' + tier + '/' + sort)
     .then(res => res.json())
     .then(resResult => {
-        
         if(Object.keys(resResult).length === 0) {
             page--; 
             end = true; 
@@ -241,7 +244,7 @@ function getProfileCardList() {
 
               
                             }
-            $profileCardWrapper.innerHTML += profileCardTag;                         
+            $profileCardWrapper.innerHTML += profileCardTag;                       
         // ====================================================================================
         stopPropagation();
         //채팅 생성하기
