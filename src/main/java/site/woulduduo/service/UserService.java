@@ -815,6 +815,7 @@ public class UserService {
                 .lolNickname(lolNickname)
                 .userComment(foundUser.getUserComment())
                 .tier(newTier)
+                .rank(rankInfo.getRank())
                 // 모스트 3 챔피언 정보
                 .mostChampInfos(mostChampInfoList)
                 // riot api 를 통해 얻어오는 솔로랭크 혹은 자유랭크 데이터
