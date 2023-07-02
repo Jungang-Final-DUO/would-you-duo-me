@@ -164,7 +164,6 @@ function checkProfile(profileImage) {
 
 // 팔로잉 상태에 따라 하트 이미지 주기
 function checkFollowing(followed) {
-    
     return followed === false ? "not-following" : "following";
 }
 

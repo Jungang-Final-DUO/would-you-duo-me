@@ -42,11 +42,12 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
     @Override
     public List<UserProfileResponseDTO> getUserProfileList(UserSearchType userSearchType, HttpSession session) {
+        System.out.println("%%% userSearchType // session = " + userSearchType + session);
 
-        if (session != null) {
-            LoginUserResponseDTO login = (LoginUserResponseDTO) session.getAttribute("login");
-        }
-        List<User> followedUsers = (session != null) ? followed(session) : null;
+        LoginUserResponseDTO login = (LoginUserResponseDTO) session.getAttribute("login");
+        System.out.println("hghgfh"+login);
+
+        List<User> followedUsers = (login != null) ? followed(session) : null;
 
         List<User> userList = queryFactory.selectFrom(user)
                 .join(user.mostChampList, mostChamp).fetchJoin()
@@ -88,7 +89,11 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
         // 팔로우 여부 설정
         List<UserProfileResponseDTO> userProfiles = userList.stream()
                 .map(u -> {
-                       boolean isFollowed = followedUsers.contains(u);
+                    boolean isFollowed = false;
+
+                    if (followedUsers != null) {
+                        isFollowed = followedUsers.contains(u);
+                    }
                     return UserProfileResponseDTO.builder()
                             .userAccount(u.getUserAccount())
                             .userGender(u.getUserGender())
@@ -115,32 +120,51 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
     private  BooleanExpression followeq(String followers, HttpSession session) {
         LoginUserResponseDTO login = (LoginUserResponseDTO)session.getAttribute("login");
 
-        QFollow subFollow = new QFollow("subFollow");
-        List<User> followedUserAccountList = queryFactory.select(subFollow.followTo)
-                .from(subFollow)
-                .where(subFollow.followFrom.userAccount.eq(login.getUserAccount()))
-                .fetch();
+        List<String> collect = null;
+        if (login != null) {
+            QFollow subFollow = new QFollow("subFollow");
+            List<User> followedUserAccountList = queryFactory.select(subFollow.followTo)
+                    .from(subFollow)
+                    .where(subFollow.followFrom.userAccount.eq(login.getUserAccount()))
+                    .fetch();
 
-        List<String> collect = followedUserAccountList.stream()
-                .map(u -> u.getUserAccount())
-                .collect(Collectors.toList());
-
+            collect = followedUserAccountList.stream()
+                    .map(u -> u.getUserAccount())
+                    .collect(Collectors.toList());
+        }
         return (followers.equals("all")) ? null : user.userAccount.in(collect);
     }
 
 
+//    @Override
+//    public List<User> followed(HttpSession session) {
+//        LoginUserResponseDTO login = (LoginUserResponseDTO)session.getAttribute("login");
+//
+//        // 팔로우한 사용자 목록 가져오기
+//        return queryFactory.select(follow.followTo)
+//                .from(follow)
+//                .where(follow.followFrom.userAccount.eq(login.getUserAccount()))
+//                .fetch();
+//
+//
+//    }
+// ==================================================
     @Override
     public List<User> followed(HttpSession session) {
         LoginUserResponseDTO login = (LoginUserResponseDTO)session.getAttribute("login");
 
-        // 팔로우한 사용자 목록 가져오기
-        return queryFactory.select(follow.followTo)
-                .from(follow)
-                .where(follow.followFrom.userAccount.eq(login.getUserAccount()))
-                .fetch();
+        QFollow subFollow = new QFollow("subFollow");
 
+        JPQLQuery<User> query = queryFactory.select(subFollow.followTo)
+                .from(subFollow);
 
+        if (login != null) {
+            query.where(subFollow.followFrom.userAccount.eq(login.getUserAccount()));
+        }
+
+        return query.fetch();
     }
+// ==================================================
 
     // 프로필 카드 수정
     @Override
