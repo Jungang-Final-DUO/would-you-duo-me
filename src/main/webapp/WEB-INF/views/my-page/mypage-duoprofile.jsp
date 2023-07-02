@@ -68,7 +68,7 @@
                                     autofocus>${login.userComment}</textarea></label>
                             <div id="submit-box">
                                 <p id="matching-point-title">매칭포인트</p><label id="matching-point-label">
-                                    <input id="matching-point" name="userMatchingPoint" value="${login.userMatchingPoint}"><span>POINT</span></label>
+                                    <input id="matching-point" name="userMatchingPoint" value="${login.userMatchingPoint}" data-matchingpoint="${login.userMatchingPoint}"><span>POINT</span></label>
                                 <c:if test="${login.userMatchingPoint == 0}">
                                     <div class="duo-btn" id="register-duo">듀오 등록</div>
                                 </c:if>

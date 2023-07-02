@@ -326,7 +326,15 @@ public class UserController {
         boolean b = userService.registerDUO(session, dto);
         log.info("프로필카드등록 성공여부 : {}", b);
         log.info("@@@@dto@@@@ :{}", dto);
-
+        if (b) {
+            log.info("success register");
+            LoginUserResponseDTO login = (LoginUserResponseDTO)session.getAttribute("login");
+            login.setUserComment(dto.getUserComment());
+            login.setUserPosition(dto.getUserPosition());
+            login.setUserMatchingPoint(dto.getUserMatchingPoint());
+        } else {
+            log.info("failed register");
+        }
         return "redirect:/user/register-duo";
     }
 
