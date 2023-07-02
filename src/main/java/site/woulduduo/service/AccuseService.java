@@ -14,6 +14,7 @@ import site.woulduduo.dto.response.ListResponseDTO;
 import site.woulduduo.dto.response.accuse.AccuseListResponseDTO;
 import site.woulduduo.dto.response.page.PageResponseDTO;
 import site.woulduduo.entity.Accuse;
+import site.woulduduo.entity.Board;
 import site.woulduduo.entity.User;
 import site.woulduduo.repository.AccuseRepository;
 import site.woulduduo.repository.UserRepository;
@@ -45,19 +46,29 @@ public class AccuseService {
                 Sort.by("accuseNo").descending()
         );
 
-        System.out.println("pageable = " + pageable);
+        String keyword = dto.getKeyword();
+        if ("".equals(keyword)){
+            keyword=null;
+        }
 
-        Page<Accuse> all = accuseRepository.findAll(pageable);
+        String userAccount = dto.getKeyword();
+        Page<Accuse> accuses;
 
-        System.out.println("all = " + all);
-        List<AccuseListResponseDTO> collect = all.stream()
+        if (userAccount==null) {
+            accuses = accuseRepository.findAll(pageable);
+        }else{
+            accuses = accuseRepository.findByUser_UserAccountContaining(userAccount, pageable);
+        }
+
+        System.out.println("accuses = " + accuses);
+        List<AccuseListResponseDTO> collect = accuses.stream()
                 .map(AccuseListResponseDTO::new)
                 .collect(toList());
 
         System.out.println("collect = " + collect);
         return ListResponseDTO.<AccuseListResponseDTO,Accuse>builder()
                 .count(collect.size())
-                .pageInfo(new PageResponseDTO<>(all))
+                .pageInfo(new PageResponseDTO<>(accuses))
                 .list(collect)
                 .build();
 
@@ -71,16 +82,23 @@ public class AccuseService {
                 Sort.by("accuseNo").descending()
         );
 
-        System.out.println("pageable = " + pageable);
+        String keyword = dto.getKeyword();
+        if ("".equals(keyword)){
+            keyword=null;
+        }
 
         String userAccount = dto.getKeyword();
+        Page<Accuse> accuses;
 
-        Page<Accuse> all = accuseRepository.findAll(pageable);
-        System.out.println("all-------- = " + all);
+        if (userAccount==null) {
+            accuses = accuseRepository.findAll(pageable);
+        }else{
+            accuses = accuseRepository.findByUser_UserAccountContaining(userAccount, pageable);
+        }
         List<Accuse> todayAccuseList = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
 
-        for (Accuse accuse : all) {
+        for (Accuse accuse : accuses) {
             System.out.println("accuseByAdminResponseDTO = " + accuse);
             LocalDateTime localDateTime = accuse.getAccuseWrittenDate();
             LocalDate localDate = localDateTime.toLocalDate();
@@ -101,7 +119,7 @@ public class AccuseService {
             System.out.println("collect = " + collect);
             return ListResponseDTO.<AccuseListResponseDTO, Accuse>builder()
                     .count(collect.size())
-                    .pageInfo(new PageResponseDTO<>(all))
+                    .pageInfo(new PageResponseDTO<>(accuses))
                     .list(collect)
                     .build();
 
