@@ -105,7 +105,7 @@ public class MatchingController {
     }
 
     /**
-     * 유저가 받은 리뷰를 전적 페이지에 가져오는 메서드
+     * 유저가 받은 리뷰를 마이 페이지에 가져오는 메서드
      *
      * @param userAccount - 해당 유저
      * @return - 유저가 받은 리뷰 목록을 담은 응답

@@ -10,7 +10,6 @@ import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.Gender;
 import site.woulduduo.enumeration.MatchingStatus;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface MatchingRepository extends JpaRepository<Matching, Long> {
@@ -19,10 +18,10 @@ public interface MatchingRepository extends JpaRepository<Matching, Long> {
     @Query("SELECT m FROM Matching m WHERE m.chatting.chattingTo.userAccount = :userAccount AND m.matchingReviewRate IS NOT NULL\n")
     Page<Matching> findOneByChattingTo(String userAccount, Pageable pageable);
 
-    @Query("SELECT m FROM Matching m WHERE m.chatting.chattingTo.userAccount = :userAccount")
+    @Query("SELECT m FROM Matching m WHERE m.chatting.chattingTo.userAccount = :userAccount AND m.matchingStatus != 'REJECT'")
     Page<Matching> findOneByChattingToOnMyPage(String userAccount, Pageable pageable);
 
-    @Query("SELECT m FROM Matching m WHERE m.chatting.chattingFrom.userAccount = :userAccount")
+    @Query("SELECT m FROM Matching m WHERE m.chatting.chattingFrom.userAccount = :userAccount AND m.matchingStatus != 'REJECT'")
     Page<Matching> findOneByChattingFromOnMyPage(String userAccount, Pageable pageable);
 
     List<Matching> findByChatting(Chatting chatting);
