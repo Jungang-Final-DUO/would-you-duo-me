@@ -6,8 +6,8 @@
         <p class = "my-page-menu"><a href="/user/my-page">내 정보 확인 / 변경</a></p>
         <p class = "my-page-menu"><a href="/user/register-duo">듀오 프로필 등록 / 수정</a></p>
         <p class = "my-page-menu">내가 쓴 글 / 댓글</p>
-        <p class = "my-page-menu">출석 체크</p>
         <p class = "my-page-menu"><a href="/user/change-password">비밀번호 변경</a></p>
+        <p class="my-page-menu"><a href="/user/matching-list">매칭 히스토리</a></p>
     </div>
 </div>
 
