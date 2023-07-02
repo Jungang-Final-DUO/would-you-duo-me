@@ -9,6 +9,7 @@ let end = false;
 const profileCardListURL = "/api/v1/users";
 const $profileCardWrapper = document.getElementById('profile-cards-wrapper'); 
 
+let onlyFollow = 'all';
 let keyword = '';
 const size = 20;
 let position = 'all';
@@ -108,6 +109,19 @@ function searchName() {
   };
 }
 
+// 팔로잉 버튼 클릭시 작동 함수
+function filterFollowing() {
+
+    document.getElementById('view-followings').onclick = e => {
+        page = 1;
+        end = false;
+        removeTag();
+        onlyFollow = 'followers';
+        getProfileCardList();
+    }
+
+}
+
 // 정렬 조건 변경시 작동 함수
 function selectSort() {
 
@@ -150,6 +164,7 @@ function checkProfile(profileImage) {
 
 // 팔로잉 상태에 따라 하트 이미지 주기
 function checkFollowing(followed) {
+    
     return followed === false ? "not-following" : "following";
 }
 
@@ -185,7 +200,7 @@ function getProfileCardList() {
 
     if(keyword === '') keyword = '-';
 
-    fetch(profileCardListURL +'/' + page + '/' + keyword + '/' + size + '/' + position + '/' + gender + '/' + tier + '/' + sort)
+    fetch(profileCardListURL +'/' + page + '/' + keyword + '/' + size + '/' + position + '/' + gender + '/' + tier + '/' + onlyFollow + '/' + sort)
     .then(res => res.json())
     .then(resResult => {
         if(Object.keys(resResult).length === 0) {
@@ -233,7 +248,7 @@ function getProfileCardList() {
                                            + '<div class="rate-matching-point matching-point-box"><img class="rate-matching-point-image" src="/assets/img/main/coin.png" alt="coin">'
                                                + '<p class="matching-point">'+ userMatchingPoint +'</p></div>'
                                        + '</div>'
-                                       + '<div class="profile-comment"><p>'+ userComment +'</p></div>'
+                                       + '<div class="profile-comment"><p>'+ subStrComment(userComment) +'</p></div>'
                                        + '<div class="profile-most-champ">'
                                            + '<ul class="champ-list">'
                                                + mostChampTag
@@ -253,12 +268,23 @@ function getProfileCardList() {
     });
  }
 
+ // userComment 글자수 오버시 ...처리
+ function subStrComment(userComment) {
+    if (userComment.length >= 25) {
+        return userComment.substring(0, 25) + "...";
+    } else {
+        return userComment;
+    }
+ }
+
+ // 전체보기 클릭시 동작함수
  function viewAll() {
     document.getElementById('view-all').onclick = e => {
         removeTag();
         page = 1;
         end = false;
         keyword = '';
+        onlyFollow = 'all';
         // 체크된 티어 있는지 확인
         for (let i = 0; i < $tierOption.length; i++) {
             if ($tierOption[i].checked) {
@@ -297,59 +323,37 @@ function getProfileCardList() {
     }
  }
 
- // 하트 이미지 클릭시 팔로잉 상태에 따라 비동기 요청 함수
-//  function follow() {
-//     const $followImg =  document.querySelector('.follow-status');
-// // document.getElementById('profile-cards-wrapper')
-//     $followImg.onclick = e => {
-//         e.stopPropagation();
-
-//         if (e.target.classList.contains('follow-status')) {
-//             console.log(e.target.dataset.following);
-
-//             const res = fetch(profileCardListURL+'/'+e.target.closest('.duo-profile').dataset.userAccount,
-//             {
-//                 method: 'PATCH'
-//             });
-
-//             if (res.ok) {
-//                 const isFollowed = res.json();
-//                 const $followingImg = e.target.closest('.follow-status').querySelector('img');
-
-//                 if (isFollowed) {
-//                     $followingImg.src = '/assets/img/main/following.png';
-//                 } else {
-//                     $followingImg.src = '/assets/img/main/not-following.png';
-//                 }
-//             }
-//         }
-//     }
-//  }
-
-// =========================================================
+// 팔로우 / 언팔로우 기능
 function follow() {
     const $followImgs = document.querySelectorAll('.follow-status');
     
     $followImgs.forEach($followImg => {
+
         $followImg.onclick = e => {
             e.stopPropagation(); // 이벤트 전파 중지
+
+            const $followingImg = e.target.closest('.follow-status');
             
             console.log(e.target.closest('.duo-profile').dataset.useraccount);
             
-            const res = fetch(profileCardListURL + '/' + e.target.closest('.duo-profile').dataset.useraccount, {
+            fetch(profileCardListURL + '/' + e.target.closest('.duo-profile').dataset.useraccount, {
                 method: 'PATCH'
-            });
-            
-            if (res.ok) {
-                const isFollowed = res.json();
-                const $followingImg = e.target.closest('.follow-status');
-                
-                if (isFollowed) {
-                    $followingImg.src = '/assets/img/main/following.png';
-                } else {
-                    $followingImg.src = '/assets/img/main/not-following.png';
+            }).then(res => {
+                if (res.status === 200) {
+                    console.log("진입성공");
+                    // const isFollowed = res.json();
+                    // console.log("res.json"+isFollowed);
+                    console.log($followingImg);
+
+                    res.json().then(data => {
+                        if (data) {
+                            $followingImg.src = '/assets/img/main/following.png';
+                        } else {
+                            $followingImg.src = '/assets/img/main/not-following.png';
+                        }
+                    })                        
                 }
-            }
+            });
         }
     });
 }
@@ -396,7 +400,9 @@ function follow() {
     // 검색창 입력시 동작
     searchName();   
     // 전체보기 클릭시
-    viewAll()
+    viewAll();
+
+    filterFollowing();
     
     // 프로필 카드 불러오기 함수(비동기)
    getProfileCardList();

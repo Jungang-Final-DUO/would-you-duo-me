@@ -55,17 +55,18 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     // 메인페이지 - 프로필 카드 불러오기(비동기)
-    @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
+    @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{follow}/{sort}")
     public ResponseEntity<?> getUserProfileList(@PathVariable int page, @PathVariable String keyword, @PathVariable int size
             , @PathVariable String position, @PathVariable String gender
-            , @PathVariable String tier, @PathVariable String sort, HttpSession session) {
+            , @PathVariable String tier,@PathVariable String follow ,@PathVariable String sort, HttpSession session) {
 
 
-        System.out.println(keyword + position + gender + tier + sort);
+        System.out.println(keyword + position + gender + tier + "  "+ follow +"  "+ sort);
 
         UserSearchType userSearchType = new UserSearchType();
         userSearchType.setPage(page);
         userSearchType.setSize(size);
+        userSearchType.setFollowers(follow);
         if (!keyword.equals("-")) {
             userSearchType.setKeyword(keyword);
         }
