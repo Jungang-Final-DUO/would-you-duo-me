@@ -111,8 +111,11 @@ function searchName() {
 
 // 팔로잉 버튼 클릭시 작동 함수
 function filterFollowing() {
-
     document.getElementById('view-followings').onclick = e => {
+        if (document.getElementById('login-check').dataset.login === '') {
+            alert("로그인이 필요한 기능입니다.");
+            return;
+        } 
         page = 1;
         end = false;
         removeTag();
@@ -264,6 +267,7 @@ function getProfileCardList() {
         makeChattingRoom();
         // 팔로우 기능
         follow();
+            
     });
  }
 
@@ -327,9 +331,17 @@ function follow() {
     const $followImgs = document.querySelectorAll('.follow-status');
     
     $followImgs.forEach($followImg => {
-
+        
         $followImg.onclick = e => {
             e.stopPropagation(); // 이벤트 전파 중지
+            if (document.getElementById('login-check').dataset.login === '') {
+                alert("로그인이 필요한 기능입니다.");
+                return;
+            }
+            if (document.getElementById('login-check').dataset.login === e.target.closest('.duo-profile').dataset.useraccount) {
+                alert("본인의 프로필카드입니다.");
+                return;
+            }
 
             const $followingImg = e.target.closest('.follow-status');
             

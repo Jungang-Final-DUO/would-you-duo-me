@@ -58,7 +58,7 @@ public class UserController {
     @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{follow}/{sort}")
     public ResponseEntity<?> getUserProfileList(@PathVariable int page, @PathVariable String keyword, @PathVariable int size
             , @PathVariable String position, @PathVariable String gender
-            , @PathVariable String tier,@PathVariable String follow ,@PathVariable String sort, HttpSession session) {
+            , @PathVariable String tier,@PathVariable String follow ,@PathVariable String sort, HttpSession session, Model model) {
 
 
         System.out.println(keyword + position + gender + tier + "  "+ follow +"  "+ sort);
@@ -82,6 +82,10 @@ public class UserController {
         if (!keyword.equals("all")) {
             userSearchType.setSort(sort);
         }
+        LoginUserResponseDTO login = (LoginUserResponseDTO)session.getAttribute("login");
+
+        model.addAttribute("login", login);
+
         List<UserProfileResponseDTO> userServiceUserProfileList = userService.getUserProfileList(session, userSearchType);
         System.out.println("userServiceUserProfileList = " + userServiceUserProfileList);
 
