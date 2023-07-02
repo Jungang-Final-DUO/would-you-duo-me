@@ -675,125 +675,127 @@ function renderUserTodayList({
 
 
         totalBoardButton.onclick = e => {
-            userDisplayNone();
-            accuseDisplayNone();
-            boardMenuBar.style.display = '';
+  userDisplayNone();
+  accuseDisplayNone();
+  boardMenuBar.style.display = '';
 
-            const pageNum = 1; // 초기 페이지 설정
+  const pageNum = 1; // 초기 페이지 설정
 
-            const searchInput = document.getElementById('search_input');
-            const button = document.getElementById('search_button');
+  const searchInput = document.getElementById('search_input');
+  const button = document.getElementById('search_button');
 
-            let keyword = ""; // 초기에는 빈 문자열로 설정합니다.
+  let keyword = ""; // 초기에는 빈 문자열로 설정합니다.
 
-            button.onclick = e => {
-                keyword = searchInput.value; // 입력된 텍스트 값으로 keyword를 업데이트합니다.
-                console.log(keyword);
+  button.onclick = e => {
+    keyword = searchInput.value; // 입력된 텍스트 값으로 keyword를 업데이트합니다.
+    console.log(keyword);
 
-                if (keyword == "") {
-                    keyword = "";
-                }
+    if (keyword == "") {
+      keyword = "";
+    }
 
-                // 사용자 목록을 가져오는 함수 호출
-                getBoardList(pageNum, keyword);
-            };
+    // 사용자 목록을 가져오는 함수 호출
+    getBoardList(pageNum, keyword);
+  };
 
-            // 사용자 목록을 가져오는 함수 호출 (초기에는 keyword가 빈 문자열로 호출됩니다.)
-            getBoardList(pageNum, keyword);
-            console.log('함수전달할 때  키워드', keyword);
+  // 사용자 목록을 가져오는 함수 호출 (초기에는 keyword가 빈 문자열로 호출됩니다.)
+  getBoardList(pageNum, keyword);
+  console.log('함수전달할 때  키워드', keyword);
+};
+
+
+function getBoardList(pageNum, keyword) {
+
+  fetch(`/api/v1/boards/admin1?pageNum=\${pageNum}&keyword=\${keyword}`)
+    .then(response => response.json())
+    .then(res => {
+      const list = res.list;
+
+      for (let i = 0; i < boardList.length; i++) {
+        const boardLink = boardList[i];
+
+        if (i < list.length) {
+          const data = list[i];
+          updateBoardLink(boardLink, data);
+        } else {
+          boardLink.style.display = 'none';
+        }
+      }
+
+      const yourList = list; // yourList에 list를 할당
+
+      const boardDelete = document.querySelectorAll('.delete');
+      for (let index = 0; index < boardDelete.length; index++) {
+        boardDelete[index].onclick = function () {
+          if (confirm('게시물을 삭제하시겠습니까?')) {
+            alert('게시물 삭제 완료');
+            deleteBoard(yourList, index);
+          }
         };
+      }
 
+      renderBoardList(res);
+    });
+}
+function updateBoardLink(boardLink, data) {
+  const {
+    boardNo,
+    userAccount,
+    boardTitle,
+    boardWrittenDate,
+    boardViewCount
+  } = data;
 
-        function getBoardList(pageNum, keyword) {
+  boardLink.querySelector('.bln').innerText = boardNo;
+  boardLink.querySelector('.blm').innerText = userAccount;
+  boardLink.querySelector('.blt').innerText = boardTitle;
+  boardLink.querySelector('.bld').innerText = boardWrittenDate;
+  boardLink.querySelector('.blc').innerText = boardViewCount;
 
-            fetch(`/api/v1/boards/admin?pageNum=\${pageNum}&keyword=\${keyword}`)
-                .then(response => response.json())
-                .then(res => {
-                    const list = res.list;
+  boardLink.style.display = '';
+}
 
-                    for (let i = 0; i < boardList.length; i++) {
-                        const boardLink = boardList[i];
+function deleteBoard(list, index) {
+  const boardNo = list[index].boardNo;
+  console.log('asd123====', boardNo);
 
-                        if (i < list.length) {
+  fetch(`/api/v1/boards/admin/delete?boardNo=\${boardNo}`, {
+    method: 'DELETE'
+  })
+    .then(response => response.json())
+    .then(res => {
 
-                            const {
-                                boardNo,
-                                userAccount,
-                                boardTitle,
-                                boardWrittenDate,
-                                boardViewCount
-                            } = list[i];
+      if (res == true) {
+        // 게시물 삭제 후 새로운 데이터 가져오기
+        fetch('/api/v1/boards/admin1') // 새로운 데이터 가져오기 API 엔드포인트로 변경해야 함
+          .then(response => response.json())
+          .then(res => {
+            console.log('res123123123:', res);
 
-                            const boardNoElement = boardLink.querySelector('.bln');
-                            boardNoElement.innerText = boardNo;
+            const newList = res.list;
+            // 새로운 데이터를 이용하여 화면 업데이트
+            console.log('newlist나갑니다', newList);
 
-                            const userAccountElement = boardLink.querySelector('.blm');
-                            userAccountElement.innerText = userAccount;
+            updateBoardTotalList(newList);
+          });
+      }
+    });
+}
 
-                            const boardTitleElement = boardLink.querySelector('.blt');
-                            boardTitleElement.innerText = boardTitle;
+function updateBoardTotalList(newList) {
+  // 게시물 리스트 업데이트
+  console.log('newlist나갑니다',newList);
+  for (let i = 0; i < boardList.length; i++) {
+    const boardLink = boardList[i];
 
-                            const boardWrittenDateElement = boardLink.querySelector('.bld');
-                            boardWrittenDateElement.innerText = boardWrittenDate;
-
-                            const boardViewCountElement = boardLink.querySelector('.blc');
-                            boardViewCountElement.innerText = boardViewCount;
-
-                            boardLink.style.display = '';
-                        } else {
-                            boardLink.style.display = 'none';
-                        }
-                    }
-
-                    const yourList = list; // yourList에 list를 할당
-
-                    const boardDelete = document.querySelectorAll('.delete');
-                    for (let index = 0; index < boardDelete.length; index++) {
-                        boardDelete[index].onclick = function () {
-                            if (confirm('게시물을 삭제하시겠습니까?')) {
-                                alert('게시물 삭제 완료');
-                                deleteBoard(yourList, index);
-                            }
-                        };
-                    }
-
-                    renderBoardList(res);
-                });
-        }
-
-
-
-        //게시물삭제
-        function deleteBoard(list, index) {
-            const boardNo = list[index].boardNo;
-            console.log('asd123====', boardNo);
-
-            fetch(`/api/v1/boards/admin/delete?boardNo=` + boardNo, {
-                    method: 'DELETE'
-                })
-                .then(response => response.json())
-                .then(res => {
-                    console.log('res:', res);
-
-                    // 게시물 삭제 후 새로운 데이터 가져오기
-                    fetch('/api/v1/boards/admin') // 새로운 데이터 가져오기 API 엔드포인트로 변경해야 함
-                        .then(response => response.json())
-                        .then(res => {
-                            const newList = res.list;
-                            // 새로운 데이터를 이용하여 화면 업데이트
-                            updateBoardList(newList);
-                        });
-                });
-        }
-
-        function updateBoardList(newList) {
-            // 게시물 리스트 업데이트
-            bln(newList);
-            blm(newList);
-            blt(newList);
-            bld(newList);
-            blc(newList);
-        }
+    if (i < newList.length) {
+      const data = newList[i];
+      updateBoardLink(boardLink, data);
+    } else {
+      boardLink.style.display = 'none';
+    }
+  }
+}
 
 
         //보드 페이징
@@ -919,86 +921,92 @@ function renderUserTodayList({
                     const list = res.list;
 
                     for (let i = 0; i < boardList.length; i++) {
-                        const boardLink = boardList[i];
+                        const boardTodayLink = boardList[i];
 
                         if (i < list.length) {
-
-                            const {
-                                boardNo,
-                                userAccount,
-                                boardTitle,
-                                boardWrittenDate,
-                                boardViewCount
-                            } = list[i];
-
-                            const boardNoElement = boardLink.querySelector('.bln');
-                            boardNoElement.innerText = boardNo;
-
-                            const userAccountElement = boardLink.querySelector('.blm');
-                            userAccountElement.innerText = userAccount;
-
-                            const boardTitleElement = boardLink.querySelector('.blt');
-                            boardTitleElement.innerText = boardTitle;
-
-                            const boardWrittenDateElement = boardLink.querySelector('.bld');
-                            boardWrittenDateElement.innerText = boardWrittenDate;
-
-                            const boardViewCountElement = boardLink.querySelector('.blc');
-                            boardViewCountElement.innerText = boardViewCount;
-
-                            boardLink.style.display = '';
-                        } else {
-                            boardLink.style.display = 'none';
-                        }
-                    }
-
-                    const yourList = list; // yourList에 list를 할당
-
-                    const boardDelete = document.querySelectorAll('.delete');
-                    for (let index = 0; index < boardDelete.length; index++) {
-                        boardDelete[index].onclick = function () {
-                            if (confirm('게시물을 삭제하시겠습니까?')) {
-                                alert('게시물 삭제 완료');
-                                deleteBoard(yourList, index);
-                            }
-                        };
-                    }
-
-                    renderBoardTodayList(res);
-                });
+          const data = list[i];
+          updateBoardTodayLink(boardTodayLink, data);
+        } else {
+          boardTodayLink.style.display = 'none';
         }
+      }
+
+      const yourList = list; // yourList에 list를 할당
+
+      const boardDelete = document.querySelectorAll('.delete');
+      for (let index = 0; index < boardDelete.length; index++) {
+        boardDelete[index].onclick = function () {
+          if (confirm('게시물을 삭제하시겠습니까?')) {
+            alert('게시물 삭제 완료');
+            deleteTodayBoard(yourList, index);
+          }
+        };
+      }
+
+      renderBoardTodayList(res);
+    });
+}
 
 
-        function deleteTodayBoard(list, index) {
-            const boardNo = list[index].boardNo;
-            console.log('asd123====', boardNo);
+function updateBoardTodayLink(boardLink, data) {
+  const {
+    boardNo,
+    userAccount,
+    boardTitle,
+    boardWrittenDate,
+    boardViewCount
+  } = data;
 
-            fetch(`/api/v1/boards/admin/delete?boardNo=` + boardNo, {
-                    method: 'DELETE'
-                })
-                .then(response => response.json())
-                .then(res => {
-                    console.log('res:', res);
+  boardLink.querySelector('.bln').innerText = boardNo;
+  boardLink.querySelector('.blm').innerText = userAccount;
+  boardLink.querySelector('.blt').innerText = boardTitle;
+  boardLink.querySelector('.bld').innerText = boardWrittenDate;
+  boardLink.querySelector('.blc').innerText = boardViewCount;
 
-                    // 게시물 삭제 후 새로운 데이터 가져오기
-                    fetch('/api/v1/boards/admin1') // 새로운 데이터 가져오기 API 엔드포인트로 변경해야 함
-                        .then(response => response.json())
-                        .then(res => {
-                            const newList = res.list;
-                            // 새로운 데이터를 이용하여 화면 업데이트
-                            updateBoardList(newList);
-                        });
-                });
-        }
+  boardLink.style.display = '';
+}
 
-        function updateBoardList(newList) {
-            // 게시물 리스트 업데이트
-            bln1(newList);
-            blm1(newList);
-            blt1(newList);
-            bld1(newList);
-            blc1(newList);
-        }
+function deleteTodayBoard(list, index) {
+  const boardNo = list[index].boardNo;
+  console.log('asd123====', boardNo);
+
+  fetch(`/api/v1/boards/admin/delete?boardNo=\${boardNo}`, {
+    method: 'DELETE'
+  })
+    .then(response => response.json())
+    .then(res => {
+
+      if (res == true) {
+        // 게시물 삭제 후 새로운 데이터 가져오기
+        fetch('/api/v1/boards/admin1') // 새로운 데이터 가져오기 API 엔드포인트로 변경해야 함
+          .then(response => response.json())
+          .then(res => {
+            console.log('res123123123:', res);
+
+            const newList = res.list;
+            // 새로운 데이터를 이용하여 화면 업데이트
+            console.log('newlist나갑니다', newList);
+
+            updateBoardTodayList(newList);
+          });
+      }
+    });
+}
+
+function updateBoardTodayList(newList) {
+  // 게시물 리스트 업데이트
+  console.log('newlist나갑니다',newList);
+  for (let i = 0; i < boardList.length; i++) {
+    const boardLink = boardList[i];
+
+    if (i < newList.length) {
+      const data = newList[i];
+      updateBoardLink(boardLink, data);
+    } else {
+      boardLink.style.display = 'none';
+    }
+  }
+}
 
         //보드 페이징
 

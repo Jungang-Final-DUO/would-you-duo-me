@@ -33,7 +33,7 @@ class BoardRepositoryTest {
     void saveTest() {
         User byUserAccount = userRepository.findByUserAccount("user1");
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 50; i++) {
             Board board = Board.builder()
                     .user(byUserAccount)
                     .boardTitle("게시글2제목1"+i)
