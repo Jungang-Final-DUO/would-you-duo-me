@@ -382,141 +382,133 @@
         const user = document.getElementById('user_name');
 
 
+   //Ban 클릭 변수
+    // Ban 클릭 변수
+    const banClick = document.getElementById('is_ben');
 
-
-
-        //Ban 클릭 변수
-        const banClick = document.getElementById('is_ben');
-
-        function userIsBan() {
-            const userNickname = user.innerText;
-            //console.log(userNickname);
-
-            fetch(`http://localhost:8282/user/detail/banBoolean?nickname=` + userNickname)
-                .then(response => {
-                    return response.json()
-                })
-                .then(res => {
-
-
-
-                    //   console.log('res21231231  :  -' + res);
-
-
-                    if (res === true) {
-                        banClick.style.backgroundColor = 'red';
-                    } else {
-                        banClick.style.backgroundColor = '#111E30';
-                    }
-                    //     console.log(res);
-                });
-        }
-
-        userIsBan();
-
-        banClick.onclick = e => {
-            const userNickname = user.innerText;
-            // console.log(userNickname);
-
-            fetch(`http://localhost:8282/user/ban`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        userIsBanned: 1,
-                        userNickname: user.innerText
-                    })
-                })
-                .then(response => {
-                    return response.json()
-                })
-                .then(res => {
-                    // console.log('res  :  -' + res);
-
-
-                    if (res === true) {
-                        banClick.style.backgroundColor = 'red';
-                    } else {
-                        banClick.style.backgroundColor = '#111E30';
-                    }
-                    // console.log(res);
-                });
-
-        };
-
-
-
-
-
-        //모달 count red 색칠
-        function banCheck() {
-            const accuseImages = document.querySelectorAll('.accuse_img');
-
-            function userIsAccuse() {
-                const userNickname = user.innerText;
-                console.log(userNickname);
-
-                fetch('http://localhost:8282/user/accuse/count', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            userNickname: userNickname,
-                        })
-                    })
-                    .then(response => {
-                        console.log('response: ', response);
-                        return response.json();
-                    })
-                    .then(res => {
-                        console.log('res: ', res);
-
-                        for (let index = 0; index < res; index++) {
-
-                            const newImageSrc = '/assets/img/admin/경고R.png';
-                            accuseImages[index].setAttribute('src', newImageSrc);
-
-                        }
-
-
-                    });
-
-
-            }
-
-            userIsAccuse();
-        }
-
-        banCheck();
-
-
-
-
-
-
-
-
-        //모달 데이터 보내기
-        const sendAccuseModal = document.querySelectorAll('.sendAccuse');
-const accuseTypeEtcInput = document.querySelectorAll('.accuseTypeEtc');
-
-sendAccuseModal.forEach((modal, index) => {
-    modal.addEventListener('click', e => {
+    function userIsBan() {
         const userNickname = user.innerText;
-        e.preventDefault();
-        accuseModalData(userNickname, index);
+
+        fetch(`/user/detail/banBoolean?nickname=` + userNickname)
+            .then(response => {
+                return response.json();
+            })
+            .then(res => {
+                if (res >= 5) {
+                    banClick.style.backgroundColor = 'red';
+                }
+
+                if (res === true) {
+                    banClick.style.backgroundColor = 'red';
+                } else {
+                    banClick.style.backgroundColor = '#111E30';
+                }
+            });
+    }
+
+    userIsBan();
+
+
+    // 모달 count red 색칠
+
+    banClick.onclick = e => {
+        const userNickname = user.innerText;
+        // console.log(userNickname);
+
+        fetch(`/user/ban`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userIsBanned: 1,
+                userNickname: user.innerText
+            })
+        })
+            .then(response => {
+                return response.json()
+            })
+            .then(res => {
+                // console.log('res  :  -' + res);
+
+
+                if (res === true) {
+                    banClick.style.backgroundColor = 'red';
+                } else {
+                    banClick.style.backgroundColor = '#111E30';
+                }
+                // console.log(res);
+            });
+
+    };
+
+
+    function banCheck() {
+        const accuseImages = document.querySelectorAll('.accuse_img');
+
+        function userIsAccuse() {
+            const userNickname = user.innerText;
+            console.log(userNickname);
+
+            fetch('/user/accuse/count', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userNickname: userNickname,
+                })
+            })
+                .then(response => {
+                    console.log('response: ', response);
+                    return response.json();
+                })
+                .then(res => {
+                    console.log('res: ', res);
+                    fifthAccuseBan(res);
+
+                    for (let index = 0; index < res; index++) {
+                        const newImageSrc = '/assets/img/admin/경고R.png';
+                        accuseImages[index].setAttribute('src', newImageSrc);
+                    }
+
+                    if (res >= 5) {
+                        banClick.style.backgroundColor = 'red';
+                    }
+                });
+        }
+
+        userIsAccuse();
+    }
+
+    function fifthAccuseBan(res) {
+        if (res >= 5) {
+            banClick.style.backgroundColor = 'red';
+        }
+    }
+
+    banCheck();
+
+
+    //모달 데이터 보내기
+    const sendAccuseModal = document.querySelectorAll('.sendAccuse');
+    const accuseTypeEtcInput = document.querySelectorAll('.accuseTypeEtc');
+
+    sendAccuseModal.forEach((modal, index) => {
+        modal.addEventListener('click', e => {
+            const userNickname = user.innerText;
+            e.preventDefault();
+            accuseModalData(userNickname, index);
+        });
     });
-});
 
-function accuseModalData(userNickname, index) {
-    const checkboxes = document.querySelectorAll('input[name="accuseType"]:checked');
-    const accuseType = Array.from(checkboxes).map(checkbox => checkbox.nextElementSibling.innerText);
+    function accuseModalData(userNickname, index) {
+        const checkboxes = document.querySelectorAll('input[name="accuseType"]:checked');
+        const accuseType = Array.from(checkboxes).map(checkbox => checkbox.nextElementSibling.innerText);
 
-    const accuseTypeEtcValue = accuseTypeEtcInput[index].value;
+        const accuseTypeEtcValue = accuseTypeEtcInput[index].value;
 
-    fetch('http://localhost:8282/user/accuse', {
+        fetch('http://localhost:8282/user/accuse', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -542,8 +534,6 @@ function accuseModalData(userNickname, index) {
         }
     });
 }
-
-
 
 
 

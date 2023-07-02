@@ -485,11 +485,11 @@ public class UserController {
     @GetMapping("/user/detail/banBoolean")
 //    //관리자 페이지 자세히 보기
     public ResponseEntity<?> showBanIsBoolean(HttpSession session, @RequestParam String nickname) {
-        log.info("{}nickname = ", nickname);
+        log.info("{}nicknamedetail = ", nickname);
 
         boolean userDetailByAdmin = userService.getUserBanBooleanByAdmin(nickname);
 
-        log.info("{}userDetailByAdmin = ", userDetailByAdmin);
+        log.info("{}userDetailByAdmin11111  = ", userDetailByAdmin);
 
         return ResponseEntity
                 .ok()
