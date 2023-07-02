@@ -30,7 +30,7 @@ public class MyPageReviewResponseDTO {
             this.profileImage = matching.getChatting().getChattingTo().getLatestProfileImage();
         }
 
-        if (matchingDate == null) {
+        if (matching.getMatchingDate() == null) {
             this.matchingDate = null;
         } else
             this.matchingDate = matching.getMatchingDate().format(DateTimeFormatter.ofPattern("yy-MM-dd"));
