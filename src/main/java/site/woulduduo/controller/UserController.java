@@ -166,8 +166,7 @@ public class UserController {
             // 서버에서 세션에 로그인 정보를 저장
             userService.maintainLoginState(request.getSession(), dto.getUserAccount());
 
-//            return dto.getRequestURI();
-            return "index";
+            return dto.getRequestURI();
         }
 
         // 1회용으로 쓰고 버릴 데이터
@@ -552,6 +551,19 @@ public class UserController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/api/v1/users/infos")
+    public ResponseEntity<?> getUserInfos(HttpSession session) {
+        LoginUserResponseDTO loginUser = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
+
+        if (loginUser == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        UserInfoResponseDTO userInfo = userService.getUserInfo(loginUser.getUserAccount());
+
+        return ResponseEntity.ok(userInfo);
     }
 
 }

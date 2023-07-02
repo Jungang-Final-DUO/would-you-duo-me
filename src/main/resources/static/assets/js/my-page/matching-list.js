@@ -32,14 +32,12 @@ import {fillRateStars} from "../review/review-rate.js";
         {
             userAccount: userAccount,
             pageNo: increaseGottenReviewPage
-        },
-        500);
+        });
     scrollPaging(document.getElementById('applied-matching-wrapper'), renderWrittenReviewOnMyPage,
         {
             userAccount: userAccount,
             pageNo: increaseWrittenReviewPage
-        },
-        500);
+        });
 
 })();
 

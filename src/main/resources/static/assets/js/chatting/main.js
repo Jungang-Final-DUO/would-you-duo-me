@@ -8,27 +8,35 @@ export function connectSocket() {
 
         const chat_list = document.querySelector('.chatting-modal-dialog');
 
-        if(!document.getElementById(message.room)
-            && chat_list.hasAttribute('open')
-        ){
-            getChattingList();
-        }
-
         //output message to DOM
         outputMessage(message);
 
         if(chat_list.hasAttribute('open')){
 
-            const chatroom = document.getElementById(message.room);
-            if(!chatroom.querySelector('.message-dialog').hasAttribute('open')){
-                renderUnreadMessages(message.room);
-            }else {
-                readMessages(message.room);
+            if(!document.getElementById(message.room)
+            ){
+                const chatRooms = document.querySelectorAll('.message-dialog');
+                for (const message of chatRooms) {
+                    if(message.hasAttribute('open')){
+                        return;
+                    }
+                }
+
+                getChattingList();
+            } else {
+
+                const chatroom = document.getElementById(message.room);
+                if(!chatroom.querySelector('.message-dialog').hasAttribute('open')){
+                    renderUnreadMessages(message.room);
+                }else {
+                 readMessages(message.room);
+                }
+
             }
+
         } else {
             renderTotalUnreadMessages();
         }
-
 
         scrollDown();
     });

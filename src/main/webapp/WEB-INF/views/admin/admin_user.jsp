@@ -15,8 +15,8 @@
 </head>
 
 <body>
-<%@ include file="../common/header.jsp" %>
 
+<%@ include file="../common/header.jsp" %>
 <div id="main-wrapper">
 
     <div class="side_container">
@@ -359,9 +359,8 @@
         <div class="direction_img"><img src="/assets/img/admin/오른쪽방향.png" alt="left"></div>
 
     </div>
-    <%@ include file="../common/footer.jsp" %>
 </div>
-
+<%@ include file="../common/footer.jsp" %>
 
 <script>
     //경고 클릭시 빨간색
@@ -407,7 +406,7 @@
     function userIsBan() {
         const userNickname = user.innerText;
 
-        fetch(`http://localhost:8282/user/detail/banBoolean?nickname=` + userNickname)
+        fetch(`/user/detail/banBoolean?nickname=` + userNickname)
             .then(response => {
                 return response.json();
             })
@@ -433,7 +432,7 @@
         const userNickname = user.innerText;
         // console.log(userNickname);
 
-        fetch(`http://localhost:8282/user/ban`, {
+        fetch(`/user/ban`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -468,7 +467,7 @@
             const userNickname = user.innerText;
             console.log(userNickname);
 
-            fetch('http://localhost:8282/user/accuse/count', {
+            fetch('/user/accuse/count', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -526,7 +525,7 @@
 
         const accuseTypeEtcValue = accuseTypeEtcInput[index].value;
 
-        fetch('http://localhost:8282/user/accuse', {
+        fetch('/user/accuse', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -562,7 +561,7 @@
 
 
         //포인트 정보 전송
-        fetch('http://localhost:8282/user/point', {
+        fetch('/user/point', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
