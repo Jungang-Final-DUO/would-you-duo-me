@@ -167,7 +167,7 @@
             .then(function (response) {
                 if (response.ok) {
                     // 요청이 성공적으로 완료된 경우
-                    return response.json();
+                    return response.text(); // 텍스트 형태로 응답 받기
                 } else {
                     // 요청이 실패한 경우
                     throw new Error('요청 실패');
@@ -176,6 +176,7 @@
             .then(function (data) {
                 // 응답 데이터 처리
                 console.log(data);
+                alert("정보 수정이 완료되었습니다.");
             })
             .catch(function (error) {
                 // 에러 처리

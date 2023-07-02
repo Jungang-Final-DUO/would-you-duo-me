@@ -153,7 +153,7 @@ public class BoardService {
 
     //금일 작성 게시물 (ADMIN)
     public ListResponseDTO<BoardsByAdminResponseDTO, Board> todayBoardByAdmin(PageDTO dto) {
-
+        System.out.println("서비스dto = " + dto);
         Pageable pageable = PageRequest.of(
                 dto.getPage() - 1,
                 dto.getSize(),
@@ -186,6 +186,7 @@ public class BoardService {
             }
         }
 
+        System.out.println("todayBoardList = " + todayBoardList);
         List<BoardsByAdminResponseDTO> collect = todayBoardList.stream()
                 .map(BoardsByAdminResponseDTO::new)
                 .collect(toList());

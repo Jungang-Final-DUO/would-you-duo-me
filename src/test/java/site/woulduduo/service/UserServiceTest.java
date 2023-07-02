@@ -117,6 +117,7 @@ class UserServiceTest {
     @Test
     @DisplayName("회원 하나에 ADMIN 부여하기")
     void addAdmin() {
+
         User user = userService.getUser("jun761_1@naver.com");
         user.setRole(Role.ADMIN);
 

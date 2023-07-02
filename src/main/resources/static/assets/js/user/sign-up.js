@@ -1,4 +1,4 @@
-import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
+import {addModalBtnEvent} from "../common/modal-handler.js";
 
 (() => {
 
@@ -23,7 +23,9 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 
                 document.getElementById('user-email').style.borderColor = 'skyblue';
 
-                return true;
+                checkResultList[6] = true;
+
+                document.getElementById('emailChk').innerHTML = '<b style="color: skyblue;">[인증되었습니다]</b>';
             }
 
         }
@@ -91,7 +93,7 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
                     });
 
                 if (res.status === 200) {
-                    return showConfirmationModal();
+                    return showConfirmationModal(180);
                 } else {
                     alert('이메일 전송에 실패하였습니다');
                 }
@@ -104,11 +106,9 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
     }
 
 // 모달 창 열기 및 인증 코드 표시
-    function showConfirmationModal() {
+    function showConfirmationModal(remainTime) {
         const modal = document.querySelector("dialog");
         const confirmCodeInput = modal.querySelector("#confirm-code");
-
-        let remainTime = 180;
 
         const timer = setInterval(() => {
             if (remainTime === 0) {
@@ -122,11 +122,18 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 
         modal.showModal();
 
+        // 모달창 닫기 이벤트 등록
+        modal.onclick = e => {
+            if (e.target.matches('dialog')) {
+                clearInterval(timer);
+                e.target.close();
+            }
+        }
+
         return addConfirmBtnHandler();
     }
 
     addModalBtnEvent();
-    addModalCloseEvent();
 
     document.getElementById("verification-btn").onclick = null;
 
@@ -181,10 +188,9 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
     });
 
     // 이메일 입력값 검증
-
     const isEmailValid = checkEmailValidation().then();
 
-    checkResultList[6] = sendVerificationEmail(isEmailValid).then();
+    sendVerificationEmail(isEmailValid).then();
 
     // 패스워드 검사 정규표현식
     const passwordPattern = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*?_~]).{8,16}$/;

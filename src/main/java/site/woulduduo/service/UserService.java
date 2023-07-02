@@ -524,6 +524,8 @@ public class UserService {
     //유저리스트 DTO변환(Admin) + 페이징
     public ListResponseDTO<UserByAdminResponseDTO, User> getUserListByAdmin(PageDTO dto) {
 
+        log.info("dtoo:{}",dto);
+
         Pageable pageable = PageRequest.of(
                 dto.getPage() - 1,
                 dto.getSize(),
@@ -549,6 +551,7 @@ public class UserService {
         List<UserByAdminResponseDTO> collect = users.stream()
                 .map(UserByAdminResponseDTO::new)
                 .collect(toList());
+        log.info("collect:{}",collect);
 
         int i = (dto.getPage() - 1) * dto.getSize() + 1;
         for (UserByAdminResponseDTO user : collect) {
