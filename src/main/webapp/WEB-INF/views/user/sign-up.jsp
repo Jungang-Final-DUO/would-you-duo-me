@@ -74,7 +74,7 @@
 
                             <div>
                                 <label for="confirm-code">인증번호</label>
-                                <input type="text" id="confirm-code">
+                                <input type="text" id="confirm-code" placeholder="남은 시간 : 180초">
                                 <button class="btn">확인</button>
                             </div>
 
