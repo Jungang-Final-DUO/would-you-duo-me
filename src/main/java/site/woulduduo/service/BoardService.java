@@ -120,7 +120,7 @@ public class BoardService {
         }else{
             boards = boardRepository.findByUser_UserAccountContaining(userAccount, pageable);
         }
-
+        System.out.println("boards123123 = " + boards);
 
         System.out.println("all = " + boards);
         List<BoardsByAdminResponseDTO> collect = boards.stream()
@@ -173,7 +173,7 @@ public class BoardService {
         }else{
             boards = boardRepository.findByUser_UserAccountContaining(userAccount, pageable);
         }
-
+        System.out.println("boardstoday = " + boards);
         List<Board> todayBoardList = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
 

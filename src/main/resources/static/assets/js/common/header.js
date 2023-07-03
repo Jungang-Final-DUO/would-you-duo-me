@@ -6,6 +6,7 @@ import {addDropdownEvent} from "./dropdown-handler.js";
 import {signInSubmitHandler} from "../user/sign-in-submit-handler.js";
 import {renderMatchingCalendar} from "../chatting/chatting-calendar.js";
 import {preventCharPwd} from "./preventCharPwd.js";
+import {addUserInfoBtnHandler} from "./add-user-info-btn-handler.js";
 
 (async () => {
 
@@ -29,6 +30,9 @@ import {preventCharPwd} from "./preventCharPwd.js";
 
         // 내 정보 모달 드롭다운 이벤트
         addDropdownEvent('user-info-btn', 'my-page-modal-wrapper');
+
+        // 유저정보 드롭다운 렌더링
+        addUserInfoBtnHandler();
     } else {
         // 로그인 드롭다운 이벤트
         addDropdownEvent('sign-in-btn', 'sign-in-modal-wrapper');
@@ -45,5 +49,4 @@ import {preventCharPwd} from "./preventCharPwd.js";
 
     // 비밀번호에 한글 입력 막기
     preventCharPwd();
-
 })();
