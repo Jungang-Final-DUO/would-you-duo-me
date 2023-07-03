@@ -55,17 +55,18 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     // 메인페이지 - 프로필 카드 불러오기(비동기)
-    @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{sort}")
+    @GetMapping("/api/v1/users/{page}/{keyword}/{size}/{position}/{gender}/{tier}/{follow}/{sort}")
     public ResponseEntity<?> getUserProfileList(@PathVariable int page, @PathVariable String keyword, @PathVariable int size
             , @PathVariable String position, @PathVariable String gender
-            , @PathVariable String tier, @PathVariable String sort, HttpSession session) {
+            , @PathVariable String tier,@PathVariable String follow ,@PathVariable String sort, HttpSession session, Model model) {
 
 
-        System.out.println(keyword + position + gender + tier + sort);
+        System.out.println(keyword + position + gender + tier + "  "+ follow +"  "+ sort);
 
         UserSearchType userSearchType = new UserSearchType();
         userSearchType.setPage(page);
         userSearchType.setSize(size);
+        userSearchType.setFollowers(follow);
         if (!keyword.equals("-")) {
             userSearchType.setKeyword(keyword);
         }
@@ -81,6 +82,10 @@ public class UserController {
         if (!keyword.equals("all")) {
             userSearchType.setSort(sort);
         }
+        LoginUserResponseDTO login = (LoginUserResponseDTO)session.getAttribute("login");
+
+        model.addAttribute("login", login);
+
         List<UserProfileResponseDTO> userServiceUserProfileList = userService.getUserProfileList(session, userSearchType);
         System.out.println("userServiceUserProfileList = " + userServiceUserProfileList);
 
@@ -165,8 +170,7 @@ public class UserController {
             // 서버에서 세션에 로그인 정보를 저장
             userService.maintainLoginState(request.getSession(), dto.getUserAccount());
 
-//            return dto.getRequestURI();
-            return "index";
+            return dto.getRequestURI();
         }
 
         // 1회용으로 쓰고 버릴 데이터
@@ -555,6 +559,19 @@ public class UserController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/api/v1/users/infos")
+    public ResponseEntity<?> getUserInfos(HttpSession session) {
+        LoginUserResponseDTO loginUser = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
+
+        if (loginUser == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        UserInfoResponseDTO userInfo = userService.getUserInfo(loginUser.getUserAccount());
+
+        return ResponseEntity.ok(userInfo);
     }
 
 }

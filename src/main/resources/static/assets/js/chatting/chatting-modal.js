@@ -11,7 +11,8 @@ export async function getChattingList() {
 function makeChatting(chat) {
 
     chat.onclick = (e) => {
-        const userAccount = chat.closest('.duo-profile').id;
+        e.stopPropagation();
+        const userAccount = chat.closest('.duo-profile-account').dataset.userAccount;
         // console.log('makeChatting 도달');
         const requestInfo = {
             method: 'POST',

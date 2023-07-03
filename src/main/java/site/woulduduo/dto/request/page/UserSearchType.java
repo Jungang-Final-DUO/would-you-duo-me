@@ -22,6 +22,8 @@ public class UserSearchType extends PageDTO{
     @Enumerated(EnumType.STRING)
     private Tier tier;
 
+    private String followers;
+
     private String sort;
 
     public UserSearchType() {

@@ -10,7 +10,8 @@
     <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>WOULD U DUO</title>
+    <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">
     <!-- <link rel="stylesheet" href="/assets/css/common.css"> -->
     <%@ include file="../common/static-head.jsp" %>
     <link rel="stylesheet" href="/assets/css/my-page/mypage-duoprofile.css">

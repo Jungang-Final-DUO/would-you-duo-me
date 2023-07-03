@@ -1,52 +1,146 @@
-import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
-
+import {addModalBtnEvent} from "../common/modal-handler.js";
 
 (() => {
 
-    addModalBtnEvent();
-    addModalCloseEvent();
-    addConfirmBtnHandler();
+    // 인증 버튼 핸들러
+    function addConfirmBtnHandler() {
+        document.getElementById('email-confirm-modal')
+            .querySelector('button').onclick = async e => {
+            e.preventDefault();
+            const res = await fetch("/user/check-email",
+                {
+                    method: 'POST',
+                    body: document.getElementById('confirm-code').value
+                });
 
-    document.getElementById("verification-btn").addEventListener("click", function () {
-        var userEmail = document.getElementById("user-email").value;
+            if (res.status === 499) {
+                alert('인증번호가 맞지 않습니다!');
+                return false;
+            } else if (res.status === 200) {
+                alert('인증되었습니다!');
 
-        // AJAX 요청을 통해 서버에 이메일 주소 전송
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/user/send-email");
-        xhr.setRequestHeader("Content-Type", "application/json");
+                e.target.closest('dialog').close();
 
-        // 이메일 주소를 JSON 형식으로 변환하여 요청 본문에 포함
-        var data = JSON.stringify({"userEmail": userEmail});
+                document.getElementById('user-email').style.borderColor = 'skyblue';
 
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    // 성공적으로 이메일을 전송한 경우에 대한 처리
-                    var authCode = xhr.responseText;
-                    showConfirmationModal(authCode); // 모달 창 열기 및 인증 코드 표시
-                } else {
-                    // 이메일 전송 실패 시에 대한 처리
-                    alert("인증 이메일 전송에 실패했습니다. 오류 메시지: " + xhr.responseText);
-                }
+                checkResultList[6] = true;
+
+                document.getElementById('emailChk').innerHTML = '<b style="color: skyblue;">[인증되었습니다]</b>';
             }
-        };
 
-        xhr.send(data);
-    });
-
-    // 모달 창 열기 및 인증 코드 표시
-    function showConfirmationModal(authCode) {
-        var modal = document.querySelector("dialog");
-        var confirmCodeInput = modal.querySelector("#confirm-code");
-        confirmCodeInput.placeholder = "남은 시간 03:00";
-        confirmCodeInput.value = authCode;
-        modal.showModal();
+        }
     }
+
+    async function checkEmailValidation() {
+        // 이메일 검사 정규표현식
+        const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+
+        // 이메일 입력값 검증
+        const emailInput = document.getElementById('user-email');
+        const emailCheckMessage = document.getElementById('emailChk');
+        let isEmailValid = false;
+
+        emailInput.addEventListener('keyup', () => {
+            const emailValue = emailInput.value.trim();
+
+            if (emailValue === '') {
+                emailInput.style.borderColor = 'red';
+                emailCheckMessage.innerHTML = '<b style="color: red;">[이메일 필수값입니다!]</b>';
+                isEmailValid = false;
+            } else if (!emailPattern.test(emailValue)) {
+                emailInput.style.borderColor = 'red';
+                emailCheckMessage.innerHTML = '<b style="color: red;">[이메일 형식을 지켜주세요~]</b>';
+                isEmailValid = false;
+            } else {
+                fetch(`/check?type=email&keyword=${encodeURIComponent(emailValue)}`)
+                    .then(res => res.json())
+                    .then(isDuplicate => {
+                        if (isDuplicate) {
+                            emailInput.style.borderColor = 'red';
+                            emailCheckMessage.innerHTML = '<b style="color: red;">[이메일이 중복되었습니다.]</b>';
+                            isEmailValid = false;
+                        } else {
+                            emailInput.style.borderColor = 'yellow';
+                            emailCheckMessage.innerHTML = '<b style="color: skyblue;">[인증을 끝마쳐주세요]</b>';
+                            isEmailValid = true;
+                            checkResultList[6] = false;
+                        }
+                    });
+            }
+        });
+
+        return isEmailValid;
+    }
+
+    async function sendVerificationEmail(isEmailValid) {
+
+        document.getElementById("verification-btn").onclick = async e => {
+
+            e.preventDefault();
+
+            const userEmail = document.getElementById('user-email').value.trim();
+
+            if (isEmailValid) {
+                const res = await fetch('/user/send-email',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            'userEmail': userEmail
+                        })
+                    });
+
+                if (res.status === 200) {
+                    return showConfirmationModal(180);
+                } else {
+                    alert('이메일 전송에 실패하였습니다');
+                }
+            } else {
+                alert('올바른 이메일을 입력해주세요');
+            }
+
+            return false;
+        };
+    }
+
+// 모달 창 열기 및 인증 코드 표시
+    function showConfirmationModal(remainTime) {
+        const modal = document.querySelector("dialog");
+        const confirmCodeInput = modal.querySelector("#confirm-code");
+
+        const timer = setInterval(() => {
+            if (remainTime === 0) {
+                clearInterval(timer);
+                modal.close();
+                return;
+            }
+            remainTime--;
+            confirmCodeInput.placeholder = "남은 시간 : " + remainTime + '초';
+        }, 1000);
+
+        modal.showModal();
+
+        // 모달창 닫기 이벤트 등록
+        modal.onclick = e => {
+            if (e.target.matches('dialog')) {
+                clearInterval(timer);
+                e.target.close();
+            }
+        }
+
+        return addConfirmBtnHandler();
+    }
+
+    addModalBtnEvent();
+
+    document.getElementById("verification-btn").onclick = null;
 
     // 회원가입 입력값 검증 처리
 
     // 입력값 검증 통과 여부 배열
-    const checkResultList = [false, false, false, false, false, false];
+    const checkResultList = [false, false, false, false, false, false, false];
 
     // 닉네임 입력값 검증
     const nicknameInput = document.getElementById('user-nickname');
@@ -61,7 +155,7 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
             checkResultList[0] = false;
         } else if (!nicknamePattern.test(nicknameValue)) {
             nicknameInput.style.borderColor = 'red';
-            document.getElementById('nicknameChk').innerHTML = '<b style="color: red;">[한글,영문,숫자 포함 2~8자리입니다.]</b>';
+            document.getElementById('nicknameChk').innerHTML = '<b style="color: red;">[한글, 영문, 숫자 포함 2~8자입니다.]</b>';
             checkResultList[0] = false;
         } else {
             nicknameInput.style.borderColor = 'skyblue';
@@ -78,6 +172,7 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
     function setRedBorder() {
         userGenderSelect.style.borderColor = 'red';
     }
+
     // 초기에는 테두리 색상을 설정하지 않음
     userGenderSelect.style.borderColor = '';
 
@@ -92,42 +187,10 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
         }
     });
 
-
-    // 이메일 검사 정규표현식
-    const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
-
     // 이메일 입력값 검증
-    const emailInput = document.getElementById('user-email');
-    const emailCheckMessage = document.getElementById('emailChk');
-    let isEmailValid = false;
+    const isEmailValid = checkEmailValidation().then();
 
-    emailInput.addEventListener('keyup', () => {
-        const emailValue = emailInput.value.trim();
-
-        if (emailValue === '') {
-            emailInput.style.borderColor = 'red';
-            emailCheckMessage.innerHTML = '<b style="color: red;">[이메일 필수값입니다!]</b>';
-            isEmailValid = false;
-        } else if (!emailPattern.test(emailValue)) {
-            emailInput.style.borderColor = 'red';
-            emailCheckMessage.innerHTML = '<b style="color: red;">[이메일 형식을 지켜주세요~]</b>';
-            isEmailValid = false;
-        } else {
-            fetch(`/check?type=email&keyword=${encodeURIComponent(emailValue)}`)
-                .then(res => res.json())
-                .then(isDuplicate => {
-                    if (isDuplicate) {
-                        emailInput.style.borderColor = 'red';
-                        emailCheckMessage.innerHTML = '<b style="color: red;">[이메일이 중복되었습니다.]</b>';
-                        isEmailValid = false;
-                    } else {
-                        emailInput.style.borderColor = 'skyblue';
-                        emailCheckMessage.innerHTML = '<b style="color: skyblue;">[사용가능한 이메일입니다.]</b>';
-                        isEmailValid = true;
-                    }
-                });
-        }
-    });
+    sendVerificationEmail(isEmailValid).then();
 
     // 패스워드 검사 정규표현식
     const passwordPattern = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*?_~]).{8,16}$/;
@@ -162,11 +225,11 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 
         if (passwordCheckValue.trim() === '') {
             passwordCheckInput.style.borderColor = 'red';
-            document.getElementById('pwChk2').innerHTML = '<b style="color: red;">[확인란은 필수값입니다!]</b>';
+            document.getElementById('pwChk2').innerHTML = '<b style="color: red;">[비밀번호 확인란은 필수값입니다!]</b>';
             checkResultList[3] = false;
         } else if (passwordCheckInput.value !== passwordInput.value) {
             passwordCheckInput.style.borderColor = 'red';
-            document.getElementById('pwChk2').innerHTML = '<b style="color: red;">[위와 똑같이 입력해주세요.]</b>';
+            document.getElementById('pwChk2').innerHTML = '<b style="color: red;">[비밀번호를 똑같이 입력해주세요.]</b>';
             checkResultList[3] = false;
         } else {
             passwordCheckInput.style.borderColor = 'skyblue';
@@ -189,7 +252,7 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
             checkResultList[4] = false;
         } else if (currentDate.getFullYear() - selectedDate.getFullYear() <= 18) {
             birthdayInput.style.borderColor = 'red';
-            document.getElementById('birthdayChk').innerHTML = '<b style="color: red;">[미성년자는 가입 불가합니다.]</b>';
+            document.getElementById('birthdayChk').innerHTML = '<b style="color: red;">[미성년자는 가입불가합니다.]</b>';
             checkResultList[4] = false;
         } else {
             birthdayInput.style.borderColor = 'skyblue';
@@ -198,6 +261,22 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
         }
     };
 
+
+    // const birthdayInput = document.getElementById('user-birthday');
+    //
+    // birthdayInput.onblur = () => {
+    //     const birthdayValue = birthdayInput.value;
+    //
+    //     if (birthdayValue.trim() === '') {
+    //         birthdayInput.style.borderColor = 'red';
+    //         document.getElementById('birthdayChk').innerHTML = '<b style="color: red;">[생년월일은 필수값입니다!]</b>';
+    //         checkResultList[4] = false;
+    //     } else {
+    //         birthdayInput.style.borderColor = 'skyblue';
+    //         document.getElementById('birthdayChk').innerHTML = '<b style="color: skyblue;">[확인됐습니다.]</b>';
+    //         checkResultList[4] = true;
+    //     }
+    // };
 
     // 소환사 아이디 입력값 검증
     const lolNicknameInput = document.getElementById('lol-nickname');
@@ -208,7 +287,7 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 
         if (lolNicknameValue === '') {
             lolNicknameInput.style.borderColor = 'red';
-            document.getElementById('lolNicknameChk').innerHTML = '<b style="color: red;">[롤계정은 필수값입니다!]</b>';
+            document.getElementById('lolNicknameChk').innerHTML = '<b style="color: red;">[소환사 닉네임은 필수값입니다!]</b>';
             checkResultList[5] = false;
         } else if (!lolNicknamePattern.test(lolNicknameValue)) {
             lolNicknameInput.style.borderColor = 'red';
@@ -228,7 +307,6 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
         if (checkResultList.includes(false)) {
             e.preventDefault();
             alert('입력란을 다시 확인하세요!');
-            return;
         } else {
             formResult.action = '/user/sign-up';
         }
@@ -285,7 +363,7 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 
         if (userId === '') {
             twitterInput.style.borderColor = 'greenyellow';
-            document.getElementById('twitterChk').innerHTML = '<b style="color: greenyellow;">[트위터 id는 선택값입니다.!]</b>';
+            document.getElementById('twitterChk').innerHTML = '<b style="color: greenyellow;">[트위터 id는 선택값입니다!]</b>';
         } else if (!userIdPattern.test(userId)) {
             twitterInput.style.borderColor = 'greenyellow';
             document.getElementById('twitterChk').innerHTML = '<b style="color: greenyellow;">[사용자 아이디를 입력해주세요.]</b>';
@@ -294,26 +372,6 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
             document.getElementById('twitterChk').innerHTML = '<b style="color: skyblue;">[확인됐습니다.]</b>';
         }
     };
-
-    // 인증 버튼 핸들러
-    function addConfirmBtnHandler() {
-        document.getElementById('email-confirm-modal')
-            .querySelector('button').onclick = async e => {
-            e.preventDefault();
-            const res = await fetch("/user/check-email",
-                {
-                    method: 'POST',
-                    body: document.getElementById('confirm-code').value
-                });
-
-            if (res.status === 499) {
-                alert('인증번호가 맞지 않습니다!');
-            } else if (res.status === 200) {
-                alert('인증되었습니다!');
-            }
-
-        }
-    }
 
     // 프로필 사진 관련 스크립트
     const fileInputs = document.querySelectorAll('#sign-up-wrapper input[type="file"]');
@@ -345,8 +403,6 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
             fileInput.click();
         }
     });
-
-
 
 
 })();

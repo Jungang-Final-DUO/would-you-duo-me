@@ -19,7 +19,7 @@
     align-items: center;
 }
 
-#profile-img-wrapper {
+#user-history-profile-img-wrapper {
     width: 200px;
     height: 250px;
     border-radius: 28px;
@@ -89,6 +89,7 @@
 
 #user-comment {
     font-size: 0.8em;
+    line-height: 1.5em;
 }
 
 /* ranking info style */

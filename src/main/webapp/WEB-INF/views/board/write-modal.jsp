@@ -6,7 +6,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>WOULD U DUO</title>
+    <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">
     <link rel="stylesheet" href="/assets/css/common.css">
     <link rel="stylesheet" href="/assets/css/board/board-write.css">
 

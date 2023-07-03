@@ -105,6 +105,10 @@ header h2 {
     width: 50%;
 }
 
+dialog::-webkit-scrollbar {
+    display: none;
+}
+
 #sign-up-request-info-wrapper button
 , #user-gender {
     border-radius: 5px;
@@ -140,59 +144,79 @@ header h2 {
 #sign-up-request-info-wrapper #nicknameChk {
     position: absolute;
     top: 4px;
-    right: -295px;
-
+    right: -415px;
+    width: 400px;
+    text-align: left;
 }
 
 #sign-up-request-info-wrapper #emailChk {
     position: absolute;
     top: 44px;
-    right: -291px;
-
+    right: -415px;
+    width: 400px;
+    text-align: left;
 }
 
 #sign-up-request-info-wrapper #pwChk {
     position: absolute;
     top: 84px;
-    right: -183px;
+    right: -415px;
+    width: 400px;
+    text-align: left;
+
 }
 
 #sign-up-request-info-wrapper #pwChk2 {
     position: absolute;
     top: 124px;
-    right: -150px;
+    right: -415px;
+    width: 400px;
+    text-align: left;
+
 }
 
 #sign-up-request-info-wrapper #birthdayChk {
     position: absolute;
     top: 164px;
-    right: -172px;
+    right: -415px;
+    width: 400px;
+    text-align: left;
 
 }
 
 #sign-up-request-info-wrapper #lolNicknameChk {
     position: absolute;
     top: 203px;
-    right: -172px;
+    right: -415px;
+    width: 400px;
+    text-align: left;
 
 }
 
 #sign-up-request-info-wrapper .sns-input-wrapper #instagramChk {
     position: absolute;
     top: 343px;
-    right: -190px;
+    right: -415px;
+    width: 400px;
+    text-align: left;
+
 }
 
 #sign-up-request-info-wrapper .sns-input-wrapper #facebookChk {
     position: absolute;
     top: 392px;
-    right: -190px;
+    right: -415px;
+    width: 400px;
+    text-align: left;
+
 }
 
 #sign-up-request-info-wrapper .sns-input-wrapper #twitterChk {
     position: absolute;
     top: 441px;
-    right: -190px;
+    right: -415px;
+    width: 400px;
+    text-align: left;
 
 }
 
@@ -315,8 +339,4 @@ header h2 {
 #email-confirm-modal div:nth-child(3) {
     display: flex;
     justify-content: right;
-}
-
-#email-confirm-modal div:nth-child(3) button {
-    color: #2E93CC;
 }

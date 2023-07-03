@@ -771,6 +771,7 @@ public class UserService {
                 .lolNickname(lolNickname)
                 .userComment(foundUser.getUserComment())
                 .tier(newTier)
+                .rank(rankInfo.getRank())
                 // 모스트 3 챔피언 정보
                 .mostChampInfos(mostChampInfoList)
                 // riot api 를 통해 얻어오는 솔로랭크 혹은 자유랭크 데이터
@@ -808,7 +809,7 @@ public class UserService {
 
         String followFrom = ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount();
 
-        if (followTo.equals(followFrom)) throw new RuntimeException("해당하는 유저가 없습니다.");
+        if (followTo.equals(followFrom)) throw new RuntimeException("자기 자신은 팔로우할 수 없습니다.");
 
         Follow followState;
 
@@ -847,25 +848,25 @@ public class UserService {
         //남자에게 받은 매칭 요청
         int matchingFromMale = matchingRepository.countByChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(Gender.M, user);
         //여자에게 받은 매칭 요청
-        int matchingFromFemale = matchingRepository.countByChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(Gender.M, user);
+        int matchingFromFemale = matchingRepository.countByChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(Gender.F, user);
         //남자에게 받은 매칭 수락건
         List<MatchingStatus> matchingStatus = List.of(MatchingStatus.CONFIRM, MatchingStatus.DONE);
         int confirmWithMale = matchingRepository.countByMatchingStatusInAndChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(matchingStatus, Gender.M, user);
         //여자에게 받은 매칭 수락건
         int confirmWithFemale = matchingRepository.countByMatchingStatusInAndChatting_ChattingFrom_UserGenderAndChatting_ChattingTo(matchingStatus, Gender.F, user);
         //남자와 매칭확정률
-        double confirmRateMale = 0;
+        double confirmRateMale = 0.0;
         try {
-            confirmRateMale = confirmWithMale/(double)matchingFromMale * 100;
+            confirmRateMale = Math.round(((double) confirmWithMale / (double) matchingFromMale * 10000.0) / 100.0);
         } catch (ArithmeticException e) {
-            confirmRateMale = 0;
+            confirmRateMale = 0.0;
         }
         //여자와 매칭확정률
         double confirmRateFemale = 0;
         try {
-            confirmRateFemale = confirmWithFemale/(double)matchingFromFemale * 100;
+            confirmRateFemale = Math.round(((double) confirmWithFemale / (double) matchingFromFemale * 10000.0) / 100.0);
         } catch (ArithmeticException e) {
-            confirmRateMale = 0;
+            confirmRateMale = 0.0;
         }
 
 //        내 호감도
@@ -896,4 +897,16 @@ public class UserService {
                 .build();
     }
 
+    public UserInfoResponseDTO getUserInfo(String userAccount) {
+
+        User user = userRepository.findById(userAccount).orElseThrow();
+
+        return UserInfoResponseDTO.builder()
+                .profileImage(user.getLatestProfileImage())
+                .userCurrentPoint(user.getUserCurrentPoint())
+                .userNickname(user.getUserNickname())
+                .lolNickname(user.getLolNickname())
+                .build();
+
+    }
 }

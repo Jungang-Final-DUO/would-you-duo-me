@@ -5,7 +5,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>WOULD U DUO</title>
+    <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">
 
     <link rel="stylesheet" href="/assets/css/user/sign-up.css">'
 
@@ -74,13 +75,10 @@
 
                             <div>
                                 <label for="confirm-code">인증번호</label>
-                                <input type="text" id="confirm-code" placeholder="남은 시간 03:00">
+                                <input type="text" id="confirm-code" placeholder="남은 시간 : 180초">
                                 <button class="btn">확인</button>
                             </div>
 
-                            <div>
-                                <button class="btn">이메일 재전송</button>
-                            </div>
                         </div>
                     </dialog>
 

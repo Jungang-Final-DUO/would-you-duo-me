@@ -8,7 +8,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>WOULD U DUO</title>
+    <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">
 
 
     <%@ include file="../common/static-head.jsp" %>
@@ -18,11 +19,12 @@
 </head>
 
 <body>
-<%@ include file="../common/header.jsp" %>
 <div id="main-wrapper">
+<%@ include file="../common/header.jsp" %>
     <div class="community-wrapper">
         <div class="search-write-wrapper">
             <div class="search-container">
+                <div id = "searchBox">
                 <input class="search-box" id="search" type="text">
                 <button class="board-search-title-btn">
 
@@ -30,13 +32,14 @@
                          onclick="handleSearchClick()">
 
                 </button>
+                </div>
+                <button class="write-btn modal-btn"><p class = "write">글쓰기</p><img class = "searchImage" src="/assets/img/community/pencilwhite.png" alt="글쓰기버튼">
+                </button>
+                <%@ include file="../board/board-write.jsp" %>
             </div>
 
 
             <div class="write-container">
-                <button class="modal-btn"><p>글쓰기</p><img src="/assets/img/community/pencilwhite.png" alt="글쓰기버튼">
-                </button>
-                <%@ include file="../board/board-write.jsp" %>
 
 
                 <div class="sort-wrapper">
@@ -48,7 +51,7 @@
                         <button class="accuse-board" id="accuse-btn">신고</button>
 
                     </div>
-                    //input radio
+
                     <div class="orderby-wrapper">
                         <button class="new-board-btn"><img src="/assets/img/community/sunwhite.png" alt="최신순이미지">최신순
                         </button>
@@ -117,7 +120,7 @@
                     </li>
                     </ul>
                 </div>
-            </div>a
+            </div>
         </div>
     </div>
     <%@ include file="../common/footer.jsp" %>

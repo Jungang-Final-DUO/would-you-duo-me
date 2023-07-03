@@ -5,7 +5,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>WOULD U DUO</title>
+    <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">
 
     <%@ include file="../common/static-head.jsp" %>
 
@@ -22,11 +23,12 @@
     <!-- 헤더가 위치할 자리 -->
     <%@ include file="../common/header.jsp" %>
 
-    <div id="history-wrapper" data-user-account="${history.userAccount}">
+    <div id="history-wrapper" class = "duo-profile-account" data-user-account="${history.userAccount}">
         <div id="user-profile-info-wrapper">
             <div id="user-main-info-wrapper">
                 <!-- 임시 이미지를 인라인 스타일로 먹임 -->
-                <button id="profile-img-wrapper" class="btn"></button>
+                <button id="user-history-profile-img-wrapper" class="btn"
+                        style="background-image: url('${history.profileImage}')"></button>
                 <div>
                     <div id="user-nickname-etc-wrapper">
                         <!-- 달러랑 중괄호는 살짝 아래로 내려가있기 때문에 중앙정렬이 안맞아 보이는 것-->
@@ -63,7 +65,7 @@
                     <!-- end of rate point wrapper -->
                     <div id="sns-chat-btn-wrapper">
                         <c:if test="${history.userInstagram ne null}">
-                            <a href="https://instagram.com/${history.userInstagram}" class="btn">
+                            <a href="https://instagram.com/${history.userInstagram}" class="btn" target="_blank">
                                 <img src="/assets/img/main/instagram.png" alt="인스타그램 아이콘">
                             </a>
                         </c:if>
@@ -71,7 +73,7 @@
                             <img class = "image-with-null" src="/assets/img/main/instagram.png" alt="인스타그램 아이콘">
                         </c:if>
                         <c:if test="${history.userFacebook ne null}">
-                            <a href="https://facebook.com/${history.userFacebook}" class="btn">
+                            <a href="https://facebook.com/${history.userFacebook}" class="btn" target="_blank">
                                 <img src="/assets/img/main/facebook.png" alt="페이스북 아이콘">
                             </a>
                         </c:if>
@@ -79,7 +81,7 @@
                                 <img class = "image-with-null" src="/assets/img/main/facebook.png" alt="페이스북 아이콘">
                         </c:if>
                         <c:if test="${history.userTwitter ne null}">
-                            <a href="https://twitter.com/${history.userTwitter}" class="btn">
+                            <a href="https://twitter.com/${history.userTwitter}" class="btn" target="_blank">
                                 <img src="/assets/img/main/twitter.png" alt="트위터 아이콘">
                             </a>
                         </c:if>

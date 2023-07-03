@@ -1,4 +1,4 @@
-]import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
+import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 
 // 게시글 쓰기
 (() => {

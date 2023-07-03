@@ -16,7 +16,7 @@
             <img src="/assets/img/header/logo-for-header.png" alt="로고 이미지" id="logo">
         </a>
     </h1>
-    <p style="color: #fff">DUO 해 DUO 가 힘들어요 ㅜㅜ. 너무 많은 요청을 보냈어요 ㅠㅠ. 잠시 후에 다시 시도해주세요ㅠㅠㅠㅠ</p>
+    <p style="color: #fff">내부 공사중... <br>빠른 시일 내에 오픈 예정입니다.</p>
 </div>
 
 </body>
