@@ -385,7 +385,7 @@
     //추가지급 입력포인트 int변환
     function addPoint() {
         const givePointInput = document.getElementById('give_point');
-        add = parseInt(givePointInput.value);
+         add = parseInt(givePointInput.value);
 
     }
 
