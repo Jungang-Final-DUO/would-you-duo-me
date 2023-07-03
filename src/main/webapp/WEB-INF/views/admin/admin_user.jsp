@@ -380,7 +380,7 @@
     const pay = document.getElementById('give_point');
     //현재포인트 int 변환
     const point = parseInt(userCurrentPoint.innerText);
-    // const add = parseInt(AddPoint.value);
+    let add = null;
 
     //추가지급 입력포인트 int변환
     function addPoint() {
@@ -419,50 +419,9 @@
 
     userIsBan();
 
-
-        function userIsBan() {
-            const userNickname = user.innerText;
-
-            fetch(`/user/detail/banBoolean?nickname=` + userNickname)
-                .then(response => {
-                    return response.json();
-                })
-                .then(res => {
-
-                    if (res === true) {
-
-                        document.getElementById('is_ben').style.backgroundColor = 'red';
-                    } else {
-                        document.getElementById('is_ben').style.backgroundColor = '#111E30';
-                    }
-                });
-        }
-
-        userIsBan();
-
-    function plusBan() {
-        const userNickname = user.innerText;
-        // console.log(userNickname);
-
-
-
-        // 모달 count red 색칠
-
-
-        banClick.onclick = e => {
-            plusBan();
-
-                if (res === true) {
-                    banClick.style.backgroundColor = 'red';
-                } else {
-                    banClick.style.backgroundColor = '#111E30';
-                }
-                // console.log(res);
-            });
+    banClick.onclick = e => {
+        plusBan();
     }
-
-
-        };
 
         function plusBan() {
             const userNickname = user.innerText;
