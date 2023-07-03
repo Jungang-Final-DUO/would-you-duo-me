@@ -6,8 +6,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Insert title here</title>
-    <%@ include file="../common/static-head.jsp"%>
+
+    <title>WOULD U DUO</title>
+    <link rel="icon" href="/assets/img/main/simple-favicon-navy.png">
+    <%@ include file="../common/static-head.jsp" %>
+
     <link rel="stylesheet" href="/assets/css/admin/admin_user.css">
     <link rel="stylesheet" href="/assets/css/admin/adminModal.css">
 
