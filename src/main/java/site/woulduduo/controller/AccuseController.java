@@ -75,9 +75,9 @@ public class AccuseController {
 
     //모달 데이터 저장
     @PostMapping("/user/accuse")
-    public boolean accuseUser(HttpSession session, @RequestBody UserAccuseRequestDTO dto) {
+    public int accuseUser(HttpSession session, @RequestBody UserAccuseRequestDTO dto) {
         log.info("{}dto123===========", dto);
-        boolean b = accuseService.accuseUser(dto);
+        int b = accuseService.accuseUser(dto);
         System.out.println("btruefalse = " + b);
         return b;
     }
