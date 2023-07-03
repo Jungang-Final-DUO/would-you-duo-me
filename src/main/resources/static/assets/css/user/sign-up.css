@@ -144,59 +144,79 @@ dialog::-webkit-scrollbar {
 #sign-up-request-info-wrapper #nicknameChk {
     position: absolute;
     top: 4px;
-    right: -295px;
-
+    right: -415px;
+    width: 400px;
+    text-align: left;
 }
 
 #sign-up-request-info-wrapper #emailChk {
     position: absolute;
     top: 44px;
-    right: -291px;
-
+    right: -415px;
+    width: 400px;
+    text-align: left;
 }
 
 #sign-up-request-info-wrapper #pwChk {
     position: absolute;
     top: 84px;
-    right: -183px;
+    right: -415px;
+    width: 400px;
+    text-align: left;
+
 }
 
 #sign-up-request-info-wrapper #pwChk2 {
     position: absolute;
     top: 124px;
-    right: -150px;
+    right: -415px;
+    width: 400px;
+    text-align: left;
+
 }
 
 #sign-up-request-info-wrapper #birthdayChk {
     position: absolute;
     top: 164px;
-    right: -172px;
+    right: -415px;
+    width: 400px;
+    text-align: left;
 
 }
 
 #sign-up-request-info-wrapper #lolNicknameChk {
     position: absolute;
     top: 203px;
-    right: -172px;
+    right: -415px;
+    width: 400px;
+    text-align: left;
 
 }
 
 #sign-up-request-info-wrapper .sns-input-wrapper #instagramChk {
     position: absolute;
     top: 343px;
-    right: -190px;
+    right: -415px;
+    width: 400px;
+    text-align: left;
+
 }
 
 #sign-up-request-info-wrapper .sns-input-wrapper #facebookChk {
     position: absolute;
     top: 392px;
-    right: -190px;
+    right: -415px;
+    width: 400px;
+    text-align: left;
+
 }
 
 #sign-up-request-info-wrapper .sns-input-wrapper #twitterChk {
     position: absolute;
     top: 441px;
-    right: -190px;
+    right: -415px;
+    width: 400px;
+    text-align: left;
 
 }
 

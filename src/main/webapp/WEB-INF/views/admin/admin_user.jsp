@@ -580,7 +580,7 @@
 
 
                 //포인트 정보 전송
-                fetch('http://localhost:8282/user/point', {
+                fetch('/user/point', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
