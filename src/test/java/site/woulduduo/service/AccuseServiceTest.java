@@ -55,7 +55,7 @@ class AccuseServiceTest {
                 .accuseEtc("기타")
                 .build();
 
-        boolean booleanResult = accuseService.accuseUser(accuse);
+        int booleanResult = accuseService.accuseUser(accuse);
 
     }
 
