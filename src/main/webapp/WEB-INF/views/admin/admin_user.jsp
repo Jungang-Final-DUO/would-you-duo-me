@@ -397,9 +397,6 @@
                 return response.json();
             })
             .then(res => {
-                if (res >= 5) {
-                    banClick.style.backgroundColor = 'red';
-                }
 
                 if (res === true) {
                     banClick.style.backgroundColor = 'red';
@@ -415,7 +412,12 @@
     // 모달 count red 색칠
 
     banClick.onclick = e => {
-        const userNickname = user.innerText;
+        plusBan();
+
+    };
+
+function plusBan(){
+    const userNickname = user.innerText;
         // console.log(userNickname);
 
         fetch(`/user/ban`, {
@@ -442,9 +444,7 @@
                 }
                 // console.log(res);
             });
-
-    };
-
+}
 
     function banCheck() {
         const accuseImages = document.querySelectorAll('.accuse_img');
@@ -475,8 +475,9 @@
                         accuseImages[index].setAttribute('src', newImageSrc);
                     }
 
-                    if (res >= 5) {
-                        banClick.style.backgroundColor = 'red';
+                    if (res === 5) {
+                        plusBan();
+                        banClick.style.background='red';
                     }
                 });
         }
@@ -500,7 +501,6 @@
     sendAccuseModal.forEach((modal, index) => {
         modal.addEventListener('click', e => {
             const userNickname = user.innerText;
-            e.preventDefault();
             accuseModalData(userNickname, index);
         });
     });
