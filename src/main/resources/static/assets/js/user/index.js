@@ -168,17 +168,17 @@ function checkSNS(userInstagram, userFacebook, userTwitter) {
     let snsTag = '';
 
     if(userInstagram !== null) {
-        snsTag += '<a href="https://instagram.com/'+ userInstagram +'" class="sns-type instagram"><img class="sns-image" src="/assets/img/main/instagram.png" alt="instagram"></a>'
+        snsTag += '<a target = "_blank" href="https://instagram.com/'+ userInstagram +'" class="sns-link sns-type instagram"><img class="sns-image" src="/assets/img/main/instagram.png" alt="instagram"></a>'
     } else {
         snsTag += '<img class="sns-image sns-image-with-null" src="/assets/img/main/instagram.png" alt="instagram">'
     }
     if(userFacebook !== null) {
-        snsTag += '<a href="https://facebook.com/'+ userFacebook +'" class="sns-type facebook"><img class="sns-image" src="/assets/img/main/facebook.png" alt="facebook"></a>'
+        snsTag += '<a target = "_blank" href="https://facebook.com/'+ userFacebook +'" class="sns-link sns-type facebook"><img class="sns-image" src="/assets/img/main/facebook.png" alt="facebook"></a>'
     } else {
         snsTag += '<img class="sns-image sns-image-with-null" src="/assets/img/main/facebook.png" alt="facebook">'
     }
     if(userTwitter !== null) {
-        snsTag += '<a href="https://twitter.com/'+ userTwitter +'" class="sns-type twitter"><img class="sns-image" src="/assets/img/main/twitter.png" alt="twitter"></a>'
+        snsTag += '<a target = "_blank" href="https://twitter.com/'+ userTwitter +'" class="sns-link sns-type twitter"><img class="sns-image" src="/assets/img/main/twitter.png" alt="twitter"></a>'
     } else {
         snsTag += '<img class="sns-image sns-image-with-null" src="/assets/img/main/twitter.png" alt="twitter">'
     }
@@ -216,7 +216,7 @@ function getProfileCardList() {
 
             const tierImgSrc = transTier(tier) !== null ? '"/assets/img/main/TFT_Regalia_'+ transTier(tier) +'.png"' : '/assets/img/main/unranked-removebg-preview.png';
             
-            profileCardTag += `<div id = "`+ userAccount +`"data-userAccount="`+ userAccount +`" class="duo-profile" onclick="window.location.href='/user/user-history?userAccount=${userAccount}'">`
+            profileCardTag += `<div id = "`+ userAccount +`"data-userAccount="`+ userAccount +`"data-user-account="`+ userAccount +`" class="duo-profile duo-profile-account" onclick="window.location.href='/user/user-history?userAccount=${userAccount}'">`
                                    + '<img class="duo-tier" src=' + tierImgSrc + ' alt="tier">'
                                     
                                    + '<div class="profile-left-side">'
@@ -316,7 +316,7 @@ function getProfileCardList() {
 // 팔로우 / 언팔로우 기능
 function follow() {
     const $followImgs = document.querySelectorAll('.follow-status');
-    
+
     $followImgs.forEach($followImg => {
         
         $followImg.onclick = e => {
@@ -329,6 +329,7 @@ function follow() {
                 alert("본인의 프로필카드입니다.");
                 return;
             }
+
 
             const $followingImg = e.target.closest('.follow-status');
             
@@ -351,7 +352,7 @@ function follow() {
     });
 }
 
- 
+
  let loading = false; // 초기에는 로딩 상태가 아님을 나타내는 변수
 
  window.addEventListener('scroll', () => {
@@ -426,4 +427,12 @@ function renderFailMessage() {
 
     if (msg !== null)
         alert(msg);
+}
+
+function stopPropagation(){
+    [...document.querySelectorAll('.sns-link ')].forEach(
+        sns => sns.onclick = e => {
+            e.stopPropagation();
+        }
+    );
 }

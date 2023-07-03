@@ -31,8 +31,7 @@ import {makeChattingRoom} from "../../chatting/chatting-modal.js";
             $wrapper: $reviewWrapper,
             userAccount: userAccount,
             pageNo: increasePageNo
-        },
-        800);
+        });
 
 
     // 로그인 했을때만 실행되는 함수

@@ -183,21 +183,6 @@ public class BoardController {
                 .body(boardListByAdmin);
     }
 
-    //보드 삭제
-    @DeleteMapping("/api/v1/boards/admin/delete")
-    public ResponseEntity<?>  deleteBoardByAdmin(long boardNo ){
-        log.info("{}boardNo1212==",boardNo);
-
-        boolean b1 = boardService.deleteBoard(boardNo);
-        System.out.println("b1 = " + b1);
-
-        return ResponseEntity
-                .ok()
-                .body(b1);
-
-    }
-
-
     //금일 등록된 boardlist
     @GetMapping("/api/v1/boards/admin1")
     public ResponseEntity<?> getTodayBoardListByAdmin(
@@ -219,6 +204,23 @@ public class BoardController {
                 .ok()
                 .body(boardsByAdminResponseDTOUserListResponseDTO);
     }
+
+    //보드 삭제
+    @DeleteMapping("/api/v1/boards/admin/delete")
+    public ResponseEntity<?>  deleteBoardByAdmin(long boardNo ){
+        log.info("{}boardNo1212==",boardNo);
+
+        boolean b1 = boardService.deleteBoard(boardNo);
+        System.out.println("b1 = " + b1);
+
+        return ResponseEntity
+                .ok()
+                .body(b1);
+
+    }
+
+
+
 
 }
 

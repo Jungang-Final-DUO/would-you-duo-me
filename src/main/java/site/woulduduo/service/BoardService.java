@@ -120,7 +120,7 @@ public class BoardService {
         }else{
             boards = boardRepository.findByUser_UserAccountContaining(userAccount, pageable);
         }
-
+        System.out.println("boards123123 = " + boards);
 
         System.out.println("all = " + boards);
         List<BoardsByAdminResponseDTO> collect = boards.stream()
@@ -153,7 +153,7 @@ public class BoardService {
 
     //금일 작성 게시물 (ADMIN)
     public ListResponseDTO<BoardsByAdminResponseDTO, Board> todayBoardByAdmin(PageDTO dto) {
-
+        System.out.println("서비스dto = " + dto);
         Pageable pageable = PageRequest.of(
                 dto.getPage() - 1,
                 dto.getSize(),
@@ -173,7 +173,7 @@ public class BoardService {
         }else{
             boards = boardRepository.findByUser_UserAccountContaining(userAccount, pageable);
         }
-
+        System.out.println("boardstoday = " + boards);
         List<Board> todayBoardList = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
 
@@ -186,6 +186,7 @@ public class BoardService {
             }
         }
 
+        System.out.println("todayBoardList = " + todayBoardList);
         List<BoardsByAdminResponseDTO> collect = todayBoardList.stream()
                 .map(BoardsByAdminResponseDTO::new)
                 .collect(toList());

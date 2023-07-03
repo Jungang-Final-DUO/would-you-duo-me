@@ -17,7 +17,7 @@ UserRepository extends
         JpaRepository<User,String> {
 
     //아이디로 검색한 정보보기 + 페이징
-    Page<User> findByUserAccountContaining(String userAccount, Pageable pageable);
+    Page<User> findByUserNicknameContaining(String UserNickname, Pageable pageable);
 
     @Query(value = "SELECT COUNT(*) FROM User u WHERE u.userAccount = :email")
     int countByUserEmail(String email);
