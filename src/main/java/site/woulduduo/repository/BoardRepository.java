@@ -12,18 +12,20 @@ import java.awt.print.Pageable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
 public interface BoardRepository extends JpaRepository<Board,Long> {
 
 
-
-//    List<Board> findByBoardTitleContainingIgnoreCase(String keyword, Pageable pageable);
-//    List<Board> findByBoardCategory(BoardCategory boardCategory, Pageable pageable);
 
     //해당 id 게시글 작성
     long countByUser(User user);
 
     @Query(value = "SELECT COUNT(*) FROM duo_board WHERE board_written_date >= DATE(NOW()) AND board_written_date < DATE_ADD(DATE(NOW()), INTERVAL 1 DAY)",nativeQuery = true)
     int findAllWithBoardWrittenDate();
+
+    List<Board> findByBoardCategory(@Param("boardCategory") BoardCategory boardCategory);
+
 
 
 

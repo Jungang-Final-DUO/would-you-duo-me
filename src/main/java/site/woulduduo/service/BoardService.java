@@ -156,7 +156,6 @@ public class BoardService {
         // TODO : 2. service 핵심 로직(키워드로 찾는다, 카테고리로 찾는다, 전체 조회를 한다.) ->
         //        3. repository 데이터 취득 -> 4. 취득한 데이터가 service 가 controller 리턴 ->
 
-        List<Board> boardList;
 
         System.out.println("keyword = " + keyword);
         System.out.println("boardCategory = " + boardCategory);
