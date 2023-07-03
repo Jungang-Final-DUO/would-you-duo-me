@@ -5,6 +5,8 @@ import site.woulduduo.entity.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 @Setter
 @Getter
@@ -19,7 +21,7 @@ public class UserDetailByAdminResponseDTO {
     private long reportCount;
     private long followCount;
     private LocalDate joinDate;
-    private LocalDateTime recentLoginDate;
+    private String  recentLoginDate;
     private boolean isBanned;
     private int point;
 
@@ -30,7 +32,7 @@ public class UserDetailByAdminResponseDTO {
         this.reportCount=user.getAccuseList().size();
         this.followCount=user.getFollowToList().size();
         this.joinDate=user.getUserJoinDate();
-        this.recentLoginDate=user.getUserRecentLoginDate();
+        this.recentLoginDate=recentLogin(user);
         this.isBanned=user.isUserIsBanned();
         this.point=user.getUserCurrentPoint();
     }
@@ -40,6 +42,13 @@ public class UserDetailByAdminResponseDTO {
             return false;
         }  return true;
 
+    }
+
+    public String   recentLogin(User user){
+        LocalDateTime userRecentLoginDate = user.getUserRecentLoginDate();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String format = userRecentLoginDate.format(formatter);
+        return format;
     }
 
 }
