@@ -135,20 +135,6 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
         return (followers.equals("all")) ? null : user.userAccount.in(collect);
     }
 
-
-//    @Override
-//    public List<User> followed(HttpSession session) {
-//        LoginUserResponseDTO login = (LoginUserResponseDTO)session.getAttribute("login");
-//
-//        // 팔로우한 사용자 목록 가져오기
-//        return queryFactory.select(follow.followTo)
-//                .from(follow)
-//                .where(follow.followFrom.userAccount.eq(login.getUserAccount()))
-//                .fetch();
-//
-//
-//    }
-// ==================================================
     @Override
     public List<User> followed(HttpSession session) {
         LoginUserResponseDTO login = (LoginUserResponseDTO)session.getAttribute("login");
@@ -164,7 +150,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
         return query.fetch();
     }
-// ==================================================
+
 
     // 프로필 카드 수정
     @Override
@@ -193,9 +179,6 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
     }
 
 
-
-
-
     // 2페이지부터 offset 조정
     private Long checkPage(int page) {
         return page == 1 ? 0 : ((long) page - 1) * 20;
@@ -214,7 +197,7 @@ public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepositoryCustom 
 
     // 포지션 파라미터가 null인지 체크
     private BooleanExpression positioneq(Position position) {
-        return (position != null) ? user.userPosition.eq(position) : null;
+        return (position != null) ? user.userPosition.eq(position).or(user.userPosition.eq(Position.ALL)) : null;
     }
 
     // 검색 키워드가 null인지 체크

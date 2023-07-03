@@ -19,7 +19,7 @@
 <div id="main-wrapper">
 
     <%@ include file="common/header.jsp" %>
-
+    <div id="login-check" data-login="${login.userAccount}" style="display: none;"></div>
     <div id="search-bar">
         <!--        인풋 닉네임 검색 -->
         <label><input type="text" id="searchBy-nickname" placeholder="듀오 검색하기" name="keyword"
