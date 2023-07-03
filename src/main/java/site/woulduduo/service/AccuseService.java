@@ -154,17 +154,12 @@ public class AccuseService {
     }
 
     //경고 데이터 전달
-    public boolean accuseUser(UserAccuseRequestDTO dto){
+    public int accuseUser(UserAccuseRequestDTO dto){
 
         String userNickname = dto.getUserNickname();
         User byUserAccount = userRepository.findByUserNickname(userNickname);
         System.out.println("byUserAccount = " + byUserAccount);
         //정보 없으면 false;
-        if(byUserAccount==null){
-            return false;
-
-
-        }
 
         Accuse entity = dto.toEntity();
         entity.setUser(byUserAccount);
@@ -178,9 +173,11 @@ public class AccuseService {
         if(accuseEtc!=null||accuseType!=null) {
             Accuse save = accuseRepository.save(entity);
             System.out.println("save = " + save);
-            return true;
+
+            int i = accuseUserCount(dto);
+            return i;
         }
-        return false;
+        return 0;
     }
 
     public int accuseUserCount(UserAccuseRequestDTO dto) {

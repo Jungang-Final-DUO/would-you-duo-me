@@ -12,7 +12,7 @@ function renderUserInfo({profileImage,
                         userNickname,
                         lolNickname,
                         userCurrentPoint}) {
-    document.getElementById('profile-img-wrapper').firstElementChild.src = profileImage;
+    document.getElementById('profile-img-wrapper').firstElementChild.src = profileImage || '/assets/img/chattingModal/user.png';
     document.getElementById('nickname-wrapper').textContent = userNickname;
     const $userInfo = document.getElementById('user-info-wrapper');
     $userInfo.firstElementChild.textContent = ` 라이엇 계정 : ${lolNickname} `;
