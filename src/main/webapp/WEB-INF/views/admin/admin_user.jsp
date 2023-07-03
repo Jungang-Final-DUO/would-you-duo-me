@@ -380,12 +380,10 @@
     const pay = document.getElementById('give_point');
     //현재포인트 int 변환
     const point = parseInt(userCurrentPoint.innerText);
-    // const add = parseInt(AddPoint.value);
 
     //추가지급 입력포인트 int변환
     function addPoint() {
         const givePointInput = document.getElementById('give_point');
-        add = parseInt(givePointInput.value);
 
     }
 
