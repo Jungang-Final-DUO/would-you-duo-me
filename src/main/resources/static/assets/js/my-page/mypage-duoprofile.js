@@ -79,6 +79,33 @@ function modifyCard() {
     document.getElementById('modify-duo').onclick = e => {
         form.action = "/user/modify-duo";
         if(confirm("지금 내용으로 수정하시겠습니까?")) {
+            let selectedPosition = '';
+        // 체크된 버튼 있는지 확인
+        for (let i = 0; i < $positionOption.length; i++) {
+            if ($positionOption[i].checked) {
+                selectedPosition = $positionOption[i].value;
+            }
+        }
+        // 포지션 미선택 시 알림창 + 리턴
+        if (selectedPosition === '') {
+            alert(`포지션을 선택해주세요.`);
+            return;
+        }
+        // 자기소개글 미입력시 알림창 + 리턴
+        else if ($comment.value === '') {
+            alert(`자기소개글을 입력해주세요.`);
+            return;
+        }
+        // 매칭 포인트 미기재시 알림창 + 리턴
+        else if ($matchingPoint.value === '') {
+            alert(`매칭 포인트를 입력해주세요.`);
+            return;
+        }
+        // 기재 포인트가 100포인트 미만시 알림창 + 리턴
+        else if ($matchingPoint.value < 100) {
+            alert(`매칭 포인트는 100point 이상 입력해주세요`);
+            return;
+        }
             form.submit();
         }
     }
