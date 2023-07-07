@@ -12,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import site.woulduduo.dto.riot.LeagueV4DTO;
 import site.woulduduo.dto.riot.MatchV5DTO;
 import site.woulduduo.dto.riot.SummonerV4DTO;
-import site.woulduduo.enumeration.Tier;
 import site.woulduduo.exception.NoRankException;
 
 import java.util.*;
@@ -35,38 +34,6 @@ public class RiotApiService {
     // 매치 데이터 요청 uri
     @Value("${riot.api.request.uri.matches}")
     private String RIOT_MATCH_URI;
-
-    /**
-     * 티어 정보를 얻는 메서드
-     *
-     * @param lolNickname - 롤 닉네임
-     * @return - 티어 열거형
-     */
-    public Tier getTier(String lolNickname) {
-
-        LeagueV4DTO[] responseDTO = getLeagueV4DTO(lolNickname);
-
-        LeagueV4DTO soloRankInfo = null;
-        try {
-            for (LeagueV4DTO leagueV4DTO : responseDTO) {
-                if (leagueV4DTO.getQueueType().equals("RANKED_SOLO_5x5")) {
-                    soloRankInfo = leagueV4DTO;
-                    break;
-                }
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            // 솔로랭크 정보가 없을 때
-            return Tier.UNR;
-        }
-
-        Tier tier = null;
-        try {
-            tier = Objects.requireNonNull(soloRankInfo).getTierEnum();
-        } catch (NullPointerException e) {
-            tier = Tier.UNR;
-        }
-        return tier;
-    }
 
     /**
      * 랭크 정보 데이터를 담은 DTO 를 반환

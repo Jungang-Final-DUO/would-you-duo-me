@@ -29,6 +29,7 @@ import site.woulduduo.entity.*;
 import site.woulduduo.enumeration.*;
 import site.woulduduo.exception.NotFollowedException;
 import site.woulduduo.exception.NoRankException;
+import site.woulduduo.exception.NotFoundUserException;
 import site.woulduduo.repository.*;
 import site.woulduduo.util.LoginUtil;
 
@@ -64,9 +65,7 @@ public class UserService {
     private final UserProfileRepository userProfileRepository;
     private final MostChampRepository mostChampRepository;
 
-
-    final String id = "abc1234";
-
+    // 회원가입
     public void register(UserRegisterRequestDTO dto) {
 
         // 이메일 중복 검사
@@ -84,6 +83,20 @@ public class UserService {
             throw new IllegalArgumentException("이미 등록된 롤 닉네임입니다.");
         }
 
+        String lolNickname = dto.getLolNickname();
+
+        // 랭크 정보 가져오기
+        LeagueV4DTO rankInfo = null;
+        try {
+            rankInfo = riotApiService.getRankInfo(lolNickname, "RANKED_SOLO_5x5");
+        } catch (NoRankException e) {
+            try {
+                rankInfo = riotApiService.getRankInfo(lolNickname, "RANKED_FLEX_SR");
+            } catch (NoRankException ex) {
+                rankInfo = LeagueV4DTO.builder().build();
+            }
+        }
+
         // 회원 정보 저장
         User user = User.builder()
                 .userAccount(dto.getUserEmail())
@@ -93,32 +106,20 @@ public class UserService {
                 .userInstagram(dto.getUserInstagram().isEmpty() ? null : dto.getUserInstagram())
                 .userTwitter(dto.getUserTwitter().isEmpty() ? null : dto.getUserTwitter())
                 .userFacebook(dto.getUserFacebook().isEmpty() ? null : dto.getUserFacebook())
-                .lolNickname(dto.getLolNickname())
+                .lolNickname(lolNickname)
                 .userGender(dto.getUserGender() == Gender.M ? Gender.M : Gender.F)
-                .lolTier(riotApiService.getTier(dto.getLolNickname()))
+                .lolTier(rankInfo.getTierEnum())
+                .lolRank(rankInfo.getRank())
+                .lolLeaguePoints(rankInfo.getLeaguePoints())
+                .lolTotalWinCount(rankInfo.getWins())
+                .lolTotalLoseCount(rankInfo.getLosses())
+                .lolWinRate((int) Math.round(rankInfo.getWinRate() * 100))
                 .userRecentLoginDate(LocalDateTime.now())
                 .build();
-
 
         User saved = userRepository.save(user);
 
         // 프로필 사진 저장
-        // 모스트 챔피언 3개 또는 그 이하 저장
-        List<String> most3Champions = riotApiService.getMost3Champions(dto.getLolNickname());
-        for (int i = 0; i < 3; i++) {
-            String champName = null;
-            try {
-                champName = most3Champions.get(i);
-            } catch (IndexOutOfBoundsException e) {
-                champName = "";
-            }
-            mostChampRepository.save(MostChamp.builder()
-                    .user(saved)
-                    .mostNo(i + 1)
-                    .champName(champName)
-                    .build());
-        }
-
         String[] profileImagePaths = dto.getProfileImagePaths();
         if (profileImagePaths != null) {
             for (String imagePath : profileImagePaths) {
@@ -131,7 +132,6 @@ public class UserService {
                 }
             }
         }
-
 
 
         log.info("회원 가입이 완료되었습니다.");
@@ -337,29 +337,6 @@ public class UserService {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * 마이페이지 - 프로필카드 등록 메서드
      * <p>
@@ -396,7 +373,24 @@ public class UserService {
             u.setUserMatchingPoint(dto.getUserMatchingPoint());
 
             userRepository.save(u);
+
+            // 모스트 챔피언 3개 또는 그 이하 저장
+            List<String> most3Champions = riotApiService.getMost3Champions(u.getLolNickname());
+            for (int i = 0; i < 3; i++) {
+                String champName = null;
+                try {
+                    champName = most3Champions.get(i);
+                } catch (IndexOutOfBoundsException e) {
+                    champName = "";
+                }
+                mostChampRepository.save(MostChamp.builder()
+                        .user(u)
+                        .mostNo(i + 1)
+                        .champName(champName)
+                        .build());
+            }
         });
+
         return true;
     }
 
@@ -517,8 +511,6 @@ public class UserService {
     }
 
 
-
-
     //금일 가입자(Admin)
     public ListResponseDTO<UserByAdminResponseDTO, User> todayUserByAdMin(PageDTO dto) {
         Pageable pageable = PageRequest.of(
@@ -527,14 +519,14 @@ public class UserService {
                 Sort.by("userJoinDate").descending()
         );
         String keyword = dto.getKeyword();
-        if ("".equals(keyword)){
-            keyword=null;
+        if ("".equals(keyword)) {
+            keyword = null;
         }
 
         String userAccount = dto.getKeyword();
         Page<User> users;
 
-        if (userAccount==null) {
+        if (userAccount == null) {
             // 전체 불러오기
             users = userRepository.findAll(pageable);
             int accusesize = users.getContent().size();
@@ -583,9 +575,9 @@ public class UserService {
                 new UserDetailByAdminResponseDTO(byUserNickName);
 
 
-
         return userDetail;
     }
+
     public boolean getUserBanBooleanByAdmin(String userNickname) {
         User byUserNickName = userRepository.findByUserNickname(userNickname);
 
@@ -649,7 +641,7 @@ public class UserService {
         System.out.println("userIsBanned1 = " + userIsBanned1);
 
         //클릭이 동작된것 front 에서 1을 보내줄것
-        if(userIsBanned==1) {
+        if (userIsBanned == 1) {
             //userIsBanned가 1이면 참
             if (userIsBanned1 == true) {
                 byUserNickName.setUserIsBanned(false);
@@ -671,13 +663,12 @@ public class UserService {
     }
 
     //닉네임으로 user 찾기
-    public User findUserByNickName(UserModifyRequestDTO dto){
+    public User findUserByNickName(UserModifyRequestDTO dto) {
         User byUserNickName = userRepository.findByUserNickname(dto.getUserNickname());
 
 
         return byUserNickName;
     }
-
 
 
     /**
@@ -690,16 +681,17 @@ public class UserService {
     public UserHistoryResponseDTO getUserHistoryInfo(HttpSession session, String userAccount) {
 
         User foundUser = userRepository.findById(userAccount).orElseThrow(
-                () -> new RuntimeException("해당하는 유저가 없습니다.")
+                () -> new NotFoundUserException("해당하는 유저가 없습니다.")
         );
+
+        // 듀오 프로필을 등록하지 않았다면 오류 페이지로 이동
+        if (foundUser.getUserComment() == null)
+            throw new NotFoundUserException("해당하는 유저가 없습니다.");
+
+        // 전적 정보가 있다면 해당 정보를 리턴
+
+
         String lolNickname = foundUser.getLolNickname();
-
-        // 티어 정보 갱신
-        Tier newTier = riotApiService.getTier(lolNickname);
-
-        foundUser.setLolTier(newTier);
-
-        userRepository.save(foundUser);
 
         List<MatchV5DTO.MatchInfo.ParticipantDTO> last20ParticipantDTOList = riotApiService.getLast20ParticipantDTOList(lolNickname);
 
@@ -713,6 +705,13 @@ public class UserService {
                 rankInfo = LeagueV4DTO.builder().build();
             }
         }
+
+        // 티어 정보 갱신
+        Tier newTier = riotApiService.getTier(rankInfo);
+
+        foundUser.setLolTier(newTier);
+
+        userRepository.save(foundUser);
 
         boolean isFollowed = false;
         try {

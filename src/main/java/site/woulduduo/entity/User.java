@@ -93,6 +93,22 @@ public class User {
     @Builder.Default
     private String userSessionId = "none";
 
+    // 상세 티어 정보
+    @Column(length = 1)
+    private String lolRank;
+
+    @Column(length = 5)
+    private int lolLeaguePoints;
+
+    @Column(length = 5)
+    private int lolTotalWinCount;
+
+    @Column(length = 5)
+    private int lolTotalLoseCount;
+
+    @Column(length = 3)
+    private int lolWinRate;
+
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private LoginType userLoginType = NORMAL;
