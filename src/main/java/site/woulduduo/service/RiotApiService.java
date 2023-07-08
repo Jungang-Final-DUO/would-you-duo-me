@@ -154,12 +154,9 @@ public class RiotApiService {
      * 모스트 챔피언 세 개를 구하는 메서드
      * 모스트 1 이 0 번 인덱스이고 3이 2번 인덱스이다.
      *
-     * @param lolNickname - 소환사명
      * @return - 모스트 챔피언 세 개의 이름이 담긴 리스트
      */
-    public List<String> getMost3Champions(String lolNickname) {
-
-        List<MatchV5DTO.MatchInfo.ParticipantDTO> last20ParticipantDTOList = getLast20ParticipantDTOList(lolNickname);
+    public List<String> getMost3Champions(List<MatchV5DTO.MatchInfo.ParticipantDTO> last20ParticipantDTOList) {
 
         return getTop3PopularityItems(last20ParticipantDTOList.stream()
                 .map(MatchV5DTO.MatchInfo.ParticipantDTO::getChampionName)

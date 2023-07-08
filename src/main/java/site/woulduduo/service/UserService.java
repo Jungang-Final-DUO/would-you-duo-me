@@ -117,7 +117,7 @@ public class UserService {
                 .userRecentLoginDate(LocalDateTime.now())
                 .build();
 
-        User saved = userRepository.save(user);
+        userRepository.save(user);
 
         // 프로필 사진 저장
         String[] profileImagePaths = dto.getProfileImagePaths();
@@ -132,7 +132,6 @@ public class UserService {
                 }
             }
         }
-
 
         log.info("회원 가입이 완료되었습니다.");
     }
@@ -367,6 +366,9 @@ public class UserService {
         if (user.isEmpty()) {
             return false;
         }
+
+        List<MatchV5DTO.MatchInfo.ParticipantDTO> last20ParticipantDTOList = riotApiService.getLast20ParticipantDTOList(user.get().getLolNickname());
+
         user.ifPresent(u -> {
             u.setUserPosition(dto.getUserPosition());
             u.setUserComment(dto.getUserComment());
@@ -375,9 +377,13 @@ public class UserService {
             userRepository.save(u);
 
             // 모스트 챔피언 3개 또는 그 이하 저장
-            List<String> most3Champions = riotApiService.getMost3Champions(u.getLolNickname());
+            List<String> most3Champions = riotApiService.getMost3Champions(last20ParticipantDTOList);
+
             for (int i = 0; i < 3; i++) {
                 String champName = null;
+                int winCount = 0;
+                int loseCount = 0;
+                double kda = 0;
                 try {
                     champName = most3Champions.get(i);
                 } catch (IndexOutOfBoundsException e) {
@@ -387,6 +393,9 @@ public class UserService {
                         .user(u)
                         .mostNo(i + 1)
                         .champName(champName)
+                                .champWinCount()
+                                .champLoseCount()
+                                .champKda()
                         .build());
             }
         });
@@ -706,10 +715,8 @@ public class UserService {
             }
         }
 
-        // 티어 정보 갱신
-        Tier newTier = riotApiService.getTier(rankInfo);
-
-        foundUser.setLolTier(newTier);
+        foundUser.setLolTier(rankInfo.getTierEnum());
+        foundUser.setLolRank(rankInfo.getRank());
 
         userRepository.save(foundUser);
 
@@ -721,7 +728,7 @@ public class UserService {
         } catch (NullPointerException ignored) {
         }
 
-        List<MostChampInfo> mostChampInfoList = riotApiService.getMost3Champions(lolNickname).stream()
+        List<MostChampInfo> mostChampInfoList = riotApiService.getMost3Champions(last20ParticipantDTOList).stream()
                 .map(m -> {
                     List<MatchV5DTO.MatchInfo.ParticipantDTO> championMatchInfoList = last20ParticipantDTOList.stream()
                             .filter(p -> p.getChampionName().equals(m))
