@@ -20,53 +20,12 @@ public class MatchResponseDTO {
     private int item5;
     private int item6;
     private int kills;
-    private MatchV5DTO.MatchInfo.ParticipantDTO.PerksDTO perks;
-    private String summonerName;
+    private int mainPerk;
+    private int subPerk;
     private int summoner1Id;
     private int summoner2Id;
     private boolean win;
     private String avgKda;
-
-    // 룬특성 정보
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @EqualsAndHashCode
-    @ToString
-    @Builder
-    public static class PerksDTO {
-        private MatchV5DTO.MatchInfo.ParticipantDTO.PerksDTO.PerkStyleDTO[] styles;
-
-        // 룬 정보는 runesReforged.json 에 있다.
-        @Getter
-        @NoArgsConstructor
-        @AllArgsConstructor
-        @EqualsAndHashCode
-        @ToString
-        @Builder
-        public static class PerkStyleDTO {
-
-            // 주 또는 보조 룬인지 판단
-            private String description;
-            // 어떤 룬을 찍었는지
-            private MatchV5DTO.MatchInfo.ParticipantDTO.PerksDTO.PerkStyleDTO.PerStyleSelectionDTO[] selections;
-            // 룬 카테고리
-            private int style;
-
-            @Getter
-            @NoArgsConstructor
-            @AllArgsConstructor
-            @EqualsAndHashCode
-            @ToString
-            @Builder
-            public static class PerStyleSelectionDTO {
-
-                // 어떤 룬인지
-                private int perk;
-
-            }
-        }
-    }
 
     public MatchResponseDTO(MatchV5DTO.MatchInfo.ParticipantDTO p) {
         this.assists = p.getAssists();
@@ -80,8 +39,8 @@ public class MatchResponseDTO {
         this.item5 = p.getItem5();
         this.item6 = p.getItem6();
         this.kills = p.getKills();
-        this.perks = p.getPerks();
-        this.summonerName = p.getSummonerName();
+        this.mainPerk = p.getPerks().getStyles()[0].getSelections()[0].getPerk();
+        this.subPerk = p.getPerks().getStyles()[1].getStyle();
         this.summoner1Id = p.getSummoner1Id();
         this.summoner2Id = p.getSummoner2Id();
         this.win = p.isWin();

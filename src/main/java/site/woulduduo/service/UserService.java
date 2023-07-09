@@ -386,18 +386,45 @@ public class UserService {
                 double kda = 0;
                 try {
                     champName = most3Champions.get(i);
+
+                    String finalChampName = champName;
+                    List<MatchV5DTO.MatchInfo.ParticipantDTO> champMatchInfo = last20ParticipantDTOList.stream()
+                            .filter(p -> p.getChampionName().equals(finalChampName))
+                            .collect(toList());
+
+                    winCount = (int) champMatchInfo.stream()
+                            .filter(MatchV5DTO.MatchInfo.ParticipantDTO::isWin).count();
+
+                    loseCount = champMatchInfo.size() - winCount;
+
+                    // stream을 한번에 돌려서 필요한 정보들을 같이 가져오는 (ex 배열에 담던가 객체를 하나 만들어서) 방법으로
+                    // 리팩토링 가능
+                    int kills = champMatchInfo.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getKills).sum();
+
+                    int deaths = champMatchInfo.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getDeaths).sum();
+
+                    int assists = champMatchInfo.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getAssists).sum();
+
+                    kda = (double) (kills + assists) / deaths;
+
                 } catch (IndexOutOfBoundsException e) {
                     champName = "";
                 }
+
                 mostChampRepository.save(MostChamp.builder()
                         .user(u)
                         .mostNo(i + 1)
                         .champName(champName)
-                                .champWinCount()
-                                .champLoseCount()
-                                .champKda()
+                                .champWinCount(winCount)
+                                .champLoseCount(loseCount)
+                                .champKda(kda)
                         .build());
             }
+
+
         });
 
         return true;
@@ -737,8 +764,7 @@ public class UserService {
                     int winCount = (int) championMatchInfoList.stream()
                             .filter(MatchV5DTO.MatchInfo.ParticipantDTO::isWin).count();
 
-                    int loseCount = (int) championMatchInfoList.stream()
-                            .filter(c -> !c.isWin()).count();
+                    int loseCount = championMatchInfoList.size() - winCount;
 
                     int winRate = winCount * 100 / (winCount + loseCount);
 

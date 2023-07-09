@@ -174,9 +174,9 @@
                              class="playing-champ-img">
                         <div class="rune-spell-wrapper">
                             <div class="rune-wrapper">
-                                <img src="/assets/img/user-history/rune/main/${match.perks.styles[0].selections[0].perk}.png"
+                                <img src="/assets/img/user-history/rune/main/${match.mainPerk}.png"
                                      alt="주 룬">
-                                <img src="/assets/img/user-history/rune/sub/${match.perks.styles[1].style}.png"
+                                <img src="/assets/img/user-history/rune/sub/${match.subPerk}.png"
                                      alt="보조 룬">
                             </div>
                             <div class="spell-wrapper">
