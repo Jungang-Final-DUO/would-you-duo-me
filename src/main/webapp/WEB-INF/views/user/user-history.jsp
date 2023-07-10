@@ -154,7 +154,7 @@
                             <img src="/assets/img/user-history/champions/${champ.champName}_0.jpg" alt="모스트 챔피언 아이콘">
                             <div>${champ.winCount}승 ${champ.loseCount}패</div>
                             <div class="champ-win-rate">${champ.winRate}%</div>
-                            <div>${String.format("%.2f", champ.kda)}</div>
+                            <div>${champ.kda}</div>
                         </c:forEach>
                     </div>
                 </div>
@@ -174,9 +174,9 @@
                              class="playing-champ-img">
                         <div class="rune-spell-wrapper">
                             <div class="rune-wrapper">
-                                <img src="/assets/img/user-history/rune/main/${match.perks.styles[0].selections[0].perk}.png"
+                                <img src="/assets/img/user-history/rune/main/${match.mainPerk}.png"
                                      alt="주 룬">
-                                <img src="/assets/img/user-history/rune/sub/${match.perks.styles[1].style}.png"
+                                <img src="/assets/img/user-history/rune/sub/${match.subPerk}.png"
                                      alt="보조 룬">
                             </div>
                             <div class="spell-wrapper">
