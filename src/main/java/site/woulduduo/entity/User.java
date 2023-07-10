@@ -94,7 +94,7 @@ public class User {
     private String userSessionId = "none";
 
     // 상세 티어 정보
-    @Column(length = 1)
+    @Column(length = 3)
     private String lolRank;
 
     @Column(length = 5)
@@ -173,9 +173,14 @@ public class User {
     @Builder.Default
     private List<MostChamp> mostChampList = new ArrayList<>();
 
+    // 자격
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Role role = Role.COMMON;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "user")
+    @Builder.Default
+    private List<RecentMatch> recentMatchList = new ArrayList<>();
 
     // 양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
     public void addReply(Reply reply) {
@@ -267,6 +272,13 @@ public class User {
         mostChampList.add(mostChamp);
         if (this != mostChamp.getUser()) {
             mostChamp.setUser(this);
+        }
+    }
+
+    public void addRecentMatchList(RecentMatch recentMatch) {
+        recentMatchList.add(recentMatch);
+        if (this != recentMatch.getUser()) {
+            recentMatch.setUser(this);
         }
     }
 }
