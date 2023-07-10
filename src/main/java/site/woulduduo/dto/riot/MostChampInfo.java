@@ -14,6 +14,6 @@ public class MostChampInfo {
     private int winCount;
     private int loseCount;
     private int winRate;
-    private double kda;
+    private String kda;
 
 }

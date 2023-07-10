@@ -29,6 +29,7 @@ import site.woulduduo.entity.*;
 import site.woulduduo.enumeration.*;
 import site.woulduduo.exception.NotFollowedException;
 import site.woulduduo.exception.NoRankException;
+import site.woulduduo.exception.NotFoundUserException;
 import site.woulduduo.repository.*;
 import site.woulduduo.util.LoginUtil;
 
@@ -63,10 +64,9 @@ public class UserService {
     private final FollowRepository followRepository;
     private final UserProfileRepository userProfileRepository;
     private final MostChampRepository mostChampRepository;
+    private final RecentMatchRepository recentMatchRepository;
 
-
-    final String id = "abc1234";
-
+    // 회원가입
     public void register(UserRegisterRequestDTO dto) {
 
         // 이메일 중복 검사
@@ -84,6 +84,22 @@ public class UserService {
             throw new IllegalArgumentException("이미 등록된 롤 닉네임입니다.");
         }
 
+        String lolNickname = dto.getLolNickname();
+
+        // 랭크 정보 가져오기
+        LeagueV4DTO rankInfo = null;
+        try {
+            rankInfo = riotApiService.getRankInfo(lolNickname, "RANKED_SOLO_5x5");
+        } catch (NoRankException e) {
+            try {
+                rankInfo = riotApiService.getRankInfo(lolNickname, "RANKED_FLEX_SR");
+            } catch (NoRankException ex) {
+                rankInfo = LeagueV4DTO.builder().build();
+            }
+        }
+
+        log.info("lol rank : {}", rankInfo.getRank());
+
         // 회원 정보 저장
         User user = User.builder()
                 .userAccount(dto.getUserEmail())
@@ -93,32 +109,20 @@ public class UserService {
                 .userInstagram(dto.getUserInstagram().isEmpty() ? null : dto.getUserInstagram())
                 .userTwitter(dto.getUserTwitter().isEmpty() ? null : dto.getUserTwitter())
                 .userFacebook(dto.getUserFacebook().isEmpty() ? null : dto.getUserFacebook())
-                .lolNickname(dto.getLolNickname())
+                .lolNickname(lolNickname)
                 .userGender(dto.getUserGender() == Gender.M ? Gender.M : Gender.F)
-                .lolTier(riotApiService.getTier(dto.getLolNickname()))
+                .lolTier(rankInfo.getTierEnum())
+                .lolRank(rankInfo.getRank())
+                .lolLeaguePoints(rankInfo.getLeaguePoints())
+                .lolTotalWinCount(rankInfo.getWins())
+                .lolTotalLoseCount(rankInfo.getLosses())
+                .lolWinRate((int) Math.round(rankInfo.getWinRate() * 100))
                 .userRecentLoginDate(LocalDateTime.now())
                 .build();
 
-
-        User saved = userRepository.save(user);
+        userRepository.save(user);
 
         // 프로필 사진 저장
-        // 모스트 챔피언 3개 또는 그 이하 저장
-        List<String> most3Champions = riotApiService.getMost3Champions(dto.getLolNickname());
-        for (int i = 0; i < 3; i++) {
-            String champName = null;
-            try {
-                champName = most3Champions.get(i);
-            } catch (IndexOutOfBoundsException e) {
-                champName = "";
-            }
-            mostChampRepository.save(MostChamp.builder()
-                    .user(saved)
-                    .mostNo(i + 1)
-                    .champName(champName)
-                    .build());
-        }
-
         String[] profileImagePaths = dto.getProfileImagePaths();
         if (profileImagePaths != null) {
             for (String imagePath : profileImagePaths) {
@@ -131,8 +135,6 @@ public class UserService {
                 }
             }
         }
-
-
 
         log.info("회원 가입이 완료되었습니다.");
     }
@@ -337,29 +339,6 @@ public class UserService {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * 마이페이지 - 프로필카드 등록 메서드
      * <p>
@@ -390,13 +369,104 @@ public class UserService {
         if (user.isEmpty()) {
             return false;
         }
+
+        List<MatchV5DTO.MatchInfo.ParticipantDTO> last20ParticipantDTOList = riotApiService.getLast20ParticipantDTOList(user.get().getLolNickname());
+
         user.ifPresent(u -> {
             u.setUserPosition(dto.getUserPosition());
             u.setUserComment(dto.getUserComment());
             u.setUserMatchingPoint(dto.getUserMatchingPoint());
 
             userRepository.save(u);
+
+            // 20게임 정보 저장
+            for (int i = 0; i < last20ParticipantDTOList.size(); i++) {
+                MatchV5DTO.MatchInfo.ParticipantDTO participantDTO = last20ParticipantDTOList.get(i);
+
+                int kills = participantDTO.getKills();
+                int deaths = participantDTO.getDeaths();
+                int assists = participantDTO.getAssists();
+                recentMatchRepository.save(RecentMatch.builder()
+                        .user(u)
+                        .recentNo(i + 1)
+                        .championName(participantDTO.getChampionName())
+                        .kills(kills)
+                        .deaths(deaths)
+                        .assists(assists)
+                        .item0(participantDTO.getItem0())
+                        .item1(participantDTO.getItem1())
+                        .item2(participantDTO.getItem2())
+                        .item3(participantDTO.getItem3())
+                        .item4(participantDTO.getItem4())
+                        .item5(participantDTO.getItem5())
+                        .item6(participantDTO.getItem6())
+                        .mainPerk(participantDTO.getPerks().getStyles()[0].getSelections()[0].getPerk())
+                        .subPerk(participantDTO.getPerks().getStyles()[1].getStyle())
+                        .summoner1Id(participantDTO.getSummoner1Id())
+                        .summoner2Id(participantDTO.getSummoner2Id())
+                        .win(participantDTO.isWin())
+                        .avgKda(String.format("%.2f", ((double) kills + assists / deaths)))
+                        .build());
+            }
+
+            // 20 게임 미만일 경우
+            for (int i = last20ParticipantDTOList.size(); i < 20; i++) {
+                recentMatchRepository.save(RecentMatch.builder()
+                        .user(u)
+                        .recentNo(i + 1)
+                        .build());
+            }
+
+            // 모스트 챔피언 3개 또는 그 이하 저장
+            List<String> most3Champions = riotApiService.getMost3Champions(last20ParticipantDTOList);
+
+            for (int i = 0; i < 3; i++) {
+                String champName = null;
+                int winCount = 0;
+                int loseCount = 0;
+                double kda = 0;
+                try {
+                    champName = most3Champions.get(i);
+
+                    String finalChampName = champName;
+                    List<MatchV5DTO.MatchInfo.ParticipantDTO> champMatchInfo = last20ParticipantDTOList.stream()
+                            .filter(p -> p.getChampionName().equals(finalChampName))
+                            .collect(toList());
+
+                    winCount = (int) champMatchInfo.stream()
+                            .filter(MatchV5DTO.MatchInfo.ParticipantDTO::isWin).count();
+
+                    loseCount = champMatchInfo.size() - winCount;
+
+                    // stream을 한번에 돌려서 필요한 정보들을 같이 가져오는 (ex 배열에 담던가 객체를 하나 만들어서) 방법으로
+                    // 리팩토링 가능
+                    int kills = champMatchInfo.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getKills).sum();
+
+                    int deaths = champMatchInfo.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getDeaths).sum();
+
+                    int assists = champMatchInfo.stream()
+                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getAssists).sum();
+
+                    kda = (double) (kills + assists) / deaths;
+
+                } catch (IndexOutOfBoundsException e) {
+                    champName = "";
+                }
+
+                mostChampRepository.save(MostChamp.builder()
+                        .user(u)
+                        .mostNo(i + 1)
+                        .champName(champName)
+                        .champWinCount(winCount)
+                        .champLoseCount(loseCount)
+                        .champKda(kda)
+                        .build());
+            }
+
         });
+
         return true;
     }
 
@@ -517,8 +587,6 @@ public class UserService {
     }
 
 
-
-
     //금일 가입자(Admin)
     public ListResponseDTO<UserByAdminResponseDTO, User> todayUserByAdMin(PageDTO dto) {
         Pageable pageable = PageRequest.of(
@@ -527,14 +595,14 @@ public class UserService {
                 Sort.by("userJoinDate").descending()
         );
         String keyword = dto.getKeyword();
-        if ("".equals(keyword)){
-            keyword=null;
+        if ("".equals(keyword)) {
+            keyword = null;
         }
 
         String userAccount = dto.getKeyword();
         Page<User> users;
 
-        if (userAccount==null) {
+        if (userAccount == null) {
             // 전체 불러오기
             users = userRepository.findAll(pageable);
             int accusesize = users.getContent().size();
@@ -583,9 +651,9 @@ public class UserService {
                 new UserDetailByAdminResponseDTO(byUserNickName);
 
 
-
         return userDetail;
     }
+
     public boolean getUserBanBooleanByAdmin(String userNickname) {
         User byUserNickName = userRepository.findByUserNickname(userNickname);
 
@@ -649,7 +717,7 @@ public class UserService {
         System.out.println("userIsBanned1 = " + userIsBanned1);
 
         //클릭이 동작된것 front 에서 1을 보내줄것
-        if(userIsBanned==1) {
+        if (userIsBanned == 1) {
             //userIsBanned가 1이면 참
             if (userIsBanned1 == true) {
                 byUserNickName.setUserIsBanned(false);
@@ -671,13 +739,12 @@ public class UserService {
     }
 
     //닉네임으로 user 찾기
-    public User findUserByNickName(UserModifyRequestDTO dto){
+    public User findUserByNickName(UserModifyRequestDTO dto) {
         User byUserNickName = userRepository.findByUserNickname(dto.getUserNickname());
 
 
         return byUserNickName;
     }
-
 
 
     /**
@@ -690,72 +757,14 @@ public class UserService {
     public UserHistoryResponseDTO getUserHistoryInfo(HttpSession session, String userAccount) {
 
         User foundUser = userRepository.findById(userAccount).orElseThrow(
-                () -> new RuntimeException("해당하는 유저가 없습니다.")
+                () -> new NotFoundUserException("해당하는 유저가 없습니다.")
         );
-        String lolNickname = foundUser.getLolNickname();
 
-        // 티어 정보 갱신
-        Tier newTier = riotApiService.getTier(lolNickname);
+        // 듀오 프로필을 등록하지 않았다면 오류 페이지로 이동
+        if (foundUser.getUserComment() == null)
+            throw new NotFoundUserException("해당하는 유저가 없습니다.");
 
-        foundUser.setLolTier(newTier);
-
-        userRepository.save(foundUser);
-
-        List<MatchV5DTO.MatchInfo.ParticipantDTO> last20ParticipantDTOList = riotApiService.getLast20ParticipantDTOList(lolNickname);
-
-        LeagueV4DTO rankInfo = null;
-        try {
-            rankInfo = riotApiService.getRankInfo(lolNickname, "RANKED_SOLO_5x5");
-        } catch (NoRankException e) {
-            try {
-                rankInfo = riotApiService.getRankInfo(lolNickname, "RANKED_FLEX_SR");
-            } catch (NoRankException ex) {
-                rankInfo = LeagueV4DTO.builder().build();
-            }
-        }
-
-        boolean isFollowed = false;
-        try {
-            isFollowed = followRepository.existsByFollowFromAndFollowTo(
-                    ((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount()
-                    , userAccount) == 1;
-        } catch (NullPointerException ignored) {
-        }
-
-        List<MostChampInfo> mostChampInfoList = riotApiService.getMost3Champions(lolNickname).stream()
-                .map(m -> {
-                    List<MatchV5DTO.MatchInfo.ParticipantDTO> championMatchInfoList = last20ParticipantDTOList.stream()
-                            .filter(p -> p.getChampionName().equals(m))
-                            .collect(toList());
-
-                    int winCount = (int) championMatchInfoList.stream()
-                            .filter(MatchV5DTO.MatchInfo.ParticipantDTO::isWin).count();
-
-                    int loseCount = (int) championMatchInfoList.stream()
-                            .filter(c -> !c.isWin()).count();
-
-                    int winRate = winCount * 100 / (winCount + loseCount);
-
-                    int kills = championMatchInfoList.stream()
-                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getKills).sum();
-
-                    int deaths = championMatchInfoList.stream()
-                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getDeaths).sum();
-
-                    int assists = championMatchInfoList.stream()
-                            .mapToInt(MatchV5DTO.MatchInfo.ParticipantDTO::getAssists).sum();
-
-                    double kda = (double) (kills + assists) / deaths;
-
-                    return MostChampInfo.builder()
-                            .champName(m)
-                            .winCount(winCount)
-                            .loseCount(loseCount)
-                            .winRate(winRate)
-                            .kda(kda)
-                            .build();
-                })
-                .collect(toList());
+        boolean isFollowed = followRepository.existsByFollowFromAndFollowTo(((LoginUserResponseDTO) session.getAttribute(LOGIN_KEY)).getUserAccount(), userAccount) == 1;
 
         return UserHistoryResponseDTO.builder()
                 .userAccount(userAccount)
@@ -768,20 +777,49 @@ public class UserService {
                 .userInstagram(foundUser.getUserInstagram())
                 .userFacebook(foundUser.getUserFacebook())
                 .userTwitter(foundUser.getUserTwitter())
-                .lolNickname(lolNickname)
+                .lolNickname(foundUser.getLolNickname())
                 .userComment(foundUser.getUserComment())
-                .tier(newTier)
-                .rank(rankInfo.getRank())
+                .tier(foundUser.getLolTier())
+                .rank(foundUser.getLolRank())
                 // 모스트 3 챔피언 정보
-                .mostChampInfos(mostChampInfoList)
+                .mostChampInfos(foundUser.getMostChampList().stream()
+                        .map(m -> {
+                            int champWinCount = m.getChampWinCount();
+                            int champLoseCount = m.getChampLoseCount();
+                            return MostChampInfo.builder()
+                                    .champName(m.getChampName())
+                                    .winCount(champWinCount)
+                                    .loseCount(champLoseCount)
+                                    .winRate(champWinCount / (champWinCount + champLoseCount) * 100)
+                                    .kda(String.format("%.2f", m.getChampKda()))
+                                    .build();
+                        }).collect(toList()))
                 // riot api 를 통해 얻어오는 솔로랭크 혹은 자유랭크 데이터
-                .leaguePoints(rankInfo.getLeaguePoints())
-                .totalWinCount(rankInfo.getWins())
-                .totalLoseCount(rankInfo.getLosses())
-                .winRate(Math.round(rankInfo.getWinRate() * 100))
+                .leaguePoints(foundUser.getLolLeaguePoints())
+                .totalWinCount(foundUser.getLolTotalWinCount())
+                .totalLoseCount(foundUser.getLolTotalLoseCount())
+                .winRate(foundUser.getLolWinRate())
                 // 최근 20 매치의 정보 데이터
-                .last20Matches(last20ParticipantDTOList.stream()
-                        .map(MatchResponseDTO::new)
+                .last20Matches(foundUser.getRecentMatchList().stream()
+                        .map(m -> MatchResponseDTO.builder()
+                                .assists(m.getAssists())
+                                .championName(m.getChampionName())
+                                .deaths(m.getDeaths())
+                                .item0(m.getItem0())
+                                .item1(m.getItem1())
+                                .item2(m.getItem2())
+                                .item3(m.getItem3())
+                                .item4(m.getItem4())
+                                .item5(m.getItem5())
+                                .item6(m.getItem6())
+                                .kills(m.getKills())
+                                .mainPerk(m.getMainPerk())
+                                .subPerk(m.getSubPerk())
+                                .summoner1Id(m.getSummoner1Id())
+                                .summoner2Id(m.getSummoner2Id())
+                                .win(m.isWin())
+                                .avgKda(m.getAvgKda())
+                                .build())
                         .collect(toList()))
                 .build();
 

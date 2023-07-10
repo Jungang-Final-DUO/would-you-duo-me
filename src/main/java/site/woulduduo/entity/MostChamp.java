@@ -32,5 +32,12 @@ public class MostChamp {
     @JoinColumn(name = "user_account")
     private User user;
 
+    @Column(length = 2)
+    private int champWinCount;
+
+    @Column(length = 2)
+    private int champLoseCount;
+
+    private double champKda;
 
 }

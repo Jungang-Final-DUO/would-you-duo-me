@@ -24,6 +24,7 @@ import site.woulduduo.dto.response.login.LoginUserResponseDTO;
 import site.woulduduo.dto.response.user.*;
 import site.woulduduo.entity.User;
 import site.woulduduo.enumeration.*;
+import site.woulduduo.exception.NotFoundUserException;
 import site.woulduduo.repository.UserRepository;
 import site.woulduduo.service.EmailService;
 import site.woulduduo.service.UserService;
@@ -536,7 +537,12 @@ public class UserController {
 
         log.info("/user/history?userAccount={} GET", userAccount);
 
-        UserHistoryResponseDTO dto = userService.getUserHistoryInfo(session, userAccount);
+        UserHistoryResponseDTO dto = null;
+        try {
+            dto = userService.getUserHistoryInfo(session, userAccount);
+        } catch (NotFoundUserException e) {
+            return "error/error444";
+        }
 
         model.addAttribute("history", dto);
 
