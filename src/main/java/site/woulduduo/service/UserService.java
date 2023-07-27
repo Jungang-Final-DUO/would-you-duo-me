@@ -94,7 +94,10 @@ public class UserService {
             try {
                 rankInfo = riotApiService.getRankInfo(lolNickname, "RANKED_FLEX_SR");
             } catch (NoRankException ex) {
-                rankInfo = LeagueV4DTO.builder().build();
+                rankInfo = LeagueV4DTO.builder()
+                        .tier("UNR")
+                        .rank("")
+                        .build();
             }
         }
 
