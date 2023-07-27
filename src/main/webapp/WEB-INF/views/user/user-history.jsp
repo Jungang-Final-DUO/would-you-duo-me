@@ -96,6 +96,10 @@
                         <c:if test="${history.userMatchingPoint eq null}">
                             <img class = "image-with-null" src="/assets/img/main/chatting-icon.png" alt="채팅 아이콘">
                         </c:if>
+
+                        <button id="refresh-btn" class="btn">
+                            전적 갱신하기
+                        </button>
                     </div>
                     <!-- end of sns chat button wrapper-->
                 </div>
