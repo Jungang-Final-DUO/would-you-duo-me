@@ -205,7 +205,7 @@
 
 ## About Project
 
-![img.png](img.png)
+![img.png](readme-assets/img.png)
 
 함께 즐거운 게임 플레이를 하고 싶은 사람들을 위한 웹사이트입니다.
 
@@ -266,4 +266,26 @@
 ## Pages
 
 ### Main Page
+
+![img_1.png](readme-assets%2Fimg_1.png)
+
+### My Page - 내 정보 확인 및 변경
+
+![img.png](readme-assets/img_2.png)
+
+### My Page - 듀오 프로필 등록 및 수정
+
+![img.png](readme-assets/img_3.png)
+
+### My Page - 매칭 내역 확인
+
+![img.png](readme-assets/img_4.png)
+
+### History Page
+
+![img.png](readme-assets/img_5.png)
+
+### Sign Up Page
+
+![img.png](readme-assets/img_6.png)
 
