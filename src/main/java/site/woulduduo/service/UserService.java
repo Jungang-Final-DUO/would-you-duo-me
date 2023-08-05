@@ -872,6 +872,8 @@ public class UserService {
 
         User user = userRepository.findByUserAccount(userAccount);
 
+        deleteExistingHistoryInfo(userAccount);
+
         List<MatchV5DTO.MatchInfo.ParticipantDTO> last20ParticipantDTOList = riotApiService.getLast20ParticipantDTOList(user.getLolNickname());
 
         saveHistoryInfo(last20ParticipantDTOList, user);
@@ -882,15 +884,6 @@ public class UserService {
 
     private void saveHistoryInfo(List<MatchV5DTO.MatchInfo.ParticipantDTO> last20ParticipantDTOList, User user) {
 
-        // 존재하고 있는 데이터를 모두 비워줌
-        String userAccount = user.getUserAccount();
-        try {
-            recentMatchRepository.deleteAllByUserAccount(userAccount);
-            mostChampRepository.deleteAllByUserAccount(userAccount);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
         // 20게임 정보 저장
         for (int i = 0; i < last20ParticipantDTOList.size(); i++) {
             MatchV5DTO.MatchInfo.ParticipantDTO participantDTO = last20ParticipantDTOList.get(i);
@@ -898,6 +891,12 @@ public class UserService {
             int kills = participantDTO.getKills();
             int deaths = participantDTO.getDeaths();
             int assists = participantDTO.getAssists();
+            String avgKda = null;
+            try {
+                avgKda = String.format("%.2f", ((double) kills + assists / deaths));
+            } catch (ArithmeticException e) {
+                avgKda = "P";
+            }
             recentMatchRepository.save(RecentMatch.builder()
                     .user(user)
                     .recentNo(i + 1)
@@ -917,7 +916,7 @@ public class UserService {
                     .summoner1Id(participantDTO.getSummoner1Id())
                     .summoner2Id(participantDTO.getSummoner2Id())
                     .win(participantDTO.isWin())
-                    .avgKda(String.format("%.2f", ((double) kills + assists / deaths)))
+                    .avgKda(avgKda)
                     .build());
         }
 
@@ -976,5 +975,11 @@ public class UserService {
                     .champKda(kda)
                     .build());
         }
+    }
+
+    private void deleteExistingHistoryInfo(String userAccount) {
+        // 존재하고 있는 데이터를 모두 비워줌
+        recentMatchRepository.deleteAllByUserAccount(userAccount);
+        mostChampRepository.deleteAllByUserAccount(userAccount);
     }
 }
