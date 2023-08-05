@@ -44,7 +44,7 @@ import {makeChattingRoom} from "../../chatting/chatting-modal.js";
     }
 
     // 전적 갱신 버튼 이벤트 등록
-    document.getElementById('refresh-btn').onclick(async e => {
+    document.getElementById('refresh-btn').onclick = async e => {
         const userAccount = e.target.closest('#history-wrapper').dataset.userAccount;
 
         const response = await fetch(`/api/v1/users/refresh/${userAccount}`,
@@ -58,6 +58,6 @@ import {makeChattingRoom} from "../../chatting/chatting-modal.js";
         if (result) {
             window.location.reload();
         }
-    });
+    };
 
 })();
