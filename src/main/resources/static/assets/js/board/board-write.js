@@ -16,7 +16,7 @@ import {addModalBtnEvent, addModalCloseEvent} from "../common/modal-handler.js";
 //
 //        //도메인 전역변수 매핑경로오류...
 //
-//  ard/'  fetch('http://localhost:8282/bo, {
+//  ard/'  fetch('http://3.35.212.146:8282/bo, {
 //        method: 'GET',
 //
 //    })
