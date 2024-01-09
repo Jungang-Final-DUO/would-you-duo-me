@@ -518,7 +518,7 @@
 
             const accuseTypeEtcValue = accuseTypeEtcInput[index].value;
 
-            fetch('localhost:80/user/accuse', {
+            fetch('http://localhost:80/user/accuse', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
